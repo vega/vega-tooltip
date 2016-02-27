@@ -7,6 +7,8 @@
   <script src="http://vega.github.io/vega/vega.js"></script>
   <script src="http://vega.github.io/vega-lite/vega-lite.js"></script>
   <script src="http://vega.github.io/vega-editor/vendor/vega-embed.js" charset="utf-8"></script>
+  <script src="vega-lite-tooltip.js" charset="utf-8"></script>
+  <style src="vega-lite-tooltip.css"></style>
 
   <style media="screen">
     /* Add space between vega-embed links  */
@@ -18,6 +20,17 @@
 <body>
   <!-- Container for the visualization -->
   <div id="vis"></div>
+  <!-- Placeholder for tooltip -->
+  <div id="vis-tooltip">
+    <table>
+      <tr>
+        <td class="key">key</td>
+        <td class="value">
+          <b>value</b>
+        </td>
+      </tr>
+    </table>
+  </div>
 
   <script>
   var vlSpec = {
