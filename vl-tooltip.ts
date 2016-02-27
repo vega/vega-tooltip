@@ -13,9 +13,11 @@ let embedSpec = {
 };
 
 function onMouseOver(event, item) {
-  if (!item || !item.datum) { return; }
+  if (!item || !item.datum) return;
   // avoid showing tooltip for facet's background
   if (item.datum._facetID) return;
+  // avoid showing tooltip for axis title and labels
+  if (!item.datum._id) return;
 
   // (zening) TODO: show partial data in tooltip
   let vgData = d3.map(item.datum);
@@ -53,7 +55,7 @@ function onMouseOver(event, item) {
       return "" + (event.pageX - tooltipWidth - 10) + "px";
     }
   })
-  .style("opacity", 1);
+  .style("opacity", 0.9);
 }
 
 function onMouseOut() {
