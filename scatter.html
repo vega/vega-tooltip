@@ -7,8 +7,8 @@
   <script src="http://vega.github.io/vega/vega.js"></script>
   <script src="http://vega.github.io/vega-lite/vega-lite.js"></script>
   <script src="http://vega.github.io/vega-editor/vendor/vega-embed.js" charset="utf-8"></script>
-  <script src="vega-lite-tooltip.js" charset="utf-8"></script>
-  <style src="vega-lite-tooltip.css"></style>
+  <script src="vl-tooltip.js" charset="utf-8"></script>
+  <link rel="stylesheet" type="text/css" href="vl-tooltip.css">
 
   <style media="screen">
     /* Add space between vega-embed links  */
@@ -20,38 +20,10 @@
 <body>
   <!-- Container for the visualization -->
   <div id="vis"></div>
+
   <!-- Placeholder for tooltip -->
-  <div id="vis-tooltip">
-    <table>
-      <tr>
-        <td class="key">key</td>
-        <td class="value">
-          <b>value</b>
-        </td>
-      </tr>
-    </table>
-  </div>
+  <table class="vis-tooltip">
+  </table>
 
-  <script>
-  var vlSpec = {
-  "data": {"url": "data/cars.json"},
-  "mark": "circle",
-  "encoding": {
-    "x": {"field": "Horsepower", "type": "quantitative"},
-    "y": {"field": "Miles_per_Gallon", "type": "quantitative"}
-  }
-};
-
-  var embedSpec = {
-    mode: "vega-lite",  // Instruct Vega-Embed to use the Vega-Lite compiler
-    spec: vlSpec
-  };
-
-  // Embed the visualization in the container with id `vis`
-  vg.embed("#vis", embedSpec, function(error, result) {
-    // Callback receiving the View instance and parsed Vega spec
-    // result.view is the View, which resides under the '#vis' element
-  });
-  </script>
 </body>
 </html>
