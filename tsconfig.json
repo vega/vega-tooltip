@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+        "noImplicitAny": false,
+        "removeComments": true,
+        "sourceMap": true
+    },
+    "files": [
+        "src/vl-tooltip.ts",
+        "typings/d3.d.ts",
+        "typings/vega-lite.d.ts",
+        "typings/vega.d.ts"
+    ]
+}

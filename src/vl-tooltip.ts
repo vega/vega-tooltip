@@ -33,7 +33,7 @@ function onMouseOver(event, item) {
   let row = tooltipRows.enter().append("tr")
   .attr("class", "tooltip-row");
   row.append("td").attr("class", "key").text(function(d) { return d.key; });
-  row.append("td").attr("class", "value").text(function(d) { return d.value; });
+  row.append("td").attr("class", "value").text(function(d) { return d.value.toString(); });
 
   // by default: put tooltip 10px below cursor
   // if tooltip is close to the bottom of the window, put tooltip 10px above cursor

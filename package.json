@@ -1,0 +1,25 @@
+{
+  "name": "vega-lite-tooltip",
+  "version": "1.0.0",
+  "description": "A tooltip plugin for vega-lite visualization grammar.",
+  "main": "vega-lite-tooltip.js",
+  "scripts": {
+    "prestart": "tsc && sass src/vl-tooltip.scss src/vl-tooltip.css",
+    "start": "python -m SimpleHTTPServer 4000",
+    "test": "echo TODO:test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vega/vega-lite-tooltip.git"
+  },
+  "keywords": [
+    "vega-lite",
+    "tooltip"
+  ],
+  "author": "Zening Qu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vega/vega-lite-tooltip/issues"
+  },
+  "homepage": "https://github.com/vega/vega-lite-tooltip#readme"
+}
