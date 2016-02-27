@@ -28,19 +28,23 @@ function onMouseOver(event, item) {
   row.append("td").attr("class", "key").text(function(d) { return d.key; });
   row.append("td").attr("class", "value").text(function(d) { return d.value; });
 
+  // by default: put tooltip 10px below cursor
+  // if tooltip is close to the bottom of the window, put tooltip 10px above cursor
   tooltip.style("top", function() {
-    let tooltipHeight = parseInt(d3.select(this).style("height").replace("px", ""));
-    if (event.pageY + tooltipHeight + 10 < window.innerHeight) { // default: put tooltip 10px below cursor
+    let tooltipHeight = parseInt(d3.select(this).style("height"));
+    if (event.pageY + tooltipHeight + 10 < window.innerHeight) {
       return "" + (event.pageY + 10) + "px";
-    } else { // if tooltip is close to the bottom of the window, put tooltip 10px above cursor
+    } else {
       return "" + (event.pageY - tooltipHeight - 10) + "px";
     }
   })
+  // by default: put tooltip 10px to the right of cursor
+  // if tooltip is close to the right edge of the window, put tooltip 10 px to the left of cursor
   .style("left", function() {
-    let tooltipWidth = parseInt(d3.select(this).style("width").replace("px", ""));
-    if (event.pageX + tooltipWidth + 10 < window.innerWidth) { // default: put tooltip 10px to the right of cursor
+    let tooltipWidth = parseInt(d3.select(this).style("width"));
+    if (event.pageX + tooltipWidth + 10 < window.innerWidth) {
       return "" + (event.pageX + 10) + "px";
-    } else { // if tooltip is close to the right edge of the window, put tooltip 10 px to the left of cursor
+    } else {
       return "" + (event.pageX - tooltipWidth - 10) + "px";
     }
   });
@@ -51,7 +55,6 @@ function onMouseOver(event, item) {
 function onMouseOut() {
   let tooltipRows = d3.select(".vis-tooltip").selectAll(".tooltip-row").data([]);
   tooltipRows.exit().remove();
-
   d3.select(".vis-tooltip").style("opacity", 0);
 }
 
