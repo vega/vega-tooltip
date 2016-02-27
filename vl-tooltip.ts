@@ -17,9 +17,14 @@ function onMouseOver(event, item) {
   // avoid showing tooltip for facet's background
   if (item.datum._facetID) return;
 
-  let tooltip = d3.select(".vis-tooltip");
-  let tooltipData = d3.map(item.datum).entries();
-  let tooltipRows = tooltip.selectAll(".tooltip-row").data(tooltipData);
+  // (zening) TODO: show partial data in tooltip
+  let vgData = d3.map(item.datum);
+  // remove vega internals
+  vgData.remove("_id");
+  vgData.remove("_prev");
+  let tooltipData = vgData.entries();
+
+  let tooltipRows = d3.select(".vis-tooltip").selectAll(".tooltip-row").data(tooltipData);
 
   tooltipRows.exit().remove();
 
@@ -30,7 +35,7 @@ function onMouseOver(event, item) {
 
   // by default: put tooltip 10px below cursor
   // if tooltip is close to the bottom of the window, put tooltip 10px above cursor
-  tooltip.style("top", function() {
+  d3.select(".vis-tooltip").style("top", function() {
     let tooltipHeight = parseInt(d3.select(this).style("height"));
     if (event.pageY + tooltipHeight + 10 < window.innerHeight) {
       return "" + (event.pageY + 10) + "px";
@@ -47,9 +52,8 @@ function onMouseOver(event, item) {
     } else {
       return "" + (event.pageX - tooltipWidth - 10) + "px";
     }
-  });
-
-  tooltip.style("opacity", 1);
+  })
+  .style("opacity", 1);
 }
 
 function onMouseOut() {
