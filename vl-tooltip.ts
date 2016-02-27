@@ -12,13 +12,14 @@ let embedSpec = {
   spec: vlSpec
 };
 
-function viewOnMouseOver(event, item) {
+function onMouseOver(event, item) {
   if (!item || !item.datum) { return; }
   // avoid showing tooltip for facet's background
   if (item.datum._facetID) return;
 
+  let tooltip = d3.select(".vis-tooltip");
   let tooltipData = d3.map(item.datum).entries();
-  let tooltipRows = d3.select(".vis-tooltip").selectAll(".tooltip-row").data(tooltipData);
+  let tooltipRows = tooltip.selectAll(".tooltip-row").data(tooltipData);
 
   tooltipRows.exit().remove();
 
@@ -27,21 +28,34 @@ function viewOnMouseOver(event, item) {
   row.append("td").attr("class", "key").text(function(d) { return d.key; });
   row.append("td").attr("class", "value").text(function(d) { return d.value; });
 
-  d3.select(".vis-tooltip")
-  .style("display", "block")
-  .style("top", function() { return "" + event.pageY + "px"; })
-  .style("left", function() { return "" + event.pageX + "px"; });
+  tooltip.style("top", function() {
+    let tooltipHeight = parseInt(d3.select(this).style("height").replace("px", ""));
+    if (event.pageY + tooltipHeight + 10 < window.innerHeight) { // default: put tooltip 10px below cursor
+      return "" + (event.pageY + 10) + "px";
+    } else { // if tooltip is close to the bottom of the window, put tooltip 10px above cursor
+      return "" + (event.pageY - tooltipHeight - 10) + "px";
+    }
+  })
+  .style("left", function() {
+    let tooltipWidth = parseInt(d3.select(this).style("width").replace("px", ""));
+    if (event.pageX + tooltipWidth + 10 < window.innerWidth) { // default: put tooltip 10px to the right of cursor
+      return "" + (event.pageX + 10) + "px";
+    } else { // if tooltip is close to the right edge of the window, put tooltip 10 px to the left of cursor
+      return "" + (event.pageX - tooltipWidth - 10) + "px";
+    }
+  });
+
+  tooltip.style("opacity", 1);
 }
 
-function viewOnMouseOut() {
-  // hide tooltip
-  d3.select(".vis-tooltip").style("display", "none");
-  // clear tooltip elements
+function onMouseOut() {
   let tooltipRows = d3.select(".vis-tooltip").selectAll(".tooltip-row").data([]);
   tooltipRows.exit().remove();
+
+  d3.select(".vis-tooltip").style("opacity", 0);
 }
 
 vg.embed("#vis", embedSpec, function(error, result) {
-  result.view.on("mouseover", viewOnMouseOver);
-  result.view.on("mouseout", viewOnMouseOut);
+  result.view.on("mouseover", onMouseOver);
+  result.view.on("mouseout", onMouseOut);
 });
