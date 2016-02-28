@@ -2,7 +2,7 @@
   /* default to .vis-light
   can be overwritten by .vis-dark*/
   background-color: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgb(64, 64, 64);
+  border: 1px solid rgb(128, 128, 128);
   color: black;
 
   opacity: 0;
@@ -34,6 +34,6 @@
 }
 .vis-tooltip.vis-light {
   background-color: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgb(64, 64, 64);
+  border: 1px solid rgb(128, 128, 128);
   color: black;
 }
