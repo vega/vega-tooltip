@@ -16,12 +16,95 @@
       margin-right: 5px;
     }
   </style>
+
+  <script>
+  // Scatter Plot
+  var scatterSpec = {
+    "data": {"url": "data/cars.json"},
+    "mark": "circle",
+    "encoding": {
+      "x": {"field": "Horsepower", "type": "quantitative"},
+      "y": {"field": "Miles_per_Gallon", "type": "quantitative"}
+    }};
+  var scatterEmbed = {
+    mode: "vega-lite",  // Instruct Vega-Embed to use the Vega-Lite compiler
+    spec: scatterSpec
+  };
+  vg.embed("#vis-scatter", scatterEmbed, function(error, result) {
+    result.view.on("mouseover", onMouseOver);
+    result.view.on("mouseout", onMouseOut);
+  });
+
+  // Stacked Bar Chart
+  var stackedbarSpec = {
+    "data": {"url": "data/seattle-weather.csv", "formatType": "csv"},
+    "mark": "bar",
+    "encoding": {
+      "x": {
+        "field": "date",
+        "type": "temporal",
+        "timeUnit": "month",
+        "axis": {"title": "Month of the year"}
+      },
+      "y": {
+        "field": "*",
+        "type": "quantitative",
+        "aggregate": "count"
+      },
+      "color": {
+        "field": "weather",
+        "type": "nominal",
+        "scale": {
+          "domain": ["sun","fog","drizzle","rain","snow"],
+          "range": ["#e7ba52","#c7c7c7","#aec7e8","#1f77b4","#9467bd"]
+        },
+        "legend": {
+          "title": "Weather type"
+        }
+      }
+    }
+  }
+  var stackedbarEmbed = {
+    mode: "vega-lite",
+    spec: stackedbarSpec
+  }
+  vg.embed("#vis-stacked-bar", stackedbarEmbed, function(error, result) {
+    result.view.on("mouseover",onMouseOver);
+    result.view.on("mouseout", onMouseOut);
+  })
+
+  // Line Chart
+  var lineSpec = {
+    "description": "Stock prices of 5 Tech Companies Over Time.",
+    "data": {"url": "data/stocks.csv", "formatType":"csv"},
+    "mark": "line",
+    "encoding": {
+      "x": {"field": "date", "type": "temporal"},
+      "y": {"field": "price", "type": "quantitative"},
+      "color": {"field": "symbol", "type": "nominal"}
+    }
+  };
+  var lineEmbed = {
+    mode: "vega-lite",
+    spec: lineSpec
+  }
+  vg.embed("#vis-line", lineEmbed, function(error, result) {
+    result.view.on("mouseover", onMouseOver);
+    result.view.on("mouseout", onMouseOut);
+  })
+  </script>
 </head>
 <body>
-  <!-- Container for the visualization -->
-  <div id="vis"></div>
+  <!-- Scatter Plot Tooltip Example -->
+  <div id="vis-scatter" class="tooltip-example"></div>
 
-  <!-- Placeholder for tooltip -->
+  <!-- Stacked Bar Chart Tooltip Example -->
+  <div id="vis-stacked-bar" class="tooltip-example"></div>
+
+  <!-- Line Chart Tooltip Example -->
+  <div id="vis-line" class="tooltip-example"></div>
+
+  <!-- Placeholder for Tooltip -->
   <table class="vis-tooltip vis-dark">
   </table>
 

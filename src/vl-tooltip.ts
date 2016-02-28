@@ -1,17 +1,3 @@
-let vlSpec = {
-"data": {"url": "data/cars.json"},
-"mark": "circle",
-"encoding": {
-  "x": {"field": "Horsepower", "type": "quantitative"},
-  "y": {"field": "Miles_per_Gallon", "type": "quantitative"}
-}
-};
-
-let embedSpec = {
-  mode: "vega-lite",  // Instruct Vega-Embed to use the Vega-Lite compiler
-  spec: vlSpec
-};
-
 function onMouseOver(event, item) {
   if (!item || !item.datum) return;
   // avoid showing tooltip for facet's background
@@ -39,20 +25,20 @@ function onMouseOver(event, item) {
   // if tooltip is close to the bottom of the window, put tooltip 10px above cursor
   d3.select(".vis-tooltip").style("top", function() {
     let tooltipHeight = parseInt(d3.select(this).style("height"));
-    if (event.pageY + tooltipHeight + 10 < window.innerHeight) {
-      return "" + (event.pageY + 10) + "px";
+    if (event.clientY + tooltipHeight + 10 < window.innerHeight) {
+      return "" + (event.clientY + 10) + "px";
     } else {
-      return "" + (event.pageY - tooltipHeight - 10) + "px";
+      return "" + (event.clientY - tooltipHeight - 10) + "px";
     }
   })
   // by default: put tooltip 10px to the right of cursor
   // if tooltip is close to the right edge of the window, put tooltip 10 px to the left of cursor
   .style("left", function() {
     let tooltipWidth = parseInt(d3.select(this).style("width"));
-    if (event.pageX + tooltipWidth + 10 < window.innerWidth) {
-      return "" + (event.pageX + 10) + "px";
+    if (event.clientX + tooltipWidth + 10 < window.innerWidth) {
+      return "" + (event.clientX + 10) + "px";
     } else {
-      return "" + (event.pageX - tooltipWidth - 10) + "px";
+      return "" + (event.clientX - tooltipWidth - 10) + "px";
     }
   })
   .style("opacity", 1);
@@ -63,8 +49,3 @@ function onMouseOut() {
   tooltipRows.exit().remove();
   d3.select(".vis-tooltip").style("opacity", 0);
 }
-
-vg.embed("#vis", embedSpec, function(error, result) {
-  result.view.on("mouseover", onMouseOver);
-  result.view.on("mouseout", onMouseOut);
-});
