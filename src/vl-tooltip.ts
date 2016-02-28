@@ -55,7 +55,7 @@ function onMouseOver(event, item) {
       return "" + (event.pageX - tooltipWidth - 10) + "px";
     }
   })
-  .style("opacity", 0.9);
+  .style("opacity", 1);
 }
 
 function onMouseOut() {
