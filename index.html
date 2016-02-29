@@ -31,8 +31,8 @@
     spec: scatterSpec
   };
   vg.embed("#vis-scatter", scatterEmbed, function(error, result) {
-    result.view.on("mouseover", onMouseOver);
-    result.view.on("mouseout", onMouseOut);
+    result.view.on("mouseover", fillTooltip);
+    result.view.on("mouseout", clearTooltip);
   });
 
   // Stacked Bar Chart
@@ -63,15 +63,43 @@
         }
       }
     }
-  }
+  };
   var stackedbarEmbed = {
     mode: "vega-lite",
     spec: stackedbarSpec
-  }
+  };
   vg.embed("#vis-stacked-bar", stackedbarEmbed, function(error, result) {
-    result.view.on("mouseover",onMouseOver);
-    result.view.on("mouseout", onMouseOut);
+    result.view.on("mouseover", fillTooltip);
+    result.view.on("mousemove", updateTooltip); // for larger marks (e.g. bars), update tooltip position on mouse move
+    result.view.on("mouseout", clearTooltip);
+  });
+
+  // Simple Bar Chart
+  var barSpec = {
+    "description": "A simple bar chart with embedded data.",
+    "data": {
+      "values": [
+        {"a": "A","b": 28}, {"a": "B","b": 55}, {"a": "C","b": 43},
+        {"a": "D","b": 91}, {"a": "E","b": 81}, {"a": "F","b": 53},
+        {"a": "G","b": 19}, {"a": "H","b": 87}, {"a": "I","b": 52}
+      ]
+    },
+    "mark": "bar",
+    "encoding": {
+      "x": {"field": "a", "type": "ordinal"},
+      "y": {"field": "b", "type": "quantitative"}
+    }
+  };
+  var barEmbed = {
+    mode: "vega-lite",
+    spec: barSpec
+  }
+  vg.embed("#vis-bar", barEmbed, function(error, result) {
+    result.view.on("mouseover", fillTooltip);
+    result.view.on("mousemove", updateTooltip); // for larger marks (e.g. bars), update tooltip position on mouse move
+    result.view.on("mouseout", clearTooltip);
   })
+
   </script>
 </head>
 <body>
@@ -80,6 +108,9 @@
 
   <!-- Stacked Bar Chart Tooltip Example -->
   <div id="vis-stacked-bar" class="tooltip-example"></div>
+
+  <!-- Simple Bar Chart Example -->
+  <div id="vis-bar" class="tooltip-example"></div>
 
   <!-- Placeholder for Tooltip -->
   <table class="vis-tooltip">

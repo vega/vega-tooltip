@@ -1,4 +1,4 @@
-function onMouseOver(event, item) {
+function fillTooltip(event, item) {
   if (!item || !item.datum) return;
   // avoid showing tooltip for facet's background
   if (item.datum._facetID) return;
@@ -21,6 +21,15 @@ function onMouseOver(event, item) {
   row.append("td").attr("class", "key").text(function(d) { return d.key; });
   row.append("td").attr("class", "value").text(function(d) { return d.value.toString(); });
 
+  updateTooltipPosition(event);
+  d3.select(".vis-tooltip").style("opacity", 1);
+}
+
+function updateTooltip(event, item) {
+  updateTooltipPosition(event);
+}
+
+function updateTooltipPosition (event) {
   // by default: put tooltip 10px below cursor
   // if tooltip is close to the bottom of the window, put tooltip 10px above cursor
   d3.select(".vis-tooltip").style("top", function() {
@@ -40,11 +49,10 @@ function onMouseOver(event, item) {
     } else {
       return "" + (event.clientX - tooltipWidth - 10) + "px";
     }
-  })
-  .style("opacity", 1);
+  });
 }
 
-function onMouseOut() {
+function clearTooltip() {
   let tooltipRows = d3.select(".vis-tooltip").selectAll(".tooltip-row").data([]);
   tooltipRows.exit().remove();
   d3.select(".vis-tooltip").style("opacity", 0);
