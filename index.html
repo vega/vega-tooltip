@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<head>
+  <title>Vega Lite Bar Chart</title>
+  <meta charset="utf-8">
+
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://vega.github.io/vega/vega.js"></script>
+  <script src="http://vega.github.io/vega-lite/vega-lite.js"></script>
+  <script src="http://vega.github.io/vega-editor/vendor/vega-embed.js" charset="utf-8"></script>
+  <script src="src/vl-tooltip.js" charset="utf-8"></script>
+  <link rel="stylesheet" type="text/css" href="src/vl-tooltip.css">
+
+  <style media="screen">
+    /* Add space between vega-embed links  */
+    .vega-actions a {
+      margin-right: 5px;
+    }
+  </style>
+
+  <script>
+  // Scatter Plot
+  var scatterSpec = {
+    "data": {"url": "data/cars.json"},
+    "mark": "circle",
+    "encoding": {
+      "x": {"field": "Horsepower", "type": "quantitative"},
+      "y": {"field": "Miles_per_Gallon", "type": "quantitative"}
+    }};
+  var scatterEmbed = {
+    mode: "vega-lite",  // Instruct Vega-Embed to use the Vega-Lite compiler
+    spec: scatterSpec
+  };
+  vg.embed("#vis-scatter", scatterEmbed, function(error, result) {
+    result.view.on("mouseover", fillTooltip);
+    result.view.on("mouseout", clearTooltip);
+  });
+
+  // Stacked Bar Chart
+  var stackedbarSpec = {
+    "data": {"url": "data/seattle-weather.csv", "formatType": "csv"},
+    "mark": "bar",
+    "encoding": {
+      "x": {
+        "field": "date",
+        "type": "temporal",
+        "timeUnit": "month",
+        "axis": {"title": "Month of the year"}
+      },
+      "y": {
+        "field": "*",
+        "type": "quantitative",
+        "aggregate": "count"
+      },
+      "color": {
+        "field": "weather",
+        "type": "nominal",
+        "scale": {
+          "domain": ["sun","fog","drizzle","rain","snow"],
+          "range": ["#e7ba52","#c7c7c7","#aec7e8","#1f77b4","#9467bd"]
+        },
+        "legend": {
+          "title": "Weather type"
+        }
+      }
+    }
+  };
+  var stackedbarEmbed = {
+    mode: "vega-lite",
+    spec: stackedbarSpec
+  };
+  vg.embed("#vis-stacked-bar", stackedbarEmbed, function(error, result) {
+    result.view.on("mouseover", fillTooltip);
+    result.view.on("mousemove", updateTooltip); // for larger marks (e.g. bars), update tooltip position on mouse move
+    result.view.on("mouseout", clearTooltip);
+  });
+
+  // Simple Bar Chart
+  var barSpec = {
+    "description": "A simple bar chart with embedded data.",
+    "data": {
+      "values": [
+        {"a": "A","b": 28}, {"a": "B","b": 55}, {"a": "C","b": 43},
+        {"a": "D","b": 91}, {"a": "E","b": 81}, {"a": "F","b": 53},
+        {"a": "G","b": 19}, {"a": "H","b": 87}, {"a": "I","b": 52}
+      ]
+    },
+    "mark": "bar",
+    "encoding": {
+      "x": {"field": "a", "type": "ordinal"},
+      "y": {"field": "b", "type": "quantitative"}
+    }
+  };
+  var barEmbed = {
+    mode: "vega-lite",
+    spec: barSpec
+  }
+  vg.embed("#vis-bar", barEmbed, function(error, result) {
+    result.view.on("mouseover", fillTooltip);
+    result.view.on("mousemove", updateTooltip); // for larger marks (e.g. bars), update tooltip position on mouse move
+    result.view.on("mouseout", clearTooltip);
+  })
+
+  </script>
+</head>
+<body>
+  <!-- Scatter Plot Tooltip Example -->
+  <div id="vis-scatter" class="tooltip-example"></div>
+
+  <!-- Stacked Bar Chart Tooltip Example -->
+  <div id="vis-stacked-bar" class="tooltip-example"></div>
+
+  <!-- Simple Bar Chart Example -->
+  <div id="vis-bar" class="tooltip-example"></div>
+
+  <!-- Placeholder for Tooltip -->
+  <table class="vis-tooltip">
+  </table>
+
+</body>
+</html>
