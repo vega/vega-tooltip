@@ -1,7 +1,9 @@
 function fillTooltip(event, item) {
   if (!item || !item.datum) return;
+  
   // avoid showing tooltip for facet's background
   if (item.datum._facetID) return;
+  
   // avoid showing tooltip for axis title and labels
   if (!item.datum._id) return;
 
