@@ -5,7 +5,7 @@
   border: 1px solid #d9d9d9;
   color: black;
   opacity: 0;
-  padding: 3px;
+  padding: 6px;
   border-radius: 3px;
   position: fixed;
   z-index: 2000;
@@ -19,7 +19,7 @@
 .vis-tooltip td.key {
   max-width: 100px;
   text-align: right;
-  padding-right: 5px;
+  padding-right: 3px;
 }
 .vis-tooltip td.value {
   max-width: 150px;
