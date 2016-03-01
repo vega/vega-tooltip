@@ -1,3 +1,18 @@
+/**
+ * @param view the Vega view to which the tooltip will be added
+ */
+ export function addTooltip(view) {
+  // fill tooltip with data
+  view.on("mouseover", fillTooltip);
+
+  // update tooltip position on mouse move
+  // (important for large marks e.g. bars)
+  view.on("mousemove", updateTooltip);
+
+  // clear tooltip
+  view.on("mouseout", clearTooltip);
+}
+
 function fillTooltip(event, item) {
   if (!item || !item.datum) { return; }
 

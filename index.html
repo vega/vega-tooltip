@@ -31,8 +31,7 @@
     spec: scatterSpec
   };
   vg.embed("#vis-scatter", scatterEmbed, function(error, result) {
-    result.view.on("mouseover", fillTooltip);
-    result.view.on("mouseout", clearTooltip);
+    addTooltip(result.view);
   });
 
   // Stacked Bar Chart
@@ -69,9 +68,7 @@
     spec: stackedbarSpec
   };
   vg.embed("#vis-stacked-bar", stackedbarEmbed, function(error, result) {
-    result.view.on("mouseover", fillTooltip);
-    result.view.on("mousemove", updateTooltip); // for larger marks (e.g. bars), update tooltip position on mouse move
-    result.view.on("mouseout", clearTooltip);
+    addTooltip(result.view);
   });
 
   // Simple Bar Chart
@@ -95,9 +92,7 @@
     spec: barSpec
   }
   vg.embed("#vis-bar", barEmbed, function(error, result) {
-    result.view.on("mouseover", fillTooltip);
-    result.view.on("mousemove", updateTooltip); // for larger marks (e.g. bars), update tooltip position on mouse move
-    result.view.on("mouseout", clearTooltip);
+    addTooltip(result.view);
   })
 
   </script>
