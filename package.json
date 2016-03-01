@@ -1,6 +1,6 @@
 {
   "name": "vega-lite-tooltip",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A tooltip plugin for vega-lite visualization grammar.",
   "main": "vega-lite-tooltip.js",
   "scripts": {
@@ -17,7 +17,7 @@
     "tooltip"
   ],
   "author": "Zening Qu",
-  "license": "ISC",
+  "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/vega/vega-lite-tooltip/issues"
   },
