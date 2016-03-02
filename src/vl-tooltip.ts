@@ -1,9 +1,9 @@
 function fillTooltip(event, item) {
   if (!item || !item.datum) return;
-  
+
   // avoid showing tooltip for facet's background
   if (item.datum._facetID) return;
-  
+
   // avoid showing tooltip for axis title and labels
   if (!item.datum._id) return;
 
@@ -20,7 +20,7 @@ function fillTooltip(event, item) {
 
   let row = tooltipRows.enter().append("tr")
   .attr("class", "tooltip-row");
-  row.append("td").attr("class", "key").text(function(d) { return d.key; });
+  row.append("td").attr("class", "key").text(function(d) { return d.key + ":"; });
   row.append("td").attr("class", "value").text(function(d) { return d.value.toString(); });
 
   updateTooltipPosition(event);

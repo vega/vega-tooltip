@@ -4,7 +4,7 @@
   "description": "A tooltip plugin for vega-lite visualization grammar.",
   "main": "vega-lite-tooltip.js",
   "scripts": {
-    "prestart": "tsc && sass src/vl-tooltip.scss src/vl-tooltip.css",
+    "prestart": "tsc",
     "start": "python -m SimpleHTTPServer 4000",
     "test": "echo TODO:test"
   },
