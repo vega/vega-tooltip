@@ -4,7 +4,7 @@
   <meta charset="utf-8">
 
   <script src="http://d3js.org/d3.v3.min.js"></script>
-  <script src="http://vega.github.io/vega/vega.js"></script>
+  <script src="https://vega.github.io/vega/vega.min.js"></script>
   <script src="http://vega.github.io/vega-lite/vega-lite.js"></script>
   <script src="http://vega.github.io/vega-editor/vendor/vega-embed.js" charset="utf-8"></script>
   <script src="src/vl-tooltip.js" charset="utf-8"></script>
@@ -93,19 +93,29 @@
   }
   vg.embed("#vis-bar", barEmbed, function(error, result) {
     addTooltip(result.view);
-  })
+  });
+
+  // Vega Example: Arc
+  vg.parse.spec("examples/arc.json", function(error, chart) {
+    var view = chart({el:"#vis-arc"}).update();
+    console.log(view);
+    addTooltip(view);
+  });
 
   </script>
 </head>
 <body>
-  <!-- Scatter Plot Tooltip Example -->
+  <!-- Vega-Lite Example: Scatter Plot -->
   <div id="vis-scatter" class="tooltip-example"></div>
 
-  <!-- Stacked Bar Chart Tooltip Example -->
+  <!-- Vega-Lite Example: Stacked Bar Chart -->
   <div id="vis-stacked-bar" class="tooltip-example"></div>
 
-  <!-- Simple Bar Chart Example -->
+  <!-- Vega-Lite Example: Simple Bar Chart -->
   <div id="vis-bar" class="tooltip-example"></div>
+
+  <!-- Vega Example: Arc -->
+  <div id="vis-arc" class="tooltip-example"></div>
 
   <!-- Placeholder for Tooltip -->
   <table class="vis-tooltip">
