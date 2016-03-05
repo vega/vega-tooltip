@@ -1,7 +1,7 @@
 /**
  * @param view the Vega view to which the tooltip will be added
  */
- export function addTooltip(view) {
+function addTooltip(view) {
   // fill tooltip with data
   view.on("mouseover", fillTooltip);
 
