@@ -117,6 +117,18 @@
     addTooltip(view);
   });
 
+  // Vega Example: Force
+  vg.parse.spec("examples/force.json", function(error, chart) {
+    var view = chart({el:"#vis-force"}).update();
+    addTooltip(view);
+  });
+
+  // Vega Example: Heatmap
+  vg.parse.spec("examples/heatmap.json", function(error, chart) {
+    var view = chart({el:"#vis-heatmap"}).update();
+    addTooltip(view);
+  });
+
   </script>
 </head>
 <body>
@@ -135,10 +147,14 @@
   <!-- Vega Example: Choropleth -->
   <div id="vis-choropleth" class="tooltip-example"></div>
 
+  <!-- Vega Example: Force -->
+  <div id="vis-force" class="tooltip-example"></div>
+
+  <!-- Vega Example: Heatmap -->
+  <div id="vis-heatmap" class="tooltip-example"></div>
 
   <!-- Placeholder for Tooltip -->
-  <table class="vis-tooltip">
-  </table>
+  <table class="vis-tooltip"></table>
 
 </body>
 </html>
