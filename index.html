@@ -7,6 +7,8 @@
   <script src="https://vega.github.io/vega/vega.min.js"></script>
   <script src="http://vega.github.io/vega-lite/vega-lite.js"></script>
   <script src="http://vega.github.io/vega-editor/vendor/vega-embed.js" charset="utf-8"></script>
+  <script src="https://vega.github.io/vega-editor/vendor/d3.geo.projection.min.js"></script>
+  <script src="https://vega.github.io/vega-editor/vendor/topojson.js"></script>
   <script src="src/vl-tooltip.js" charset="utf-8"></script>
   <link rel="stylesheet" type="text/css" href="src/vl-tooltip.css">
 
@@ -14,6 +16,14 @@
     /* Add space between vega-embed links  */
     .vega-actions a {
       margin-right: 5px;
+    }
+
+    .tooltip-example {
+      margin: 40px 0px;
+    }
+    .tooltip-example canvas {
+      display: block;
+      margin: auto;
     }
   </style>
 
@@ -98,7 +108,12 @@
   // Vega Example: Arc
   vg.parse.spec("examples/arc.json", function(error, chart) {
     var view = chart({el:"#vis-arc"}).update();
-    console.log(view);
+    addTooltip(view);
+  });
+
+  // Vega Example: Choropleth
+  vg.parse.spec("examples/choropleth.json", function(error, chart) {
+    var view = chart({el:"#vis-choropleth"}).update();
     addTooltip(view);
   });
 
@@ -108,14 +123,18 @@
   <!-- Vega-Lite Example: Scatter Plot -->
   <div id="vis-scatter" class="tooltip-example"></div>
 
-  <!-- Vega-Lite Example: Stacked Bar Chart -->
-  <div id="vis-stacked-bar" class="tooltip-example"></div>
-
   <!-- Vega-Lite Example: Simple Bar Chart -->
   <div id="vis-bar" class="tooltip-example"></div>
 
+  <!-- Vega-Lite Example: Stacked Bar Chart -->
+  <div id="vis-stacked-bar" class="tooltip-example"></div>
+
   <!-- Vega Example: Arc -->
   <div id="vis-arc" class="tooltip-example"></div>
+
+  <!-- Vega Example: Choropleth -->
+  <div id="vis-choropleth" class="tooltip-example"></div>
+
 
   <!-- Placeholder for Tooltip -->
   <table class="vis-tooltip">
