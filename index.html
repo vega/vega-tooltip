@@ -13,9 +13,8 @@
   <link rel="stylesheet" type="text/css" href="src/vg-tooltip.css">
 
   <style media="screen">
-    /* Add space between vega-embed links  */
-    .vega-actions a {
-      margin-right: 5px;
+    .vega-actions {
+      display: none;
     }
 
     .tooltip-example {
@@ -28,108 +27,48 @@
   </style>
 
   <script>
+  function addVlExample(path, id) {
+    d3.json(path, function(error, vlSpec) {
+      if (error) {
+        return console.warn(error);
+      }
+      var stackedbarEmbed = {
+        mode: "vega-lite",
+        spec: vlSpec
+      };
+      vg.embed(id, stackedbarEmbed, function(error, result) {
+        vgTooltip.linkToView(result.view);
+      });
+    });
+  }
+
+  function addVgExample(path, id) {
+    vg.parse.spec(path, function(error, chart) {
+      var view = chart({el:id}).update();
+      vgTooltip.linkToView(view);
+    });
+  }
+
   // Vega-Lite Example: Scatter Plot
-  var scatterSpec = {
-    "data": {"url": "https://vega.github.io/vega-datasets/data/cars.json"},
-    "mark": "circle",
-    "encoding": {
-      "x": {"field": "Horsepower", "type": "quantitative"},
-      "y": {"field": "Miles_per_Gallon", "type": "quantitative"}
-    }};
-  var scatterEmbed = {
-    mode: "vega-lite",  // Instruct Vega-Embed to use the Vega-Lite compiler
-    spec: scatterSpec
-  };
-  vg.embed("#vis-scatter", scatterEmbed, function(error, result) {
-    vgTooltip.linkToView(result.view);
-  });
+  addVlExample("examples/scatter.json", "#vis-scatter");
 
   // Vega-Lite Example: Stacked Bar Chart
-  var stackedbarSpec = {
-    "data": {"url": "https://vega.github.io/vega-datasets/data/seattle-weather.csv", "formatType": "csv"},
-    "mark": "bar",
-    "encoding": {
-      "x": {
-        "field": "date",
-        "type": "temporal",
-        "timeUnit": "month",
-        "axis": {"title": "Month of the year"}
-      },
-      "y": {
-        "field": "*",
-        "type": "quantitative",
-        "aggregate": "count"
-      },
-      "color": {
-        "field": "weather",
-        "type": "nominal",
-        "scale": {
-          "domain": ["sun","fog","drizzle","rain","snow"],
-          "range": ["#e7ba52","#c7c7c7","#aec7e8","#1f77b4","#9467bd"]
-        },
-        "legend": {
-          "title": "Weather type"
-        }
-      }
-    }
-  };
-  var stackedbarEmbed = {
-    mode: "vega-lite",
-    spec: stackedbarSpec
-  };
-  vg.embed("#vis-stacked-bar", stackedbarEmbed, function(error, result) {
-    vgTooltip.linkToView(result.view);
-  });
+  addVlExample("examples/stacked_bar_weather.json", "#vis-stacked-bar");
 
   // Vega-Lite Example: Simple Bar Chart
-  var barSpec = {
-    "description": "A simple bar chart with embedded data.",
-    "data": {
-      "values": [
-        {"a": "A","b": 28}, {"a": "B","b": 55}, {"a": "C","b": 43},
-        {"a": "D","b": 91}, {"a": "E","b": 81}, {"a": "F","b": 53},
-        {"a": "G","b": 19}, {"a": "H","b": 87}, {"a": "I","b": 52}
-      ]
-    },
-    "mark": "bar",
-    "encoding": {
-      "x": {"field": "a", "type": "ordinal"},
-      "y": {"field": "b", "type": "quantitative"}
-    }
-  };
-  var barEmbed = {
-    mode: "vega-lite",
-    spec: barSpec
-  }
-  vg.embed("#vis-bar", barEmbed, function(error, result) {
-    vgTooltip.linkToView(result.view);
-  });
+  addVlExample("examples/bar.json", "#vis-bar");
 
   // Vega Example: Arc
-  vg.parse.spec("examples/arc.json", function(error, chart) {
-    var view = chart({el:"#vis-arc"}).update();
-    vgTooltip.linkToView(view);
-  });
+  addVgExample("examples/arc.json", "#vis-arc");
 
   // Vega Example: Choropleth
-  vg.parse.spec("examples/choropleth.json", function(error, chart) {
-    var view = chart({el:"#vis-choropleth"}).update();
-    vgTooltip.linkToView(view);
-  });
+  addVgExample("examples/choropleth.json", "#vis-choropleth");
 
   // Vega Example: Force
-  vg.parse.spec("examples/force.json", function(error, chart) {
-    var view = chart({el:"#vis-force"}).update();
-    vgTooltip.linkToView(view);
-  });
+  addVgExample("examples/force.json", "#vis-force");
 
   // Vega Example: Heatmap
-  vg.parse.spec("examples/heatmap.json", function(error, chart) {
-    var view = chart({el:"#vis-heatmap"}).update();
-    vgTooltip.linkToView(view);
-  });
-
-
+  addVgExample("examples/heatmap.json", "#vis-heatmap");
 
   </script>
 </head>
