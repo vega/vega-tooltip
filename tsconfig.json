@@ -7,7 +7,7 @@
     "sourceMap": true
   },
   "files": [
-    "src/vl-tooltip.ts",
+    "src/vg-tooltip.ts",
     "typings/d3.d.ts",
     "typings/vega-lite.d.ts",
     "typings/vega.d.ts"

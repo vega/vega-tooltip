@@ -9,8 +9,8 @@
   <script src="http://vega.github.io/vega-editor/vendor/vega-embed.js" charset="utf-8"></script>
   <script src="https://vega.github.io/vega-editor/vendor/d3.geo.projection.min.js"></script>
   <script src="https://vega.github.io/vega-editor/vendor/topojson.js"></script>
-  <script src="src/vl-tooltip.js" charset="utf-8"></script>
-  <link rel="stylesheet" type="text/css" href="src/vl-tooltip.css">
+  <script src="src/vg-tooltip.js" charset="utf-8"></script>
+  <link rel="stylesheet" type="text/css" href="src/vg-tooltip.css">
 
   <style media="screen">
     /* Add space between vega-embed links  */
@@ -28,7 +28,7 @@
   </style>
 
   <script>
-  // Scatter Plot
+  // Vega-Lite Example: Scatter Plot
   var scatterSpec = {
     "data": {"url": "https://vega.github.io/vega-datasets/data/cars.json"},
     "mark": "circle",
@@ -41,10 +41,10 @@
     spec: scatterSpec
   };
   vg.embed("#vis-scatter", scatterEmbed, function(error, result) {
-    addTooltip(result.view);
+    vgTooltip.linkToView(result.view);
   });
 
-  // Stacked Bar Chart
+  // Vega-Lite Example: Stacked Bar Chart
   var stackedbarSpec = {
     "data": {"url": "https://vega.github.io/vega-datasets/data/seattle-weather.csv", "formatType": "csv"},
     "mark": "bar",
@@ -78,10 +78,10 @@
     spec: stackedbarSpec
   };
   vg.embed("#vis-stacked-bar", stackedbarEmbed, function(error, result) {
-    addTooltip(result.view);
+    vgTooltip.linkToView(result.view);
   });
 
-  // Simple Bar Chart
+  // Vega-Lite Example: Simple Bar Chart
   var barSpec = {
     "description": "A simple bar chart with embedded data.",
     "data": {
@@ -102,32 +102,34 @@
     spec: barSpec
   }
   vg.embed("#vis-bar", barEmbed, function(error, result) {
-    addTooltip(result.view);
+    vgTooltip.linkToView(result.view);
   });
 
   // Vega Example: Arc
   vg.parse.spec("examples/arc.json", function(error, chart) {
     var view = chart({el:"#vis-arc"}).update();
-    addTooltip(view);
+    vgTooltip.linkToView(view);
   });
 
   // Vega Example: Choropleth
   vg.parse.spec("examples/choropleth.json", function(error, chart) {
     var view = chart({el:"#vis-choropleth"}).update();
-    addTooltip(view);
+    vgTooltip.linkToView(view);
   });
 
   // Vega Example: Force
   vg.parse.spec("examples/force.json", function(error, chart) {
     var view = chart({el:"#vis-force"}).update();
-    addTooltip(view);
+    vgTooltip.linkToView(view);
   });
 
   // Vega Example: Heatmap
   vg.parse.spec("examples/heatmap.json", function(error, chart) {
     var view = chart({el:"#vis-heatmap"}).update();
-    addTooltip(view);
+    vgTooltip.linkToView(view);
   });
+
+
 
   </script>
 </head>
@@ -154,7 +156,7 @@
   <div id="vis-heatmap" class="tooltip-example"></div>
 
   <!-- Placeholder for Tooltip -->
-  <table class="vis-tooltip"></table>
+  <table id="vis-tooltip" class="vg-tooltip"></table>
 
 </body>
 </html>
