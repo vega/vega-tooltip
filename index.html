@@ -3,15 +3,6 @@
   <title>Vega Lite Bar Chart</title>
   <meta charset="utf-8">
 
-  <script src="http://d3js.org/d3.v3.min.js"></script>
-  <script src="https://vega.github.io/vega/vega.min.js"></script>
-  <script src="http://vega.github.io/vega-lite/vega-lite.js"></script>
-  <script src="http://vega.github.io/vega-editor/vendor/vega-embed.js" charset="utf-8"></script>
-  <script src="https://vega.github.io/vega-editor/vendor/d3.geo.projection.min.js"></script>
-  <script src="https://vega.github.io/vega-editor/vendor/topojson.js"></script>
-  <script src="src/vg-tooltip.js" charset="utf-8"></script>
-  <link rel="stylesheet" type="text/css" href="src/vg-tooltip.css">
-
   <style media="screen">
     .vega-actions {
       display: none;
@@ -26,6 +17,16 @@
     }
   </style>
 
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="https://vega.github.io/vega/vega.min.js"></script>
+  <script src="http://vega.github.io/vega-lite/vega-lite.js"></script>
+  <script src="http://vega.github.io/vega-editor/vendor/vega-embed.js" charset="utf-8"></script>
+  <script src="https://vega.github.io/vega-editor/vendor/d3.geo.projection.min.js"></script>
+  <script src="https://vega.github.io/vega-editor/vendor/topojson.js"></script>
+  <script src="http://vega.github.io/datalib/datalib.min.js"></script>
+  <script src="src/vg-tooltip.js" charset="utf-8"></script>
+  <link rel="stylesheet" type="text/css" href="src/vg-tooltip.css">
+
   <script>
   function addVlExample(path, id) {
     d3.json(path, function(error, vlSpec) {
@@ -37,16 +38,21 @@
         spec: vlSpec
       };
       vg.embed(id, stackedbarEmbed, function(error, result) {
-        vgTooltip.linkToView(result.view);
+        linkToView(result.view, result.spec);
       });
     });
   }
 
   function addVgExample(path, id) {
-    vg.parse.spec(path, function(error, chart) {
-      var view = chart({el:id}).update();
-      vgTooltip.linkToView(view);
-    });
+    d3.json(path, function(error, vgSpec) {
+      if (error) {
+        return console.warn(error);
+      }
+      vg.parse.spec(vgSpec, function(error, chart) {
+        var view = chart({el:id}).update();
+        linkToView(view, vgSpec);
+      });
+    })
   }
 
   // Vega-Lite Example: Scatter Plot
