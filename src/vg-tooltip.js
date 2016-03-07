@@ -1,4 +1,5 @@
 var vgTooltip = function() {
+
   function fill(event, item) {
     if (!item || !item.datum) return;
 
@@ -26,7 +27,11 @@ var vgTooltip = function() {
     .attr("class", "tooltip-row");
     row.append("td").attr("class", "key").text(function(d) { return d.key + ":"; });
     row.append("td").attr("class", "value").text(function(d) {
-      return d.value.toString();
+      var timeFormatter = dl.format.auto.time();
+      switch(dl.type(d.value)) {
+        case "date": return timeFormatter(d.value);
+        default: return d.value;
+      }
     });
 
     update_position(event);
