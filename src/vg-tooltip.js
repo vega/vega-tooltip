@@ -1,17 +1,4 @@
-
-
-  function linkToView(view, vgSpec) {
-    // fill tooltip with data
-    view.on("mouseover", fill);
-
-    // update tooltip position on mouse move
-    // (important for large marks e.g. bars)
-    view.on("mousemove", update);
-
-    // clear tooltip
-    view.on("mouseout", clear);
-  }
-
+var vgTooltip = function() {
   function fill(event, item) {
     if (!item || !item.datum) return;
 
@@ -79,3 +66,18 @@
     tooltipRows.exit().remove();
     d3.select("#vis-tooltip").style("opacity", 0);
   }
+
+  return {
+    linkToView: function(view, vgSpec) {
+      // fill tooltip with data
+      view.on("mouseover", fill);
+
+      // update tooltip position on mouse move
+      // (important for large marks e.g. bars)
+      view.on("mousemove", update);
+
+      // clear tooltip
+      view.on("mouseout", clear);
+    }
+  }
+}();

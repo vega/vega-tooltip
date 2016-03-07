@@ -38,7 +38,7 @@
         spec: vlSpec
       };
       vg.embed(id, stackedbarEmbed, function(error, result) {
-        linkToView(result.view, result.spec);
+        vgTooltip.linkToView(result.view, result.spec);
       });
     });
   }
@@ -50,7 +50,7 @@
       }
       vg.parse.spec(vgSpec, function(error, chart) {
         var view = chart({el:id}).update();
-        linkToView(view, vgSpec);
+        vgTooltip.linkToView(view, vgSpec);
       });
     })
   }
