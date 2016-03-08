@@ -1,46 +1,4 @@
-var vgTooltip = function() {
-
-  function fill(event, item) {
-    if (!item || !item.datum) return;
-
-    // avoid showing tooltip for facet's background
-    if (item.datum._facetID) return;
-
-    // avoid showing tooltip for axis title and labels
-    if (!item.datum._id) return;
-
-    var vgData = d3.map(item.datum);
-
-    // remove vega internals
-    vgData.remove("_id");
-    vgData.remove("_prev");
-
-    // get array of key value pairs for tooltip
-    var tooltipData = vgData.entries();
-
-    // TODO(zening): show partial data in tooltip
-    var tooltipRows = d3.select("#vis-tooltip").selectAll(".tooltip-row").data(tooltipData);
-
-    tooltipRows.exit().remove();
-
-    var row = tooltipRows.enter().append("tr")
-    .attr("class", "tooltip-row");
-    row.append("td").attr("class", "key").text(function(d) { return d.key + ":"; });
-    row.append("td").attr("class", "value").text(function(d) {
-      var timeFormatter = dl.format.auto.time();
-      switch(dl.type(d.value)) {
-        case "date": return timeFormatter(d.value);
-        default: return d.value;
-      }
-    });
-
-    update_position(event);
-    d3.select("#vis-tooltip").style("opacity", 1);
-  }
-
-  function update(event, item) {
-    update_position(event);
-  }
+var tooltipUtil = function() {
 
   function update_position(event) {
     d3.select("#vis-tooltip")
@@ -66,23 +24,83 @@ var vgTooltip = function() {
     });
   }
 
-  function clear() {
-    var tooltipRows = d3.select("#vis-tooltip").selectAll(".tooltip-row").data([]);
-    tooltipRows.exit().remove();
-    d3.select("#vis-tooltip").style("opacity", 0);
-  }
-
   return {
-    linkToView: function(view, vgSpec) {
-      // fill tooltip with data
-      view.on("mouseover", fill);
+    fill: function (event, item) {
+      if (!item || !item.datum) return;
 
-      // update tooltip position on mouse move
-      // (important for large marks e.g. bars)
-      view.on("mousemove", update);
+      // avoid showing tooltip for facet's background
+      if (item.datum._facetID) return;
 
-      // clear tooltip
-      view.on("mouseout", clear);
+      // avoid showing tooltip for axis title and labels
+      if (!item.datum._id) return;
+
+      var vgData = d3.map(item.datum);
+
+      // remove vega internals
+      vgData.remove("_id");
+      vgData.remove("_prev");
+
+      // get array of key value pairs for tooltip
+      var tooltipData = vgData.entries();
+
+      // TODO(zening): show partial data in tooltip
+      var tooltipRows = d3.select("#vis-tooltip").selectAll(".tooltip-row").data(tooltipData);
+
+      tooltipRows.exit().remove();
+
+      var row = tooltipRows.enter().append("tr")
+      .attr("class", "tooltip-row");
+      row.append("td").attr("class", "key").text(function(d) { return d.key + ":"; });
+      row.append("td").attr("class", "value").text(function(d) {
+        var timeFormatter = dl.format.auto.time();
+        switch(dl.type(d.value)) {
+          case "date": return timeFormatter(d.value);
+          default: return d.value;
+        }
+      });
+
+      update_position(event);
+      d3.select("#vis-tooltip").style("opacity", 1);
+    },
+    update: function(event, item) {
+      update_position(event);
+    },
+    clear: function() {
+      var tooltipRows = d3.select("#vis-tooltip").selectAll(".tooltip-row").data([]);
+      tooltipRows.exit().remove();
+      d3.select("#vis-tooltip").style("opacity", 0);
     }
   }
 }();
+
+var vgTooltip = function() {
+  return {
+    linkToView: function(view, opt) {
+      // fill tooltip with data
+      view.on("mouseover", tooltipUtil.fill);
+
+      // update tooltip position on mouse move
+      // (important for large marks e.g. bars)
+      view.on("mousemove", tooltipUtil.update);
+
+      // clear tooltip
+      view.on("mouseout", tooltipUtil.clear);
+    }
+  }
+}();
+
+var vlTooltip = function() {
+  return {
+    linkToView: function(view, vlSpec, opt) {
+      // fill tooltip with data
+      view.on("mouseover", tooltipUtil.fill);
+
+      // update tooltip position on mouse move
+      // (important for large marks e.g. bars)
+      view.on("mousemove", tooltipUtil.update);
+
+      // clear tooltip
+      view.on("mouseout", tooltipUtil.clear);
+    }
+  }
+}()
