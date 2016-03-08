@@ -28,7 +28,7 @@
   <link rel="stylesheet" type="text/css" href="src/vg-tooltip.css">
 
   <script>
-  function addVlExample(path, id) {
+  function addVlExample(path, id, options) {
     d3.json(path, function(error, vlSpec) {
       if (error) {
         return console.warn(error);
@@ -38,45 +38,72 @@
         spec: vlSpec
       };
       vg.embed(id, stackedbarEmbed, function(error, result) {
-        var options = {}
-        vlTooltip.linkToView(result.view, result.spec, options);
+        vlTooltip.linkToView(result.view, options, vlSpec);
       });
     });
   }
 
-  function addVgExample(path, id) {
+  function addVgExample(path, id, options) {
     d3.json(path, function(error, vgSpec) {
       if (error) {
         return console.warn(error);
       }
       vg.parse.spec(vgSpec, function(error, chart) {
         var view = chart({el:id}).update();
-        var options = {};
         vgTooltip.linkToView(view, options);
       });
     })
   }
 
   // Vega-Lite Example: Scatter Plot
-  addVlExample("examples/scatter.json", "#vis-scatter");
+  addVlExample("examples/scatter.json", "#vis-scatter", [
+    {
+      field: "Name"
+    },
+    {
+      field: "Horsepower",
+      type: "number"
+    },
+    {
+      field: "Miles_per_Gallon",
+      fieldTitle: "Miles per Gallon",
+      type: "string"
+    }
+  ]);
 
   // Vega-Lite Example: Stacked Bar Chart
-  addVlExample("examples/stacked_bar_weather.json", "#vis-stacked-bar");
+  addVlExample("examples/stacked_bar_weather.json", "#vis-stacked-bar", [
+    {
+      field: "month_date",
+      fieldTitle: "Month",
+      type: "date",
+      format: "month" // same as "timeUnit in vlSpec"
+    },
+    {
+      field: "weather",
+      fieldTitle: "Weather"
+    },
+    {
+      field: "count",
+      fieldTitle: "Count"
+    }
+  ]);
 
   // Vega-Lite Example: Simple Bar Chart
+  // We don't pass in opt because the data is very simple
   addVlExample("examples/bar.json", "#vis-bar");
 
   // Vega Example: Arc
-  addVgExample("examples/arc.json", "#vis-arc");
+  addVgExample("examples/arc.json", "#vis-arc", []);
 
   // Vega Example: Choropleth
-  addVgExample("examples/choropleth.json", "#vis-choropleth");
+  addVgExample("examples/choropleth.json", "#vis-choropleth", []);
 
   // Vega Example: Force
-  addVgExample("examples/force.json", "#vis-force");
+  addVgExample("examples/force.json", "#vis-force", []);
 
   // Vega Example: Heatmap
-  addVgExample("examples/heatmap.json", "#vis-heatmap");
+  addVgExample("examples/heatmap.json", "#vis-heatmap", []);
 
   </script>
 </head>

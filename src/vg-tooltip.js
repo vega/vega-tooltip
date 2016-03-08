@@ -25,7 +25,10 @@ var tooltipUtil = function() {
   }
 
   return {
-    fill: function (event, item) {
+    fill: function (event, item, options) {
+      console.log("fill...");
+      console.log(options);
+
       if (!item || !item.datum) return;
 
       // avoid showing tooltip for facet's background
@@ -75,9 +78,15 @@ var tooltipUtil = function() {
 
 var vgTooltip = function() {
   return {
-    linkToView: function(view, opt) {
+    linkToView: function(view, options) {
+      // parse options
+      // options contain field, fieldTitle, type, format
+      // pass in options to fill
+
       // fill tooltip with data
-      view.on("mouseover", tooltipUtil.fill);
+      view.on("mouseover", function(event, item) {
+        tooltipUtil.fill(event, item, options);
+      });
 
       // update tooltip position on mouse move
       // (important for large marks e.g. bars)
@@ -90,10 +99,33 @@ var vgTooltip = function() {
 }();
 
 var vlTooltip = function() {
+
+  function combineOptions(vlSpec, opt) {
+    // opt contains all the fields that should be displayed
+    // if option is empty, 1. display all fields, 2. infer format from vlSpec, 3. infer using datalib.auto
+    // if option is not empty, 1. read opt fields first, 2. if opt does not contain format for a field, infer from vlSpec, 3. if vlSpec also does not contain format for a field, infer from datalib.auto
+    var options = [];
+
+    // get time unit if contained in vlSpec
+    vl.spec.fieldDefs(vlSpec).forEach(function(channel) {
+      if(channel.timeUnit) {
+
+      }
+    });
+  }
+
   return {
-    linkToView: function(view, vlSpec, opt) {
+    linkToView: function(view, options, vlSpec) {
+      // combine options with vlSpec options
+      // 1. options 2. vlSpec 3. datalib.auto
+      // opt contains field, fieldTitle, type, format
+      // pass options to fill
+      // combineOptions(vlSpec, options);
+
       // fill tooltip with data
-      view.on("mouseover", tooltipUtil.fill);
+      view.on("mouseover", function(event, item) {
+        tooltipUtil.fill(event, item, options);
+      });
 
       // update tooltip position on mouse move
       // (important for large marks e.g. bars)
