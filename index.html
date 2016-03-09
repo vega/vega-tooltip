@@ -67,7 +67,7 @@
     {
       field: "Miles_per_Gallon",
       fieldTitle: "Miles per Gallon",
-      type: "string"
+      type: "number"
     }
   ]);
 
@@ -77,7 +77,7 @@
       field: "month_date",
       fieldTitle: "Month",
       type: "date",
-      format: "month" // same as "timeUnit in vlSpec"
+      format: "%B" // I wish I could pass in timeUnit
     },
     {
       field: "weather",
@@ -118,7 +118,22 @@
   ]);
 
   // Vega Example: Heatmap
-  addVgExample("examples/heatmap.json", "#vis-heatmap", []);
+  addVgExample("examples/heatmap.json", "#vis-heatmap", [
+    {
+      field: "date",
+      fieldTitle: "Date",
+      type: "date",
+      format: "%b %e, %Y"
+    },
+    {
+      field: "temp",
+      fieldTitle: "Temperature(F)"
+    },
+    {
+      field: "hour",
+      fieldTitle: "Hour"
+    }
+  ]);
 
   </script>
 </head>
