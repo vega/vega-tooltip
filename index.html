@@ -94,13 +94,28 @@
   addVlExample("examples/bar.json", "#vis-bar");
 
   // Vega Example: Arc
-  addVgExample("examples/arc.json", "#vis-arc", []);
+  addVgExample("examples/arc.json", "#vis-arc", [
+    {
+      field: "data"
+    }
+  ]);
 
   // Vega Example: Choropleth
-  addVgExample("examples/choropleth.json", "#vis-choropleth", []);
+  addVgExample("examples/choropleth.json", "#vis-choropleth", [
+    {
+      field: "id"
+    },
+    {
+      field: "properties"
+    }
+  ]);
 
   // Vega Example: Force
-  addVgExample("examples/force.json", "#vis-force", []);
+  addVgExample("examples/force.json", "#vis-force", [
+    {
+      field: "name"
+    }
+  ]);
 
   // Vega Example: Heatmap
   addVgExample("examples/heatmap.json", "#vis-heatmap", []);

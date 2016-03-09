@@ -26,9 +26,6 @@ var tooltipUtil = function() {
 
   return {
     fill: function (event, item, options) {
-      console.log("fill...");
-      console.log(options);
-
       if (!item || !item.datum) return;
 
       // avoid showing tooltip for facet's background
@@ -37,14 +34,33 @@ var tooltipUtil = function() {
       // avoid showing tooltip for axis title and labels
       if (!item.datum._id) return;
 
-      var vgData = d3.map(item.datum);
+      var itemData = d3.map(item.datum);
 
-      // remove vega internals
-      vgData.remove("_id");
-      vgData.remove("_prev");
+      // if options is not empty, show fields in options
+      // if options is empty, auto determine fields to show
+      if (options && options.length > 0) {
+        var opt = d3.map(options, function(d) { return d.field; });
+        itemData.forEach(function(key, value) {
+          if(opt.has(key)) {
+            // keep the field in tooltip
+            // format the field for tooltip
+          }
+          else {
+            // remove field from tooltip
+            itemData.remove(key);
+          }
+        })
+      }
+      else {
+        console.log("empty: " + options);
+        // remove vega internals
+        itemData.remove("_id");
+        itemData.remove("_prev");
+      }
+
 
       // get array of key value pairs for tooltip
-      var tooltipData = vgData.entries();
+      var tooltipData = itemData.entries();
 
       // TODO(zening): show partial data in tooltip
       var tooltipRows = d3.select("#vis-tooltip").selectAll(".tooltip-row").data(tooltipData);
@@ -82,6 +98,7 @@ var vgTooltip = function() {
       // parse options
       // options contain field, fieldTitle, type, format
       // pass in options to fill
+      // 1. options 2. datalib.auto
 
       // fill tooltip with data
       view.on("mouseover", function(event, item) {
