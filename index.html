@@ -103,17 +103,21 @@
   // Vega Example: Choropleth
   addVgExample("examples/choropleth.json", "#vis-choropleth", [
     {
-      field: "id"
+      field: "unemp.id",
+      fieldTitle: "County ID"
     },
     {
-      field: "properties"
+      field: "unemp.rate",
+      fieldTitle: "Unemployment Rate"
     }
   ]);
 
   // Vega Example: Force
   addVgExample("examples/force.json", "#vis-force", [
     {
-      field: "name"
+      field: "name",
+      fieldTitle: "Name",
+      type: "string"
     }
   ]);
 

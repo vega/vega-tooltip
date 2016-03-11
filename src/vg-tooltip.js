@@ -14,7 +14,7 @@ var tooltipUtil = function() {
   }
 
   // update tooltip position
-  function updatePosition(event) {
+  function updatePosition (event) {
     d3.select("#vis-tooltip")
     .style("top", function() {
       // by default: put tooltip 10px below cursor
@@ -38,65 +38,131 @@ var tooltipUtil = function() {
     });
   }
 
+  function getTooltipData (item, options) {
+
+    // get field value from an item's datum,
+    // even if the field is buried down in the object hierarchy
+    function getFieldValue (datum, field) {
+      if(field.includes('.')) {
+        var accessors = field.split('.');
+        var value = datum;
+        var path = '';
+        accessors.forEach(function (a) {
+          if (value[a]) {
+            value = value[a];
+            path = path + '.' + a;
+          }
+          else {
+            console.warn('[VgTooltip] Cannot find field ' + path + ' in data.');
+            return;
+          }
+        });
+        return value;
+      }
+      else {
+        if (datum[field]) {
+          return datum[field];
+        }
+        else {
+          console.warn('[VgTooltip] Cannot find field ' + field + ' in data.');
+          return;
+        }
+      }
+    }
+
+    function getFieldTitle (opt) {
+      if (opt.fieldTitle) {
+        return opt.fieldTitle;
+      }
+      else {
+        return opt.field;
+      }
+    }
+
+    // custom tooltip: fields & format
+    function getCustomData (item, options) {
+      var content = [];
+
+      options.forEach(function(opt) {
+
+        var title = getFieldTitle(opt);
+
+        var value = getFieldValue(item.datum, opt.field);
+
+        var formattedValue;
+        if (!opt.type || !opt.format) {
+          formattedValue = autoFormat(value);
+        }
+        else {
+          switch (opt.type) {
+            case 'date':
+              var formatter = dl.format.time(opt.format);
+              formattedValue = formatter(value);
+              break;
+            case 'number':
+              var formatter = dl.format.number(opt.format);
+              formattedValue = formatter(value);
+              break;
+            default:
+              formattedValue = value;
+          }
+        }
+
+        content.push({fieldTitle: title, fieldValue: formattedValue});
+      });
+
+      return content;
+    }
+
+    // automatically format a value
+    // currently we only handle dates
+    function autoFormat(value) {
+      switch (dl.type(value)) {
+        case 'date':
+          return dl.format.auto.time(value);
+        default:
+          return value;
+      }
+    }
+
+    // auto-prepare tooltip: top level fields, default format
+    function getDefaultData (item) {
+
+      var content = [];
+
+      var itemData = d3.map(item.datum);
+      itemData.remove("_id");
+      itemData.remove("_prev");
+
+      itemData.forEach(function(field, value) {
+        var formattedValue = autoFormat(value);
+        content.push({fieldTitle: field, fieldValue: formattedValue});
+      });
+
+      return content;
+    }
+
+    var tooltipData;
+
+    if (options && options.length > 0) {
+      tooltipData = getCustomData(item, options);
+    }
+    else {
+      tooltipData = getDefaultData(item);
+    }
+
+    return tooltipData;
+  }
+
   return {
     fill: function (event, item, options) {
       if(shouldShowTooltip(item) === false) return;
 
-      var itemData = d3.map(item.datum);
+      var tooltipData = getTooltipData(item, options);
 
-      // if options is not empty, show fields in options
-      // if options is empty, auto determine fields to show
-      if (options && options.length > 0) {
-        var opt = d3.map(options, function(d) { return d.field; });
-        itemData.forEach(function(fieldName, fieldValue) {
-          if(opt.has(fieldName)) {
-            // keep the field in tooltip
-            // format the field for tooltip
-
-            switch(opt.get(fieldName).type) {
-              case "utc":
-              case "date":
-              // format date as specified in opt
-              // otherwise, auto format date
-              if(opt.get(fieldName).format) {
-                var custTimeFmt = dl.format.time(opt.get(fieldName).format);
-                itemData.set(fieldName, custTimeFmt(fieldValue));
-              }
-              else {
-                var autoTimeFmt = dl.format.auto.time();
-                itemData.set(fieldName, autoTimeFmt(fieldValue));
-              }
-              break;
-              case "number":
-              // format number
-              break;
-              case "string":
-              // format string
-              break;
-              case "object":
-              // format object
-              break;
-              default:
-              // infer field type and auto format it
-            }
-          }
-          else {
-            // remove field from tooltip
-            itemData.remove(fieldName);
-          }
-        })
-      }
-      else {
-        // remove vega internals
-        itemData.remove("_id");
-        itemData.remove("_prev");
-
-        // infer field types and auto-format them
-
-      }
-
-      // get array of key value pairs for tooltip
-      var tooltipData = itemData.entries();
+      // if there is no "meaningful" data, don't show tooltip
+      // "meaningful": as decided by item and options
+      if (!tooltipData || tooltipData.length === 0) return;
 
       var tooltipRows = d3.select("#vis-tooltip").selectAll(".tooltip-row").data(tooltipData);
 
@@ -104,8 +170,8 @@ var tooltipUtil = function() {
 
       var row = tooltipRows.enter().append("tr")
       .attr("class", "tooltip-row");
-      row.append("td").attr("class", "key").text(function(d) { return d.key + ":"; });
-      row.append("td").attr("class", "value").text(function(d) { return d.value; });
+      row.append("td").attr("class", "key").text(function(d) { return d.fieldTitle + ":"; });
+      row.append("td").attr("class", "value").text(function(d) { return d.fieldValue; });
 
       updatePosition(event);
       d3.select("#vis-tooltip").style("opacity", 1);
