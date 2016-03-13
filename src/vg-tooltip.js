@@ -138,10 +138,10 @@ var tooltipUtil = function() {
     function autoFormat(field, value, options) {
 
       // check if timeUnit applies to the field
-      if (options.timeUnit) {
-        var timeFields = d3.map(options.timeUnit, function(d) { return d.field; });
+      if (options.fieldsWithTimeUnit) {
+        var timeFields = d3.map(options.fieldsWithTimeUnit, function(d) { return d.field; });
         if (timeFields.has(field)) {
-          var specifier = vl.timeUnit.format(timeFields.get(field).format);
+          var specifier = vl.timeUnit.format(timeFields.get(field).timeUnit);
           var formatter = dl.format.time(specifier);
           return formatter(value);
         }
@@ -259,17 +259,17 @@ var vlTooltip = function() {
     // supplement timeUnit
     vl.spec.fieldDefs(vlSpec).forEach(function(channel) {
       if (channel.timeUnit) {
-        if (!options.timeUnit) {
-          options.timeUnit = [];
+        if (!options.fieldsWithTimeUnit) {
+          options.fieldsWithTimeUnit = [];
         }
         try {
           // TODO(zening): rename field because VL renames field
           // e.g. date --> month_date, date --> year_date
-          var timeUnit_field = channel.timeUnit + '_' + channel.field;
-          options.timeUnit.push({field: timeUnit_field, format: channel.timeUnit});
+          var renamedField = channel.timeUnit + '_' + channel.field;
+          options.fieldsWithTimeUnit.push({field: renamedField, timeUnit: channel.timeUnit});
         }
         catch (error) {
-          console.error('[VgTooltip] Parsing Vega-Lite timeUnit: ' + error);
+          console.error('[VgTooltip] Error parsing Vega-Lite timeUnit: ' + error);
         }
       }
     });
