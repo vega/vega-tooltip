@@ -111,8 +111,10 @@
   addVlExample("examples/stacked_bar_weather.json", "#vis-stacked-bar", stackedbarOpts);
 
   // Vega-Lite Example: Line Chart
-  var lineOpts = {}
-  addVlExample("examples/line.json", "#vis-line");
+  var lineOpts = {
+    colorTheme: "dark"
+  }
+  addVlExample("examples/line.json", "#vis-line", lineOpts);
 
   // Vega-Lite Example: Colored Line Chart
   var colorLineOpts = {}

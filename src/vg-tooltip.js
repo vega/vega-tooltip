@@ -59,6 +59,26 @@ var tooltipUtil = function() {
     });
   }
 
+  // update tooltip color theme according to options.colorTheme
+  function updateTheme (options) {
+    if (options && options.colorTheme) {
+      clearTheme();
+      switch (options.colorTheme) {
+        case 'dark':
+          d3.select("#vis-tooltip").classed('dark-theme', true);
+          break;
+        case 'light':
+        default:
+      }
+    }
+
+  }
+
+  // reset color themes to default
+  function clearTheme () {
+    d3.select("#vis-tooltip").classed('dark-theme light-theme', false);
+  }
+
   function getTooltipData (item, options) {
 
     // get field value from an item's datum,
@@ -241,6 +261,7 @@ var tooltipUtil = function() {
       row.append("td").attr("class", "value").text(function(d) { return d.fieldValue; });
 
       updatePosition(event, options);
+      updateTheme(options);
       d3.select("#vis-tooltip").style("opacity", 1);
     },
     update: function(event, item, options) {
@@ -249,6 +270,7 @@ var tooltipUtil = function() {
     clear: function() {
       var tooltipRows = d3.select("#vis-tooltip").selectAll(".tooltip-row").data([]);
       tooltipRows.exit().remove();
+      clearTheme();
       d3.select("#vis-tooltip").style("opacity", 0);
     }
   }
