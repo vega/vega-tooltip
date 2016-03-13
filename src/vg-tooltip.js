@@ -174,6 +174,8 @@ var tooltipUtil = function() {
       itemData.remove("_prev");
 
       if (item.mark.marktype === "line" || item.mark.marktype === "area") {
+        console.warn('[VgTooltip]: By default, we only show qualitative data in tooltip.');
+
         itemData.forEach(function(field, value) {
           switch(dl.type(value)) {
             case 'boolean':
