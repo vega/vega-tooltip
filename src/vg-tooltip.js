@@ -165,6 +165,7 @@ var tooltipUtil = function() {
     }
 
     // auto-prepare tooltip: top level fields, default format
+    // drop number and date data for line charts and area charts #1
     function getDefaultFieldsData (item, options) {
       var content = [];
 
@@ -172,10 +173,26 @@ var tooltipUtil = function() {
       itemData.remove("_id");
       itemData.remove("_prev");
 
-      itemData.forEach(function(field, value) {
-        var formattedValue = autoFormat(field, value, options);
-        content.push({fieldTitle: field, fieldValue: formattedValue});
-      });
+      if (item.mark.marktype === "line" || item.mark.marktype === "area") {
+        itemData.forEach(function(field, value) {
+          switch(dl.type(value)) {
+            case 'boolean':
+            case 'string':
+              content.push({fieldTitle: field, fieldValue: value});
+              break;
+            case 'number':
+            case 'date':
+            default:
+              break;
+          }
+        })
+      }
+      else {
+        itemData.forEach(function(field, value) {
+          var formattedValue = autoFormat(field, value, options);
+          content.push({fieldTitle: field, fieldValue: formattedValue});
+        });
+      }
 
       return content;
     }

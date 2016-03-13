@@ -4,6 +4,13 @@
   <meta charset="utf-8">
 
   <style media="screen">
+    body {
+      font-family: sans-serif;
+    }
+    h1 {
+      text-align: center;
+    }
+
     .vega-actions {
       display: none;
     }
@@ -99,6 +106,17 @@
   };
   addVlExample("examples/stacked_bar_weather.json", "#vis-stacked-bar", stackedbarOpts);
 
+  // Vega-Lite Example: Line Chart
+  var lineOpts = {}
+  addVlExample("examples/line.json", "#vis-line");
+
+  // Vega-Lite Example: Colored Line Chart
+  var colorLineOpts = {}
+  addVlExample("examples/line_color.json", "#vis-color-line");
+
+  // Vega-Lite Example: Area Chart
+  addVlExample("examples/area_vertical.json", "#vis-area-vertical");
+
 
   // Vega Example: Arc
   var arcOpts = {
@@ -161,6 +179,8 @@
   </script>
 </head>
 <body>
+  <h1>Vega-Lite Tooltip Examples</h1>
+
   <!-- Vega-Lite Example: Scatter Plot -->
   <div id="vis-scatter" class="tooltip-example"></div>
 
@@ -170,6 +190,18 @@
   <!-- Vega-Lite Example: Stacked Bar Chart -->
   <div id="vis-stacked-bar" class="tooltip-example"></div>
 
+  <!-- Vega-Lite Example: Line Chart -->
+  <div id="vis-line" class="tooltip-example"></div>
+
+  <!-- Vega-Lite Example: Color Line Chart -->
+  <div id="vis-color-line" class="tooltip-example"></div>
+
+  <!-- Vega-Lite Example: Area Chart -->
+  <div id="vis-area-vertical" class="tooltip-example"></div>
+
+
+
+  <h1>Vega Tooltip Examples</h1>
   <!-- Vega Example: Arc -->
   <div id="vis-arc" class="tooltip-example"></div>
 
