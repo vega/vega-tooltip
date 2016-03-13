@@ -13,14 +13,14 @@ var tooltipUtil = function() {
     return true;
   }
 
-  // returns true if options specifies fields to show in tooltip
-  // returns false if options doesn't specify which fields to show
-  function shouldCustomFields (options) {
+  // returns true tooltip should show default fields bound to an item (item.datum)
+  // returns false if tooltip should only show a custom subset of fields specified by options
+  function shouldShowDefaultFields (options) {
     if (options && options.showFields && options.showFields.length > 0) {
-      return true;
+      return false;
     }
     else {
-      return false;
+      return true;
     }
   }
 
@@ -91,7 +91,7 @@ var tooltipUtil = function() {
     }
 
     // custom tooltip: fields & format
-    function getCustomData (item, options) {
+    function getCustomFieldsData (item, options) {
       var content = [];
 
       options.showFields.forEach(function(opt) {
@@ -102,7 +102,7 @@ var tooltipUtil = function() {
 
         var formattedValue;
         if (!opt.type || !opt.format) {
-          formattedValue = autoFormat(value);
+          formattedValue = autoFormat(opt.field, value, options);
         }
         else {
           switch (opt.type) {
@@ -126,15 +126,30 @@ var tooltipUtil = function() {
       return content;
     }
 
-    // automatically format a value
-    // currently we only handle dates
-    function autoFormat(value) {
+    // automatically format date, number and string values
+    function autoFormat(field, value, options) {
+
+      // check if timeUnit applies to the field
+      if (options.timeUnit) {
+        var timeFields = d3.map(options.timeUnit, function(d) { return d.field; });
+        if (timeFields.has(field)) {
+          // TODO(zening): translate timeUnit to string specifier
+          var formatter = dl.format.time('[format] %Y %B');
+          return formatter(value);
+        }
+      }
+
+      // format other date, number, string values
       switch (dl.type(value)) {
         case 'date':
           var formatter = dl.format.auto.time();
           return formatter(value);
-        case 'boolean':
         case 'number':
+          if (options.numberFormat) {
+            var formatter = dl.format.number(options.numberFormat);
+            return formatter(value);
+          }
+        case 'boolean':
         case 'string':
         default:
           return value;
@@ -142,7 +157,7 @@ var tooltipUtil = function() {
     }
 
     // auto-prepare tooltip: top level fields, default format
-    function getDefaultData (item) {
+    function getDefaultFieldsData (item, options) {
       var content = [];
 
       var itemData = d3.map(item.datum);
@@ -150,7 +165,7 @@ var tooltipUtil = function() {
       itemData.remove("_prev");
 
       itemData.forEach(function(field, value) {
-        var formattedValue = autoFormat(value);
+        var formattedValue = autoFormat(field, value, options);
         content.push({fieldTitle: field, fieldValue: formattedValue});
       });
 
@@ -159,11 +174,11 @@ var tooltipUtil = function() {
 
     var tooltipData;
 
-    if ( shouldCustomFields(options) === true ) {
-      tooltipData = getCustomData(item, options);
+    if ( shouldShowDefaultFields(options) === true ) {
+      tooltipData = getDefaultFieldsData(item, options);
     }
     else {
-      tooltipData = getDefaultData(item);
+      tooltipData = getCustomFieldsData(item, options);
     }
 
     return tooltipData;
@@ -224,29 +239,32 @@ var vlTooltip = function() {
 
   // supplement options with timeUnit and numberFormat from vlSpec
   function supplementOptions (options, vlSpec) {
-    // var channels = d3.map(vl.spec.fieldDefs(vlSpec), function(d) { return d.field; });
-    //
-    // // supplement field and type
-    // if (options && options.length > 0) {
-    //   options.forEach(function(opt) {
-    //     if(channels.has(opt.field)) {
-    //
-    //     }
-    //   })
-    // }
-    // else {
-    //   console.log(channels);
-    //
-    //   options = [];
-    //   channels.forEach(function(fld, chl) {
-    //     var tp = translateType(chl.type);
-    //     options.push({field: fld, type: tp});
-    //   })
-    // }
-
-    // supplement timeUnit
+    if (!options) {
+      options = {};
+    }
 
     // supplement numberFormat
+    if (vlSpec.config && vlSpec.config.numberFormat) {
+      options.numberFormat = vlSpec.config.numberFormat;
+    }
+
+    // supplement timeUnit
+    vl.spec.fieldDefs(vlSpec).forEach(function(channel) {
+      if (channel.timeUnit) {
+        if (!options.timeUnit) {
+          options.timeUnit = [];
+        }
+        try {
+          // TODO(zening): rename field because VL renames field
+          // e.g. date --> month_date, date --> year_date
+          var timeUnit_field = channel.timeUnit + '_' + channel.field;
+          options.timeUnit.push({field: timeUnit_field, format: channel.timeUnit});
+        }
+        catch (error) {
+          console.error('[VgTooltip] Parsing Vega-Lite timeUnit: ' + error);
+        }
+      }
+    });
 
     return options;
   }
@@ -254,7 +272,7 @@ var vlTooltip = function() {
   return {
     linkToView: function(view, options, vlSpec) {
 
-      // options = supplementOptions(options, vlSpec);
+      options = supplementOptions(options, vlSpec);
 
       // fill tooltip with data
       view.on("mouseover", function(event, item) {
