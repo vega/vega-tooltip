@@ -13,6 +13,17 @@ var tooltipUtil = function() {
     return true;
   }
 
+  // returns true if options specifies fields to show in tooltip
+  // returns false if options doesn't specify which fields to show
+  function shouldCustomFields (options) {
+    if (options && options.showFields && options.showFields.length > 0) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
   // update tooltip position
   function updatePosition (event) {
     d3.select("#vis-tooltip")
@@ -83,7 +94,7 @@ var tooltipUtil = function() {
     function getCustomData (item, options) {
       var content = [];
 
-      options.forEach(function(opt) {
+      options.showFields.forEach(function(opt) {
 
         var title = getFieldTitle(opt);
 
@@ -103,6 +114,7 @@ var tooltipUtil = function() {
               var formatter = dl.format.number(opt.format);
               formattedValue = formatter(value);
               break;
+            case 'string':
             default:
               formattedValue = value;
           }
@@ -119,7 +131,11 @@ var tooltipUtil = function() {
     function autoFormat(value) {
       switch (dl.type(value)) {
         case 'date':
-          return dl.format.auto.time(value);
+          var formatter = dl.format.auto.time();
+          return formatter(value);
+        case 'boolean':
+        case 'number':
+        case 'string':
         default:
           return value;
       }
@@ -127,7 +143,6 @@ var tooltipUtil = function() {
 
     // auto-prepare tooltip: top level fields, default format
     function getDefaultData (item) {
-
       var content = [];
 
       var itemData = d3.map(item.datum);
@@ -144,7 +159,7 @@ var tooltipUtil = function() {
 
     var tooltipData;
 
-    if (options && options.length > 0) {
+    if ( shouldCustomFields(options) === true ) {
       tooltipData = getCustomData(item, options);
     }
     else {
@@ -190,11 +205,6 @@ var tooltipUtil = function() {
 var vgTooltip = function() {
   return {
     linkToView: function(view, options) {
-      // parse options
-      // options contain field, fieldTitle, type, format
-      // pass in options to fill
-      // 1. options 2. datalib.auto
-
       // fill tooltip with data
       view.on("mouseover", function(event, item) {
         tooltipUtil.fill(event, item, options);
@@ -212,27 +222,39 @@ var vgTooltip = function() {
 
 var vlTooltip = function() {
 
-  function combineOptions(vlSpec, opt) {
-    // opt contains all the fields that should be displayed
-    // if option is empty, 1. display all fields, 2. infer format from vlSpec, 3. infer using datalib.auto
-    // if option is not empty, 1. read opt fields first, 2. if opt does not contain format for a field, infer from vlSpec, 3. if vlSpec also does not contain format for a field, infer from datalib.auto
-    var options = [];
+  // supplement options with timeUnit and numberFormat from vlSpec
+  function supplementOptions (options, vlSpec) {
+    // var channels = d3.map(vl.spec.fieldDefs(vlSpec), function(d) { return d.field; });
+    //
+    // // supplement field and type
+    // if (options && options.length > 0) {
+    //   options.forEach(function(opt) {
+    //     if(channels.has(opt.field)) {
+    //
+    //     }
+    //   })
+    // }
+    // else {
+    //   console.log(channels);
+    //
+    //   options = [];
+    //   channels.forEach(function(fld, chl) {
+    //     var tp = translateType(chl.type);
+    //     options.push({field: fld, type: tp});
+    //   })
+    // }
 
-    // get time unit if contained in vlSpec
-    vl.spec.fieldDefs(vlSpec).forEach(function(channel) {
-      if(channel.timeUnit) {
+    // supplement timeUnit
 
-      }
-    });
+    // supplement numberFormat
+
+    return options;
   }
 
   return {
     linkToView: function(view, options, vlSpec) {
-      // combine options with vlSpec options
-      // 1. options 2. vlSpec 3. datalib.auto
-      // opt contains field, fieldTitle, type, format
-      // pass options to fill
-      // combineOptions(vlSpec, options);
+
+      // options = supplementOptions(options, vlSpec);
 
       // fill tooltip with data
       view.on("mouseover", function(event, item) {

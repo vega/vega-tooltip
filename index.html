@@ -56,88 +56,107 @@
   }
 
   // Vega-Lite Example: Scatter Plot
-  addVlExample("examples/scatter.json", "#vis-scatter", [
-    {
-      field: "Name"
-    },
-    {
-      field: "Horsepower",
-      type: "number"
-    },
-    {
-      field: "Miles_per_Gallon",
-      fieldTitle: "Miles per Gallon",
-      type: "number"
-    }
-  ]);
-
-  // Vega-Lite Example: Stacked Bar Chart
-  addVlExample("examples/stacked_bar_weather.json", "#vis-stacked-bar", [
-    {
-      field: "month_date",
-      fieldTitle: "Month",
-      type: "date",
-      format: "%B" // I wish I could pass in timeUnit
-    },
-    {
-      field: "weather",
-      fieldTitle: "Weather"
-    },
-    {
-      field: "count",
-      fieldTitle: "Count"
-    }
-  ]);
+  var scatterOpts = {
+    showFields: [
+      {
+        field: "Name"
+      },
+      {
+        field: "Horsepower",
+        type: "number"
+      },
+      {
+        field: "Miles_per_Gallon",
+        fieldTitle: "Miles per Gallon",
+        type: "number"
+      }
+    ]
+  };
+  addVlExample("examples/scatter.json", "#vis-scatter");
 
   // Vega-Lite Example: Simple Bar Chart
   // We don't pass in opt because the data is very simple
   addVlExample("examples/bar.json", "#vis-bar");
 
+  // Vega-Lite Example: Stacked Bar Chart
+  var stackedbarOpts = {
+    showFields: [
+      {
+        field: "month_date",
+        fieldTitle: "Month",
+        type: "date",
+        format: "%B" // I wish I could pass in timeUnit
+      },
+      {
+        field: "weather",
+        fieldTitle: "Weather"
+      },
+      {
+        field: "count",
+        fieldTitle: "Count"
+      }
+    ]
+  };
+  addVlExample("examples/stacked_bar_weather.json", "#vis-stacked-bar");
+
+
   // Vega Example: Arc
-  addVgExample("examples/arc.json", "#vis-arc", [
-    {
-      field: "data"
-    }
-  ]);
+  var arcOpts = {
+    showFields: [
+      {
+        field: "data"
+      }
+    ]
+  }
+  addVgExample("examples/arc.json", "#vis-arc", arcOpts);
 
   // Vega Example: Choropleth
-  addVgExample("examples/choropleth.json", "#vis-choropleth", [
-    {
-      field: "unemp.id",
-      fieldTitle: "County ID"
-    },
-    {
-      field: "unemp.rate",
-      fieldTitle: "Unemployment Rate"
-    }
-  ]);
+  var choroplethOpts = {
+    showFields: [
+      {
+        field: "unemp.id",
+        fieldTitle: "County ID"
+      },
+      {
+        field: "unemp.rate",
+        fieldTitle: "Unemployment Rate"
+      }
+    ]
+  }
+  addVgExample("examples/choropleth.json", "#vis-choropleth", choroplethOpts);
 
   // Vega Example: Force
-  addVgExample("examples/force.json", "#vis-force", [
-    {
-      field: "name",
-      fieldTitle: "Name",
-      type: "string"
-    }
-  ]);
+  var forceOpts = {
+    showFields: [
+      {
+        field: "name",
+        fieldTitle: "Name",
+        type: "string"
+      }
+    ]
+  }
+  addVgExample("examples/force.json", "#vis-force", forceOpts);
 
   // Vega Example: Heatmap
-  addVgExample("examples/heatmap.json", "#vis-heatmap", [
-    {
-      field: "date",
-      fieldTitle: "Date",
-      type: "date",
-      format: "%b %e, %Y"
-    },
-    {
-      field: "temp",
-      fieldTitle: "Temperature(F)"
-    },
-    {
-      field: "hour",
-      fieldTitle: "Hour"
-    }
-  ]);
+  var heatmapOpts = {
+    showFields: [
+      {
+        field: "date",
+        fieldTitle: "Date",
+        type: "date",
+        format: "%b %e, %Y"
+      },
+      {
+        field: "temp",
+        fieldTitle: "Temperature(F)"
+      },
+      {
+        field: "hour",
+        fieldTitle: "Hour"
+      }
+    ]
+  }
+  addVgExample("examples/heatmap.json", "#vis-heatmap", heatmapOpts);
 
   </script>
 </head>
