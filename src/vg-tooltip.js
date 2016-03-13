@@ -107,8 +107,17 @@ var tooltipUtil = function() {
         else {
           switch (opt.type) {
             case 'date':
-              var formatter = dl.format.time(opt.format);
-              formattedValue = formatter(value);
+              if (vl.timeUnit.TIMEUNITS.indexOf(opt.format) > -1) {
+                // TODO(zening): read abbreviated
+                var specifier = vl.timeUnit.format(opt.format, false)
+                var formatter = dl.format.time(specifier);
+                formattedValue = formatter(value);
+              }
+              else {
+                var formatter = dl.format.time(opt.format);
+                formattedValue = formatter(value);
+              }
+
               break;
             case 'number':
               var formatter = dl.format.number(opt.format);
@@ -133,8 +142,9 @@ var tooltipUtil = function() {
       if (options.timeUnit) {
         var timeFields = d3.map(options.timeUnit, function(d) { return d.field; });
         if (timeFields.has(field)) {
-          // TODO(zening): translate timeUnit to string specifier
-          var formatter = dl.format.time('[format] %Y %B');
+          // TODO(zening): read abbreviated (boolean)
+          var specifier = vl.timeUnit.format('yearmonth', false);
+          var formatter = dl.format.time(specifier);
           return formatter(value);
         }
       }
