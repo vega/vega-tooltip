@@ -62,7 +62,8 @@
     })
   }
 
-  // Vega-Lite Example: Scatter Plot
+  /* Vega-Lite Examples */
+  // Scatter Plot
   var scatterOpts = {
     showFields: [
       {
@@ -85,12 +86,11 @@
   };
   addVlExample("examples/scatter.json", "#vis-scatter", scatterOpts);
 
-  // Vega-Lite Example: Simple Bar Chart
-  // We don't pass in opt because the data is very simple
+  // Simple Bar Chart
   addVlExample("examples/bar.json", "#vis-bar");
 
-  // Vega-Lite Example: Stacked Bar Chart
-  var stackedbarOpts = {
+  // Stacked Bar Chart
+  var stackedBarOpts = {
     showFields: [
       {
         field: "month_date",
@@ -108,23 +108,45 @@
       }
     ]
   };
-  addVlExample("examples/stacked_bar_weather.json", "#vis-stacked-bar", stackedbarOpts);
+  addVlExample("examples/stacked_bar_weather.json", "#vis-stacked-bar", stackedBarOpts);
 
-  // Vega-Lite Example: Line Chart
+  // Layered Bar Chart
+  var layeredBarOpts = {
+    showFields: [
+      {
+        field: "age",
+        fieldTitle: "Age"
+      },
+      {
+        field: "gender",
+        fieldTitle: "Gender"
+      },
+      {
+        field: "sum_people",
+        fieldTitle: "Population",
+        type: "number",
+        format: ","
+      }
+    ]
+  };
+  addVlExample("examples/bar_layered_transparent.json", "#vis-layered-bar", layeredBarOpts);
+
+  // Line Chart
   var lineOpts = {
     colorTheme: "dark"
   }
   addVlExample("examples/line.json", "#vis-line", lineOpts);
 
-  // Vega-Lite Example: Colored Line Chart
+  // Colored Line Chart
   var colorLineOpts = {}
   addVlExample("examples/line_color.json", "#vis-color-line");
 
-  // Vega-Lite Example: Area Chart
+  // Area Chart
   addVlExample("examples/area_vertical.json", "#vis-area-vertical");
 
 
-  // Vega Example: Arc
+  /* Vega Examples */
+  // Arc
   var arcOpts = {
     showFields: [
       {
@@ -134,7 +156,7 @@
   }
   addVgExample("examples/arc.json", "#vis-arc", arcOpts);
 
-  // Vega Example: Choropleth
+  // Choropleth
   var choroplethOpts = {
     showFields: [
       {
@@ -149,7 +171,7 @@
   }
   addVgExample("examples/choropleth.json", "#vis-choropleth", choroplethOpts);
 
-  // Vega Example: Force
+  // Force
   var forceOpts = {
     showFields: [
       {
@@ -161,7 +183,7 @@
   }
   addVgExample("examples/force.json", "#vis-force", forceOpts);
 
-  // Vega Example: Heatmap
+  // Heatmap
   var heatmapOpts = {
     showFields: [
       {
@@ -191,37 +213,40 @@
 <body>
   <h1>Vega-Lite Tooltip Examples</h1>
 
-  <!-- Vega-Lite Example: Scatter Plot -->
+  <!-- Scatter Plot -->
   <div id="vis-scatter" class="tooltip-example"></div>
 
-  <!-- Vega-Lite Example: Simple Bar Chart -->
+  <!-- Simple Bar Chart -->
   <div id="vis-bar" class="tooltip-example"></div>
 
-  <!-- Vega-Lite Example: Stacked Bar Chart -->
+  <!-- Stacked Bar Chart -->
   <div id="vis-stacked-bar" class="tooltip-example"></div>
 
-  <!-- Vega-Lite Example: Line Chart -->
+  <!-- Layered Bar Chart-->
+  <div id="vis-layered-bar" class="tooltip-example"></div>
+
+  <!-- Line Chart -->
   <div id="vis-line" class="tooltip-example"></div>
 
-  <!-- Vega-Lite Example: Color Line Chart -->
+  <!-- Color Line Chart -->
   <div id="vis-color-line" class="tooltip-example"></div>
 
-  <!-- Vega-Lite Example: Area Chart -->
+  <!-- Area Chart -->
   <div id="vis-area-vertical" class="tooltip-example"></div>
 
 
 
   <h1>Vega Tooltip Examples</h1>
-  <!-- Vega Example: Arc -->
+  <!-- Arc -->
   <div id="vis-arc" class="tooltip-example"></div>
 
-  <!-- Vega Example: Choropleth -->
+  <!-- Choropleth -->
   <div id="vis-choropleth" class="tooltip-example"></div>
 
-  <!-- Vega Example: Force -->
+  <!-- Force -->
   <div id="vis-force" class="tooltip-example"></div>
 
-  <!-- Vega Example: Heatmap -->
+  <!-- Heatmap -->
   <div id="vis-heatmap" class="tooltip-example"></div>
 
   <!-- Placeholder for Tooltip -->
