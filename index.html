@@ -72,7 +72,7 @@
       }
     ]
   };
-  addVlExample("examples/scatter.json", "#vis-scatter", scatterOpts);
+  addVlExample("examples/scatter.json", "#vis-scatter");
 
   // Vega-Lite Example: Simple Bar Chart
   // We don't pass in opt because the data is very simple
@@ -85,7 +85,7 @@
         field: "month_date",
         fieldTitle: "Month",
         type: "date",
-        format: "%b" // can be either VL timeUnit or d3 time format string specifier
+        format: "month" // can be either VL timeUnit or d3 time format string specifier
       },
       {
         field: "weather",
