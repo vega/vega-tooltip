@@ -77,7 +77,11 @@
         fieldTitle: "Miles per Gallon",
         type: "number"
       }
-    ]
+    ],
+    offset: {
+      x: 1, // x and y axis in pixels
+      y: 1
+    }
   };
   addVlExample("examples/scatter.json", "#vis-scatter", scatterOpts);
 
@@ -172,7 +176,11 @@
         field: "hour",
         fieldTitle: "Hour"
       }
-    ]
+    ],
+    offset: {
+      x: 10,
+      y: 0
+    }
   }
   addVgExample("examples/heatmap.json", "#vis-heatmap", heatmapOpts);
 

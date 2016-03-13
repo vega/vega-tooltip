@@ -25,26 +25,36 @@ var tooltipUtil = function() {
   }
 
   // update tooltip position
-  function updatePosition (event) {
+  function updatePosition (event, options) {
+    // determine x and y offsets, defaults are 10px
+    var offsetX = 10;
+    var offsetY = 10;
+    if (options && options.offset && !(options.offset.x === undefined)) {
+      offsetX = options.offset.x;
+    }
+    if (options && options.offset && !(options.offset.y === undefined)) {
+      offsetY = options.offset.y;
+    }
+
     d3.select("#vis-tooltip")
     .style("top", function() {
       // by default: put tooltip 10px below cursor
       // if tooltip is close to the bottom of the window, put tooltip 10px above cursor
       var tooltipHeight = parseInt(d3.select(this).style("height"));
-      if (event.clientY + tooltipHeight + 10 < window.innerHeight) {
-        return "" + (event.clientY + 10) + "px";
+      if (event.clientY + tooltipHeight + offsetY < window.innerHeight) {
+        return "" + (event.clientY + offsetY) + "px";
       } else {
-        return "" + (event.clientY - tooltipHeight - 10) + "px";
+        return "" + (event.clientY - tooltipHeight - offsetY) + "px";
       }
     })
     .style("left", function() {
       // by default: put tooltip 10px to the right of cursor
       // if tooltip is close to the right edge of the window, put tooltip 10 px to the left of cursor
       var tooltipWidth = parseInt(d3.select(this).style("width"));
-      if (event.clientX + tooltipWidth + 10 < window.innerWidth) {
-        return "" + (event.clientX + 10) + "px";
+      if (event.clientX + tooltipWidth + offsetX < window.innerWidth) {
+        return "" + (event.clientX + offsetX) + "px";
       } else {
-        return "" + (event.clientX - tooltipWidth - 10) + "px";
+        return "" + (event.clientX - tooltipWidth - offsetX) + "px";
       }
     });
   }
@@ -230,11 +240,11 @@ var tooltipUtil = function() {
       row.append("td").attr("class", "key").text(function(d) { return d.fieldTitle + ":"; });
       row.append("td").attr("class", "value").text(function(d) { return d.fieldValue; });
 
-      updatePosition(event);
+      updatePosition(event, options);
       d3.select("#vis-tooltip").style("opacity", 1);
     },
-    update: function(event, item) {
-      updatePosition(event);
+    update: function(event, item, options) {
+      updatePosition(event, options);
     },
     clear: function() {
       var tooltipRows = d3.select("#vis-tooltip").selectAll(".tooltip-row").data([]);
@@ -254,7 +264,9 @@ var vgTooltip = function() {
 
       // update tooltip position on mouse move
       // (important for large marks e.g. bars)
-      view.on("mousemove", tooltipUtil.update);
+      view.on("mousemove", function(event, item) {
+        tooltipUtil.update(event, item, options);
+      });
 
       // clear tooltip
       view.on("mouseout", tooltipUtil.clear);
@@ -308,7 +320,9 @@ var vlTooltip = function() {
 
       // update tooltip position on mouse move
       // (important for large marks e.g. bars)
-      view.on("mousemove", tooltipUtil.update);
+      view.on("mousemove", function(event, item) {
+        tooltipUtil.update(event, item, options);
+      });
 
       // clear tooltip
       view.on("mouseout", tooltipUtil.clear);
