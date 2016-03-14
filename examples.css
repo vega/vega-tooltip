@@ -1,0 +1,19 @@
+body {
+  font-family: sans-serif;
+}
+h1 {
+  text-align: center;
+  margin: 100px 0px 25px;
+}
+
+.vega-actions {
+  display: none;
+}
+
+.tooltip-example {
+  margin: 40px 0px;
+}
+.tooltip-example canvas {
+  display: block;
+  margin: auto;
+}
