@@ -92,7 +92,7 @@ var vlTooltip = (function() {
  */
 var tooltipUtil = (function() {
 
-  // decide if a chart element deserves tooltip
+  /* Decide if a chart element deserves tooltip */
   function shouldShowTooltip (item) {
     if (!item || !item.datum) return false;
 
@@ -105,18 +105,7 @@ var tooltipUtil = (function() {
     return true;
   }
 
-  // returns true tooltip should show default fields bound to an item (item.datum)
-  // returns false if tooltip should only show a custom subset of fields specified by options
-  function shouldShowDefaultFields (options) {
-    if (options && options.showFields && options.showFields.length > 0) {
-      return false;
-    }
-    else {
-      return true;
-    }
-  }
-
-  // update tooltip position
+  /* Update tooltip position */
   function updatePosition (event, options) {
     // determine x and y offsets, defaults are 10px
     var offsetX = 10;
@@ -151,7 +140,7 @@ var tooltipUtil = (function() {
     });
   }
 
-  // update tooltip color theme according to options.colorTheme
+  /* Update tooltip color theme according to options.colorTheme */
   function updateTheme (options) {
     if (options && options.colorTheme) {
       clearTheme();
@@ -166,12 +155,26 @@ var tooltipUtil = (function() {
 
   }
 
-  // reset color themes to default
+  /* Reset color themes to default */
   function clearTheme () {
     d3.select("#vis-tooltip").classed('dark-theme light-theme', false);
   }
 
+  /**
+   * Prepare data to be bound to the tooltip element
+   * @return [{ fieldTitle: ..., fieldValue: ...}]
+   */
   function getTooltipData (item, options) {
+    // returns true tooltip should show default fields bound to an item (item.datum)
+    // returns false if tooltip should only show a custom subset of fields specified by options
+    function shouldShowDefaultFields (options) {
+      if (options && options.showFields && options.showFields.length > 0) {
+        return false;
+      }
+      else {
+        return true;
+      }
+    }
 
     // get field value from an item's datum,
     // even if the field is buried down in the object hierarchy
@@ -339,8 +342,7 @@ var tooltipUtil = (function() {
 
       var tooltipData = getTooltipData(item, options);
 
-      // if there is no "meaningful" data, don't show tooltip
-      // "meaningful": as decided by item and options
+      // if no data, don't show tooltip
       if (!tooltipData || tooltipData.length === 0) return;
 
       var tooltipRows = d3.select("#vis-tooltip").selectAll(".tooltip-row").data(tooltipData);
