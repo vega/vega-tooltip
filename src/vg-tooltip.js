@@ -1,4 +1,96 @@
-var tooltipUtil = function() {
+/**
+ * Export Vega Tooltip API: vgTooltip.linkToView(vgView, options)
+ * options can specify data fields to show in the tooltip and can
+ * provide data formats for those fields
+ */
+var vgTooltip = (function() {
+  return {
+    linkToView: function(vgView, options) {
+      // initialize tooltip with data
+      vgView.on("mouseover", function(event, item) {
+        tooltipUtil.init(event, item, options);
+      });
+
+      // update tooltip position on mouse move
+      // (important for large marks e.g. bars)
+      vgView.on("mousemove", function(event, item) {
+        tooltipUtil.update(event, item, options);
+      });
+
+      // clear tooltip
+      vgView.on("mouseout", tooltipUtil.clear);
+    }
+  }
+}());
+
+/**
+ * Export Vega-Lite Tooltip API: vlTooltip.linkToView(vgView, vlSpec, options)
+ * options can specify data fields to show in the tooltip and can
+ * overwrite data formats in vlSpec
+ */
+var vlTooltip = (function() {
+
+  // supplement options with timeUnit and numberFormat from vlSpec
+  function supplementOptions (options, vlSpec) {
+    if (!options) {
+      options = {};
+    }
+
+    // supplement numberFormat
+    if (vlSpec.config && vlSpec.config.numberFormat) {
+      options.numberFormat = vlSpec.config.numberFormat;
+    }
+
+    // supplement timeUnit
+    vl.spec.fieldDefs(vlSpec).forEach(function(channel) {
+      if (channel.timeUnit) {
+        if (!options.fieldsWithTimeUnit) {
+          options.fieldsWithTimeUnit = [];
+        }
+        try {
+          // TODO(zening): rename field because VL renames field
+          // e.g. date --> month_date, date --> year_date
+          var renamedField = channel.timeUnit + '_' + channel.field;
+          options.fieldsWithTimeUnit.push({field: renamedField, timeUnit: channel.timeUnit});
+        }
+        catch (error) {
+          console.error('[VgTooltip] Error parsing Vega-Lite timeUnit: ' + error);
+        }
+      }
+    });
+
+    return options;
+  }
+
+  return {
+    linkToView: function(vgView, vlSpec, options) {
+
+      options = supplementOptions(options, vlSpec);
+
+      // initialize tooltip with data
+      vgView.on("mouseover", function(event, item) {
+        tooltipUtil.init(event, item, options);
+      });
+
+      // update tooltip position on mouse move
+      // (important for large marks e.g. bars)
+      vgView.on("mousemove", function(event, item) {
+        tooltipUtil.update(event, item, options);
+      });
+
+      // clear tooltip
+      vgView.on("mouseout", tooltipUtil.clear);
+    }
+  }
+}());
+
+/**
+ * Export common utilities: init, update and clear
+ * init(): initialize tooltip with data
+ * update(): update tooltip as mouse moves
+ * clear(): clear tooltip data
+ */
+var tooltipUtil = (function() {
 
   // decide if a chart element deserves tooltip
   function shouldShowTooltip (item) {
@@ -242,7 +334,7 @@ var tooltipUtil = function() {
   }
 
   return {
-    fill: function (event, item, options) {
+    init: function (event, item, options) {
       if(shouldShowTooltip(item) === false) return;
 
       var tooltipData = getTooltipData(item, options);
@@ -274,80 +366,4 @@ var tooltipUtil = function() {
       d3.select("#vis-tooltip").style("opacity", 0);
     }
   }
-}();
-
-var vgTooltip = function() {
-  return {
-    linkToView: function(view, options) {
-      // fill tooltip with data
-      view.on("mouseover", function(event, item) {
-        tooltipUtil.fill(event, item, options);
-      });
-
-      // update tooltip position on mouse move
-      // (important for large marks e.g. bars)
-      view.on("mousemove", function(event, item) {
-        tooltipUtil.update(event, item, options);
-      });
-
-      // clear tooltip
-      view.on("mouseout", tooltipUtil.clear);
-    }
-  }
-}();
-
-var vlTooltip = function() {
-
-  // supplement options with timeUnit and numberFormat from vlSpec
-  function supplementOptions (options, vlSpec) {
-    if (!options) {
-      options = {};
-    }
-
-    // supplement numberFormat
-    if (vlSpec.config && vlSpec.config.numberFormat) {
-      options.numberFormat = vlSpec.config.numberFormat;
-    }
-
-    // supplement timeUnit
-    vl.spec.fieldDefs(vlSpec).forEach(function(channel) {
-      if (channel.timeUnit) {
-        if (!options.fieldsWithTimeUnit) {
-          options.fieldsWithTimeUnit = [];
-        }
-        try {
-          // TODO(zening): rename field because VL renames field
-          // e.g. date --> month_date, date --> year_date
-          var renamedField = channel.timeUnit + '_' + channel.field;
-          options.fieldsWithTimeUnit.push({field: renamedField, timeUnit: channel.timeUnit});
-        }
-        catch (error) {
-          console.error('[VgTooltip] Error parsing Vega-Lite timeUnit: ' + error);
-        }
-      }
-    });
-
-    return options;
-  }
-
-  return {
-    linkToView: function(view, options, vlSpec) {
-
-      options = supplementOptions(options, vlSpec);
-
-      // fill tooltip with data
-      view.on("mouseover", function(event, item) {
-        tooltipUtil.fill(event, item, options);
-      });
-
-      // update tooltip position on mouse move
-      // (important for large marks e.g. bars)
-      view.on("mousemove", function(event, item) {
-        tooltipUtil.update(event, item, options);
-      });
-
-      // clear tooltip
-      view.on("mouseout", tooltipUtil.clear);
-    }
-  }
-}();
+}());

@@ -10,7 +10,7 @@
         spec: vlSpec
       };
       vg.embed(id, stackedbarEmbed, function(error, result) {
-        vlTooltip.linkToView(result.view, options, vlSpec);
+        vlTooltip.linkToView(result.view, vlSpec, options);
       });
     });
   }
