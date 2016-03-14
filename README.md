@@ -1,13 +1,78 @@
-# vega-lite-tooltip
-A tooltip Plugin for Vega-Lite and Vega.
+# vgTooltip
+A tooltip plugin for Vega-Lite and Vega.
+![demo image](demo.png "a tooltip for a Vega-Lite scatterplot")
+
+
+## Author
+The development of Vega-Lite Tooltip is led by Zening Qu, with significant help from [Kanit "Ham" Wongsuphasawat](https://twitter.com/kanitw) and [Dominik Moritz](https://twitter.com/domoritz).
+
+
+## Examples
+http://vega.github.io/vega-lite-tooltip/
+
 
 ## Run Instructions
-
 1. In the project folder `vega-lite-tooltip`, type command `npm start`.
-2. In your browser, navigate to `http://localhost:4000/`.
+2. In your browser, navigate to `http://localhost:4000/`. You will see various Vega-Lite and Vega visualizations working with tooltip.
 
-You should see Vega-Lite scatter plot and bar chart examples with tooltip.
 
-## Team
+## How to Use
+1. Include the `vgTooltip` library and its dependencies (`d3`, `vega`, `vega-lite`, `vega-embed` and `datalib`) in your HTML `<head>`.
+```
+<!-- Dependencies -->
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="https://vega.github.io/vega/vega.min.js"></script>
+<script src="http://vega.github.io/vega-lite/vega-lite.min.js"></script>
+<script src="http://vega.github.io/vega-editor/vendor/vega-embed.js" charset="utf-8"></script>
+<script src="http://vega.github.io/datalib/datalib.min.js"></script>
+<!-- Tooltip Library -->
+<script src="vg-tooltip.js" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="vg-tooltip.css">
+```
 
-The development of Vega-Lite Tooltip is led by Zening Qu, with significant help from [Kanit "Ham" Wongsuphasawat](https://twitter.com/kanitw) and [Dominik Moritz](https://twitter.com/domoritz).
+2. In your HTML `<body>`, create a placeholder for your Vega-Lite or Vega visualization. Give the placeholder a unique `id`, which will be used in step 4. For example:
+```
+<!-- Placeholder for my Scatter Plot -->
+<div id="vis-scatter"></div>
+```
+
+3. In your HTML `<body>`, create a placeholder for the tooltip. Give the placeholder an `id` named `vis-tooltip` so that it can be recognized by our plugin. Assign `class` `vg-tooltip` to the placeholder to use our default CSS style.
+```
+<!-- Placeholder for Tooltip -->
+<table id="vis-tooltip" class="vg-tooltip"></table>
+```
+> Tip: Generally speaking you only need one tooltip placeholder per HTML page (even if you have multiple visualizations in that page) because the mouse only points at one thing at a time.
+
+4. In your JavaScript file, create a Vega-Lite visualization using [`vg.embed`](https://github.com/vega/vega/wiki/Embed-Vega-Web-Components) or create a Vega visualization using [`vg.parse.spec`](https://github.com/vega/vega/wiki/Runtime). For example:
+```
+// create a Vega-Lite example using vg.embed
+vg.embed("#vis-scatter", embedSpec, function(error, result) {
+    // result.view is the Vega View
+});
+```
+or
+```
+// create a Vega example using vg.parse.spec
+vg.parse.spec(vgSpec, function(error, chart) {
+    // view is the Vega View
+    var view = chart({el:"#vis-scatter"}).update();
+});
+```
+5. In step 4 callback function, link the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) object with your tooltip. If it's a Vega-Lite visualization, use `vlTooltip.linkToView`. If it's a Vega visualization, use `vgTooltip.linkToView`. For example:
+```
+// create a Vega-Lite example using vg.embed
+vg.embed("#vis-scatter", embedSpec, function(error, result) {
+    // result.view is the Vega View
+    vlTooltip.linkToView(result.view, vlSpec);
+});
+```
+or
+```
+// create a Vega example using vg.parse.spec
+vg.parse.spec(vgSpec, function(error, chart) {
+    // view is the Vega View
+    var view = chart({el:"#vis-scatter"}).update();
+    vgTooltip.linkToView(view);
+});
+```
+Now you be able to see a tooltip working with your visualization.
