@@ -105,7 +105,11 @@ var tooltipUtil = (function() {
     return true;
   }
 
-  /* Update tooltip position */
+  /**
+   * Update tooltip position
+   * Default position is 10px right of and 10px below the cursor. This can be
+   * overwritten by options.
+   */
   function updatePosition (event, options) {
     // determine x and y offsets, defaults are 10px
     var offsetX = 10;
@@ -165,92 +169,110 @@ var tooltipUtil = (function() {
    * @return [{ fieldTitle: ..., fieldValue: ...}]
    */
   function getTooltipData (item, options) {
-    // returns true tooltip should show default fields bound to an item (item.datum)
-    // returns false if tooltip should only show a custom subset of fields specified by options
-    function shouldShowDefaultFields (options) {
+
+    /**
+     * Determine if tooltip should customize or show default fields
+     * @return 'custom' or 'default'
+     */
+    function shouldCustomizeFields (options) {
       if (options && options.showFields && options.showFields.length > 0) {
-        return false;
+        return 'custom';
       }
       else {
-        return true;
+        return 'default';
       }
     }
 
-    // get field value from an item's datum,
-    // even if the field is buried down in the object hierarchy
-    function getFieldValue (datum, field) {
-      if(field.includes('.')) {
-        var accessors = field.split('.');
-        var value = datum;
-        var path = '';
-        accessors.forEach(function (a) {
-          if (value[a]) {
-            value = value[a];
-            path = path + '.' + a;
-          }
-          else {
-            console.warn('[VgTooltip] Cannot find field ' + path + ' in data.');
-            return;
-          }
-        });
-        return value;
-      }
-      else {
-        if (datum[field]) {
-          return datum[field];
+    /**
+     * Prepare custom fields (specified by options) for tooltip.
+     * When options or vlSpec provides custom format for a field, apply custom format.
+     * Otherwise, automatically format the field.
+     * options can always overwrite format provided by vlSpec.
+     * @return An array ready to be bound to the tooltip element:
+     * [{ fieldTitle: ..., fieldValue: ...}]
+     */
+    function getCustomFieldsData (item, options) {
+
+      /**
+       * Get one field value from an item's datum,
+       * even if the field is not at top-level of item.datum.
+       * @return the field value if successful,
+       * undefined if the field cannot be found in item.datum
+       */
+      function getFieldValue (datum, field) {
+        if(field.includes('.')) {
+          var accessors = field.split('.');
+          var value = datum;
+          var path = '';
+          accessors.forEach(function (a) {
+            if (value[a]) {
+              value = value[a];
+              path = path + '.' + a;
+            }
+            else {
+              console.warn('[VgTooltip] Cannot find field ' + path + ' in data.');
+              return;
+            }
+          });
+          return value;
         }
         else {
-          console.warn('[VgTooltip] Cannot find field ' + field + ' in data.');
-          return;
+          if (datum[field]) {
+            return datum[field];
+          }
+          else {
+            console.warn('[VgTooltip] Cannot find field ' + field + ' in data.');
+            return;
+          }
         }
       }
-    }
 
-    function getFieldTitle (opt) {
-      if (opt.fieldTitle) {
-        return opt.fieldTitle;
+      /**
+       * Apply custom format to a date, number, or string value
+       * @return the formatted value
+       */
+      function custFormat(opt, value) {
+        var formattedValue;
+        switch (opt.type) {
+          case 'date':
+            // opt.format can be a Vega-Lite timeUnit or simply a string specifier
+            if (vl.timeUnit.TIMEUNITS.indexOf(opt.format) > -1) {
+              var specifier = vl.timeUnit.format(opt.format)
+              var formatter = dl.format.time(specifier);
+              formattedValue = formatter(value);
+            }
+            else {
+              var formatter = dl.format.time(opt.format);
+              formattedValue = formatter(value);
+            }
+            break;
+          case 'number':
+            // opt.number is a string specifier
+            var formatter = dl.format.number(opt.format);
+            formattedValue = formatter(value);
+            break;
+          case 'string':
+          default:
+            formattedValue = value;
+        }
+        return formattedValue;
       }
-      else {
-        return opt.field;
-      }
-    }
 
-    // custom tooltip: fields & format
-    function getCustomFieldsData (item, options) {
       var content = [];
 
       options.showFields.forEach(function(opt) {
-
-        var title = getFieldTitle(opt);
-
+        var title = opt.fieldTitle ? opt.fieldTitle : opt.field;
         var value = getFieldValue(item.datum, opt.field);
 
         var formattedValue;
+        
+        // if either type or format is missing, apply auto format
+        // else if both type and format exist, apply custom format
         if (!opt.type || !opt.format) {
           formattedValue = autoFormat(opt.field, value, options);
         }
         else {
-          switch (opt.type) {
-            case 'date':
-              if (vl.timeUnit.TIMEUNITS.indexOf(opt.format) > -1) {
-                var specifier = vl.timeUnit.format(opt.format)
-                var formatter = dl.format.time(specifier);
-                formattedValue = formatter(value);
-              }
-              else {
-                var formatter = dl.format.time(opt.format);
-                formattedValue = formatter(value);
-              }
-
-              break;
-            case 'number':
-              var formatter = dl.format.number(opt.format);
-              formattedValue = formatter(value);
-              break;
-            case 'string':
-            default:
-              formattedValue = value;
-          }
+          formattedValue = custFormat(opt, value);
         }
 
         content.push({fieldTitle: title, fieldValue: formattedValue});
@@ -259,7 +281,50 @@ var tooltipUtil = (function() {
       return content;
     }
 
-    // automatically format date, number and string values
+    /**
+     * Prepare default fields (top-level fields of item.datum) for tooltip.
+     * Automatically format field values.
+     * @return An array ready to be bound to the tooltip element:
+     * [{ fieldTitle: ..., fieldValue: ...}]
+     */
+    function getDefaultFieldsData (item, options) {
+      var content = [];
+
+      var itemData = d3.map(item.datum);
+      itemData.remove("_id");
+      itemData.remove("_prev");
+
+      // drop number and date data for line charts and area charts (#1)
+      if (item.mark.marktype === "line" || item.mark.marktype === "area") {
+        console.warn('[VgTooltip]: By default, we only show qualitative data in tooltip.');
+
+        itemData.forEach(function(field, value) {
+          switch(dl.type(value)) {
+            case 'boolean':
+            case 'string':
+              content.push({fieldTitle: field, fieldValue: value});
+              break;
+            case 'number':
+            case 'date':
+            default:
+              break;
+          }
+        })
+      }
+      else {
+        itemData.forEach(function(field, value) {
+          var formattedValue = autoFormat(field, value, options);
+          content.push({fieldTitle: field, fieldValue: formattedValue});
+        });
+      }
+
+      return content;
+    }
+
+    /**
+     * Automatically format a date, number or string value
+     * @return the formated data, number or string value
+     */
     function autoFormat(field, value, options) {
 
       // check if timeUnit applies to the field
@@ -289,50 +354,14 @@ var tooltipUtil = (function() {
       }
     }
 
-    // auto-prepare tooltip: top level fields, default format
-    // drop number and date data for line charts and area charts #1
-    function getDefaultFieldsData (item, options) {
-      var content = [];
-
-      var itemData = d3.map(item.datum);
-      itemData.remove("_id");
-      itemData.remove("_prev");
-
-      if (item.mark.marktype === "line" || item.mark.marktype === "area") {
-        console.warn('[VgTooltip]: By default, we only show qualitative data in tooltip.');
-
-        itemData.forEach(function(field, value) {
-          switch(dl.type(value)) {
-            case 'boolean':
-            case 'string':
-              content.push({fieldTitle: field, fieldValue: value});
-              break;
-            case 'number':
-            case 'date':
-            default:
-              break;
-          }
-        })
-      }
-      else {
-        itemData.forEach(function(field, value) {
-          var formattedValue = autoFormat(field, value, options);
-          content.push({fieldTitle: field, fieldValue: formattedValue});
-        });
-      }
-
-      return content;
-    }
 
     var tooltipData;
-
-    if ( shouldShowDefaultFields(options) === true ) {
+    if ( shouldCustomizeFields(options) === 'default' ) {
       tooltipData = getDefaultFieldsData(item, options);
     }
     else {
       tooltipData = getCustomFieldsData(item, options);
     }
-
     return tooltipData;
   }
 
