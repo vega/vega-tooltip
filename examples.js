@@ -10,7 +10,7 @@
         spec: vlSpec
       };
       vg.embed(id, stackedbarEmbed, function(error, result) {
-        vlTooltip.linkToView(result.view, vlSpec, options);
+        vlTooltip.linkToView(result.view, vlSpec);
       });
     });
   }
@@ -22,7 +22,7 @@
       }
       vg.parse.spec(vgSpec, function(error, chart) {
         var view = chart({el:id}).update();
-        vgTooltip.linkToView(view, options);
+        vgTooltip.linkToView(view);
       });
     })
   }
@@ -43,11 +43,7 @@
         fieldTitle: "Miles per Gallon",
         type: "number"
       }
-    ],
-    offset: {
-      x: 1, // x and y axis in pixels
-      y: 1
-    }
+    ]
   };
   addVlExample("exampleSpecs/scatter.json", "#vis-scatter", scatterOpts);
 

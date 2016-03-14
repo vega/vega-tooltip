@@ -6,6 +6,10 @@
 var vgTooltip = (function() {
   return {
     linkToView: function(vgView, options) {
+      if (!options) {
+        options = {};
+      }
+
       // initialize tooltip with data
       vgView.on("mouseover", function(event, item) {
         tooltipUtil.init(event, item, options);
@@ -32,10 +36,6 @@ var vlTooltip = (function() {
 
   // supplement options with timeUnit and numberFormat from vlSpec
   function supplementOptions (options, vlSpec) {
-    if (!options) {
-      options = {};
-    }
-
     // supplement numberFormat
     if (vlSpec.config && vlSpec.config.numberFormat) {
       options.numberFormat = vlSpec.config.numberFormat;
@@ -64,6 +64,9 @@ var vlTooltip = (function() {
 
   return {
     linkToView: function(vgView, vlSpec, options) {
+      if (!options) {
+        options = {};
+      }
 
       options = supplementOptions(options, vlSpec);
 
@@ -265,7 +268,7 @@ var tooltipUtil = (function() {
         var value = getFieldValue(item.datum, opt.field);
 
         var formattedValue;
-        
+
         // if either type or format is missing, apply auto format
         // else if both type and format exist, apply custom format
         if (!opt.type || !opt.format) {
