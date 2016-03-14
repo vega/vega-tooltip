@@ -10,7 +10,7 @@
         spec: vlSpec
       };
       vg.embed(id, stackedbarEmbed, function(error, result) {
-        vlTooltip.linkToView(result.view, vlSpec);
+        vlTooltip.linkToView(result.view, vlSpec, options);
       });
     });
   }
@@ -22,7 +22,7 @@
       }
       vg.parse.spec(vgSpec, function(error, chart) {
         var view = chart({el:id}).update();
-        vgTooltip.linkToView(view);
+        vgTooltip.linkToView(view, options);
       });
     })
   }
