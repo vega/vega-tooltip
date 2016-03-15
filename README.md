@@ -19,7 +19,8 @@ http://vega.github.io/vega-lite-tooltip/
 
 ## Creating Your Tooltip
 **Step 1** Include the `vgTooltip` library and its dependencies (`d3`, `vega`, `vega-lite`, `vega-embed` and `datalib`) in your HTML `<head>`.
-```
+
+```html
 <!-- Dependencies -->
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="https://vega.github.io/vega/vega.min.js"></script>
@@ -32,7 +33,8 @@ http://vega.github.io/vega-lite-tooltip/
 ```
 
 **Step 2** In your HTML `<body>`, create a placeholder for your Vega-Lite or Vega visualization. Give the placeholder a unique `id`, which will be used in step 4. For example:
-```
+
+```html
 <!-- Placeholder for my Scatter Plot -->
 <div id="vis-scatter"></div>
 ```
@@ -66,7 +68,8 @@ vg.parse.spec(vgSpec, function(error, chart) {
 ```
 
 **Step 5** In step 4 callback function, link the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) object with your tooltip. If it's a Vega-Lite visualization, use `vlTooltip.linkToView`. If it's a Vega visualization, use `vgTooltip.linkToView`. For example:
-```
+
+```js
 // create a Vega-Lite example using vg.embed
 vg.embed("#vis-scatter", embedSpec, function(error, result) {
     // result.view is the Vega View, vlSpec is the original Vega-Lite spec
@@ -74,7 +77,7 @@ vg.embed("#vis-scatter", embedSpec, function(error, result) {
 });
 ```
 or
-```
+```js
 // create a Vega example using vg.parse.spec
 vg.parse.spec(vgSpec, function(error, chart) {
     // view is the Vega View
@@ -86,18 +89,20 @@ Congratulations! Now you should be able to see a tooltip working with your visua
 
 ## Customizing Your Tooltip
 You can customize the look and the content of your tooltip by passing in an optional `options` parameter to the `linkToView` function. For example:
-```
+
+```js
 // in vg.embed callback
 vlTooltip.linkToView(result.view, vlSpec, options);
 ```
 or
-```
+```js
 // in vg.parse.spec callback
 vgTooltip.vgTooltip.linkToView(view, options);
 ```
 
 The complete structure of `options` looks like this:
-```
+
+```js
 var options = {
   showFields: [{ // specify data fields to be shown in the tooltip
     field: ..., // field name in the dataset
@@ -112,6 +117,7 @@ var options = {
   colorTheme: 'light' | 'dark' // specify a color theme the tooltip should use
 }
 ```
+
 You don't have to provide a fully-structured `options` object to customize your tooltip. In most cases, a partially filled-out `options` object should suffice.
 
 ### Customize Fields
