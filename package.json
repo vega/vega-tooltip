@@ -4,10 +4,14 @@
   "description": "A tooltip plugin for vega-lite visualization grammar.",
   "main": "vega-lite-tooltip.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && npm run data",
     "prestart": "npm run build",
     "start": "python -m SimpleHTTPServer 4000",
-    "test": "echo TODO:test"
+    "test": "echo TODO:test",
+    "data": "rsync -r node_modules/vega-datasets/data/* data"
+  },
+  "devDependencies": {
+    "vega-datasets": "vega/vega-datasets#gh-pages"
   },
   "repository": {
     "type": "git",
