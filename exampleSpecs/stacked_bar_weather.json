@@ -1,5 +1,5 @@
 {
-  "data": {"url": "https://vega.github.io/vega-datasets/data/seattle-weather.csv", "formatType": "csv"},
+  "data": {"url": "data/seattle-weather.csv", "formatType": "csv"},
   "mark": "bar",
   "encoding": {
     "x": {

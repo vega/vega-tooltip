@@ -5,7 +5,7 @@
   "data": [
     {
       "name": "temperature",
-      "url": "https://vega.github.io/vega-datasets/data/seattle-temps.csv",
+      "url": "data/seattle-temps.csv",
       "format": {"type": "csv", "parse": {"temp": "number", "date": "date"}},
       "transform": [
         {"type": "formula", "field": "hour", "expr": "hours(datum.date)"},

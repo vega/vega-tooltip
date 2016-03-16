@@ -4,12 +4,12 @@
   "data": [
     {
       "name": "unemp",
-      "url": "https://vega.github.io/vega-datasets/data/unemployment.tsv",
+      "url": "data/unemployment.tsv",
       "format": {"type": "tsv", "parse": "auto"}
     },
     {
       "name": "counties",
-      "url": "https://vega.github.io/vega-datasets/data/us-10m.json",
+      "url": "data/us-10m.json",
       "format": {"type": "topojson", "feature": "counties"},
       "transform": [
         { "type": "geopath", "projection": "albersUsa" },
