@@ -13,8 +13,9 @@ http://vega.github.io/vega-lite-tooltip/
 
 
 ## Run Instructions
-1. In the project folder `vega-lite-tooltip`, type command `npm start`.
-2. In your browser, navigate to `http://localhost:4000/`. You will see various Vega-Lite and Vega visualizations working with tooltip.
+1. In the project folder `vega-lite-tooltip`, type command `npm install`.
+2. Then, type `npm start`.
+3. In your browser, navigate to `http://localhost:4000/`.
 
 
 ## Creating Your Tooltip
