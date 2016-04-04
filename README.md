@@ -68,13 +68,13 @@ vg.parse.spec(vgSpec, function(error, chart) {
 });
 ```
 
-**Step 5** In step 4 callback function, link the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) object with your tooltip. If it's a Vega-Lite visualization, use `vlTooltip.linkToView`. If it's a Vega visualization, use `vgTooltip.linkToView`. For example:
+**Step 5** In step 4 callback function, create your tooltip with [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api). If you have a Vega-Lite visualization, use `vlTooltip()` to create your tooltip. If you have a Vega visualization, use `vgTooltip()` to create your tooltip. For example:
 
 ```js
 // create a Vega-Lite example using vg.embed
 vg.embed("#vis-scatter", embedSpec, function(error, result) {
     // result.view is the Vega View, vlSpec is the original Vega-Lite spec
-    vlTooltip.linkToView(result.view, vlSpec);
+    vlTooltip(result.view, vlSpec);
 });
 ```
 or
@@ -83,22 +83,22 @@ or
 vg.parse.spec(vgSpec, function(error, chart) {
     // view is the Vega View
     var view = chart({el:"#vis-scatter"}).update();
-    vgTooltip.linkToView(view);
+    vgTooltip(view);
 });
 ```
 Congratulations! Now you should be able to see a tooltip working with your visualization.
 
 ## Customizing Your Tooltip
-You can customize the look and the content of your tooltip by passing in an optional `options` parameter to the `linkToView` function. For example:
+You can customize the look and the content of your tooltip by passing in an optional `options` parameter to `vlTooltip()` or `vgTooltip()`. For example:
 
 ```js
 // in vg.embed callback
-vlTooltip.linkToView(result.view, vlSpec, options);
+vlTooltip(result.view, vlSpec, options);
 ```
 or
 ```js
 // in vg.parse.spec callback
-vgTooltip.vgTooltip.linkToView(view, options);
+vgTooltip(view, options);
 ```
 
 The complete structure of `options` looks like this:

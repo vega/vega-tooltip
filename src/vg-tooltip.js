@@ -4,8 +4,7 @@
  * provide data formats for those fields
  */
 var vgTooltip = (function() {
-  return {
-    linkToView: function(vgView, options) {
+  return function(vgView, options) {
       if (!options) {
         options = {};
       }
@@ -24,7 +23,6 @@ var vgTooltip = (function() {
       // clear tooltip
       vgView.on("mouseout", tooltipUtil.clear);
     }
-  }
 }());
 
 /**
@@ -62,8 +60,7 @@ var vlTooltip = (function() {
     return options;
   }
 
-  return {
-    linkToView: function(vgView, vlSpec, options) {
+  return function(vgView, vlSpec, options) {
       if (!options) {
         options = {};
       }
@@ -83,8 +80,7 @@ var vlTooltip = (function() {
 
       // clear tooltip
       vgView.on("mouseout", tooltipUtil.clear);
-    }
-  }
+    }  
 }());
 
 /**
