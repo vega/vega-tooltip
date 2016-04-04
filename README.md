@@ -124,6 +124,8 @@ You don't have to provide a fully-structured `options` object to customize your 
 ### Customize Fields
 By default, tooltip shows all top-level data fields bound to an element. You can use the `options.showFields` array to overwrite this behavior. If the `showFields` array is not empty, only fields in this array will be displayed in the tooltip.
 
+[//]: # (TODO(zening): tooltip fields order: can we recommend which fields should go first and which ones should go later? I feel that the fields that are most frequently changing as the mouse moves, as well as the field that's encoded with color should go first.)
+
 ### Customize Tooltip Offset
 By default, tooltip is to the bottom right of the cursor (10px right of and 10px below the cursor). You can use `options.offset` to overwrite this.
 

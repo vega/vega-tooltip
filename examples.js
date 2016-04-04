@@ -51,22 +51,22 @@
   var trellisBarOpts = {
     showFields: [
       {
-        field: "variety",
-        fieldTitle: "Variety"
+        field: "mean_yield",
+        fieldTitle: "Mean(Yield)",
+        type: "number",
+        format: ".2f"
       },
       {
         field: "year",
         fieldTitle: "Year"
       },
       {
-        field: "site",
-        fieldTitle: "Site"
+        field: "variety",
+        fieldTitle: "Variety"
       },
       {
-        field: "mean_yield",
-        fieldTitle: "Mean(Yield)",
-        type: "number",
-        format: ".2f"
+        field: "site",
+        fieldTitle: "Site"
       }
     ]
   };
@@ -79,18 +79,18 @@
   var stackedBarOpts = {
     showFields: [
       {
-        field: "month_date",
-        fieldTitle: "Month",
-        type: "date",
-        format: "month" // can be either VL timeUnit or d3 time format string specifier
-      },
-      {
         field: "weather",
         fieldTitle: "Weather"
       },
       {
         field: "count",
         fieldTitle: "Count"
+      },
+      {
+        field: "month_date",
+        fieldTitle: "Month",
+        type: "date",
+        format: "month" // can be either VL timeUnit or d3 time format string specifier
       }
     ]
   };
@@ -100,12 +100,12 @@
   var layeredBarOpts = {
     showFields: [
       {
-        field: "age",
-        fieldTitle: "Age"
-      },
-      {
         field: "gender",
         fieldTitle: "Gender"
+      },
+      {
+        field: "age",
+        fieldTitle: "Age"
       },
       {
         field: "sum_people",
@@ -175,14 +175,14 @@
   var heatmapOpts = {
     showFields: [
       {
+        field: "temp",
+        fieldTitle: "Temperature(F)"
+      },
+      {
         field: "date",
         fieldTitle: "Date",
         type: "date",
         format: "yearmonthdate"
-      },
-      {
-        field: "temp",
-        fieldTitle: "Temperature(F)"
       },
       {
         field: "hour",
