@@ -33,7 +33,7 @@ var vgTooltip = (function() {
 var vlTooltip = (function() {
 
   // supplement options with timeUnit and numberFormat from vlSpec
-  function supplementOptions (options, vlSpec) {
+  function supplementOptions(options, vlSpec) {
     // supplement numberFormat
     if (vlSpec.config && vlSpec.config.numberFormat) {
       options.numberFormat = vlSpec.config.numberFormat;
@@ -80,7 +80,7 @@ var vlTooltip = (function() {
 
       // clear tooltip
       vgView.on("mouseout", tooltipUtil.clear);
-    }  
+    }
 }());
 
 /**
@@ -109,7 +109,7 @@ var tooltipUtil = (function() {
    * Default position is 10px right of and 10px below the cursor. This can be
    * overwritten by options.
    */
-  function updatePosition (event, options) {
+  function updatePosition(event, options) {
     // determine x and y offsets, defaults are 10px
     var offsetX = 10;
     var offsetY = 10;
@@ -144,7 +144,7 @@ var tooltipUtil = (function() {
   }
 
   /* Update tooltip color theme according to options.colorTheme */
-  function updateTheme (options) {
+  function updateTheme(options) {
     if (options && options.colorTheme) {
       clearTheme();
       switch (options.colorTheme) {
@@ -159,7 +159,7 @@ var tooltipUtil = (function() {
   }
 
   /* Reset color themes to default */
-  function clearTheme () {
+  function clearTheme() {
     d3.select("#vis-tooltip").classed('dark-theme light-theme', false);
   }
 
@@ -167,13 +167,13 @@ var tooltipUtil = (function() {
    * Prepare data to be bound to the tooltip element
    * @return [{ fieldTitle: ..., fieldValue: ...}]
    */
-  function getTooltipData (item, options) {
+  function getTooltipData(item, options) {
 
     /**
      * Determine if tooltip should customize or show default fields
      * @return 'custom' or 'default'
      */
-    function shouldCustomizeFields (options) {
+    function shouldCustomizeFields(options) {
       if (options && options.showFields && options.showFields.length > 0) {
         return 'custom';
       }
@@ -190,7 +190,7 @@ var tooltipUtil = (function() {
      * @return An array ready to be bound to the tooltip element:
      * [{ fieldTitle: ..., fieldValue: ...}]
      */
-    function getCustomFieldsData (item, options) {
+    function getCustomFieldsData(item, options) {
 
       /**
        * Get one field value from an item's datum,
@@ -198,12 +198,12 @@ var tooltipUtil = (function() {
        * @return the field value if successful,
        * undefined if the field cannot be found in item.datum
        */
-      function getFieldValue (datum, field) {
-        if(field.includes('.')) {
+      function getFieldValue(datum, field) {
+        if (field.includes('.')) {
           var accessors = field.split('.');
           var value = datum;
           var path = '';
-          accessors.forEach(function (a) {
+          accessors.forEach(function(a) {
             if (value[a]) {
               value = value[a];
               path = path + '.' + a;
@@ -286,7 +286,7 @@ var tooltipUtil = (function() {
      * @return An array ready to be bound to the tooltip element:
      * [{ fieldTitle: ..., fieldValue: ...}]
      */
-    function getDefaultFieldsData (item, options) {
+    function getDefaultFieldsData(item, options) {
       var content = [];
 
       var itemData = d3.map(item.datum);
@@ -298,7 +298,7 @@ var tooltipUtil = (function() {
         console.warn('[VgTooltip]: By default, we only show qualitative data in tooltip.');
 
         itemData.forEach(function(field, value) {
-          switch(dl.type(value)) {
+          switch (dl.type(value)) {
             case 'boolean':
             case 'string':
               content.push({fieldTitle: field, fieldValue: value});
@@ -365,8 +365,8 @@ var tooltipUtil = (function() {
   }
 
   return {
-    init: function (event, item, options) {
-      if(shouldShowTooltip(item) === false) return;
+    init: function(event, item, options) {
+      if( shouldShowTooltip(item) === false ) return;
 
       var tooltipData = getTooltipData(item, options);
 

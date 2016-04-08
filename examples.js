@@ -1,4 +1,4 @@
-(function () {
+(function() {
 
   function addVlExample(path, id, options) {
     d3.json(path, function(error, vlSpec) {
