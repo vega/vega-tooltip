@@ -78,6 +78,11 @@
   };
   addVlExample("exampleSpecs/trellis_barley.json", "#vis-trellis-barley", trellisBarOpts);
 
+  // Scatter Binned
+  addVlExample("exampleSpecs/scatter_binned.json", "#vis-scatter-binned");
+  addVlExample("exampleSpecs/scatter_binned_color.json", "#vis-scatter-binned-color");
+  addVlExample("exampleSpecs/scatter_binned_size.json", "#vis-scatter-binned-size");
+
   // Simple Bar Chart
   addVlExample("exampleSpecs/bar.json", "#vis-bar");
 
