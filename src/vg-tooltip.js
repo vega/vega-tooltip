@@ -106,32 +106,19 @@ var tooltipUtil = (function() {
 
   /**
    * Prepare data to be bound to the tooltip element
-   * @return [{ fieldTitle: ..., fieldValue: ...}]
+   * @return [{ title: ..., value: ...}]
    */
   function getTooltipData(item, options) {
-
-    /**
-     * Determine if tooltip should customize or show default fields
-     * @return 'custom' or 'default'
-     */
-    function shouldCustomizeFields(options) {
-      if (options && options.showFields && options.showFields.length > 0) {
-        return 'custom';
-      }
-      else {
-        return 'default';
-      }
-    }
 
     /**
      * Prepare custom fields (specified by options) for tooltip.
      * When options or vlSpec provides custom format for a field, apply custom format.
      * Otherwise, automatically format the field.
      * options can always overwrite format provided by vlSpec.
-     * @return An array ready to be bound to the tooltip element:
-     * [{ fieldTitle: ..., fieldValue: ...}]
+     * @return Field title and value array, ready to be formatted:
+     * [{ title: ..., value: ...}]
      */
-    function getCustomFieldsData(item, options) {
+    function getCustomFields(item, options) {
 
       /**
        * Get one field value from an item's datum,
@@ -139,7 +126,7 @@ var tooltipUtil = (function() {
        * @return the field value if successful,
        * undefined if the field cannot be found in item.datum
        */
-      function getFieldValue(datum, field) {
+      function getValue(datum, field) {
         if (field.includes('.')) {
           var accessors = field.split('.');
           var value = datum;
@@ -151,7 +138,7 @@ var tooltipUtil = (function() {
             }
             else {
               console.warn('[VgTooltip] Cannot find field ' + path + ' in data.');
-              return;
+              return undefined;
             }
           });
           return value;
@@ -162,7 +149,7 @@ var tooltipUtil = (function() {
           }
           else {
             console.warn('[VgTooltip] Cannot find field ' + field + ' in data.');
-            return;
+            return undefined;
           }
         }
       }
@@ -171,51 +158,58 @@ var tooltipUtil = (function() {
        * Apply custom format to a date, number, or string value
        * @return the formatted value
        */
-      function custFormat(opt, value) {
-        var formattedValue;
-        switch (opt.type) {
-          case 'date':
-            // opt.format can be a Vega-Lite timeUnit or simply a string specifier
-            if (vl.timeUnit.TIMEUNITS.indexOf(opt.format) > -1) {
-              var specifier = vl.timeUnit.format(opt.format)
-              var formatter = dl.format.time(specifier);
-              formattedValue = formatter(value);
-            }
-            else {
-              var formatter = dl.format.time(opt.format);
-              formattedValue = formatter(value);
-            }
-            break;
-          case 'number':
-            // opt.number is a string specifier
-            var formatter = dl.format.number(opt.format);
-            formattedValue = formatter(value);
-            break;
-          case 'string':
-          default:
-            formattedValue = value;
-        }
-        return formattedValue;
-      }
+      // function custFormat(opt, value) {
+      //   var formattedValue;
+      //   switch (opt.type) {
+      //     case 'date':
+      //       // opt.format can be a Vega-Lite timeUnit or simply a string specifier
+      //       if (vl.timeUnit.TIMEUNITS.indexOf(opt.format) > -1) {
+      //         var specifier = vl.timeUnit.format(opt.format)
+      //         var formatter = dl.format.time(specifier);
+      //         formattedValue = formatter(value);
+      //       }
+      //       else {
+      //         var formatter = dl.format.time(opt.format);
+      //         formattedValue = formatter(value);
+      //       }
+      //       break;
+      //     case 'number':
+      //       // opt.number is a string specifier
+      //       var formatter = dl.format.number(opt.format);
+      //       formattedValue = formatter(value);
+      //       break;
+      //     case 'string':
+      //     default:
+      //       formattedValue = value;
+      //   }
+      //   return formattedValue;
+      // }
 
       var content = [];
 
       options.showFields.forEach(function(opt) {
-        var title = opt.fieldTitle ? opt.fieldTitle : opt.field;
-        var value = getFieldValue(item.datum, opt.field);
-
-        var formattedValue;
-
-        // if either type or format is missing, apply auto format
-        // else if both type and format exist, apply custom format
-        if (!opt.type || !opt.format) {
-          formattedValue = autoFormat(opt.field, value, options);
-        }
-        else {
-          formattedValue = custFormat(opt, value);
+        var value = getValue(item.datum, opt.field);
+        if (value != undefined)
+        {
+          content.push({title: opt.field, value: value});
         }
 
-        content.push({fieldTitle: title, fieldValue: formattedValue});
+
+        // var title = opt.fieldTitle ? opt.fieldTitle : opt.field;
+        // var value = getFieldValue(item.datum, opt.field);
+        //
+        // var formattedValue;
+        //
+        // // if either type or format is missing, apply auto format
+        // // else if both type and format exist, apply custom format
+        // if (!opt.type || !opt.format) {
+        //   formattedValue = autoFormat(opt.field, value, options);
+        // }
+        // else {
+        //   formattedValue = custFormat(opt, value);
+        // }
+        //
+        // content.push({fieldTitle: title, fieldValue: formattedValue});
       });
 
       return content;
@@ -223,42 +217,61 @@ var tooltipUtil = (function() {
 
     /**
      * Prepare default fields (top-level fields of item.datum) for tooltip.
-     * Automatically format field values.
-     * @return An array ready to be bound to the tooltip element:
-     * [{ fieldTitle: ..., fieldValue: ...}]
+     * @return Field title and value array, ready to be formatted:
+     * [{ title: ..., value: ...}]
      */
-    function getDefaultFieldsData(item, options) {
+    function getDefaultFields(item, options) {
       var content = [];
 
       var itemData = d3.map(item.datum);
       itemData.remove("_id");
       itemData.remove("_prev");
 
+      itemData.forEach(function(field, value) {
+        content.push({title: field, value: value});
+      })
       // drop number and date data for line charts and area charts (#1)
-      if (item.mark.marktype === "line" || item.mark.marktype === "area") {
-        console.warn('[VgTooltip]: By default, we only show qualitative data in tooltip.');
-
-        itemData.forEach(function(field, value) {
-          switch (dl.type(value)) {
-            case 'boolean':
-            case 'string':
-              content.push({fieldTitle: field, fieldValue: value});
-              break;
-            case 'number':
-            case 'date':
-            default:
-              break;
-          }
-        })
-      }
-      else {
-        itemData.forEach(function(field, value) {
-          var formattedValue = autoFormat(field, value, options);
-          content.push({fieldTitle: field, fieldValue: formattedValue});
-        });
-      }
+      // if (item.mark.marktype === "line" || item.mark.marktype === "area") {
+      //   console.warn('[VgTooltip]: By default, we only show qualitative data in tooltip.');
+      //
+      //   itemData.forEach(function(field, value) {
+      //     switch (dl.type(value)) {
+      //       case 'boolean':
+      //       case 'string':
+      //         content.push({fieldTitle: field, fieldValue: value});
+      //         break;
+      //       case 'number':
+      //       case 'date':
+      //       default:
+      //         break;
+      //     }
+      //   })
+      // }
+      // else {
+      //   itemData.forEach(function(field, value) {
+      //     var formattedValue = autoFormat(field, value, options);
+      //     content.push({fieldTitle: field, fieldValue: formattedValue});
+      //   });
+      // }
 
       return content;
+    }
+
+    /**
+     * Format field title and field value according to (1) options, (2) spec, (3) datalib auto format
+     * @return Formatted field title and value array, ready to be bound to the tooltip element:
+     * [{ title: ..., value: ... }]
+     */
+    function formatFields(tooltipData, options) {
+      tooltipData.forEach(function(field) {
+        console.log(field.title + ": " + field.value);
+        // options format
+
+        // spec format
+
+        // auto format
+
+      })
     }
 
     /**
@@ -294,14 +307,28 @@ var tooltipUtil = (function() {
       }
     }
 
-
+    // this array will be bind to the tooltip element
     var tooltipData;
-    if ( shouldCustomizeFields(options) === 'default' ) {
-      tooltipData = getDefaultFieldsData(item, options);
+
+    // decide which fields to show in the tooltip
+    if ( options && options.showFields && options.showFields.length > 0 ) {
+      tooltipData = getCustomFields(item, options);
     }
     else {
-      tooltipData = getCustomFieldsData(item, options);
+      tooltipData = getDefaultFields(item, options);
     }
+
+    // TODO(zening): binned fields
+    // TODO(zening): count, count_start, count_end, layout_mid
+    // TODO(zening): don't show layout (layout_start, layout_mid, layout_end, layout_path, layout_x, layout_y)
+    // TODO(zening): perhaps also remove _id and _prev here?
+    // TODO(zening): drop quantitative fields for area and line charts
+
+    console.log(tooltipData);
+
+    // format field titles and values
+    formatFields(tooltipData, options);
+
     return tooltipData;
   }
 
@@ -315,8 +342,8 @@ var tooltipUtil = (function() {
 
     var row = tooltipRows.enter().append("tr")
     .attr("class", "tooltip-row");
-    row.append("td").attr("class", "key").text(function(d) { return d.fieldTitle + ":"; });
-    row.append("td").attr("class", "value").text(function(d) { return d.fieldValue; });
+    row.append("td").attr("class", "key").text(function(d) { return d.title + ":"; });
+    row.append("td").attr("class", "value").text(function(d) { return d.value; });
   }
 
   /**
