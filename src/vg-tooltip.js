@@ -187,11 +187,11 @@ var tooltipUtil = (function() {
 
       var content = [];
 
-      options.fields.forEach(function(opt) {
-        var value = getValue(item.datum, opt.field);
+      options.fields.forEach(function(fld) {
+        var value = getValue(item.datum, fld);
         if (value != undefined)
         {
-          content.push({title: opt.field, value: value});
+          content.push({title: fld, value: value});
         }
 
 
@@ -257,6 +257,26 @@ var tooltipUtil = (function() {
       return content;
     }
 
+    function formatFieldTitles(tooltipData, options) {
+      tooltipData.forEach(function(field) {
+        var defaultTitle = field.title;
+
+        // get a custom field title from options
+        if (options.titles && options.titles.length > 0) {
+          var optTitles = d3.map(options.titles, function(d) { return d.field; });
+          if ( optTitles.get(defaultTitle) ) {
+            var customTitle = optTitles.get(defaultTitle).title;
+            field.title = customTitle;
+            return;
+          }
+        }
+
+        // TODO(zening): get custom title from spec (e.g. axis title, legend title)
+      });
+
+      return tooltipData;
+    }
+
     /**
      * Format field title and field value according to (1) options, (2) spec, (3) datalib auto format
      * @return Formatted field title and value array, ready to be bound to the tooltip element:
@@ -264,13 +284,10 @@ var tooltipUtil = (function() {
      */
     function formatFields(tooltipData, options) {
 
-      function formatByOptions(field, options) {
-
-      }
       tooltipData.forEach(function(field) {
         console.log(field.title + ": " + field.value);
         // options format
-        
+
 
         // spec format
 
@@ -329,9 +346,9 @@ var tooltipUtil = (function() {
     // TODO(zening): perhaps also remove _id and _prev here?
     // TODO(zening): drop quantitative fields for area and line charts
 
-    console.log(tooltipData);
+    formatFieldTitles(tooltipData, options);
 
-    // format field titles
+
 
     // format field values
 
