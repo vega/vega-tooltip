@@ -105,65 +105,6 @@ var tooltipUtil = (function() {
   }
 
   /**
-   * Update tooltip position
-   * Default position is 10px right of and 10px below the cursor. This can be
-   * overwritten by options.
-   */
-  function updatePosition(event, options) {
-    // determine x and y offsets, defaults are 10px
-    var offsetX = 10;
-    var offsetY = 10;
-    if (options && options.offset && !(options.offset.x === undefined)) {
-      offsetX = options.offset.x;
-    }
-    if (options && options.offset && !(options.offset.y === undefined)) {
-      offsetY = options.offset.y;
-    }
-
-    d3.select("#vis-tooltip")
-    .style("top", function() {
-      // by default: put tooltip 10px below cursor
-      // if tooltip is close to the bottom of the window, put tooltip 10px above cursor
-      var tooltipHeight = parseInt(d3.select(this).style("height"));
-      if (event.clientY + tooltipHeight + offsetY < window.innerHeight) {
-        return "" + (event.clientY + offsetY) + "px";
-      } else {
-        return "" + (event.clientY - tooltipHeight - offsetY) + "px";
-      }
-    })
-    .style("left", function() {
-      // by default: put tooltip 10px to the right of cursor
-      // if tooltip is close to the right edge of the window, put tooltip 10 px to the left of cursor
-      var tooltipWidth = parseInt(d3.select(this).style("width"));
-      if (event.clientX + tooltipWidth + offsetX < window.innerWidth) {
-        return "" + (event.clientX + offsetX) + "px";
-      } else {
-        return "" + (event.clientX - tooltipWidth - offsetX) + "px";
-      }
-    });
-  }
-
-  /* Update tooltip color theme according to options.colorTheme */
-  function updateTheme(options) {
-    if (options && options.colorTheme) {
-      clearTheme();
-      switch (options.colorTheme) {
-        case 'dark':
-          d3.select("#vis-tooltip").classed('dark-theme', true);
-          break;
-        case 'light':
-        default:
-      }
-    }
-
-  }
-
-  /* Reset color themes to default */
-  function clearTheme() {
-    d3.select("#vis-tooltip").classed('dark-theme light-theme', false);
-  }
-
-  /**
    * Prepare data to be bound to the tooltip element
    * @return [{ fieldTitle: ..., fieldValue: ...}]
    */
@@ -364,23 +305,96 @@ var tooltipUtil = (function() {
     return tooltipData;
   }
 
+  /**
+   * Bind data to the tooltip element
+   */
+  function bindData(tooltipData) {
+    var tooltipRows = d3.select("#vis-tooltip").selectAll(".tooltip-row").data(tooltipData);
+
+    tooltipRows.exit().remove();
+
+    var row = tooltipRows.enter().append("tr")
+    .attr("class", "tooltip-row");
+    row.append("td").attr("class", "key").text(function(d) { return d.fieldTitle + ":"; });
+    row.append("td").attr("class", "value").text(function(d) { return d.fieldValue; });
+  }
+
+  /**
+   * Clear tooltip data
+   */
+  function clearData() {
+    var tooltipRows = d3.select("#vis-tooltip").selectAll(".tooltip-row").data([]);
+    tooltipRows.exit().remove();
+  }
+
+  /**
+   * Update tooltip position
+   * Default position is 10px right of and 10px below the cursor. This can be
+   * overwritten by options.
+   */
+  function updatePosition(event, options) {
+    // determine x and y offsets, defaults are 10px
+    var offsetX = 10;
+    var offsetY = 10;
+    if (options && options.offset && !(options.offset.x === undefined)) {
+      offsetX = options.offset.x;
+    }
+    if (options && options.offset && !(options.offset.y === undefined)) {
+      offsetY = options.offset.y;
+    }
+
+    d3.select("#vis-tooltip")
+    .style("top", function() {
+      // by default: put tooltip 10px below cursor
+      // if tooltip is close to the bottom of the window, put tooltip 10px above cursor
+      var tooltipHeight = parseInt(d3.select(this).style("height"));
+      if (event.clientY + tooltipHeight + offsetY < window.innerHeight) {
+        return "" + (event.clientY + offsetY) + "px";
+      } else {
+        return "" + (event.clientY - tooltipHeight - offsetY) + "px";
+      }
+    })
+    .style("left", function() {
+      // by default: put tooltip 10px to the right of cursor
+      // if tooltip is close to the right edge of the window, put tooltip 10 px to the left of cursor
+      var tooltipWidth = parseInt(d3.select(this).style("width"));
+      if (event.clientX + tooltipWidth + offsetX < window.innerWidth) {
+        return "" + (event.clientX + offsetX) + "px";
+      } else {
+        return "" + (event.clientX - tooltipWidth - offsetX) + "px";
+      }
+    });
+  }
+
+  /* Update tooltip color theme according to options.colorTheme */
+  function updateTheme(options) {
+    if (options && options.colorTheme) {
+      clearTheme();
+      switch (options.colorTheme) {
+        case 'dark':
+          d3.select("#vis-tooltip").classed('dark-theme', true);
+          break;
+        case 'light':
+        default:
+      }
+    }
+
+  }
+
+  /* Reset color themes to default */
+  function clearTheme() {
+    d3.select("#vis-tooltip").classed('dark-theme light-theme', false);
+  }
+
   return {
     init: function(event, item, options) {
       if( shouldShowTooltip(item) === false ) return;
 
+      // prepare data for tooltip
       var tooltipData = getTooltipData(item, options);
-
-      // if no data, don't show tooltip
       if (!tooltipData || tooltipData.length === 0) return;
 
-      var tooltipRows = d3.select("#vis-tooltip").selectAll(".tooltip-row").data(tooltipData);
-
-      tooltipRows.exit().remove();
-
-      var row = tooltipRows.enter().append("tr")
-      .attr("class", "tooltip-row");
-      row.append("td").attr("class", "key").text(function(d) { return d.fieldTitle + ":"; });
-      row.append("td").attr("class", "value").text(function(d) { return d.fieldValue; });
+      bindData(tooltipData);
 
       updatePosition(event, options);
       updateTheme(options);
@@ -390,8 +404,7 @@ var tooltipUtil = (function() {
       updatePosition(event, options);
     },
     clear: function() {
-      var tooltipRows = d3.select("#vis-tooltip").selectAll(".tooltip-row").data([]);
-      tooltipRows.exit().remove();
+      clearData();
       clearTheme();
       d3.select("#vis-tooltip").style("opacity", 0);
     }
