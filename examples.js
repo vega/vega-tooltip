@@ -30,7 +30,7 @@
   /* Vega-Lite Examples */
   // Scatter Plot
   var scatterOpts = {
-    showFields: [
+    fields: [
       {
         field: "Name"
       },
@@ -45,11 +45,11 @@
       }
     ]
   };
-  addVlExample("exampleSpecs/scatter.json", "#vis-scatter");
+  addVlExample("exampleSpecs/scatter.json", "#vis-scatter", scatterOpts);
 
   // Trellis Barley
   var trellisBarOpts = {
-    showFields: [
+    fields: [
       {
         field: "mean_yield",
         fieldTitle: "Mean(Yield)",
@@ -77,7 +77,7 @@
 
   // Stacked Bar Chart
   var stackedBarOpts = {
-    showFields: [
+    fields: [
       {
         field: "weather",
         fieldTitle: "Weather"
@@ -98,7 +98,7 @@
 
   // Layered Bar Chart
   var layeredBarOpts = {
-    showFields: [
+    fields: [
       {
         field: "gender",
         fieldTitle: "Gender"
@@ -134,7 +134,7 @@
   /* Vega Examples */
   // Arc
   var arcOpts = {
-    showFields: [
+    fields: [
       {
         field: "data"
       }
@@ -144,7 +144,7 @@
 
   // Choropleth
   var choroplethOpts = {
-    showFields: [
+    fields: [
       {
         field: "unemp.id",
         fieldTitle: "County ID"
@@ -161,7 +161,7 @@
 
   // Force
   var forceOpts = {
-    showFields: [
+    fields: [
       {
         field: "name",
         fieldTitle: "Name",
@@ -173,7 +173,7 @@
 
   // Heatmap
   var heatmapOpts = {
-    showFields: [
+    fields: [
       {
         field: "temp",
         fieldTitle: "Temperature(F)"

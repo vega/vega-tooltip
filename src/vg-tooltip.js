@@ -187,7 +187,7 @@ var tooltipUtil = (function() {
 
       var content = [];
 
-      options.showFields.forEach(function(opt) {
+      options.fields.forEach(function(opt) {
         var value = getValue(item.datum, opt.field);
         if (value != undefined)
         {
@@ -263,9 +263,14 @@ var tooltipUtil = (function() {
      * [{ title: ..., value: ... }]
      */
     function formatFields(tooltipData, options) {
+
+      function formatByOptions(field, options) {
+
+      }
       tooltipData.forEach(function(field) {
         console.log(field.title + ": " + field.value);
         // options format
+        
 
         // spec format
 
@@ -311,7 +316,7 @@ var tooltipUtil = (function() {
     var tooltipData;
 
     // decide which fields to show in the tooltip
-    if ( options && options.showFields && options.showFields.length > 0 ) {
+    if ( options && options.fields && options.fields.length > 0 ) {
       tooltipData = getCustomFields(item, options);
     }
     else {
@@ -326,8 +331,10 @@ var tooltipUtil = (function() {
 
     console.log(tooltipData);
 
-    // format field titles and values
-    formatFields(tooltipData, options);
+    // format field titles
+
+    // format field values
+
 
     return tooltipData;
   }
