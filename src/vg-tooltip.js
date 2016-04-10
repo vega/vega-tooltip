@@ -238,10 +238,10 @@ var tooltipUtil = (function() {
         field.title = "";
 
         // try to get a custom field title from options
-        if (options.titles && options.titles.length > 0) {
-          var optTitles = d3.map(options.titles, function(d) { return d.field; });
-          if ( optTitles.get(field.name) ) {
-            field.title = optTitles.get(field.name).title;
+        if (options.fieldConfigs && options.fieldConfigs.length > 0) {
+          var configs = d3.map(options.fieldConfigs, function(d) { return d.field; });
+          if ( configs.get(field.name) && configs.get(field.name).title ) {
+            field.title = configs.get(field.name).title;
             return;
           }
         }
@@ -268,13 +268,13 @@ var tooltipUtil = (function() {
        * undefined if options doesn't provide both type and format for the field
        */
       function optFormat(field, options) {
-        // if options doesn't provide valueFormats, return undefined
-        if (!options.valueFormats || options.valueFormats.length <= 0) return;
+        // if options doesn't have fieldConfigs, return undefined
+        if (!options.fieldConfigs || options.fieldConfigs.length <= 0) return;
 
         // if options provides type and format for the field, use them, and return the formatted value
-        var optFmt = d3.map(options.valueFormats, function(d) { return d.field; });
-        if ( optFmt.get(field.name) ) {
-          var fmt = optFmt.get(field.name);
+        var configs = d3.map(options.fieldConfigs, function(d) { return d.field; });
+        if ( configs.get(field.name) && configs.get(field.name).value ) {
+          var fmt = configs.get(field.name).value;
           if (fmt.type && fmt.format) {
             var formattedValue = applyFormat(fmt.type, fmt.format, field.value);
             return formattedValue;

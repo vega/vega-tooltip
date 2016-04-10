@@ -31,7 +31,7 @@
   // Scatter Plot
   var scatterOpts = {
     fields: ["Name", "Horsepower", "Miles_per_Gallon"],
-    titles: [
+    fieldConfigs: [
       {
         field: "Miles_per_Gallon",
         title: "Miles per Gallon"
@@ -43,17 +43,11 @@
   // Trellis Barley
   var trellisBarOpts = {
     fields: ["mean_yield", "year", "variety", "site"],
-    titles: [
+    fieldConfigs: [
       {
         field: "mean_yield",
-        title: "MEAN(yield)"
-      }
-    ],
-    valueFormats: [
-      {
-        field: "mean_yield",
-        type: "number",
-        format: ".2f"
+        title: "MEAN(yield)",
+        value: {type: "number", format: ".2f"}
       }
     ]
   };
@@ -65,11 +59,10 @@
   // Stacked Bar Chart
   var stackedBarOpts = {
     fields: ["weather", "count", "month_date"],
-    valueFormats: [
+    fieldConfigs: [
       {
         field: "month_date",
-        type: "date",
-        format: "month"
+        value: {type: "date", format: "month"}
       }
     ]
   };
@@ -78,17 +71,11 @@
   // Layered Bar Chart
   var layeredBarOpts = {
     fields: ["gender", "age", "sum_people"],
-    titles: [
+    fieldConfigs: [
       {
         field: "sum_people",
-        title: "population"
-      }
-    ],
-    valueFormats: [
-      {
-        field: "sum_people",
-        type: "number",
-        format: ","
+        title: "population",
+        value: {type: "number", format: ","}
       }
     ]
   };
@@ -118,21 +105,15 @@
   // Choropleth
   var choroplethOpts = {
     fields: ["unemp.id", "unemp.rate"],
-    titles: [
+    fieldConfigs: [
       {
         field: "unemp.id",
         title: "County ID"
       },
       {
         field: "unemp.rate",
-        title: "Unemployment Rate"
-      }
-    ],
-    valueFormats: [
-      {
-        field: "unemp.rate",
-        type: "number",
-        format: ".1%"
+        title: "Unemployment Rate",
+        value: {type: "number", format: ".1%"}
       }
     ]
   }
@@ -147,17 +128,14 @@
   // Heatmap
   var heatmapOpts = {
     fields: ["temp", "date", "hour"],
-    titles: [
+    fieldConfigs: [
       {
         field: "temp",
         title: "temp(F)"
-      }
-    ],
-    valueFormats: [
+      },
       {
         field: "date",
-        type: "date",
-        format: "yearmonthdate"
+        value: {type: "date", format: "yearmonthdate"}
       }
     ],
     offset: {
