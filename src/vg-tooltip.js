@@ -34,22 +34,29 @@ var vlTooltip = (function() {
 
   // supplement options with timeUnit and numberFormat from vlSpec
   function supplementOptions(options, vlSpec) {
+    // options.vlSpec is not visible to users
+    // it is a set of rules extracted from vlSpec that may be used to format the tooltip
+    options.vlSpec = {};
+
+    // TODO(zening): supplement binned fields
+
     // supplement numberFormat
     if (vlSpec.config && vlSpec.config.numberFormat) {
-      options.numberFormat = vlSpec.config.numberFormat;
+      options.vlSpec.numberFormat = vlSpec.config.numberFormat;
     }
 
+    // TODO(zening): supplement timeFormat
+    
     // supplement timeUnit
     vl.spec.fieldDefs(vlSpec).forEach(function(channel) {
       if (channel.timeUnit) {
-        if (!options.fieldsWithTimeUnit) {
-          options.fieldsWithTimeUnit = [];
+        if (!options.vlSpec.timeUnit) {
+          options.vlSpec.timeUnit = [];
         }
         try {
-          // TODO(zening): rename field because VL renames field
-          // e.g. date --> month_date, date --> year_date
+          // TODO(zening): consider how to remove the '_'
           var renamedField = channel.timeUnit + '_' + channel.field;
-          options.fieldsWithTimeUnit.push({field: renamedField, timeUnit: channel.timeUnit});
+          options.vlSpec.timeUnit.push({field: renamedField, timeUnit: channel.timeUnit});
         }
         catch (error) {
           console.error('[VgTooltip] Error parsing Vega-Lite timeUnit: ' + error);
@@ -285,6 +292,11 @@ var tooltipUtil = (function() {
         return;
       }
 
+      function vlSpecFormat(field, options) {
+        console.log(options);
+        return;
+      }
+
       /**
        * Apply a format to a date, number, or string value
        * @return the formatted value
@@ -317,10 +329,9 @@ var tooltipUtil = (function() {
       }
 
       tooltipData.forEach(function(field) {
-        console.log(field.title + ": " + field.value);
 
         // 1. try to format a field by options
-        var formattedValue = optFormat(field, options) || field.value;
+        var formattedValue = optFormat(field, options) || vlSpecFormat(field, options) || field.value;
 
         // 2. try to format a field by vlSpec
 
