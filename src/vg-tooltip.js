@@ -305,6 +305,17 @@ var tooltipUtil = (function() {
           }
         }
 
+        // if timeFormat applies to the field, return the formatted date value
+        if (options.vlSpec.timeFormat && dl.type(field.value) === 'date') {
+          return applyFormat('date', options.vlSpec.timeFormat, field.value);
+        }
+
+        // if numberFormat applies to the field, return the formatted number value
+        if (options.vlSpec.numberFormat && dl.type(field.value) === 'number') {
+          return applyFormat('number', options.vlSpec.numberFormat, field.value);
+        }
+
+        // if none of these rules apply to the field, return undefined
         return;
       }
 
@@ -341,12 +352,8 @@ var tooltipUtil = (function() {
 
       tooltipData.forEach(function(field) {
 
-        // 1. try to format a field by options
-        var formattedValue = optFormat(field, options) || vlSpecFormat(field, options) || field.value;
-
-        // 2. try to format a field by vlSpec
-
-        // 3. auto format
+        // try to format a field by (1) options, (2) vlSpec, (3) datalib auto format
+        var formattedValue = optFormat(field, options) || vlSpecFormat(field, options) || autoFormat(field.value);
         field.value = formattedValue;
 
       });
@@ -358,20 +365,14 @@ var tooltipUtil = (function() {
      * Automatically format a date, number or string value
      * @return the formated data, number or string value
      */
-    function autoFormat(field, value, options) {
-
-
-
-      // format other date, number, string values
+    function autoFormat(value) {
       switch (dl.type(value)) {
         case 'date':
           var formatter = dl.format.auto.time();
           return formatter(value);
         case 'number':
-          if (options.numberFormat) {
-            var formatter = dl.format.number(options.numberFormat);
+            var formatter = dl.format.auto.number();
             return formatter(value);
-          }
         case 'boolean':
         case 'string':
         default:
