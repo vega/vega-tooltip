@@ -191,7 +191,7 @@ var tooltipUtil = (function() {
         var value = getValue(item.datum, fld);
         if (value != undefined)
         {
-          content.push({title: fld, value: value});
+          content.push({name: fld, value: value});
         }
 
 
@@ -228,7 +228,7 @@ var tooltipUtil = (function() {
       itemData.remove("_prev");
 
       itemData.forEach(function(field, value) {
-        content.push({title: field, value: value});
+        content.push({name: field, value: value});
       })
       // drop number and date data for line charts and area charts (#1)
       // if (item.mark.marktype === "line" || item.mark.marktype === "area") {
@@ -257,43 +257,63 @@ var tooltipUtil = (function() {
       return content;
     }
 
+    /**
+     * Format field titles according to options
+     * In the future we are also going to format the field titles according to vlSpec
+     * so that users have less to specify in options
+     * @return tooltipData with formated field titles
+     */
     function formatFieldTitles(tooltipData, options) {
       tooltipData.forEach(function(field) {
-        var defaultTitle = field.title;
+        field.title = "";
 
-        // get a custom field title from options
+        // try to get a custom field title from options
         if (options.titles && options.titles.length > 0) {
           var optTitles = d3.map(options.titles, function(d) { return d.field; });
-          if ( optTitles.get(defaultTitle) ) {
-            var customTitle = optTitles.get(defaultTitle).title;
-            field.title = customTitle;
+          if ( optTitles.get(field.name) ) {
+            field.title = optTitles.get(field.name).title;
             return;
           }
         }
 
-        // TODO(zening): get custom title from spec (e.g. axis title, legend title)
+        // TODO(zening): try to get a custom field title from vlSpec (e.g. axis title, legend title)
+
+        // if neither options nor vlSpec provides custom field title,
+        // set field title equal to field name
+        field.title = field.name;
       });
 
       return tooltipData;
     }
 
     /**
-     * Format field title and field value according to (1) options, (2) spec, (3) datalib auto format
-     * @return Formatted field title and value array, ready to be bound to the tooltip element:
-     * [{ title: ..., value: ... }]
+     * Format field values according to (1) options, (2) vlSpec, (3) datalib auto format
+     * @return tooltipData with formated field values
      */
-    function formatFields(tooltipData, options) {
+    function formatFieldValues(tooltipData, options) {
 
+      function optFormat(field, options) {
+        if (!options.valueFormats && options.valueFormats.length <= 0) return;
+
+        var optFmt = d3.map(options.valueFormats, function(d) { return d.field; });
+        if ( optFmt.get(field.name) ) {
+          
+        }
+
+      }
       tooltipData.forEach(function(field) {
         console.log(field.title + ": " + field.value);
-        // options format
+
+        // 1. format a field by options
 
 
-        // spec format
+        // 2. format a field by vlSpec
 
-        // auto format
+        // 3. auto format
 
-      })
+      });
+
+      return tooltipData;
     }
 
     /**
@@ -346,12 +366,9 @@ var tooltipUtil = (function() {
     // TODO(zening): perhaps also remove _id and _prev here?
     // TODO(zening): drop quantitative fields for area and line charts
 
-    formatFieldTitles(tooltipData, options);
+    tooltipData = formatFieldTitles(tooltipData, options);
 
-
-
-    // format field values
-
+    tooltipData = formatFieldValues(tooltipData, options);
 
     return tooltipData;
   }
