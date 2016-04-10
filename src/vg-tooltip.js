@@ -46,7 +46,7 @@ var vlTooltip = (function() {
     }
 
     // TODO(zening): supplement timeFormat
-    
+
     // supplement timeUnit
     vl.spec.fieldDefs(vlSpec).forEach(function(channel) {
       if (channel.timeUnit) {
@@ -293,7 +293,18 @@ var tooltipUtil = (function() {
       }
 
       function vlSpecFormat(field, options) {
-        console.log(options);
+        // if options doesn't contain rules from vlSpec, return undefined
+        if (!options.vlSpec) return;
+
+        // if timeUnit describes the field, return the formatted value
+        if (options.vlSpec.timeUnit) {
+          var timeUnitFields = d3.map(options.vlSpec.timeUnit, function(d) { return d.field; });
+          if (timeUnitFields.has(field.name)) {
+            var format = timeUnitFields.get(field.name).timeUnit;
+            return applyFormat('date', format, field.value);
+          }
+        }
+
         return;
       }
 
@@ -349,15 +360,7 @@ var tooltipUtil = (function() {
      */
     function autoFormat(field, value, options) {
 
-      // check if timeUnit applies to the field
-      if (options.fieldsWithTimeUnit) {
-        var timeFields = d3.map(options.fieldsWithTimeUnit, function(d) { return d.field; });
-        if (timeFields.has(field)) {
-          var specifier = vl.timeUnit.format(timeFields.get(field).timeUnit);
-          var formatter = dl.format.time(specifier);
-          return formatter(value);
-        }
-      }
+
 
       // format other date, number, string values
       switch (dl.type(value)) {

@@ -58,13 +58,7 @@
 
   // Stacked Bar Chart
   var stackedBarOpts = {
-    fields: ["weather", "count", "month_date"],
-    fieldConfigs: [
-      {
-        field: "month_date",
-        value: {type: "date", format: "month"}
-      }
-    ]
+    fields: ["weather", "count", "month_date"]
   };
   addVlExample("exampleSpecs/stacked_bar_weather.json", "#vis-stacked-bar", stackedBarOpts);
 
