@@ -154,36 +154,6 @@ var tooltipUtil = (function() {
         }
       }
 
-      /**
-       * Apply custom format to a date, number, or string value
-       * @return the formatted value
-       */
-      // function custFormat(opt, value) {
-      //   var formattedValue;
-      //   switch (opt.type) {
-      //     case 'date':
-      //       // opt.format can be a Vega-Lite timeUnit or simply a string specifier
-      //       if (vl.timeUnit.TIMEUNITS.indexOf(opt.format) > -1) {
-      //         var specifier = vl.timeUnit.format(opt.format)
-      //         var formatter = dl.format.time(specifier);
-      //         formattedValue = formatter(value);
-      //       }
-      //       else {
-      //         var formatter = dl.format.time(opt.format);
-      //         formattedValue = formatter(value);
-      //       }
-      //       break;
-      //     case 'number':
-      //       // opt.number is a string specifier
-      //       var formatter = dl.format.number(opt.format);
-      //       formattedValue = formatter(value);
-      //       break;
-      //     case 'string':
-      //     default:
-      //       formattedValue = value;
-      //   }
-      //   return formattedValue;
-      // }
 
       var content = [];
 
@@ -292,24 +262,70 @@ var tooltipUtil = (function() {
      */
     function formatFieldValues(tooltipData, options) {
 
+      /**
+       * Try format a field according to options
+       * @return the formatted value if options provides both type and format for the field
+       * undefined if options doesn't provide both type and format for the field
+       */
       function optFormat(field, options) {
-        if (!options.valueFormats && options.valueFormats.length <= 0) return;
+        // if options doesn't provide valueFormats, return undefined
+        if (!options.valueFormats || options.valueFormats.length <= 0) return;
 
+        // if options provides type and format for the field, use them, and return the formatted value
         var optFmt = d3.map(options.valueFormats, function(d) { return d.field; });
         if ( optFmt.get(field.name) ) {
-          
+          var fmt = optFmt.get(field.name);
+          if (fmt.type && fmt.format) {
+            var formattedValue = applyFormat(fmt.type, fmt.format, field.value);
+            return formattedValue;
+          }
         }
 
+        // options doesn't provide type and format for the field, return undefined
+        return;
       }
+
+      /**
+       * Apply a format to a date, number, or string value
+       * @return the formatted value
+       */
+      function applyFormat(type, format, value) {
+        var formattedValue;
+        switch (type) {
+          case 'date':
+            // format can be a Vega-Lite timeUnit or simply a string specifier
+            if (vl.timeUnit.TIMEUNITS.indexOf(format) > -1) {
+              var specifier = vl.timeUnit.format(format)
+              var formatter = dl.format.time(specifier);
+              formattedValue = formatter(value);
+            }
+            else {
+              var formatter = dl.format.time(format);
+              formattedValue = formatter(value);
+            }
+            break;
+          case 'number':
+            // number is a string specifier
+            var formatter = dl.format.number(format);
+            formattedValue = formatter(value);
+            break;
+          case 'string':
+          default:
+            formattedValue = value;
+        }
+        return formattedValue;
+      }
+
       tooltipData.forEach(function(field) {
         console.log(field.title + ": " + field.value);
 
-        // 1. format a field by options
+        // 1. try to format a field by options
+        var formattedValue = optFormat(field, options) || field.value;
 
-
-        // 2. format a field by vlSpec
+        // 2. try to format a field by vlSpec
 
         // 3. auto format
+        field.value = formattedValue;
 
       });
 

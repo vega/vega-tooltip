@@ -48,6 +48,13 @@
         field: "mean_yield",
         title: "MEAN(yield)"
       }
+    ],
+    valueFormats: [
+      {
+        field: "mean_yield",
+        type: "number",
+        format: ".2f"
+      }
     ]
   };
   addVlExample("exampleSpecs/trellis_barley.json", "#vis-trellis-barley", trellisBarOpts);
@@ -57,7 +64,14 @@
 
   // Stacked Bar Chart
   var stackedBarOpts = {
-    fields: ["weather", "count", "month_date"]
+    fields: ["weather", "count", "month_date"],
+    valueFormats: [
+      {
+        field: "month_date",
+        type: "date",
+        format: "month"
+      }
+    ]
   };
   addVlExample("exampleSpecs/stacked_bar_weather.json", "#vis-stacked-bar", stackedBarOpts);
 
@@ -68,6 +82,13 @@
       {
         field: "sum_people",
         title: "population"
+      }
+    ],
+    valueFormats: [
+      {
+        field: "sum_people",
+        type: "number",
+        format: ","
       }
     ]
   };
@@ -106,6 +127,13 @@
         field: "unemp.rate",
         title: "Unemployment Rate"
       }
+    ],
+    valueFormats: [
+      {
+        field: "unemp.rate",
+        type: "number",
+        format: ".1%"
+      }
     ]
   }
   addVgExample("exampleSpecs/choropleth.json", "#vis-choropleth", choroplethOpts);
@@ -119,6 +147,19 @@
   // Heatmap
   var heatmapOpts = {
     fields: ["temp", "date", "hour"],
+    titles: [
+      {
+        field: "temp",
+        title: "temp(F)"
+      }
+    ],
+    valueFormats: [
+      {
+        field: "date",
+        type: "date",
+        format: "yearmonthdate"
+      }
+    ],
     offset: {
       x: 10,
       y: 0
