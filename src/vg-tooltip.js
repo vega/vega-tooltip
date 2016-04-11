@@ -201,6 +201,8 @@ var tooltipUtil = (function() {
       var content = [];
 
       var itemData = d3.map(item.datum);
+
+      // remove _id and _prev
       itemData.remove("_id");
       itemData.remove("_prev");
 
@@ -380,22 +382,19 @@ var tooltipUtil = (function() {
       }
     }
 
-    // this array will be bind to the tooltip element
-    var tooltipData;
-
     // decide which fields to show in the tooltip
+    // TODO(zening): remove _id and _prev here
+    // TODO(zening): if there are binned fields, remove _start, _end, _mid, _range fields, add bin_field and its value
+    // TODO(zening): for count, drop count_start and count_end, leave count
+    // TODO(zening): don't show layout (layout_start, layout_mid, layout_end, layout_path, layout_x, layout_y)
+    // TODO(zening): for area and line charts, drop quantitative fields
+    var tooltipData; // this array will be bind to the tooltip element
     if ( options && options.fields && options.fields.length > 0 ) {
       tooltipData = getCustomFields(item, options);
     }
     else {
       tooltipData = getDefaultFields(item, options);
     }
-
-    // TODO(zening): binned fields
-    // TODO(zening): count, count_start, count_end, layout_mid
-    // TODO(zening): don't show layout (layout_start, layout_mid, layout_end, layout_path, layout_x, layout_y)
-    // TODO(zening): perhaps also remove _id and _prev here?
-    // TODO(zening): drop quantitative fields for area and line charts
 
     tooltipData = formatFieldTitles(tooltipData, options);
 
