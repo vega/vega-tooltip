@@ -31,25 +31,26 @@
   // Scatter Plot
   var scatterOpts = {
     fields: ["Name", "Horsepower", "Miles_per_Gallon"],
-    fieldConfigs: [
-      {
-        field: "Miles_per_Gallon",
+    fieldConfigs:
+    {
+      "Miles_per_Gallon": {
         title: "Miles per Gallon"
       }
-    ]
+    }
   };
   addVlExample("exampleSpecs/scatter.json", "#vis-scatter", scatterOpts);
 
   // Trellis Barley
   var trellisBarOpts = {
     fields: ["mean_yield", "year", "variety", "site"],
-    fieldConfigs: [
-      {
-        field: "mean_yield",
+    fieldConfigs:
+    {
+      "mean_yield": {
         title: "MEAN(yield)",
-        value: {type: "number", format: ".2f"}
+        formatType: "number",
+        format: ".2f"
       }
-    ]
+    }
   };
   addVlExample("exampleSpecs/trellis_barley.json", "#vis-trellis-barley", trellisBarOpts);
 
@@ -65,13 +66,13 @@
   // Layered Bar Chart
   var layeredBarOpts = {
     fields: ["gender", "age", "sum_people"],
-    fieldConfigs: [
-      {
-        field: "sum_people",
+    fieldConfigs: {
+      "sum_people": {
         title: "population",
-        value: {type: "number", format: ","}
+        formatType: "number",
+        format: ","
       }
-    ]
+    }
   };
   addVlExample("exampleSpecs/bar_layered_transparent.json", "#vis-layered-bar", layeredBarOpts);
 
@@ -99,17 +100,14 @@
   // Choropleth
   var choroplethOpts = {
     fields: ["unemp.id", "unemp.rate"],
-    fieldConfigs: [
-      {
-        field: "unemp.id",
-        title: "County ID"
-      },
-      {
-        field: "unemp.rate",
+    fieldConfigs: {
+      "unemp.id": { title: "County ID" },
+      "unemp.rate": {
         title: "Unemployment Rate",
-        value: {type: "number", format: ".1%"}
+        formatType: "number",
+        format: ".1%"
       }
-    ]
+    }
   }
   addVgExample("exampleSpecs/choropleth.json", "#vis-choropleth", choroplethOpts);
 
@@ -122,19 +120,12 @@
   // Heatmap
   var heatmapOpts = {
     fields: ["temp", "date", "hour"],
-    fieldConfigs: [
-      {
-        field: "temp",
-        title: "temp(F)"
-      },
-      {
-        field: "date",
-        value: {type: "date", format: "yearmonthdate"}
+    fieldConfigs: {
+      "temp": { title: "temp(F)" },
+      "date": {
+        formatType: "date",
+        format: "yearmonthdate"
       }
-    ],
-    offset: {
-      x: 10,
-      y: 0
     }
   }
   addVgExample("exampleSpecs/heatmap.json", "#vis-heatmap", heatmapOpts);

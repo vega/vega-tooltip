@@ -290,9 +290,9 @@
       field.title = "";
 
       // try to get a custom field title from options
-      if (options.fieldConfigs && options.fieldConfigs.length > 0) {
-        var configs = d3.map(options.fieldConfigs, function(d) { return d.field; });
-        if ( configs.get(field.name) && configs.get(field.name).title ) {
+      if (options.fieldConfigs) {
+        var configs = d3.map(options.fieldConfigs);
+        if ( configs.has(field.name) && configs.get(field.name).title ) {
           field.title = configs.get(field.name).title;
           return;
         }
@@ -332,14 +332,15 @@
   */
   function optFormat(field, options) {
     // if options doesn't have fieldConfigs, return undefined
-    if (!options.fieldConfigs || options.fieldConfigs.length <= 0) return;
+    if (!options.fieldConfigs) return;
 
-    // if options provides type and format for the field, use them, and return the formatted value
-    var configs = d3.map(options.fieldConfigs, function(d) { return d.field; });
-    if ( configs.get(field.name) && configs.get(field.name).value ) {
-      var fmt = configs.get(field.name).value;
-      if (fmt.type && fmt.format) {
-        var formattedValue = applyFormat(fmt.type, fmt.format, field.value);
+    // if options provides formatType and format for the field, use them, and return the formatted value
+    var configs = d3.map(options.fieldConfigs);
+    if ( configs.has(field.name) ) {
+      var type = configs.get(field.name).formatType;
+      var format = configs.get(field.name).format;
+      if (type && format) {
+        var formattedValue = applyFormat(type, format, field.value);
         return formattedValue;
       }
     }
