@@ -1,38 +1,59 @@
-/**
- * Export Vega Tooltip API: vgTooltip.linkToView(vgView, options)
- * options can specify data fields to show in the tooltip and can
- * provide data formats for those fields
- */
-var vgTooltip = (function() {
-  return function(vgView, options) {
-      if (!options) {
-        options = {};
-      }
+"use strict";
 
-      // initialize tooltip with data
-      vgView.on("mouseover", function(event, item) {
-        tooltipUtil.init(event, item, options);
-      });
-
-      // update tooltip position on mouse move
-      // (important for large marks e.g. bars)
-      vgView.on("mousemove", function(event, item) {
-        tooltipUtil.update(event, item, options);
-      });
-
-      // clear tooltip
-      vgView.on("mouseout", tooltipUtil.clear);
+(function() {
+  /**
+  * Export Vega Tooltip API: vgTooltip(vgView, options)
+  * options can specify data fields to show in the tooltip and can
+  * provide data formats for those fields
+  */
+  window.vg.tooltip = function(vgView, options) {
+    if (!options) {
+      options = {};
     }
-}());
 
-/**
- * Export Vega-Lite Tooltip API: vlTooltip.linkToView(vgView, vlSpec, options)
- * options can specify data fields to show in the tooltip and can
- * overwrite data formats in vlSpec
- */
-var vlTooltip = (function() {
+    // initialize tooltip with data
+    vgView.on("mouseover", function(event, item) {
+      tooltipUtil.init(event, item, options);
+    });
 
-  // supplement options with timeUnit and numberFormat from vlSpec
+    // update tooltip position on mouse move
+    // (important for large marks e.g. bars)
+    vgView.on("mousemove", function(event, item) {
+      tooltipUtil.update(event, item, options);
+    });
+
+    // clear tooltip
+    vgView.on("mouseout", tooltipUtil.clear);
+  };
+
+  /**
+  * Export Vega-Lite Tooltip API: vlTooltip(vgView, vlSpec, options)
+  * options can specify data fields to show in the tooltip and can
+  * overwrite data formats in vlSpec
+  */
+  window.vl.tooltip = function(vgView, vlSpec, options) {
+    if (!options) {
+      options = {};
+    }
+
+    options = supplementOptions(options, vlSpec);
+
+    // initialize tooltip with data
+    vgView.on("mouseover", function(event, item) {
+      tooltipUtil.init(event, item, options);
+    });
+
+    // update tooltip position on mouse move
+    // (important for large marks e.g. bars)
+    vgView.on("mousemove", function(event, item) {
+      tooltipUtil.update(event, item, options);
+    });
+
+    // clear tooltip
+    vgView.on("mouseout", tooltipUtil.clear);
+  };
+
+  /* supplement options with vlSpec */
   function supplementOptions(options, vlSpec) {
     // options.vlSpec is not visible to users
     // it is a set of rules extracted from vlSpec that may be used to format the tooltip
@@ -67,35 +88,80 @@ var vlTooltip = (function() {
     return options;
   }
 
-  return function(vgView, vlSpec, options) {
-      if (!options) {
-        options = {};
-      }
-
-      options = supplementOptions(options, vlSpec);
-
-      // initialize tooltip with data
-      vgView.on("mouseover", function(event, item) {
-        tooltipUtil.init(event, item, options);
-      });
-
-      // update tooltip position on mouse move
-      // (important for large marks e.g. bars)
-      vgView.on("mousemove", function(event, item) {
-        tooltipUtil.update(event, item, options);
-      });
-
-      // clear tooltip
-      vgView.on("mouseout", tooltipUtil.clear);
-    }
 }());
 
+
 /**
- * Export common utilities: init, update and clear
- * init(): initialize tooltip with data
- * update(): update tooltip as mouse moves
- * clear(): clear tooltip data
- */
+* Export Vega-Lite Tooltip API: vlTooltip.linkToView(vgView, vlSpec, options)
+* options can specify data fields to show in the tooltip and can
+* overwrite data formats in vlSpec
+*/
+// var vlTooltip = (function() {
+//
+//   // supplement options with timeUnit and numberFormat from vlSpec
+//   function supplementOptions(options, vlSpec) {
+//     // options.vlSpec is not visible to users
+//     // it is a set of rules extracted from vlSpec that may be used to format the tooltip
+//     options.vlSpec = {};
+//
+//     // TODO(zening): supplement binned fields
+//
+//     // supplement numberFormat
+//     if (vlSpec.config && vlSpec.config.numberFormat) {
+//       options.vlSpec.numberFormat = vlSpec.config.numberFormat;
+//     }
+//
+//     // TODO(zening): supplement timeFormat
+//
+//     // supplement timeUnit
+//     vl.spec.fieldDefs(vlSpec).forEach(function(channel) {
+//       if (channel.timeUnit) {
+//         if (!options.vlSpec.timeUnit) {
+//           options.vlSpec.timeUnit = [];
+//         }
+//         try {
+//           // TODO(zening): consider how to remove the '_'
+//           var renamedField = channel.timeUnit + '_' + channel.field;
+//           options.vlSpec.timeUnit.push({field: renamedField, timeUnit: channel.timeUnit});
+//         }
+//         catch (error) {
+//           console.error('[VgTooltip] Error parsing Vega-Lite timeUnit: ' + error);
+//         }
+//       }
+//     });
+//
+//     return options;
+//   }
+//
+//   return function(vgView, vlSpec, options) {
+//     if (!options) {
+//       options = {};
+//     }
+//
+//     options = supplementOptions(options, vlSpec);
+//
+//     // initialize tooltip with data
+//     vgView.on("mouseover", function(event, item) {
+//       tooltipUtil.init(event, item, options);
+//     });
+//
+//     // update tooltip position on mouse move
+//     // (important for large marks e.g. bars)
+//     vgView.on("mousemove", function(event, item) {
+//       tooltipUtil.update(event, item, options);
+//     });
+//
+//     // clear tooltip
+//     vgView.on("mouseout", tooltipUtil.clear);
+//   }
+// }());
+
+/**
+* Export common utilities: init, update and clear
+* init(): initialize tooltip with data
+* update(): update tooltip as mouse moves
+* clear(): clear tooltip data
+*/
 var tooltipUtil = (function() {
 
   /* Decide if a chart element deserves tooltip */
@@ -112,27 +178,27 @@ var tooltipUtil = (function() {
   }
 
   /**
-   * Prepare data to be bound to the tooltip element
-   * @return [{ title: ..., value: ...}]
-   */
+  * Prepare data to be bound to the tooltip element
+  * @return [{ title: ..., value: ...}]
+  */
   function getTooltipData(item, options) {
 
     /**
-     * Prepare custom fields (specified by options) for tooltip.
-     * When options or vlSpec provides custom format for a field, apply custom format.
-     * Otherwise, automatically format the field.
-     * options can always overwrite format provided by vlSpec.
-     * @return Field title and value array, ready to be formatted:
-     * [{ title: ..., value: ...}]
-     */
+    * Prepare custom fields (specified by options) for tooltip.
+    * When options or vlSpec provides custom format for a field, apply custom format.
+    * Otherwise, automatically format the field.
+    * options can always overwrite format provided by vlSpec.
+    * @return Field title and value array, ready to be formatted:
+    * [{ title: ..., value: ...}]
+    */
     function getCustomFields(item, options) {
 
       /**
-       * Get one field value from an item's datum,
-       * even if the field is not at top-level of item.datum.
-       * @return the field value if successful,
-       * undefined if the field cannot be found in item.datum
-       */
+      * Get one field value from an item's datum,
+      * even if the field is not at top-level of item.datum.
+      * @return the field value if successful,
+      * undefined if the field cannot be found in item.datum
+      */
       function getValue(datum, field) {
         if (field.includes('.')) {
           var accessors = field.split('.');
@@ -193,10 +259,10 @@ var tooltipUtil = (function() {
     }
 
     /**
-     * Prepare default fields (top-level fields of item.datum) for tooltip.
-     * @return Field title and value array, ready to be formatted:
-     * [{ title: ..., value: ...}]
-     */
+    * Prepare default fields (top-level fields of item.datum) for tooltip.
+    * @return Field title and value array, ready to be formatted:
+    * [{ title: ..., value: ...}]
+    */
     function getDefaultFields(item, options) {
       var content = [];
 
@@ -237,11 +303,11 @@ var tooltipUtil = (function() {
     }
 
     /**
-     * Format field titles according to options
-     * In the future we are also going to format the field titles according to vlSpec
-     * so that users have less to specify in options
-     * @return tooltipData with formated field titles
-     */
+    * Format field titles according to options
+    * In the future we are also going to format the field titles according to vlSpec
+    * so that users have less to specify in options
+    * @return tooltipData with formated field titles
+    */
     function formatFieldTitles(tooltipData, options) {
       tooltipData.forEach(function(field) {
         field.title = "";
@@ -266,16 +332,16 @@ var tooltipUtil = (function() {
     }
 
     /**
-     * Format field values according to (1) options, (2) vlSpec, (3) datalib auto format
-     * @return tooltipData with formated field values
-     */
+    * Format field values according to (1) options, (2) vlSpec, (3) datalib auto format
+    * @return tooltipData with formated field values
+    */
     function formatFieldValues(tooltipData, options) {
 
       /**
-       * Try format a field according to options
-       * @return the formatted value if options provides both type and format for the field
-       * undefined if options doesn't provide both type and format for the field
-       */
+      * Try format a field according to options
+      * @return the formatted value if options provides both type and format for the field
+      * undefined if options doesn't provide both type and format for the field
+      */
       function optFormat(field, options) {
         // if options doesn't have fieldConfigs, return undefined
         if (!options.fieldConfigs || options.fieldConfigs.length <= 0) return;
@@ -322,32 +388,32 @@ var tooltipUtil = (function() {
       }
 
       /**
-       * Apply a format to a date, number, or string value
-       * @return the formatted value
-       */
+      * Apply a format to a date, number, or string value
+      * @return the formatted value
+      */
       function applyFormat(type, format, value) {
         var formattedValue;
         switch (type) {
           case 'date':
-            // format can be a Vega-Lite timeUnit or simply a string specifier
-            if (vl.timeUnit.TIMEUNITS.indexOf(format) > -1) {
-              var specifier = vl.timeUnit.format(format)
-              var formatter = dl.format.time(specifier);
-              formattedValue = formatter(value);
-            }
-            else {
-              var formatter = dl.format.time(format);
-              formattedValue = formatter(value);
-            }
-            break;
-          case 'number':
-            // number is a string specifier
-            var formatter = dl.format.number(format);
+          // format can be a Vega-Lite timeUnit or simply a string specifier
+          if (vl.timeUnit.TIMEUNITS.indexOf(format) > -1) {
+            var specifier = vl.timeUnit.format(format)
+            var formatter = dl.format.time(specifier);
             formattedValue = formatter(value);
-            break;
+          }
+          else {
+            var formatter = dl.format.time(format);
+            formattedValue = formatter(value);
+          }
+          break;
+          case 'number':
+          // number is a string specifier
+          var formatter = dl.format.number(format);
+          formattedValue = formatter(value);
+          break;
           case 'string':
           default:
-            formattedValue = value;
+          formattedValue = value;
         }
         return formattedValue;
       }
@@ -364,21 +430,21 @@ var tooltipUtil = (function() {
     }
 
     /**
-     * Automatically format a date, number or string value
-     * @return the formated data, number or string value
-     */
+    * Automatically format a date, number or string value
+    * @return the formated data, number or string value
+    */
     function autoFormat(value) {
       switch (dl.type(value)) {
         case 'date':
-          var formatter = dl.format.auto.time();
-          return formatter(value);
+        var formatter = dl.format.auto.time();
+        return formatter(value);
         case 'number':
-            var formatter = dl.format.auto.number();
-            return formatter(value);
+        var formatter = dl.format.auto.number();
+        return formatter(value);
         case 'boolean':
         case 'string':
         default:
-          return value;
+        return value;
       }
     }
 
@@ -404,8 +470,8 @@ var tooltipUtil = (function() {
   }
 
   /**
-   * Bind data to the tooltip element
-   */
+  * Bind data to the tooltip element
+  */
   function bindData(tooltipData) {
     var tooltipRows = d3.select("#vis-tooltip").selectAll(".tooltip-row").data(tooltipData);
 
@@ -418,18 +484,18 @@ var tooltipUtil = (function() {
   }
 
   /**
-   * Clear tooltip data
-   */
+  * Clear tooltip data
+  */
   function clearData() {
     var tooltipRows = d3.select("#vis-tooltip").selectAll(".tooltip-row").data([]);
     tooltipRows.exit().remove();
   }
 
   /**
-   * Update tooltip position
-   * Default position is 10px right of and 10px below the cursor. This can be
-   * overwritten by options.
-   */
+  * Update tooltip position
+  * Default position is 10px right of and 10px below the cursor. This can be
+  * overwritten by options.
+  */
   function updatePosition(event, options) {
     // determine x and y offsets, defaults are 10px
     var offsetX = 10;
@@ -470,8 +536,8 @@ var tooltipUtil = (function() {
       clearTheme();
       switch (options.colorTheme) {
         case 'dark':
-          d3.select("#vis-tooltip").classed('dark-theme', true);
-          break;
+        d3.select("#vis-tooltip").classed('dark-theme', true);
+        break;
         case 'light':
         default:
       }
