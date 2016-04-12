@@ -139,271 +139,6 @@
   */
   function getTooltipData(item, options) {
 
-    /**
-    * Prepare custom fields (specified by options) for tooltip.
-    * When options or vlSpec provides custom format for a field, apply custom format.
-    * Otherwise, automatically format the field.
-    * options can always overwrite format provided by vlSpec.
-    * @return Field title and value array, ready to be formatted:
-    * [{ title: ..., value: ...}]
-    */
-    function getCustomFields(item, options) {
-
-      /**
-      * Get one field value from an item's datum,
-      * even if the field is not at top-level of item.datum.
-      * @return the field value if successful,
-      * undefined if the field cannot be found in item.datum
-      */
-      function getValue(datum, field) {
-        if (field.includes('.')) {
-          var accessors = field.split('.');
-          var value = datum;
-          var path = '';
-          accessors.forEach(function(a) {
-            if (value[a]) {
-              value = value[a];
-              path = path + '.' + a;
-            }
-            else {
-              console.warn('[VgTooltip] Cannot find field ' + path + ' in data.');
-              return undefined;
-            }
-          });
-          return value;
-        }
-        else {
-          if (datum[field]) {
-            return datum[field];
-          }
-          else {
-            console.warn('[VgTooltip] Cannot find field ' + field + ' in data.');
-            return undefined;
-          }
-        }
-      }
-
-
-      var content = [];
-
-      options.fields.forEach(function(fld) {
-        var value = getValue(item.datum, fld);
-        if (value != undefined)
-        {
-          content.push({name: fld, value: value});
-        }
-
-
-        // var title = opt.fieldTitle ? opt.fieldTitle : opt.field;
-        // var value = getFieldValue(item.datum, opt.field);
-        //
-        // var formattedValue;
-        //
-        // // if either type or format is missing, apply auto format
-        // // else if both type and format exist, apply custom format
-        // if (!opt.type || !opt.format) {
-        //   formattedValue = autoFormat(opt.field, value, options);
-        // }
-        // else {
-        //   formattedValue = custFormat(opt, value);
-        // }
-        //
-        // content.push({fieldTitle: title, fieldValue: formattedValue});
-      });
-
-      return content;
-    }
-
-    /**
-    * Prepare default fields (top-level fields of item.datum) for tooltip.
-    * @return Field title and value array, ready to be formatted:
-    * [{ title: ..., value: ...}]
-    */
-    function getDefaultFields(item, options) {
-      var content = [];
-
-      var itemData = d3.map(item.datum);
-
-      // remove _id and _prev
-      itemData.remove("_id");
-      itemData.remove("_prev");
-
-      itemData.forEach(function(field, value) {
-        content.push({name: field, value: value});
-      })
-      // drop number and date data for line charts and area charts (#1)
-      // if (item.mark.marktype === "line" || item.mark.marktype === "area") {
-      //   console.warn('[VgTooltip]: By default, we only show qualitative data in tooltip.');
-      //
-      //   itemData.forEach(function(field, value) {
-      //     switch (dl.type(value)) {
-      //       case 'boolean':
-      //       case 'string':
-      //         content.push({fieldTitle: field, fieldValue: value});
-      //         break;
-      //       case 'number':
-      //       case 'date':
-      //       default:
-      //         break;
-      //     }
-      //   })
-      // }
-      // else {
-      //   itemData.forEach(function(field, value) {
-      //     var formattedValue = autoFormat(field, value, options);
-      //     content.push({fieldTitle: field, fieldValue: formattedValue});
-      //   });
-      // }
-
-      return content;
-    }
-
-    /**
-    * Format field titles according to options
-    * In the future we are also going to format the field titles according to vlSpec
-    * so that users have less to specify in options
-    * @return tooltipData with formated field titles
-    */
-    function formatFieldTitles(tooltipData, options) {
-      tooltipData.forEach(function(field) {
-        field.title = "";
-
-        // try to get a custom field title from options
-        if (options.fieldConfigs && options.fieldConfigs.length > 0) {
-          var configs = d3.map(options.fieldConfigs, function(d) { return d.field; });
-          if ( configs.get(field.name) && configs.get(field.name).title ) {
-            field.title = configs.get(field.name).title;
-            return;
-          }
-        }
-
-        // TODO(zening): try to get a custom field title from vlSpec (e.g. axis title, legend title)
-
-        // if neither options nor vlSpec provides custom field title,
-        // set field title equal to field name
-        field.title = field.name;
-      });
-
-      return tooltipData;
-    }
-
-    /**
-    * Format field values according to (1) options, (2) vlSpec, (3) datalib auto format
-    * @return tooltipData with formated field values
-    */
-    function formatFieldValues(tooltipData, options) {
-
-      /**
-      * Try format a field according to options
-      * @return the formatted value if options provides both type and format for the field
-      * undefined if options doesn't provide both type and format for the field
-      */
-      function optFormat(field, options) {
-        // if options doesn't have fieldConfigs, return undefined
-        if (!options.fieldConfigs || options.fieldConfigs.length <= 0) return;
-
-        // if options provides type and format for the field, use them, and return the formatted value
-        var configs = d3.map(options.fieldConfigs, function(d) { return d.field; });
-        if ( configs.get(field.name) && configs.get(field.name).value ) {
-          var fmt = configs.get(field.name).value;
-          if (fmt.type && fmt.format) {
-            var formattedValue = applyFormat(fmt.type, fmt.format, field.value);
-            return formattedValue;
-          }
-        }
-
-        // options doesn't provide type and format for the field, return undefined
-        return;
-      }
-
-      function vlSpecFormat(field, options) {
-        // if options doesn't contain rules from vlSpec, return undefined
-        if (!options.vlSpec) return;
-
-        // if timeUnit describes the field, return the formatted value
-        if (options.vlSpec.timeUnit) {
-          var timeUnitFields = d3.map(options.vlSpec.timeUnit, function(d) { return d.field; });
-          if (timeUnitFields.has(field.name)) {
-            var format = timeUnitFields.get(field.name).timeUnit;
-            return applyFormat('date', format, field.value);
-          }
-        }
-
-        // if timeFormat applies to the field, return the formatted date value
-        if (options.vlSpec.timeFormat && dl.type(field.value) === 'date') {
-          return applyFormat('date', options.vlSpec.timeFormat, field.value);
-        }
-
-        // if numberFormat applies to the field, return the formatted number value
-        if (options.vlSpec.numberFormat && dl.type(field.value) === 'number') {
-          return applyFormat('number', options.vlSpec.numberFormat, field.value);
-        }
-
-        // if none of these rules apply to the field, return undefined
-        return;
-      }
-
-      /**
-      * Apply a format to a date, number, or string value
-      * @return the formatted value
-      */
-      function applyFormat(type, format, value) {
-        var formattedValue;
-        switch (type) {
-          case 'date':
-          // format can be a Vega-Lite timeUnit or simply a string specifier
-          if (vl.timeUnit.TIMEUNITS.indexOf(format) > -1) {
-            var specifier = vl.timeUnit.format(format)
-            var formatter = dl.format.time(specifier);
-            formattedValue = formatter(value);
-          }
-          else {
-            var formatter = dl.format.time(format);
-            formattedValue = formatter(value);
-          }
-          break;
-          case 'number':
-          // number is a string specifier
-          var formatter = dl.format.number(format);
-          formattedValue = formatter(value);
-          break;
-          case 'string':
-          default:
-          formattedValue = value;
-        }
-        return formattedValue;
-      }
-
-      tooltipData.forEach(function(field) {
-
-        // try to format a field by (1) options, (2) vlSpec, (3) datalib auto format
-        var formattedValue = optFormat(field, options) || vlSpecFormat(field, options) || autoFormat(field.value);
-        field.value = formattedValue;
-
-      });
-
-      return tooltipData;
-    }
-
-    /**
-    * Automatically format a date, number or string value
-    * @return the formated data, number or string value
-    */
-    function autoFormat(value) {
-      switch (dl.type(value)) {
-        case 'date':
-        var formatter = dl.format.auto.time();
-        return formatter(value);
-        case 'number':
-        var formatter = dl.format.auto.number();
-        return formatter(value);
-        case 'boolean':
-        case 'string':
-        default:
-        return value;
-      }
-    }
-
     // decide which fields to show in the tooltip
     // TODO(zening): remove _id and _prev here
     // TODO(zening): if there are binned fields, remove _start, _end, _mid, _range fields, add bin_field and its value
@@ -424,6 +159,274 @@
 
     return tooltipData;
   }
+
+
+  /**
+  * Prepare custom fields (specified by options) for tooltip.
+  * When options or vlSpec provides custom format for a field, apply custom format.
+  * Otherwise, automatically format the field.
+  * options can always overwrite format provided by vlSpec.
+  * @return Field title and value array, ready to be formatted:
+  * [{ title: ..., value: ...}]
+  */
+  function getCustomFields(item, options) {
+
+    var content = [];
+
+    options.fields.forEach(function(fld) {
+      var value = getValue(item.datum, fld);
+      if (value != undefined)
+      {
+        content.push({name: fld, value: value});
+      }
+
+      // var title = opt.fieldTitle ? opt.fieldTitle : opt.field;
+      // var value = getFieldValue(item.datum, opt.field);
+      //
+      // var formattedValue;
+      //
+      // // if either type or format is missing, apply auto format
+      // // else if both type and format exist, apply custom format
+      // if (!opt.type || !opt.format) {
+      //   formattedValue = autoFormat(opt.field, value, options);
+      // }
+      // else {
+      //   formattedValue = custFormat(opt, value);
+      // }
+      //
+      // content.push({fieldTitle: title, fieldValue: formattedValue});
+    });
+
+    return content;
+  }
+
+  /**
+  * Get one field value from an item's datum,
+  * even if the field is not at top-level of item.datum.
+  * @return the field value if successful,
+  * undefined if the field cannot be found in item.datum
+  */
+  function getValue(datum, field) {
+    if (field.includes('.')) {
+      var accessors = field.split('.');
+      var value = datum;
+      var path = '';
+      accessors.forEach(function(a) {
+        if (value[a]) {
+          value = value[a];
+          path = path + '.' + a;
+        }
+        else {
+          console.warn('[VgTooltip] Cannot find field ' + path + ' in data.');
+          return undefined;
+        }
+      });
+      return value;
+    }
+    else {
+      if (datum[field]) {
+        return datum[field];
+      }
+      else {
+        console.warn('[VgTooltip] Cannot find field ' + field + ' in data.');
+        return undefined;
+      }
+    }
+  }
+
+
+  /**
+  * Prepare default fields (top-level fields of item.datum) for tooltip.
+  * @return Field title and value array, ready to be formatted:
+  * [{ title: ..., value: ...}]
+  */
+  function getDefaultFields(item, options) {
+    var content = [];
+
+    var itemData = d3.map(item.datum);
+
+    // remove _id and _prev
+    itemData.remove("_id");
+    itemData.remove("_prev");
+
+    itemData.forEach(function(field, value) {
+      content.push({name: field, value: value});
+    })
+    // drop number and date data for line charts and area charts (#1)
+    // if (item.mark.marktype === "line" || item.mark.marktype === "area") {
+    //   console.warn('[VgTooltip]: By default, we only show qualitative data in tooltip.');
+    //
+    //   itemData.forEach(function(field, value) {
+    //     switch (dl.type(value)) {
+    //       case 'boolean':
+    //       case 'string':
+    //         content.push({fieldTitle: field, fieldValue: value});
+    //         break;
+    //       case 'number':
+    //       case 'date':
+    //       default:
+    //         break;
+    //     }
+    //   })
+    // }
+    // else {
+    //   itemData.forEach(function(field, value) {
+    //     var formattedValue = autoFormat(field, value, options);
+    //     content.push({fieldTitle: field, fieldValue: formattedValue});
+    //   });
+    // }
+
+    return content;
+  }
+
+  /**
+  * Format field titles according to options
+  * In the future we are also going to format the field titles according to vlSpec
+  * so that users have less to specify in options
+  * @return tooltipData with formated field titles
+  */
+  function formatFieldTitles(tooltipData, options) {
+    tooltipData.forEach(function(field) {
+      field.title = "";
+
+      // try to get a custom field title from options
+      if (options.fieldConfigs && options.fieldConfigs.length > 0) {
+        var configs = d3.map(options.fieldConfigs, function(d) { return d.field; });
+        if ( configs.get(field.name) && configs.get(field.name).title ) {
+          field.title = configs.get(field.name).title;
+          return;
+        }
+      }
+
+      // TODO(zening): try to get a custom field title from vlSpec (e.g. axis title, legend title)
+
+      // if neither options nor vlSpec provides custom field title,
+      // set field title equal to field name
+      field.title = field.name;
+    });
+
+    return tooltipData;
+  }
+
+  /**
+  * Format field values according to (1) options, (2) vlSpec, (3) datalib auto format
+  * @return tooltipData with formated field values
+  */
+  function formatFieldValues(tooltipData, options) {
+
+    tooltipData.forEach(function(field) {
+
+      // try to format a field by (1) options, (2) vlSpec, (3) datalib auto format
+      var formattedValue = optFormat(field, options) || vlSpecFormat(field, options) || autoFormat(field.value);
+      field.value = formattedValue;
+
+    });
+
+    return tooltipData;
+  }
+
+  /**
+  * Try format a field according to options
+  * @return the formatted value if options provides both type and format for the field
+  * undefined if options doesn't provide both type and format for the field
+  */
+  function optFormat(field, options) {
+    // if options doesn't have fieldConfigs, return undefined
+    if (!options.fieldConfigs || options.fieldConfigs.length <= 0) return;
+
+    // if options provides type and format for the field, use them, and return the formatted value
+    var configs = d3.map(options.fieldConfigs, function(d) { return d.field; });
+    if ( configs.get(field.name) && configs.get(field.name).value ) {
+      var fmt = configs.get(field.name).value;
+      if (fmt.type && fmt.format) {
+        var formattedValue = applyFormat(fmt.type, fmt.format, field.value);
+        return formattedValue;
+      }
+    }
+
+    // options doesn't provide type and format for the field, return undefined
+    return;
+  }
+
+  function vlSpecFormat(field, options) {
+    // if options doesn't contain rules from vlSpec, return undefined
+    if (!options.vlSpec) return;
+
+    // if timeUnit describes the field, return the formatted value
+    if (options.vlSpec.timeUnit) {
+      var timeUnitFields = d3.map(options.vlSpec.timeUnit, function(d) { return d.field; });
+      if (timeUnitFields.has(field.name)) {
+        var format = timeUnitFields.get(field.name).timeUnit;
+        return applyFormat('date', format, field.value);
+      }
+    }
+
+    // if timeFormat applies to the field, return the formatted date value
+    if (options.vlSpec.timeFormat && dl.type(field.value) === 'date') {
+      return applyFormat('date', options.vlSpec.timeFormat, field.value);
+    }
+
+    // if numberFormat applies to the field, return the formatted number value
+    if (options.vlSpec.numberFormat && dl.type(field.value) === 'number') {
+      return applyFormat('number', options.vlSpec.numberFormat, field.value);
+    }
+
+    // if none of these rules apply to the field, return undefined
+    return;
+  }
+
+  /**
+  * Automatically format a date, number or string value
+  * @return the formated data, number or string value
+  */
+  function autoFormat(value) {
+    switch (dl.type(value)) {
+      case 'date':
+      var formatter = dl.format.auto.time();
+      return formatter(value);
+      case 'number':
+      var formatter = dl.format.auto.number();
+      return formatter(value);
+      case 'boolean':
+      case 'string':
+      default:
+      return value;
+    }
+  }
+
+
+  /**
+  * Apply a format to a date, number, or string value
+  * @return the formatted value
+  */
+  function applyFormat(type, format, value) {
+    var formattedValue;
+    switch (type) {
+      case 'date':
+      // format can be a Vega-Lite timeUnit or simply a string specifier
+      if (vl.timeUnit.TIMEUNITS.indexOf(format) > -1) {
+        var specifier = vl.timeUnit.format(format)
+        var formatter = dl.format.time(specifier);
+        formattedValue = formatter(value);
+      }
+      else {
+        var formatter = dl.format.time(format);
+        formattedValue = formatter(value);
+      }
+      break;
+      case 'number':
+      // number is a string specifier
+      var formatter = dl.format.number(format);
+      formattedValue = formatter(value);
+      break;
+      case 'string':
+      default:
+      formattedValue = value;
+    }
+    return formattedValue;
+  }
+
+
 
   /**
   * Bind data to the tooltip element
@@ -498,7 +501,6 @@
         default:
       }
     }
-
   }
 
   /* Reset color themes to default */
