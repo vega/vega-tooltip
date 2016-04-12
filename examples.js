@@ -123,7 +123,7 @@
     fieldConfigs: {
       "temp": { title: "temp(F)" },
       "date": {
-        formatType: "date",
+        formatType: "time",
         format: "%Y %B %e"
       }
     }

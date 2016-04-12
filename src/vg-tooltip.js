@@ -358,13 +358,13 @@
       var timeUnitFields = d3.map(options.vlSpec.timeUnit, function(d) { return d.field; });
       if (timeUnitFields.has(field.name)) {
         var format = timeUnitFields.get(field.name).timeUnit;
-        return applyFormat('date', format, field.value);
+        return applyFormat('time', format, field.value);
       }
     }
 
     // if timeFormat applies to the field, return the formatted date value
     if (options.vlSpec.timeFormat && dl.type(field.value) === 'date') {
-      return applyFormat('date', options.vlSpec.timeFormat, field.value);
+      return applyFormat('time', options.vlSpec.timeFormat, field.value);
     }
 
     // if numberFormat applies to the field, return the formatted number value
@@ -403,7 +403,7 @@
   function applyFormat(type, format, value) {
     var formattedValue;
     switch (type) {
-      case 'date':
+      case 'time':
       var formatter = dl.format.time(format);
       formattedValue = formatter(value);
       break;
