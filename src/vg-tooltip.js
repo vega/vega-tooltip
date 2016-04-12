@@ -404,23 +404,13 @@
     var formattedValue;
     switch (type) {
       case 'date':
-      // format can be a Vega-Lite timeUnit or simply a string specifier
-      if (vl.timeUnit.TIMEUNITS.indexOf(format) > -1) {
-        var specifier = vl.timeUnit.format(format)
-        var formatter = dl.format.time(specifier);
-        formattedValue = formatter(value);
-      }
-      else {
-        var formatter = dl.format.time(format);
-        formattedValue = formatter(value);
-      }
+      var formatter = dl.format.time(format);
+      formattedValue = formatter(value);
       break;
       case 'number':
-      // number is a string specifier
       var formatter = dl.format.number(format);
       formattedValue = formatter(value);
       break;
-      case 'string':
       default:
       formattedValue = value;
     }

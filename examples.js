@@ -124,7 +124,7 @@
       "temp": { title: "temp(F)" },
       "date": {
         formatType: "date",
-        format: "yearmonthdate"
+        format: "%Y %B %e"
       }
     }
   }
