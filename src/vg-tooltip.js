@@ -13,17 +13,19 @@
 
     // initialize tooltip with data
     vgView.on("mouseover", function(event, item) {
-      tooltipUtil.init(event, item, options);
+      init(event, item, options);
     });
 
     // update tooltip position on mouse move
     // (important for large marks e.g. bars)
     vgView.on("mousemove", function(event, item) {
-      tooltipUtil.update(event, item, options);
+      update(event, item, options);
     });
 
     // clear tooltip
-    vgView.on("mouseout", tooltipUtil.clear);
+    vgView.on("mouseout", function(event, item) {
+      clear();
+    });
   };
 
   /**
@@ -40,20 +42,22 @@
 
     // initialize tooltip with data
     vgView.on("mouseover", function(event, item) {
-      tooltipUtil.init(event, item, options);
+      init(event, item, options);
     });
 
     // update tooltip position on mouse move
     // (important for large marks e.g. bars)
     vgView.on("mousemove", function(event, item) {
-      tooltipUtil.update(event, item, options);
+      update(event, item, options);
     });
 
     // clear tooltip
-    vgView.on("mouseout", tooltipUtil.clear);
+    vgView.on("mouseout", function(event, item) {
+      clear();
+    });
   };
 
-  /* supplement options with vlSpec */
+  /* Supplement options with vlSpec */
   function supplementOptions(options, vlSpec) {
     // options.vlSpec is not visible to users
     // it is a set of rules extracted from vlSpec that may be used to format the tooltip
@@ -88,81 +92,33 @@
     return options;
   }
 
-}());
+  /* Initialize tooltip with data */
+  function init(event, item, options) {
+    if( shouldShowTooltip(item) === false ) return;
 
+    // prepare data for tooltip
+    var tooltipData = getTooltipData(item, options);
+    if (!tooltipData || tooltipData.length === 0) return;
 
-/**
-* Export Vega-Lite Tooltip API: vlTooltip.linkToView(vgView, vlSpec, options)
-* options can specify data fields to show in the tooltip and can
-* overwrite data formats in vlSpec
-*/
-// var vlTooltip = (function() {
-//
-//   // supplement options with timeUnit and numberFormat from vlSpec
-//   function supplementOptions(options, vlSpec) {
-//     // options.vlSpec is not visible to users
-//     // it is a set of rules extracted from vlSpec that may be used to format the tooltip
-//     options.vlSpec = {};
-//
-//     // TODO(zening): supplement binned fields
-//
-//     // supplement numberFormat
-//     if (vlSpec.config && vlSpec.config.numberFormat) {
-//       options.vlSpec.numberFormat = vlSpec.config.numberFormat;
-//     }
-//
-//     // TODO(zening): supplement timeFormat
-//
-//     // supplement timeUnit
-//     vl.spec.fieldDefs(vlSpec).forEach(function(channel) {
-//       if (channel.timeUnit) {
-//         if (!options.vlSpec.timeUnit) {
-//           options.vlSpec.timeUnit = [];
-//         }
-//         try {
-//           // TODO(zening): consider how to remove the '_'
-//           var renamedField = channel.timeUnit + '_' + channel.field;
-//           options.vlSpec.timeUnit.push({field: renamedField, timeUnit: channel.timeUnit});
-//         }
-//         catch (error) {
-//           console.error('[VgTooltip] Error parsing Vega-Lite timeUnit: ' + error);
-//         }
-//       }
-//     });
-//
-//     return options;
-//   }
-//
-//   return function(vgView, vlSpec, options) {
-//     if (!options) {
-//       options = {};
-//     }
-//
-//     options = supplementOptions(options, vlSpec);
-//
-//     // initialize tooltip with data
-//     vgView.on("mouseover", function(event, item) {
-//       tooltipUtil.init(event, item, options);
-//     });
-//
-//     // update tooltip position on mouse move
-//     // (important for large marks e.g. bars)
-//     vgView.on("mousemove", function(event, item) {
-//       tooltipUtil.update(event, item, options);
-//     });
-//
-//     // clear tooltip
-//     vgView.on("mouseout", tooltipUtil.clear);
-//   }
-// }());
+    bindData(tooltipData);
 
-/**
-* Export common utilities: init, update and clear
-* init(): initialize tooltip with data
-* update(): update tooltip as mouse moves
-* clear(): clear tooltip data
-*/
-var tooltipUtil = (function() {
+    updatePosition(event, options);
+    updateTheme(options);
+    d3.select("#vis-tooltip").style("opacity", 1);
+  }
+
+  /* Update tooltip position on mousemove */
+  function update(event, item, options) {
+    updatePosition(event, options);
+  }
+
+  /* Clear tooltip */
+  function clear() {
+    clearData();
+    clearTheme();
+    d3.select("#vis-tooltip").style("opacity", 0);
+  }
+
 
   /* Decide if a chart element deserves tooltip */
   function shouldShowTooltip (item) {
@@ -550,27 +506,5 @@ var tooltipUtil = (function() {
     d3.select("#vis-tooltip").classed('dark-theme light-theme', false);
   }
 
-  return {
-    init: function(event, item, options) {
-      if( shouldShowTooltip(item) === false ) return;
 
-      // prepare data for tooltip
-      var tooltipData = getTooltipData(item, options);
-      if (!tooltipData || tooltipData.length === 0) return;
-
-      bindData(tooltipData);
-
-      updatePosition(event, options);
-      updateTheme(options);
-      d3.select("#vis-tooltip").style("opacity", 1);
-    },
-    update: function(event, item, options) {
-      updatePosition(event, options);
-    },
-    clear: function() {
-      clearData();
-      clearTheme();
-      d3.select("#vis-tooltip").style("opacity", 0);
-    }
-  }
 }());
