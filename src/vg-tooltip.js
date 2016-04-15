@@ -256,7 +256,13 @@
       }
 
       // format value
-      tooltipData.push({title: title, value: value});
+      if (fieldConfigs.has(field)) {
+        var formatType = fieldConfigs.get(field).formatType;
+        var format = fieldConfigs.get(field).format;
+      }
+      var formattedValue = custFormat(value, formatType, format) || autoFormat(value);
+
+      tooltipData.push({title: title, value: formattedValue});
     })
     // drop number and date data for line charts and area charts (#1)
     // if (item.mark.marktype === "line" || item.mark.marktype === "area") {
