@@ -117,7 +117,10 @@
   var choroplethOpts = {
     showAllFields: false,
     fields: [
-      {field: "unemp.id"},
+      {
+        field: "unemp.id",
+        title: "County ID"
+      },
       {
         field: "unemp.rate",
         title: "Unemployment Rate",

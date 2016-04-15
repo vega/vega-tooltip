@@ -139,11 +139,6 @@
   */
   function getTooltipData(item, options) {
 
-    // TODO(zening): if there are binned fields, remove _start, _end, _mid, _range fields, add bin_field and its value
-    // TODO(zening): for count, drop count_start and count_end, leave count
-    // TODO(zening): don't show layout (layout_start, layout_mid, layout_end, layout_path, layout_x, layout_y)
-    // TODO(zening): for area and line charts, drop quantitative fields
-
     var tooltipData; // this array will be bind to the tooltip element
     if ( options.showAllFields === true || options.showAllFields === undefined ) {
       tooltipData = getAllFields(item);
@@ -170,21 +165,25 @@
   */
   function getCustomFields(item, options) {
 
-    var content = [];
+    var tooltipData = [];
 
     options.fields.forEach(function(fld) {
       // TODO(zening): binned fields
 
-      // TODO(zening): aggregated fields
+      // TODO(zening): aggregated fields, if a field has multiple aggregations, it should have multiple rows in the tooltip
 
       // format title
+      var formattedTitle = fld.title? fld.title : fld.field;
 
+      // get field value
       var value = getValue(item.datum, fld.field);
-      if (value != undefined)
-      {
-        // format value
-        content.push({title: fld.field, value: value});
-      }
+      if (value === undefined) return;
+
+      // format value
+      var formattedValue = optionsFormat(value, fld) || value;
+
+      // add formatted data to tooltipData
+      tooltipData.push({title: formattedTitle, value: formattedValue});
 
       // var title = opt.fieldTitle ? opt.fieldTitle : opt.field;
       // var value = getFieldValue(item.datum, opt.field);
@@ -203,7 +202,7 @@
       // content.push({fieldTitle: title, fieldValue: formattedValue});
     });
 
-    return content;
+    return tooltipData;
   }
 
   /**
@@ -342,6 +341,10 @@
     return tooltipData;
   }
 
+  function optionsFormat(value, fldConfig) {
+    // format value according to fldConfig
+    return;
+  }
   /**
   * Try format a field according to options
   * @return the formatted value if options provides both type and format for the field
