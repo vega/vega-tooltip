@@ -141,7 +141,7 @@
 
     var tooltipData; // this array will be bind to the tooltip element
     if ( options.showAllFields === true || options.showAllFields === undefined ) {
-      tooltipData = getAllFields(item);
+      tooltipData = getAllFields(item, options);
     }
     else {
       tooltipData = getCustomFields(item, options);
@@ -226,8 +226,10 @@
   * @return Field title and value array, ready to be formatted:
   * [{ title: ..., value: ...}]
   */
-  function getAllFields(item) {
-    var content = [];
+  function getAllFields(item, options) {
+    var tooltipData = [];
+
+    var fieldConfigs = d3.map(options.fields, function(d) { return d.field; });
 
     var itemData = d3.map(item.datum);
 
@@ -244,10 +246,17 @@
     // TODO(zening): for area and line charts, drop quantitative fields
 
     itemData.forEach(function(field, value) {
-      // format title
+      // get title
+      var title;
+      if(fieldConfigs.has(field) && fieldConfigs.get(field).title) {
+        title = fieldConfigs.get(field).title;
+      }
+      else {
+        title = field;
+      }
 
       // format value
-      content.push({title: field, value: value});
+      tooltipData.push({title: title, value: value});
     })
     // drop number and date data for line charts and area charts (#1)
     // if (item.mark.marktype === "line" || item.mark.marktype === "area") {
@@ -273,7 +282,7 @@
     //   });
     // }
 
-    return content;
+    return tooltipData;
   }
 
 
