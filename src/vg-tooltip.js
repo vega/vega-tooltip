@@ -147,10 +147,6 @@
       tooltipData = getCustomFields(item, options);
     }
 
-    // tooltipData = formatFieldTitles(tooltipData, options);
-
-    // tooltipData = formatFieldValues(tooltipData, options);
-
     return tooltipData;
   }
 
@@ -185,21 +181,6 @@
       // add formatted data to tooltipData
       tooltipData.push({title: title, value: formattedValue});
 
-      // var title = opt.fieldTitle ? opt.fieldTitle : opt.field;
-      // var value = getFieldValue(item.datum, opt.field);
-      //
-      // var formattedValue;
-      //
-      // // if either type or format is missing, apply auto format
-      // // else if both type and format exist, apply custom format
-      // if (!opt.type || !opt.format) {
-      //   formattedValue = autoFormat(opt.field, value, options);
-      // }
-      // else {
-      //   formattedValue = custFormat(opt, value);
-      // }
-      //
-      // content.push({fieldTitle: title, fieldValue: formattedValue});
     });
 
     return tooltipData;
@@ -295,131 +276,6 @@
     return content;
   }
 
-  /**
-  * Format field titles according to options
-  * In the future we are also going to format the field titles according to vlSpec
-  * so that users have less to specify in options
-  * @return tooltipData with formated field titles
-  */
-  // function formatFieldTitles(tooltipData, options) {
-  //   tooltipData.forEach(function(field) {
-  //     field.title = "";
-  //
-  //     // try to get a custom field title from options
-  //     if (options.fieldConfigs) {
-  //       var configs = d3.map(options.fieldConfigs);
-  //       if ( configs.has(field.name) && configs.get(field.name).title ) {
-  //         field.title = configs.get(field.name).title;
-  //         return;
-  //       }
-  //     }
-  //
-  //     // TODO(zening): try to get a custom field title from vlSpec (e.g. axis title, legend title)
-  //
-  //     // if neither options nor vlSpec provides custom field title,
-  //     // set field title equal to field name
-  //     field.title = field.name;
-  //   });
-  //
-  //   return tooltipData;
-  // }
-
-  /**
-  * Format field values according to (1) options, (2) vlSpec, (3) datalib auto format
-  * @return tooltipData with formated field values
-  */
-  // function formatFieldValues(tooltipData, options) {
-  //
-  //   tooltipData.forEach(function(field) {
-  //
-  //     // try to format a field by (1) options, (2) vlSpec, (3) datalib auto format
-  //     var formattedValue = optFormat(field, options) || vlSpecFormat(field, options) || autoFormat(field.value);
-  //     field.value = formattedValue;
-  //
-  //   });
-  //
-  //   return tooltipData;
-  // }
-
-  /**
-  * Try format a field according to fieldConfig
-  * @return the formatted value if fieldConfig provides formatType
-  * undefined if fieldConfig doesn't provide both formatType
-  */
-  // function optionsFormat(value, fieldConfig) {
-  //   // both formatType and format exists
-  //   if (fieldConfig.formatType && fieldConfig.format) {
-  //     var formattedValue = applyFormat(fieldConfig.formatType, fieldConfig.format, value);
-  //
-  //   }
-  //   // only formatType exists
-  //   elseif (fieldConfig.formatType && (!fieldConfig.format)) {
-  //     switch (fieldConfig.formatType) {
-  //       case 'time':
-  //       var formatter = dl.format.auto.time();
-  //       break;
-  //       case 'number':
-  //       var formatter = dl.format.auto.number();
-  //       break;
-  //       case 'string'
-  //       default:
-  //     }
-  //     if (formatter) {
-  //
-  //     }
-  //   }
-  //   return;
-  // }
-  /**
-  * Try format a field according to options
-  * @return the formatted value if options provides both type and format for the field
-  * undefined if options doesn't provide both type and format for the field
-  */
-  // function optFormat(field, options) {
-  //   // if options doesn't have fieldConfigs, return undefined
-  //   if (!options.fieldConfigs) return;
-  //
-  //   // if options provides formatType and format for the field, use them, and return the formatted value
-  //   var configs = d3.map(options.fieldConfigs);
-  //   if ( configs.has(field.name) ) {
-  //     var type = configs.get(field.name).formatType;
-  //     var format = configs.get(field.name).format;
-  //     if (type && format) {
-  //       var formattedValue = applyFormat(type, format, field.value);
-  //       return formattedValue;
-  //     }
-  //   }
-  //
-  //   // options doesn't provide type and format for the field, return undefined
-  //   return;
-  // }
-
-  // function vlSpecFormat(field, options) {
-  //   // if options doesn't contain rules from vlSpec, return undefined
-  //   if (!options.vlSpec) return;
-  //
-  //   // if timeUnit describes the field, return the formatted value
-  //   if (options.vlSpec.timeUnit) {
-  //     var timeUnitFields = d3.map(options.vlSpec.timeUnit, function(d) { return d.field; });
-  //     if (timeUnitFields.has(field.name)) {
-  //       var format = timeUnitFields.get(field.name).timeUnit;
-  //       return applyFormat('time', format, field.value);
-  //     }
-  //   }
-  //
-  //   // if timeFormat applies to the field, return the formatted date value
-  //   if (options.vlSpec.timeFormat && dl.type(field.value) === 'date') {
-  //     return applyFormat('time', options.vlSpec.timeFormat, field.value);
-  //   }
-  //
-  //   // if numberFormat applies to the field, return the formatted number value
-  //   if (options.vlSpec.numberFormat && dl.type(field.value) === 'number') {
-  //     return applyFormat('number', options.vlSpec.numberFormat, field.value);
-  //   }
-  //
-  //   // if none of these rules apply to the field, return undefined
-  //   return;
-  // }
 
   function custFormat(value, type, format) {
     if (!type) return;
@@ -459,28 +315,6 @@
       return value;
     }
   }
-
-  /**
-  * Apply a format to a date, number, or string value
-  * @return the formatted value
-  */
-  function applyFormat(type, format, value) {
-    var formattedValue;
-    switch (type) {
-      case 'time':
-      var formatter = dl.format.time(format);
-      formattedValue = formatter(value);
-      break;
-      case 'number':
-      var formatter = dl.format.number(format);
-      formattedValue = formatter(value);
-      break;
-      default:
-      formattedValue = value;
-    }
-    return formattedValue;
-  }
-
 
 
   /**
