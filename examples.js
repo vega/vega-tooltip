@@ -30,27 +30,32 @@
   /* Vega-Lite Examples */
   // Scatter Plot
   var scatterOpts = {
-    fields: ["Name", "Horsepower", "Miles_per_Gallon"],
-    fieldConfigs:
-    {
-      "Miles_per_Gallon": {
+    showAllFields: false,
+    fields: [
+      {field: "Name"},
+      {field: "Horsepower"},
+      {
+        field: "Miles_per_Gallon",
         title: "Miles per Gallon"
       }
-    }
+    ]
   };
   addVlExample("exampleSpecs/scatter.json", "#vis-scatter", scatterOpts);
 
   // Trellis Barley
   var trellisBarOpts = {
-    fields: ["mean_yield", "year", "variety", "site"],
-    fieldConfigs:
-    {
-      "mean_yield": {
+    showAllFields: false,
+    fields: [
+      {
+        field: "mean_yield",
         title: "MEAN(yield)",
         formatType: "number",
         format: ".2f"
-      }
-    }
+      },
+      {field: "year"},
+      {field: "variety"},
+      {field: "site"}
+    ]
   };
   addVlExample("exampleSpecs/trellis_barley.json", "#vis-trellis-barley", trellisBarOpts);
 
@@ -59,20 +64,28 @@
 
   // Stacked Bar Chart
   var stackedBarOpts = {
-    fields: ["weather", "count", "month_date"]
+    showAllFields: false,
+    fields: [
+      {field: "weather"},
+      {field: "count"},
+      {field: "month_date"}
+    ]
   };
   addVlExample("exampleSpecs/stacked_bar_weather.json", "#vis-stacked-bar", stackedBarOpts);
 
   // Layered Bar Chart
   var layeredBarOpts = {
-    fields: ["gender", "age", "sum_people"],
-    fieldConfigs: {
-      "sum_people": {
+    showAllFields: false,
+    fields: [
+      {field: "gender"},
+      {field: "age"},
+      {
+        field: "sum_people",
         title: "population",
         formatType: "number",
         format: ","
       }
-    }
+    ]
   };
   addVlExample("exampleSpecs/bar_layered_transparent.json", "#vis-layered-bar", layeredBarOpts);
 
@@ -93,40 +106,52 @@
   /* Vega Examples */
   // Arc
   var arcOpts = {
-    fields: ["data"]
+    showAllFields: false,
+    fields: [
+      {field: "data"}
+    ]
   }
   addVgExample("exampleSpecs/arc.json", "#vis-arc", arcOpts);
 
   // Choropleth
   var choroplethOpts = {
-    fields: ["unemp.id", "unemp.rate"],
-    fieldConfigs: {
-      "unemp.id": { title: "County ID" },
-      "unemp.rate": {
+    showAllFields: false,
+    fields: [
+      {field: "unemp.id"},
+      {
+        field: "unemp.rate",
         title: "Unemployment Rate",
         formatType: "number",
         format: ".1%"
       }
-    }
+    ]
   }
   addVgExample("exampleSpecs/choropleth.json", "#vis-choropleth", choroplethOpts);
 
   // Force
   var forceOpts = {
-    fields: ["name"]
+    showAllFields: false,
+    fields: [
+      {field: "name"}
+    ]
   }
   addVgExample("exampleSpecs/force.json", "#vis-force", forceOpts);
 
   // Heatmap
   var heatmapOpts = {
-    fields: ["temp", "date", "hour"],
-    fieldConfigs: {
-      "temp": { title: "temp(F)" },
-      "date": {
+    showAllFields: false,
+    fields: [
+      {
+        field: "temp",
+        title: "temp(F)"
+      },
+      {
+        field: "date",
         formatType: "time",
         format: "%Y %B %e"
-      }
-    }
+      },
+      {field: "hour"}
+    ]
   }
   addVgExample("exampleSpecs/heatmap.json", "#vis-heatmap", heatmapOpts);
 

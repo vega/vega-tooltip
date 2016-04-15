@@ -139,23 +139,22 @@
   */
   function getTooltipData(item, options) {
 
-    // decide which fields to show in the tooltip
-    // TODO(zening): remove _id and _prev here
     // TODO(zening): if there are binned fields, remove _start, _end, _mid, _range fields, add bin_field and its value
     // TODO(zening): for count, drop count_start and count_end, leave count
     // TODO(zening): don't show layout (layout_start, layout_mid, layout_end, layout_path, layout_x, layout_y)
     // TODO(zening): for area and line charts, drop quantitative fields
+
     var tooltipData; // this array will be bind to the tooltip element
-    if ( options && options.fields && options.fields.length > 0 ) {
-      tooltipData = getCustomFields(item, options);
+    if ( options.showAllFields === true || options.showAllFields === undefined ) {
+      tooltipData = getAllFields(item);
     }
     else {
-      tooltipData = getDefaultFields(item, options);
+      tooltipData = getCustomFields(item, options);
     }
 
-    tooltipData = formatFieldTitles(tooltipData, options);
+    // tooltipData = formatFieldTitles(tooltipData, options);
 
-    tooltipData = formatFieldValues(tooltipData, options);
+    // tooltipData = formatFieldValues(tooltipData, options);
 
     return tooltipData;
   }
@@ -174,10 +173,17 @@
     var content = [];
 
     options.fields.forEach(function(fld) {
-      var value = getValue(item.datum, fld);
+      // TODO(zening): binned fields
+
+      // TODO(zening): aggregated fields
+
+      // format title
+
+      var value = getValue(item.datum, fld.field);
       if (value != undefined)
       {
-        content.push({name: fld, value: value});
+        // format value
+        content.push({title: fld.field, value: value});
       }
 
       // var title = opt.fieldTitle ? opt.fieldTitle : opt.field;
@@ -236,11 +242,11 @@
 
 
   /**
-  * Prepare default fields (top-level fields of item.datum) for tooltip.
+  * Prepare all fields (top-level fields of item.datum) for tooltip.
   * @return Field title and value array, ready to be formatted:
   * [{ title: ..., value: ...}]
   */
-  function getDefaultFields(item, options) {
+  function getAllFields(item) {
     var content = [];
 
     var itemData = d3.map(item.datum);
@@ -249,8 +255,19 @@
     itemData.remove("_id");
     itemData.remove("_prev");
 
+    // TODO(zening): if there are binned fields, remove _start, _end, _mid, _range fields, add bin_field and its value
+
+    // TODO(zening): for count, drop count_start and count_end, leave count
+
+    // TODO(zening): don't show layout (layout_start, layout_mid, layout_end, layout_path, layout_x, layout_y)
+
+    // TODO(zening): for area and line charts, drop quantitative fields
+
     itemData.forEach(function(field, value) {
-      content.push({name: field, value: value});
+      // format title
+
+      // format value
+      content.push({title: field, value: value});
     })
     // drop number and date data for line charts and area charts (#1)
     // if (item.mark.marktype === "line" || item.mark.marktype === "area") {
