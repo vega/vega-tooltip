@@ -30,7 +30,7 @@
   /* Vega-Lite Examples */
   // Scatter Plot
   var scatterOpts = {
-    showAllFields: true,
+    showAllFields: false,
     fields: [
       {field: "Name"},
       {field: "Horsepower"},
@@ -44,7 +44,7 @@
 
   // Trellis Barley
   var trellisBarOpts = {
-    showAllFields: true,
+    showAllFields: false,
     fields: [
       {
         field: "yield",
@@ -63,7 +63,7 @@
 
   // Stacked Bar Chart
   var stackedBarOpts = {
-    showAllFields: true,
+    showAllFields: false,
     fields: [
       {field: "weather"},
       {field: "*"},
@@ -74,7 +74,7 @@
 
   // Layered Bar Chart
   var layeredBarOpts = {
-    showAllFields: true,
+    showAllFields: false,
     fields: [
       {field: "gender"},
       {field: "age"},
@@ -104,7 +104,7 @@
   /* Vega Examples */
   // Arc
   var arcOpts = {
-    showAllFields: true,
+    showAllFields: false,
     fields: [
       {field: "data"}
     ]
@@ -113,11 +113,12 @@
 
   // Choropleth
   var choroplethOpts = {
-    showAllFields: true,
+    showAllFields: false,
     fields: [
       {
         field: "unemp.id",
-        title: "County ID"
+        title: "County ID",
+        formatType: "string"
       },
       {
         field: "unemp.rate",
@@ -131,7 +132,7 @@
 
   // Force
   var forceOpts = {
-    showAllFields: true,
+    showAllFields: false,
     fields: [
       {field: "name"}
     ]
@@ -140,7 +141,7 @@
 
   // Heatmap
   var heatmapOpts = {
-    showAllFields: true,
+    showAllFields: false,
     fields: [
       {
         field: "temp",
@@ -149,7 +150,7 @@
       {
         field: "date",
         formatType: "time",
-        format: "%Y %B %e"
+        format: "%B %e"
       },
       {field: "hour"}
     ]

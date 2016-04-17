@@ -79,7 +79,7 @@
     var timeFormat = vlSpec.config ? vlSpec.config.timeFormat : undefined;
     var numberFormat = vlSpec.config ? vlSpec.config.numberFormat : undefined;
 
-    // if show all fields, supplement all fields
+    // if showAllFields, supplement all fields
     if (options.showAllFields === true || options.showAllFields === undefined) {
       vl.spec.fieldDefs(vlSpec).forEach(function(fieldDef){
         var field = fieldDef.field;
@@ -87,19 +87,26 @@
         // user-specified field config
         var userFieldConfig = getUserFieldConfig(fieldDef, options.fields);
 
-        // supplemented field config
+        // supplemented the field config
         var suppFieldConfig = supplementField(userFieldConfig, fieldDef, timeFormat, numberFormat);
 
         supplementedConfigs.push(suppFieldConfig);
       });
     }
-    // supplement existing fields
+    // if showAllFields is false, only supplement existing fields
     else {
-      // go through existing fields
-      // find the right fieldDef
-      // supplement everything
-    }
+      if (options.fields && options.fields.length > 0) {
+        options.fields.forEach(function(userFieldConfig) {
+          // find the right fieldDef
+          var fieldDef = getFieldDef(userFieldConfig, vl.spec.fieldDefs(vlSpec));
 
+          // supplement the field config
+          var suppFieldConfig = supplementField(userFieldConfig, fieldDef, timeFormat, numberFormat);
+
+          supplementedConfigs.push(suppFieldConfig);
+        })
+      }
+    }
 
     // TODO(zening): supplement binned fields
 
@@ -109,7 +116,7 @@
   }
 
   /**
-  * Get a user-specified field config that matches fieldDef
+  * Given a fieldDef from vlSpec, find the corresponding user-specified field config.
   * If we know from fieldDef that the field is aggregated, we find a user-specified
   * field config that matches the field name and the aggregation.
   * If the field is not aggregated, we just find a user-specified field config
@@ -117,7 +124,7 @@
   * @return a user-specified field config if there is a successful match, undefined otherwise
   */
   function getUserFieldConfig(fieldDef, optFields) {
-    if (!optFields || optFields.length <= 0) return;
+    if (!fieldDef || !optFields || optFields.length <= 0) return;
 
     var userFieldConfig = undefined;
 
@@ -153,25 +160,61 @@
   }
 
   /**
+  * Given a user-specified field config, find the corresponding fieldDef from vlSpec.
+  *
+  */
+  function getFieldDef(userFieldConfig, specFieldDefs) {
+    if (!userFieldConfig || !userFieldConfig.field || !specFieldDefs) return;
+
+    var fieldDef = undefined;
+
+    // field name and aggregation both should match
+    specFieldDefs.forEach(function(channel) {
+      if (!fieldDef && channel.field === userFieldConfig.field) {
+        if (channel.aggregate) {
+          if (channel.aggregate === userFieldConfig.aggregate || userFieldConfig.aggregate === undefined) {
+            fieldDef = channel;
+          }
+        }
+        else {
+          fieldDef = channel;
+        }
+      }
+    });
+
+    return fieldDef;
+  }
+
+  /**
   * Supplements a user-specified field config with vlSpec
   * @return the supplemented field config
   */
   function supplementField(userFieldConfig, fieldDef, timeFormat, numberFormat) {
+    // at least one of userFieldConfig and fieldDef should exist
+    if (!userFieldConfig && !fieldDef) {
+      console.warn('[VgTooltip] Cannot supplement a field when user-specified field config and vlSpec field config are both empty.');
+      return;
+    }
+    if (!userFieldConfig && fieldDef) userFieldConfig = {};
+    if (userFieldConfig && !fieldDef) fieldDef = {};
+
+    // the supplemented field config
     var suppFieldConfig = {};
 
     // supplement field name with underscore prefixes
-    suppFieldConfig.field = vl.fieldDef.field(fieldDef);
+    suppFieldConfig.field = fieldDef.field ?
+    vl.fieldDef.field(fieldDef) : userFieldConfig.field;
 
     // supplement title
-    suppFieldConfig.title = (userFieldConfig && userFieldConfig.title) ?
+    suppFieldConfig.title = userFieldConfig.title ?
     userFieldConfig.title : vl.fieldDef.title(fieldDef);
 
     // supplement formatType
-    suppFieldConfig.formatType = (userFieldConfig && userFieldConfig.formatType) ?
+    suppFieldConfig.formatType = userFieldConfig.formatType ?
     userFieldConfig.formatType : formatTypeMap[fieldDef.type];
 
     // supplement format based on formatType, using timeUnit, timeFormat, numberFormat
-    if (userFieldConfig && userFieldConfig.format) {
+    if (userFieldConfig.format) {
       suppFieldConfig.format = userFieldConfig.format;
     }
     else {
@@ -190,17 +233,6 @@
   return suppFieldConfig;
   }
 
-  function supplementTimeFormat(fieldDef) {
-    // timeUnit
-
-    // timeFormat
-    return;
-  }
-
-  function supplementNumberFormat(fieldDef) {
-    // numberFormat
-    return;
-  }
 
   /* Initialize tooltip with data */
   function init(event, item, options) {
