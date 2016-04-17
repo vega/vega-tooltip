@@ -57,39 +57,121 @@
     });
   };
 
-  /* Supplement options with vlSpec */
+  /**
+  * Supplement options with vlSpec
+  * if options.showAllFields is true or undefined, vlSpec will supplement options.fields
+  * with all fields in the spec
+  * if options.showAllFields is false, vlSpec will only supplement existing fields
+  * in options.fields
+  */
   function supplementOptions(options, vlSpec) {
-    // options.vlSpec is not visible to users
-    // it is a set of rules extracted from vlSpec that may be used to format the tooltip
-    options.vlSpec = {};
+    // vlSpec supplemented field configs
+    var supplementedConfigs = [];
+
+    // if show all fields, supplement all fields
+    if (options.showAllFields === true || options.showAllFields === undefined) {
+      vl.spec.fieldDefs(vlSpec).forEach(function(fieldDef){
+        var field = fieldDef.field;
+
+        // user-specified field config
+        var userFieldConfig = getUserFieldConfig(fieldDef, options.fields);
+
+        // supplemented field config
+        var suppFieldConfig = {};
+
+        // supplement field name
+        suppFieldConfig.field = vl.fieldDef.field(fieldDef);
+
+        // supplement title
+        if (userFieldConfig && userFieldConfig.title) {
+          suppFieldConfig.title = userFieldConfig.title;
+        }
+        else {
+          suppFieldConfig.title = vl.fieldDef.title(fieldDef)
+        }
+
+        // supplement formatType
+        // fieldConfig.formatType = getFormatType();
+
+        // based on type, supplement format, using timeUnit, timeFormat, numberFormat, bin, aggregate etc
+
+        supplementedConfigs.push(suppFieldConfig);
+      });
+    }
+    // supplement existing fields
+    else {
+    }
+
 
     // TODO(zening): supplement binned fields
 
     // supplement numberFormat
-    if (vlSpec.config && vlSpec.config.numberFormat) {
-      options.vlSpec.numberFormat = vlSpec.config.numberFormat;
-    }
+    // if (vlSpec.config && vlSpec.config.numberFormat) {
+    //   options.vlSpec.numberFormat = vlSpec.config.numberFormat;
+    // }
 
     // TODO(zening): supplement timeFormat
 
     // supplement timeUnit
-    vl.spec.fieldDefs(vlSpec).forEach(function(channel) {
-      if (channel.timeUnit) {
-        if (!options.vlSpec.timeUnit) {
-          options.vlSpec.timeUnit = [];
-        }
-        try {
-          // TODO(zening): consider how to remove the '_'
-          var renamedField = channel.timeUnit + '_' + channel.field;
-          options.vlSpec.timeUnit.push({field: renamedField, timeUnit: channel.timeUnit});
-        }
-        catch (error) {
-          console.error('[VgTooltip] Error parsing Vega-Lite timeUnit: ' + error);
-        }
-      }
-    });
+    // vl.spec.fieldDefs(vlSpec).forEach(function(channel) {
+    //   if (channel.timeUnit) {
+    //     if (!options.vlSpec.timeUnit) {
+    //       options.vlSpec.timeUnit = [];
+    //     }
+    //     try {
+    //       // TODO(zening): consider how to remove the '_'
+    //       var renamedField = channel.timeUnit + '_' + channel.field;
+    //       options.vlSpec.timeUnit.push({field: renamedField, timeUnit: channel.timeUnit});
+    //     }
+    //     catch (error) {
+    //       console.error('[VgTooltip] Error parsing Vega-Lite timeUnit: ' + error);
+    //     }
+    //   }
+    // });
+
+    options.fields = supplementedConfigs;
 
     return options;
+  }
+
+  /**
+  *
+  * @return a user-specified field config
+  */
+  function getUserFieldConfig(fieldDef, optFields) {
+    if (!optFields || optFields.length <= 0) return;
+
+    var userFieldConfig = undefined;
+
+    // if aggregate, match field name and aggregate operation
+    if (fieldDef.aggregate) {
+      // try find the perfect match: field name equals, aggregate operation equals
+      optFields.forEach(function(optFld) {
+        if (!userFieldConfig && optFld.field === fieldDef.field && optFld.aggregate === fieldDef.aggregate) {
+          userFieldConfig = optFld;
+        }
+      });
+
+      // try find the second-best match: field name equals, optFld.aggregate = undefined
+      if (!userFieldConfig) {
+        optFields.forEach(function(optFld) {
+          if (!userFieldConfig && optFld.field === fieldDef.field && optFld.aggregate === undefined) {
+            userFieldConfig = optFld;
+          }
+        });
+      }
+
+    }
+    // if not aggregate, just match field name
+    else {
+      optFields.forEach(function(optFld) {
+        if (!userFieldConfig && optFld.field === fieldDef.field) {
+          userFieldConfig = optFld;
+        }
+      });
+    }
+
+    return userFieldConfig;
   }
 
   /* Initialize tooltip with data */

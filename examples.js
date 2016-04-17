@@ -47,8 +47,7 @@
     showAllFields: true,
     fields: [
       {
-        field: "mean_yield",
-        title: "MEAN(yield)",
+        field: "yield",
         formatType: "number",
         format: ".2f"
       },
@@ -67,8 +66,8 @@
     showAllFields: true,
     fields: [
       {field: "weather"},
-      {field: "count"},
-      {field: "month_date"}
+      {field: "*"},
+      {field: "date"}
     ]
   };
   addVlExample("exampleSpecs/stacked_bar_weather.json", "#vis-stacked-bar", stackedBarOpts);
@@ -80,7 +79,7 @@
       {field: "gender"},
       {field: "age"},
       {
-        field: "sum_people",
+        field: "people",
         title: "population",
         formatType: "number",
         format: ","
