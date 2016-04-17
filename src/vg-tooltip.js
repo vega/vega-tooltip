@@ -76,6 +76,9 @@
     // vlSpec supplemented field configs
     var supplementedConfigs = [];
 
+    var timeFormat = vlSpec.config ? vlSpec.config.timeFormat : undefined;
+    var numberFormat = vlSpec.config ? vlSpec.config.numberFormat : undefined;
+
     // if show all fields, supplement all fields
     if (options.showAllFields === true || options.showAllFields === undefined) {
       vl.spec.fieldDefs(vlSpec).forEach(function(fieldDef){
@@ -85,7 +88,7 @@
         var userFieldConfig = getUserFieldConfig(fieldDef, options.fields);
 
         // supplemented field config
-        var suppFieldConfig = supplementField(userFieldConfig, fieldDef);
+        var suppFieldConfig = supplementField(userFieldConfig, fieldDef, timeFormat, numberFormat);
 
         supplementedConfigs.push(suppFieldConfig);
       });
@@ -99,30 +102,6 @@
 
 
     // TODO(zening): supplement binned fields
-
-    // supplement numberFormat
-    // if (vlSpec.config && vlSpec.config.numberFormat) {
-    //   options.vlSpec.numberFormat = vlSpec.config.numberFormat;
-    // }
-
-    // TODO(zening): supplement timeFormat
-
-    // supplement timeUnit
-    // vl.spec.fieldDefs(vlSpec).forEach(function(channel) {
-    //   if (channel.timeUnit) {
-    //     if (!options.vlSpec.timeUnit) {
-    //       options.vlSpec.timeUnit = [];
-    //     }
-    //     try {
-    //       // TODO(zening): consider how to remove the '_'
-    //       var renamedField = channel.timeUnit + '_' + channel.field;
-    //       options.vlSpec.timeUnit.push({field: renamedField, timeUnit: channel.timeUnit});
-    //     }
-    //     catch (error) {
-    //       console.error('[VgTooltip] Error parsing Vega-Lite timeUnit: ' + error);
-    //     }
-    //   }
-    // });
 
     options.fields = supplementedConfigs;
 
@@ -177,7 +156,7 @@
   * Supplements a user-specified field config with vlSpec
   * @return the supplemented field config
   */
-  function supplementField(userFieldConfig, fieldDef) {
+  function supplementField(userFieldConfig, fieldDef, timeFormat, numberFormat) {
     var suppFieldConfig = {};
 
     // supplement field name with underscore prefixes
@@ -191,17 +170,17 @@
     suppFieldConfig.formatType = (userFieldConfig && userFieldConfig.formatType) ?
     userFieldConfig.formatType : formatTypeMap[fieldDef.type];
 
-    // based on type, supplement format, using timeUnit, timeFormat, numberFormat, bin, aggregate etc
+    // supplement format based on formatType, using timeUnit, timeFormat, numberFormat
     if (userFieldConfig && userFieldConfig.format) {
       suppFieldConfig.format = userFieldConfig.format;
     }
     else {
       switch (suppFieldConfig.formatType) {
         case 'time':
-        suppFieldConfig.format = supplementTimeFormat(fieldDef);
+        suppFieldConfig.format = fieldDef.timeUnit ? vl.timeUnit.format(fieldDef.timeUnit) : timeFormat;
         break;
         case 'number':
-        suppFieldConfig.format = supplementNumberFormat(fieldDef);
+        suppFieldConfig.format = numberFormat;
         break;
         case 'string':
         default:
@@ -212,10 +191,14 @@
   }
 
   function supplementTimeFormat(fieldDef) {
+    // timeUnit
+
+    // timeFormat
     return;
   }
 
   function supplementNumberFormat(fieldDef) {
+    // numberFormat
     return;
   }
 
