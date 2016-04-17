@@ -57,6 +57,14 @@
     });
   };
 
+  /* Mapping from fieldDef.type to options.formatType */
+  var formatTypeMap = {
+    'quantitative': 'number',
+    'ordinal': undefined,
+    'temporal': 'time',
+    'nominal': 'string'
+  }
+  
   /**
   * Supplement options with vlSpec
   * if options.showAllFields is true or undefined, vlSpec will supplement options.fields
@@ -79,19 +87,16 @@
         // supplemented field config
         var suppFieldConfig = {};
 
-        // supplement field name
+        // supplement field name with underscore prefixes
         suppFieldConfig.field = vl.fieldDef.field(fieldDef);
 
         // supplement title
-        if (userFieldConfig && userFieldConfig.title) {
-          suppFieldConfig.title = userFieldConfig.title;
-        }
-        else {
-          suppFieldConfig.title = vl.fieldDef.title(fieldDef)
-        }
+        suppFieldConfig.title = (userFieldConfig && userFieldConfig.title) ?
+        userFieldConfig.title : vl.fieldDef.title(fieldDef);
 
         // supplement formatType
-        // fieldConfig.formatType = getFormatType();
+        suppFieldConfig.formatType = (userFieldConfig && userFieldConfig.formatType) ?
+        userFieldConfig.formatType : formatTypeMap[fieldDef.type];
 
         // based on type, supplement format, using timeUnit, timeFormat, numberFormat, bin, aggregate etc
 
@@ -135,8 +140,12 @@
   }
 
   /**
-  *
-  * @return a user-specified field config
+  * Get a user-specified field config that matches fieldDef
+  * If we know from fieldDef that the field is aggregated, we find a user-specified
+  * field config that matches the field name and the aggregation.
+  * If the field is not aggregated, we just find a user-specified field config
+  * that matches the field name.
+  * @return a user-specified field config if there is a successful match, undefined otherwise
   */
   function getUserFieldConfig(fieldDef, optFields) {
     if (!optFields || optFields.length <= 0) return;
@@ -173,6 +182,7 @@
 
     return userFieldConfig;
   }
+
 
   /* Initialize tooltip with data */
   function init(event, item, options) {
