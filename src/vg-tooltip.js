@@ -64,7 +64,7 @@
     'temporal': 'time',
     'nominal': 'string'
   }
-  
+
   /**
   * Supplement options with vlSpec
   * if options.showAllFields is true or undefined, vlSpec will supplement options.fields
@@ -85,26 +85,16 @@
         var userFieldConfig = getUserFieldConfig(fieldDef, options.fields);
 
         // supplemented field config
-        var suppFieldConfig = {};
-
-        // supplement field name with underscore prefixes
-        suppFieldConfig.field = vl.fieldDef.field(fieldDef);
-
-        // supplement title
-        suppFieldConfig.title = (userFieldConfig && userFieldConfig.title) ?
-        userFieldConfig.title : vl.fieldDef.title(fieldDef);
-
-        // supplement formatType
-        suppFieldConfig.formatType = (userFieldConfig && userFieldConfig.formatType) ?
-        userFieldConfig.formatType : formatTypeMap[fieldDef.type];
-
-        // based on type, supplement format, using timeUnit, timeFormat, numberFormat, bin, aggregate etc
+        var suppFieldConfig = supplementField(userFieldConfig, fieldDef);
 
         supplementedConfigs.push(suppFieldConfig);
       });
     }
     // supplement existing fields
     else {
+      // go through existing fields
+      // find the right fieldDef
+      // supplement everything
     }
 
 
@@ -183,6 +173,51 @@
     return userFieldConfig;
   }
 
+  /**
+  * Supplements a user-specified field config with vlSpec
+  * @return the supplemented field config
+  */
+  function supplementField(userFieldConfig, fieldDef) {
+    var suppFieldConfig = {};
+
+    // supplement field name with underscore prefixes
+    suppFieldConfig.field = vl.fieldDef.field(fieldDef);
+
+    // supplement title
+    suppFieldConfig.title = (userFieldConfig && userFieldConfig.title) ?
+    userFieldConfig.title : vl.fieldDef.title(fieldDef);
+
+    // supplement formatType
+    suppFieldConfig.formatType = (userFieldConfig && userFieldConfig.formatType) ?
+    userFieldConfig.formatType : formatTypeMap[fieldDef.type];
+
+    // based on type, supplement format, using timeUnit, timeFormat, numberFormat, bin, aggregate etc
+    if (userFieldConfig && userFieldConfig.format) {
+      suppFieldConfig.format = userFieldConfig.format;
+    }
+    else {
+      switch (suppFieldConfig.formatType) {
+        case 'time':
+        suppFieldConfig.format = supplementTimeFormat(fieldDef);
+        break;
+        case 'number':
+        suppFieldConfig.format = supplementNumberFormat(fieldDef);
+        break;
+        case 'string':
+        default:
+      }
+    }
+
+  return suppFieldConfig;
+  }
+
+  function supplementTimeFormat(fieldDef) {
+    return;
+  }
+
+  function supplementNumberFormat(fieldDef) {
+    return;
+  }
 
   /* Initialize tooltip with data */
   function init(event, item, options) {

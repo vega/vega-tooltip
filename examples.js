@@ -81,8 +81,7 @@
       {
         field: "people",
         title: "population",
-        formatType: "number",
-        format: ","
+        formatType: "number"
       }
     ]
   };
