@@ -384,7 +384,26 @@
 
     // TODO(zening): if there are binned fields, remove _start, _end, _mid, _range fields, add bin_field and its value
 
-    // TODO(zening): for area and line charts, drop quantitative fields
+    // drop number and date data for line charts and area charts (#1)
+    if (item.mark.marktype === "line" || item.mark.marktype === "area") {
+      console.warn('[VgTooltip]: By default, we only show qualitative data in tooltip.');
+
+      var quanKeys = [];
+      itemData.forEach(function(field, value) {
+        switch (dl.type(value)) {
+          case 'number':
+          case 'date':
+          quanKeys.push(field);
+          break;
+          case 'boolean':
+          case 'string':
+          default:
+            break;
+        }
+      });
+      removeFields(itemData, quanKeys);
+    }
+
 
     itemData.forEach(function(field, value) {
       // get title
@@ -404,30 +423,7 @@
       var formattedValue = custFormat(value, formatType, format) || autoFormat(value);
 
       tooltipData.push({title: title, value: formattedValue});
-    })
-    // drop number and date data for line charts and area charts (#1)
-    // if (item.mark.marktype === "line" || item.mark.marktype === "area") {
-    //   console.warn('[VgTooltip]: By default, we only show qualitative data in tooltip.');
-    //
-    //   itemData.forEach(function(field, value) {
-    //     switch (dl.type(value)) {
-    //       case 'boolean':
-    //       case 'string':
-    //         content.push({fieldTitle: field, fieldValue: value});
-    //         break;
-    //       case 'number':
-    //       case 'date':
-    //       default:
-    //         break;
-    //     }
-    //   })
-    // }
-    // else {
-    //   itemData.forEach(function(field, value) {
-    //     var formattedValue = autoFormat(field, value, options);
-    //     content.push({fieldTitle: field, fieldValue: formattedValue});
-    //   });
-    // }
+    });
 
     return tooltipData;
   }
