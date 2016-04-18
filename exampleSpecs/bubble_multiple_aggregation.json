@@ -1,0 +1,24 @@
+{
+  "description": "A bubbleplot showing year on x, mean horsepower on y, and population standard deviation of horsepower on size and color.",
+  "data": {"url": "data/cars.json"},
+  "mark": "circle",
+  "encoding": {
+    "y": {
+      "field": "Horsepower",
+      "type": "quantitative",
+      "aggregate": "mean"
+    },
+    "x": {"field": "Year","type": "temporal", "timeUnit": "year"},
+    "size": {
+      "field": "Horsepower",
+      "type": "quantitative",
+      "aggregate": "stdevp"
+    },
+    "color": {
+      "field": "Horsepower",
+      "type": "quantitative",
+      "aggregate": "stdevp",
+      "scale": {"range": ["#1f77b4", "#c6dbef"]}
+    }
+  }
+}

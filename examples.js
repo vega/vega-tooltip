@@ -42,6 +42,25 @@
   };
   addVlExample("exampleSpecs/scatter.json", "#vis-scatter");
 
+  // Bubble Plot with Multiple Aggregations on the same field
+  var bubbleOpts = {
+    fields: [
+      {
+        field: "Horsepower",
+        aggregate: "mean",
+        formatType: "number",
+        format: ".2f"
+      },
+      {
+        field: "Horsepower",
+        aggregate: "stdevp",
+        formatType: "number",
+        format: ".2f"
+      }
+    ]
+  }
+  addVlExample("exampleSpecs/bubble_multiple_aggregation.json", "#vis-bubble-multiagg", bubbleOpts);
+
   // Trellis Barley
   var trellisBarOpts = {
     showAllFields: false,
