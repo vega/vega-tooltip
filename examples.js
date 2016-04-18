@@ -40,7 +40,7 @@
       }
     ]
   };
-  addVlExample("exampleSpecs/scatter.json", "#vis-scatter", scatterOpts);
+  addVlExample("exampleSpecs/scatter.json", "#vis-scatter");
 
   // Trellis Barley
   var trellisBarOpts = {
@@ -56,7 +56,7 @@
       {field: "site"}
     ]
   };
-  addVlExample("exampleSpecs/trellis_barley.json", "#vis-trellis-barley", trellisBarOpts);
+  addVlExample("exampleSpecs/trellis_barley.json", "#vis-trellis-barley");
 
   // Simple Bar Chart
   addVlExample("exampleSpecs/bar.json", "#vis-bar");
@@ -70,7 +70,7 @@
       {field: "date"}
     ]
   };
-  addVlExample("exampleSpecs/stacked_bar_weather.json", "#vis-stacked-bar", stackedBarOpts);
+  addVlExample("exampleSpecs/stacked_bar_weather.json", "#vis-stacked-bar");
 
   // Layered Bar Chart
   var layeredBarOpts = {
@@ -85,13 +85,13 @@
       }
     ]
   };
-  addVlExample("exampleSpecs/bar_layered_transparent.json", "#vis-layered-bar", layeredBarOpts);
+  addVlExample("exampleSpecs/bar_layered_transparent.json", "#vis-layered-bar");
 
   // Line Chart
   var lineOpts = {
     colorTheme: "dark"
   }
-  addVlExample("exampleSpecs/line.json", "#vis-line", lineOpts);
+  addVlExample("exampleSpecs/line.json", "#vis-line");
 
   // Colored Line Chart
   var colorLineOpts = {}
@@ -109,7 +109,7 @@
       {field: "data"}
     ]
   }
-  addVgExample("exampleSpecs/arc.json", "#vis-arc", arcOpts);
+  addVgExample("exampleSpecs/arc.json", "#vis-arc");
 
   // Choropleth
   var choroplethOpts = {
@@ -128,7 +128,7 @@
       }
     ]
   }
-  addVgExample("exampleSpecs/choropleth.json", "#vis-choropleth", choroplethOpts);
+  addVgExample("exampleSpecs/choropleth.json", "#vis-choropleth");
 
   // Force
   var forceOpts = {
@@ -137,7 +137,7 @@
       {field: "name"}
     ]
   }
-  addVgExample("exampleSpecs/force.json", "#vis-force", forceOpts);
+  addVgExample("exampleSpecs/force.json", "#vis-force");
 
   // Heatmap
   var heatmapOpts = {
@@ -155,6 +155,6 @@
       {field: "hour"}
     ]
   }
-  addVgExample("exampleSpecs/heatmap.json", "#vis-heatmap", heatmapOpts);
+  addVgExample("exampleSpecs/heatmap.json", "#vis-heatmap");
 
 }());

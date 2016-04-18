@@ -375,15 +375,14 @@
 
     var itemData = d3.map(item.datum);
 
-    // remove _id and _prev
-    itemData.remove("_id");
-    itemData.remove("_prev");
+    var removeKeys = [
+      "_id", "_prev",
+      "count_start", "count_end",
+      "layout_start", "layout_mid", "layout_end", "layout_path", "layout_x", "layout_y"
+    ];
+    removeFields(itemData, removeKeys);
 
     // TODO(zening): if there are binned fields, remove _start, _end, _mid, _range fields, add bin_field and its value
-
-    // TODO(zening): for count, drop count_start and count_end, leave count
-
-    // TODO(zening): don't show layout (layout_start, layout_mid, layout_end, layout_path, layout_x, layout_y)
 
     // TODO(zening): for area and line charts, drop quantitative fields
 
@@ -433,6 +432,12 @@
     return tooltipData;
   }
 
+  /* Removes an array of fields from a data map */
+  function removeFields(dataMap, removeKeys) {
+    removeKeys.forEach(function(key) {
+      dataMap.remove(key);
+    })
+  }
 
   function custFormat(value, type, format) {
     if (!type) return;
