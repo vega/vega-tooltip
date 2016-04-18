@@ -19,7 +19,7 @@ http://vega.github.io/vega-lite-tooltip/
 
 
 ## Creating Your Tooltip
-**Step 1** Include the `vgTooltip` library and its dependencies (`d3`, `vega`, `vega-lite`, `vega-embed` and `datalib`) in your HTML `<head>`.
+**Step 1** Include the `vg-tooltip` library and its dependencies (`d3`, `vega`, `vega-lite`, `vega-embed` and `datalib`) in your HTML `<head>`.
 
 ```html
 <!-- Dependencies -->
@@ -68,13 +68,13 @@ vg.parse.spec(vgSpec, function(error, chart) {
 });
 ```
 
-**Step 5** In step 4 callback function, create your tooltip with [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api). If you have a Vega-Lite visualization, use `vlTooltip()` to create your tooltip. If you have a Vega visualization, use `vgTooltip()` to create your tooltip. For example:
+**Step 5** In the callback function of step 4, create your tooltip with [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api). If you have a Vega-Lite visualization, use `vl.tooltip()` to create your tooltip. If you have a Vega visualization, use `vg.tooltip()` to create your tooltip. For example:
 
 ```js
 // create a Vega-Lite example using vg.embed
 vg.embed("#vis-scatter", embedSpec, function(error, result) {
     // result.view is the Vega View, vlSpec is the original Vega-Lite spec
-    vlTooltip(result.view, vlSpec);
+    vl.tooltip(result.view, vlSpec);
 });
 ```
 or
@@ -83,40 +83,43 @@ or
 vg.parse.spec(vgSpec, function(error, chart) {
     // view is the Vega View
     var view = chart({el:"#vis-scatter"}).update();
-    vgTooltip(view);
+    vg.tooltip(view);
 });
 ```
 Congratulations! Now you should be able to see a tooltip working with your visualization.
 
 ## Customizing Your Tooltip
-You can customize the look and the content of your tooltip by passing in an optional `options` parameter to `vlTooltip()` or `vgTooltip()`. For example:
+You can customize the look and the content of your tooltip by passing in an optional `options` parameter to `vl.tooltip()` or `vg.tooltip()`. For example:
 
 ```js
 // in vg.embed callback
-vlTooltip(result.view, vlSpec, options);
+vl.tooltip(result.view, vlSpec, options);
 ```
 or
 ```js
 // in vg.parse.spec callback
-vgTooltip(view, options);
+vg.tooltip(view, options);
 ```
 
 The complete structure of `options` looks like this:
 
 ```js
-var options = {
-  showFields: [{ // specify data fields to be shown in the tooltip
-    field: ..., // field name in the dataset
-    fieldTitle: ..., // (optional) field title the tooltip should display
-    type: 'date' | 'number' | 'string',
-    format: timeUnit | string specifier
-  }],
-  offset: { // x and y offset (in pixels) of the tooltip
-    x: 10,
-    y: 10
-  },
-  colorTheme: 'light' | 'dark' // specify a color theme the tooltip should use
-}
+var options =
+{
+    showAllFields: true | false,
+    fields: [
+      {
+         field: 'field1',
+         title: 'Field One',
+         formatType: 'time' | 'number' | 'string', 			
+         format: string-specifier,
+         aggregate: 'mean',
+      },
+      ...
+    }],
+
+    colorTheme: 'light' | 'dark'
+};
 ```
 
 You don't have to provide a fully-structured `options` object to customize your tooltip. In most cases, a partially filled-out `options` object should suffice.
@@ -126,8 +129,6 @@ By default, tooltip shows all top-level data fields bound to an element. You can
 
 [//]: # (TODO(zening): tooltip fields order: can we recommend which fields should go first and which ones should go later? I feel that the fields that are most frequently changing as the mouse moves, as well as the field that's encoded with color should go first.)
 
-### Customize Tooltip Offset
-By default, tooltip is to the bottom right of the cursor (10px right of and 10px below the cursor). You can use `options.offset` to overwrite this.
 
 ### Customize Themes
 By default, tooltip uses a `light` color theme. You can set `colorTheme` to `dark` if it better matches your visualization. You can also always write your own CSS to overwrite the `.vg-tooltip` style.
