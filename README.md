@@ -142,7 +142,7 @@ Each object in the `fields[]` array has the following properties.
 | :--------| :-----------|
 | `field` | The name of the field. With Vega-Lite, this is the field you provided to each encoding channel. |
 | `title` | A custom string title for the field. |
-| `formatType` | Tells what kind of field this is: `'number', `'time'`, or `'string'`. |
+| `formatType` | Tells what kind of field this is: `'number'`, `'time'`, or `'string'`. |
 | `format` | If `formatType` is `'number'`, you can provide a [number format string-specifier](https://github.com/mbostock/d3/wiki/Formatting). If `formatType` is `'time'`, you can provide a [time format string-specifier](https://github.com/mbostock/d3/wiki/Time-Formatting). If `formatType` is `'string'`, there is no need to provide a `format`. |
 | `aggregate` | (Vega-Lite only) If your Vega-Lite visualization has multiple aggregations of the same field, you can provide a [aggregation operation](https://vega.github.io/vega-lite/docs/aggregate.html#supported-aggregation-operations) here to specify the particular aggregated field that you want to customize. |
 
