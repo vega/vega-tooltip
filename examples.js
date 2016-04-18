@@ -40,10 +40,11 @@
       }
     ]
   };
-  addVlExample("exampleSpecs/scatter.json", "#vis-scatter");
+  addVlExample("exampleSpecs/scatter.json", "#vis-scatter", scatterOpts);
 
   // Bubble Plot with Multiple Aggregations on the same field
   var bubbleOpts = {
+    showAllFields: true,
     fields: [
       {
         field: "Horsepower",
@@ -75,42 +76,42 @@
       {field: "site"}
     ]
   };
-  addVlExample("exampleSpecs/trellis_barley.json", "#vis-trellis-barley");
+  addVlExample("exampleSpecs/trellis_barley.json", "#vis-trellis-barley", trellisBarOpts);
 
   // Simple Bar Chart
   addVlExample("exampleSpecs/bar.json", "#vis-bar");
 
   // Stacked Bar Chart
-  var stackedBarOpts = {
-    showAllFields: false,
-    fields: [
-      {field: "weather"},
-      {field: "*"},
-      {field: "date"}
-    ]
-  };
+  // var stackedBarOpts = {
+  //   showAllFields: false,
+  //   fields: [
+  //     {field: "weather"},
+  //     {field: "*"},
+  //     {field: "date"}
+  //   ]
+  // };
   addVlExample("exampleSpecs/stacked_bar_weather.json", "#vis-stacked-bar");
 
   // Layered Bar Chart
-  var layeredBarOpts = {
-    showAllFields: false,
-    fields: [
-      {field: "gender"},
-      {field: "age"},
-      {
-        field: "people",
-        title: "population",
-        formatType: "number"
-      }
-    ]
-  };
+  // var layeredBarOpts = {
+  //   showAllFields: false,
+  //   fields: [
+  //     {field: "gender"},
+  //     {field: "age"},
+  //     {
+  //       field: "people",
+  //       title: "population",
+  //       formatType: "number"
+  //     }
+  //   ]
+  // };
   addVlExample("exampleSpecs/bar_layered_transparent.json", "#vis-layered-bar");
 
   // Line Chart
   var lineOpts = {
     colorTheme: "dark"
   }
-  addVlExample("exampleSpecs/line.json", "#vis-line");
+  addVlExample("exampleSpecs/line.json", "#vis-line", lineOpts);
 
   // Colored Line Chart
   var colorLineOpts = {}
@@ -122,12 +123,12 @@
 
   /* Vega Examples */
   // Arc
-  var arcOpts = {
-    showAllFields: false,
-    fields: [
-      {field: "data"}
-    ]
-  }
+  // var arcOpts = {
+  //   showAllFields: false,
+  //   fields: [
+  //     {field: "data"}
+  //   ]
+  // }
   addVgExample("exampleSpecs/arc.json", "#vis-arc");
 
   // Choropleth
@@ -147,7 +148,7 @@
       }
     ]
   }
-  addVgExample("exampleSpecs/choropleth.json", "#vis-choropleth");
+  addVgExample("exampleSpecs/choropleth.json", "#vis-choropleth", choroplethOpts);
 
   // Force
   var forceOpts = {
@@ -156,7 +157,7 @@
       {field: "name"}
     ]
   }
-  addVgExample("exampleSpecs/force.json", "#vis-force");
+  addVgExample("exampleSpecs/force.json", "#vis-force", forceOpts);
 
   // Heatmap
   var heatmapOpts = {
@@ -174,6 +175,6 @@
       {field: "hour"}
     ]
   }
-  addVgExample("exampleSpecs/heatmap.json", "#vis-heatmap");
+  addVgExample("exampleSpecs/heatmap.json", "#vis-heatmap", heatmapOpts);
 
 }());

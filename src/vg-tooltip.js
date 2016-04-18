@@ -2,9 +2,9 @@
 
 (function() {
   /**
-  * Export Vega Tooltip API: vgTooltip(vgView, options)
-  * options can specify data fields to show in the tooltip and can
-  * provide data formats for those fields
+  * Export Vega Tooltip API: vg.tooltip(vgView, options)
+  * options can specify to show all fields or to show custom fields in the tooltip
+  * and can provide titles and formats for those fields
   */
   window.vg.tooltip = function(vgView, options) {
     if (!options) {
@@ -29,9 +29,9 @@
   };
 
   /**
-  * Export Vega-Lite Tooltip API: vlTooltip(vgView, vlSpec, options)
-  * options can specify data fields to show in the tooltip and can
-  * overwrite data formats in vlSpec
+  * Export Vega-Lite Tooltip API: vl.tooltip(vgView, vlSpec, options)
+  * options can specify to show all fields or to show custom fields in the tooltip
+  * we use vlSpec to supplement options
   */
   window.vl.tooltip = function(vgView, vlSpec, options) {
     if (!options) {
@@ -87,7 +87,7 @@
         // user-specified field config
         var userFieldConfig = getUserFieldConfig(fieldDef, options.fields);
 
-        // supplemented the field config
+        // supplemented field config
         var suppFieldConfig = supplementField(userFieldConfig, fieldDef, timeFormat, numberFormat);
 
         supplementedConfigs.push(suppFieldConfig);
@@ -161,7 +161,11 @@
 
   /**
   * Given a user-specified field config, find the corresponding fieldDef from vlSpec.
-  *
+  * If we know from vlSpec that the field is aggregated, then the user-specified
+  * field config and the fieldDef should match on field name and aggregation.
+  * If the field is not aggregated, then the user-specified field config and the
+  * fieldDef just have to match on field name.
+  * @return a fieldDef from vlSpec if there is a successful match, undefined otherwise
   */
   function getFieldDef(userFieldConfig, specFieldDefs) {
     if (!userFieldConfig || !userFieldConfig.field || !specFieldDefs) return;
@@ -186,8 +190,11 @@
   }
 
   /**
-  * Supplements a user-specified field config with vlSpec
-  * @return the supplemented field config
+  * Supplements a user-specified field config with a fieldDef from vlSpec, and
+  * timeFormat and numberFormat from vlSpec.
+  * Either userFieldConfig or fieldDef can be undefined, but they cannot both be undefined.
+  * timeFormat and numberFormat can be undefined.
+  * @return the supplemented field config on success, undefined on failure
   */
   function supplementField(userFieldConfig, fieldDef, timeFormat, numberFormat) {
     // at least one of userFieldConfig and fieldDef should exist
@@ -308,8 +315,6 @@
     options.fields.forEach(function(fld) {
       // TODO(zening): binned fields
 
-      // TODO(zening): aggregated fields, if a field has multiple aggregations, it should have multiple rows in the tooltip
-
       // get field title
       var title = fld.title? fld.title : fld.field;
 
@@ -329,8 +334,9 @@
   }
 
   /**
-  * Get one field value from an item's datum,
-  * even if the field is not at top-level of item.datum.
+  * Get one field value from a datum.
+  * @param {string} field - the name of the field. It can contain '.' to specify
+  * that the field is not a direct child of datum
   * @return the field value if successful,
   * undefined if the field cannot be found in item.datum
   */
@@ -364,7 +370,7 @@
 
 
   /**
-  * Prepare all fields (top-level fields of item.datum) for tooltip.
+  * Prepare all fields (item.datum's direct children) for tooltip.
   * @return Field title and value array, ready to be formatted:
   * [{ title: ..., value: ...}]
   */
@@ -384,26 +390,7 @@
 
     // TODO(zening): if there are binned fields, remove _start, _end, _mid, _range fields, add bin_field and its value
 
-    // drop number and date data for line charts and area charts (#1)
-    if (item.mark.marktype === "line" || item.mark.marktype === "area") {
-      console.warn('[VgTooltip]: By default, we only show qualitative data in tooltip.');
-
-      var quanKeys = [];
-      itemData.forEach(function(field, value) {
-        switch (dl.type(value)) {
-          case 'number':
-          case 'date':
-          quanKeys.push(field);
-          break;
-          case 'boolean':
-          case 'string':
-          default:
-            break;
-        }
-      });
-      removeFields(itemData, quanKeys);
-    }
-
+    dropQuanFieldsForLineArea(item.mark.marktype, itemData);
 
     itemData.forEach(function(field, value) {
       // get title
@@ -428,18 +415,45 @@
     return tooltipData;
   }
 
-  /* Removes an array of fields from a data map */
+  /* Remove multiple fields from a data map, using removeKeys */
   function removeFields(dataMap, removeKeys) {
     removeKeys.forEach(function(key) {
       dataMap.remove(key);
     })
   }
 
-  function custFormat(value, type, format) {
-    if (!type) return;
+  /* Drop number and date data for line charts and area charts */
+  function dropQuanFieldsForLineArea(marktype, itemData) {
+    if (marktype === "line" || marktype === "area") {
+      console.warn('[VgTooltip]: By default, we only show qualitative data in tooltip.');
+
+      var quanKeys = [];
+      itemData.forEach(function(field, value) {
+        switch (dl.type(value)) {
+          case 'number':
+          case 'date':
+          quanKeys.push(field);
+          break;
+          case 'boolean':
+          case 'string':
+          default:
+            break;
+        }
+      });
+      removeFields(itemData, quanKeys);
+    }
+  }
+
+  /**
+  * Use formatType and format to format time, number or string value
+  * @return the formatted time, number or string value, or undefined if value or
+  * formatType is missing
+  */
+  function custFormat(value, formatType, format) {
+    if (!value || !formatType) return;
 
     var formattedValue;
-    switch (type) {
+    switch (formatType) {
       case 'time':
       var formatter = format? dl.format.time(format) : dl.format.auto.time();
       formattedValue = formatter(value);
@@ -456,8 +470,8 @@
   }
 
   /**
-  * Automatically format a date, number or string value
-  * @return the formated date, number or string value
+  * Automatically format a time, number or string value
+  * @return the formated time, number or string value
   */
   function autoFormat(value) {
     switch (dl.type(value)) {
@@ -476,7 +490,7 @@
 
 
   /**
-  * Bind data to the tooltip element
+  * Bind tooltipData to the tooltip element
   */
   function bindData(tooltipData) {
     var tooltipRows = d3.select("#vis-tooltip").selectAll(".tooltip-row").data(tooltipData);
