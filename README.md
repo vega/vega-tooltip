@@ -106,6 +106,7 @@ The complete structure of `options` looks like this:
 ```js
 var options =
 {
+    colorTheme: 'light' | 'dark',
     showAllFields: true | false,
     fields: [
       {
@@ -113,22 +114,32 @@ var options =
          title: 'Field One',
          formatType: 'time' | 'number' | 'string', 			
          format: string-specifier,
-         aggregate: 'mean',
+         aggregate: operation,
       },
       ...
-    }],
-
-    colorTheme: 'light' | 'dark'
+    }]
 };
 ```
 
 You don't have to provide a fully-structured `options` object to customize your tooltip. In most cases, a partially filled-out `options` object should suffice.
 
-### Customize Fields
-By default, tooltip shows all top-level data fields bound to an element. You can use the `options.showFields` array to overwrite this behavior. If the `showFields` array is not empty, only fields in this array will be displayed in the tooltip.
+`colorTheme`: By default, tooltip uses a `light` color theme. Tooltip also provides a `dark` color theme. To further customize, you can overwrite the `.vg-tooltip` class in your CSS.
+
+`showAllFields`: If `showAllFields` is true, show all fields bind to the mark. The order of the fields in the tooltip is the order they are bind to the mark item. If `showAllFields` is false, only show fields specified in the `fields` array. The order of the fields in the tooltip is the same as the order specified in the `fields` array. The default of `showAllFields` is true.
+
+`fields`: An array of objects to customize the title and format of fields. When `showAllFields` is false, only fields in this array will be shown in the tooltip. When `showAllFields` is true, the `fields` array can still provide custom titles and formats for its fields.
+
+Each object in the `fields` array has the following properties.
+
+`field`: The name of the field. In Vega-Lite, this is the field you provide to each encoding channel.
+
+`title`: A custom title for the field.
+
+`formatType`: Provide format type of a field: 'number', 'time', or 'string'.
+
+`format`: If `formatType` is 'number', you can provide a [number format string-specifier](https://github.com/mbostock/d3/wiki/Formatting). If `formatType` is 'time', you can provide a [time format string-specifier](https://github.com/mbostock/d3/wiki/Time-Formatting). If `formatType` is `string`, there is no need to provide `format`.
+
+`aggregate`: If your Vega-Lite visualization has multiple aggregations of the same field, you can provide a [aggregation operation](https://vega.github.io/vega-lite/docs/aggregate.html#supported-aggregation-operations) here to specify the particular aggregated field that you want to customize.
+
 
 [//]: # (TODO(zening): tooltip fields order: can we recommend which fields should go first and which ones should go later? I feel that the fields that are most frequently changing as the mouse moves, as well as the field that's encoded with color should go first.)
-
-
-### Customize Themes
-By default, tooltip uses a `light` color theme. You can set `colorTheme` to `dark` if it better matches your visualization. You can also always write your own CSS to overwrite the `.vg-tooltip` style.
