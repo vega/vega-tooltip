@@ -19,7 +19,10 @@ http://vega.github.io/vega-lite-tooltip/
 
 
 ## Creating Your Tooltip
-**Step 1** Include the `vg-tooltip` library and its dependencies (`d3`, `vega`, `vega-lite`, `vega-embed` and `datalib`) in your HTML `<head>`.
+
+##### Step 1. Add The Library
+
+Include the `vg-tooltip` library and its dependencies (`d3`, `vega`, `vega-lite`, `vega-embed` and `datalib`) in your HTML `<head>`.
 
 ```html
 <!-- Dependencies -->
@@ -33,14 +36,35 @@ http://vega.github.io/vega-lite-tooltip/
 <link rel="stylesheet" type="text/css" href="vg-tooltip.css">
 ```
 
-**Step 2** In your HTML `<body>`, create a placeholder for your Vega-Lite or Vega visualization. Give the placeholder a unique `id`, which will be used in step 4. For example:
+##### Step 2. Create A Visualization
+
+In your HTML `<body>`, create a placeholder for your Vega-Lite or Vega visualization. Give the placeholder a unique `id`, which you can refer to in your JavaScript. For example:
 
 ```html
 <!-- Placeholder for my Scatter Plot -->
 <div id="vis-scatter"></div>
 ```
 
-**Step 3** In your HTML `<body>`, create a placeholder for the tooltip. Give the placeholder an `id` named `vis-tooltip` so that it can be recognized by our plugin. Assign `class` `vg-tooltip` to the placeholder to use our default CSS style.
+In your JavaScript file, create a Vega-Lite visualization using [`vg.embed`](https://github.com/vega/vega/wiki/Embed-Vega-Web-Components) or create a Vega visualization using [`vg.parse.spec`](https://github.com/vega/vega/wiki/Runtime). For example:
+
+```js
+// create a Vega-Lite visualization using vg.embed
+vg.embed("#vis-scatter", embedSpec, function(error, result) {
+});
+```
+
+or
+
+```js
+// create a Vega visualization using vg.parse.spec
+vg.parse.spec(vgSpec, function(error, chart) {
+    var view = chart({el:"#vis-scatter"}).update();
+});
+```
+
+##### Step 3. Create A Tooltip
+
+In your HTML `<body>`, create a placeholder for the tooltip. Give the placeholder an `id` named `vis-tooltip` so that it can be recognized by our plugin. Assign `class` `vg-tooltip` to the tooltip placeholder so that it can pick up the default CSS style our library provides.
 
 ```html
 <!-- Placeholder for Tooltip -->
@@ -49,31 +73,12 @@ http://vega.github.io/vega-lite-tooltip/
 
 > Tip: Generally speaking you only need one tooltip placeholder per HTML page (even if you have multiple visualizations in that page) because the mouse only points at one thing at a time.
 
-**Step 4** In your JavaScript file, create a Vega-Lite visualization using [`vg.embed`](https://github.com/vega/vega/wiki/Embed-Vega-Web-Components) or create a Vega visualization using [`vg.parse.spec`](https://github.com/vega/vega/wiki/Runtime). For example:
+In the callback function of step 2, create your tooltip using either `vl.tooltip()` or `vg.tooltip()`. `vl.tooltip()` creates a tooltip for Vega-Lite visualizations. It takes the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) and the original Vega-Lite specification as inputs. `vg.tooltip()` creates a tooltip for Vega visualizations. It takes the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) as input. For example:
 
 ```js
 // create a Vega-Lite example using vg.embed
 vg.embed("#vis-scatter", embedSpec, function(error, result) {
-    // result.view is the Vega View
-});
-```
-
-or
-
-```js
-// create a Vega example using vg.parse.spec
-vg.parse.spec(vgSpec, function(error, chart) {
-    // view is the Vega View
-    var view = chart({el:"#vis-scatter"}).update();
-});
-```
-
-**Step 5** In the callback function of step 4, create your tooltip with [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api). If you have a Vega-Lite visualization, use `vl.tooltip()` to create your tooltip. If you have a Vega visualization, use `vg.tooltip()` to create your tooltip. For example:
-
-```js
-// create a Vega-Lite example using vg.embed
-vg.embed("#vis-scatter", embedSpec, function(error, result) {
-    // result.view is the Vega View, vlSpec is the original Vega-Lite spec
+    // result.view is the Vega View, vlSpec is the original Vega-Lite specification
     vl.tooltip(result.view, vlSpec);
 });
 ```
@@ -86,7 +91,9 @@ vg.parse.spec(vgSpec, function(error, chart) {
     vg.tooltip(view);
 });
 ```
+
 Congratulations! Now you should be able to see a tooltip working with your visualization.
+
 
 ## Customizing Your Tooltip
 You can customize the look and the content of your tooltip by passing in an optional `options` parameter to `vl.tooltip()` or `vg.tooltip()`. For example:
