@@ -294,13 +294,27 @@
   * @return [{ title: ..., value: ...}]
   */
   function getTooltipData(item, options) {
+    // this array will be bind to the tooltip element
+    var tooltipData;
 
-    var tooltipData; // this array will be bind to the tooltip element
+    var itemData = d3.map(item.datum);
+
+    var removeKeys = [
+      "_id", "_prev",
+      "count_start", "count_end",
+      "layout_start", "layout_mid", "layout_end", "layout_path", "layout_x", "layout_y"
+    ];
+    removeFields(itemData, removeKeys);
+
+    combineBinFields(options.fields, itemData);
+
+    dropQuanFieldsForLineArea(item.mark.marktype, itemData);
+
     if ( options.showAllFields === true || options.showAllFields === undefined ) {
-      tooltipData = getAllFields(item, options);
+      tooltipData = getAllFields(itemData, options);
     }
     else {
-      tooltipData = getCustomFields(item, options);
+      tooltipData = getCustomFields(itemData, options);
     }
 
     return tooltipData;
@@ -312,11 +326,9 @@
   * @return An array of formatted fields
   * [{ title: ..., value: ...}]
   */
-  function getCustomFields(item, options) {
+  function getCustomFields(itemData, options) {
 
     var tooltipData = [];
-
-    var itemData = d3.map(item.datum);
 
     options.fields.forEach(function(fld) {
       // TODO(zening): binned fields
@@ -375,23 +387,10 @@
   * @return An array of formatted fields
   * [{ title: ..., value: ...}]
   */
-  function getAllFields(item, options) {
+  function getAllFields(itemData, options) {
     var tooltipData = [];
 
     var fieldConfigs = d3.map(options.fields, function(d) { return d.field; });
-
-    var itemData = d3.map(item.datum);
-
-    var removeKeys = [
-      "_id", "_prev",
-      "count_start", "count_end",
-      "layout_start", "layout_mid", "layout_end", "layout_path", "layout_x", "layout_y"
-    ];
-    removeFields(itemData, removeKeys);
-
-    combineBinFields(options.fields, itemData);
-
-    dropQuanFieldsForLineArea(item.mark.marktype, itemData);
 
     itemData.forEach(function(field, value) {
       // get title

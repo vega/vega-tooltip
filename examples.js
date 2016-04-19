@@ -79,8 +79,25 @@
   addVlExample("exampleSpecs/trellis_barley.json", "#vis-trellis-barley", trellisBarOpts);
 
   // Scatter Binned
-  addVlExample("exampleSpecs/scatter_binned.json", "#vis-scatter-binned");
-  addVlExample("exampleSpecs/scatter_binned_color.json", "#vis-scatter-binned-color");
+  var binMovieOpts = {
+    showAllFields: false,
+    fields: [
+      {field: "Rotten_Tomatoes_Rating"},
+      {field: "IMDB_Rating"},
+      {field: "*"}
+    ]
+  };
+  addVlExample("exampleSpecs/scatter_binned.json", "#vis-scatter-binned", binMovieOpts);
+
+  var binColorOpts = {
+    showAllFields: false,
+    fields: [
+      {field: "Horsepower"},
+      {field: "Miles_per_Gallon"},
+      {field: "Acceleration"}
+    ]
+  };
+  addVlExample("exampleSpecs/scatter_binned_color.json", "#vis-scatter-binned-color", binColorOpts);
   addVlExample("exampleSpecs/scatter_binned_size.json", "#vis-scatter-binned-size");
 
   // Simple Bar Chart
