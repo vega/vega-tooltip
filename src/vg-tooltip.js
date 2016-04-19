@@ -316,6 +316,8 @@
 
     var tooltipData = [];
 
+    var itemData = d3.map(item.datum);
+
     options.fields.forEach(function(fld) {
       // TODO(zening): binned fields
 
@@ -323,7 +325,7 @@
       var title = fld.title? fld.title : fld.field;
 
       // get field value
-      var value = getValue(item.datum, fld.field);
+      var value = getValue(itemData, fld.field);
       if (value === undefined) return;
 
       // format value
@@ -338,38 +340,33 @@
   }
 
   /**
-  * Get one field value from a datum.
+  * Get a field value from a data map.
+  * @param {d3.map} itemData - a map of item.datum
   * @param {string} field - the name of the field. It can contain '.' to specify
   * that the field is not a direct child of datum
-  * @return the field value if successful,
-  * undefined if the field cannot be found in item.datum
+  * @return the field value on success, undefined otherwise
   */
-  function getValue(datum, field) {
-    if (field.includes('.')) {
-      var accessors = field.split('.');
-      var value = datum;
-      var path = '';
+  function getValue(itemData, field) {
+    var value;
+
+    var accessors = field.split('.');
+
+    // get the first accessor and remove it from the array
+    var firstAccessor = accessors[0];
+    accessors.shift();
+
+    if (itemData.has(firstAccessor)) {
+      value = itemData.get(firstAccessor);
+
+      // if we still have accessors, use them to get the value
       accessors.forEach(function(a) {
         if (value[a]) {
           value = value[a];
-          path = path + '.' + a;
-        }
-        else {
-          console.warn('[VgTooltip] Cannot find field ' + path + ' in data.');
-          return undefined;
         }
       });
-      return value;
     }
-    else {
-      if (datum[field]) {
-        return datum[field];
-      }
-      else {
-        console.warn('[VgTooltip] Cannot find field ' + field + ' in data.');
-        return undefined;
-      }
-    }
+
+    return value;
   }
 
 
