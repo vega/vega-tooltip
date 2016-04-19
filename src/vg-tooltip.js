@@ -108,8 +108,6 @@
       }
     }
 
-    // TODO(zening): supplement binned fields
-
     options.fields = supplementedConfigs;
 
     return options;
@@ -299,6 +297,7 @@
 
     var itemData = d3.map(item.datum);
 
+    // TODO(zening): find more keys which we should remove from data (#35)
     var removeKeys = [
       "_id", "_prev",
       "count_start", "count_end",
@@ -306,10 +305,13 @@
     ];
     removeFields(itemData, removeKeys);
 
+    // combine multiple rows of a binned field into a single row
     combineBinFields(options.fields, itemData);
 
+    // TODO(zening): use Vega-Lite layering to support tooltip on line and area charts (#1)
     dropQuanFieldsForLineArea(item.mark.marktype, itemData);
 
+    // get formatted fields for tooltip
     if ( options.showAllFields === true || options.showAllFields === undefined ) {
       tooltipData = getAllFields(itemData, options);
     }
@@ -331,7 +333,6 @@
     var tooltipData = [];
 
     options.fields.forEach(function(fld) {
-      // TODO(zening): binned fields
 
       // get field title
       var title = fld.title? fld.title : fld.field;
