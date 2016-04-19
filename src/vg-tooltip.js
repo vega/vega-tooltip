@@ -302,10 +302,7 @@
 
   /**
   * Prepare custom fields (specified by options) for tooltip.
-  * When options or vlSpec provides custom format for a field, apply custom format.
-  * Otherwise, automatically format the field.
-  * options can always overwrite format provided by vlSpec.
-  * @return Field title and value array, ready to be formatted:
+  * @return An array of formatted fields
   * [{ title: ..., value: ...}]
   */
   function getCustomFields(item, options) {
@@ -371,7 +368,7 @@
 
   /**
   * Prepare all fields (item.datum's direct children) for tooltip.
-  * @return Field title and value array, ready to be formatted:
+  * @return An array of formatted fields
   * [{ title: ..., value: ...}]
   */
   function getAllFields(item, options) {
