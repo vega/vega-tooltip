@@ -237,6 +237,11 @@
       }
     }
 
+    // supplement bin from fieldDef, user should never have to provide bin
+    if (fieldDef.bin) {
+      suppFieldConfig.bin = true;
+    }
+
   return suppFieldConfig;
   }
 
@@ -385,7 +390,7 @@
     ];
     removeFields(itemData, removeKeys);
 
-    // TODO(zening): if there are binned fields, remove _start, _end, _mid, _range fields, add bin_field and its value
+    combineBinFields(options.fields, itemData);
 
     dropQuanFieldsForLineArea(item.mark.marktype, itemData);
 
@@ -417,6 +422,42 @@
     removeKeys.forEach(function(key) {
       dataMap.remove(key);
     })
+  }
+
+  /**
+  * @return itemData
+  */
+  // if there are binned fields, remove _end, _mid, _range fields,
+  // keep bin_field_start and compute the range
+  // for now, don't support formatting for binned fields
+  function combineBinFields(optFields, itemData) {
+    if (!optFields) return;
+
+    optFields.forEach(function(optFld) {
+      if (optFld.bin === true) {
+
+        var bin_start = optFld.field;
+        var bin_end = bin_start.replace('_start', '_end');
+        var bin_mid = bin_start.replace('_start', '_mid');
+        var bin_range = bin_start.replace('_start', '_range');
+
+        // use start value and end value to compute range
+        // save the computed range in bin_start
+        var start = itemData.get(bin_start);
+        var end = itemData.get(bin_end);
+        if ((start != undefined) && (end != undefined)) {
+          var range = start + '-' + end;
+          itemData.set(bin_start, range);
+        }
+
+        // remove bin_mid, bin_end, and bin_range from itemData
+        var binRemoveKeys = [];
+        binRemoveKeys.push(bin_mid, bin_end, bin_range);
+        removeFields(itemData, binRemoveKeys);
+      }
+    });
+
+    return itemData;
   }
 
   /* Drop number and date data for line charts and area charts */
