@@ -240,6 +240,8 @@
     // supplement bin from fieldDef, user should never have to provide bin
     if (fieldDef.bin) {
       suppFieldConfig.bin = true;
+      suppFieldConfig.formatType = 'string';
+      suppFieldConfig.format = undefined;
     }
 
   return suppFieldConfig;
