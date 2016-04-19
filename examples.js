@@ -89,17 +89,6 @@
   };
   addVlExample("exampleSpecs/scatter_binned.json", "#vis-scatter-binned", binMovieOpts);
 
-  var binColorOpts = {
-    showAllFields: false,
-    fields: [
-      {field: "Horsepower"},
-      {field: "Miles_per_Gallon"},
-      {field: "Acceleration"}
-    ]
-  };
-  addVlExample("exampleSpecs/scatter_binned_color.json", "#vis-scatter-binned-color", binColorOpts);
-  addVlExample("exampleSpecs/scatter_binned_size.json", "#vis-scatter-binned-size");
-
   // Simple Bar Chart
   addVlExample("exampleSpecs/bar.json", "#vis-bar");
 
