@@ -14,6 +14,7 @@ http://vega.github.io/vega-lite-tooltip/
 ## Using the Library
 1. [Creating Your Tooltip](docs/creating_your_tooltip.md)
 2. [Customizing Your Tooltip](docs/customizing_your_tooltip.md)
+3. [Pro-tips](/docs/pro_tips.md)
 
 ## Run Instructions
 1. In the project folder `vega-lite-tooltip`, type command `npm install`.
