@@ -1,6 +1,6 @@
 # Pro-tips on Tooltip Design
 
-From the tooltip's perspective, the [`point`](https://vega.github.io/vega-lite/docs/mark.html#point-mark) mark type, when enlarged, can be good for certain visualizations and tricky for some others. For example, when data is dense and there is a lot of overlap among marks, the `point` mark type is relatively a good choice because the hollow points overlap less than other mark types. It is also relatively easy for the tooltip to pick up a mark by hovering on the circumference of a `point` (see example below).
+From the tooltip's perspective, the [`point`](https://vega.github.io/vega-lite/docs/mark.html#point-mark) mark type, when enlarged, can be good for certain visualizations and tricky for some others. For example, when data is dense and there is a lot of overlap among marks, the `point` mark type is a relative good choice because the hollow points overlap less than other mark types. It is also easy for the tooltip to pick up a `point` by hovering on its circumference (see example below).
 
 ![](imgs/point_good.png)
 
