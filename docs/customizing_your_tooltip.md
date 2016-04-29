@@ -33,7 +33,7 @@ var options =
 };
 ```
 
-You don't have to provide a fully-structured `options` object to customize your tooltip. In most cases, a partially filled-out `options` object should suffice.
+Here are the list of options:  (All of them are optional)
 
 | Option | Description |
 | :------| :-----------|
@@ -41,7 +41,7 @@ You don't have to provide a fully-structured `options` object to customize your 
 | `fields` | An array of objects that customize the title and format of fields. When `showAllFields` is `false`, only fields in this array will be shown in the tooltip. When `showAllFields` is `true`, the `fields[]` array can still provide custom titles and formats for its member fields. |
 | `colorTheme` | A string theme picker. By default, tooltip uses a `'light'` color theme. Tooltip also provides a `'dark'` color theme. To further customize, you can overwrite the `.vg-tooltip` class in your CSS. |
 
-Each object in the `fields[]` array has the following properties.
+Each object in the `fields` array has the following properties.
 
 | Property | Description |
 | :--------| :-----------|
