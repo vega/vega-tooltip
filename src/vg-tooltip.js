@@ -108,8 +108,6 @@
       }
     }
 
-    // TODO(zening): supplement binned fields
-
     options.fields = supplementedConfigs;
 
     return options;
@@ -237,6 +235,13 @@
       }
     }
 
+    // supplement bin from fieldDef, user should never have to provide bin
+    if (fieldDef.bin) {
+      suppFieldConfig.bin = true;
+      suppFieldConfig.formatType = 'string';
+      suppFieldConfig.format = undefined;
+    }
+
   return suppFieldConfig;
   }
 
@@ -287,13 +292,31 @@
   * @return [{ title: ..., value: ...}]
   */
   function getTooltipData(item, options) {
+    // this array will be bind to the tooltip element
+    var tooltipData;
 
-    var tooltipData; // this array will be bind to the tooltip element
+    var itemData = d3.map(item.datum);
+
+    // TODO(zening): find more keys which we should remove from data (#35)
+    var removeKeys = [
+      "_id", "_prev",
+      "count_start", "count_end",
+      "layout_start", "layout_mid", "layout_end", "layout_path", "layout_x", "layout_y"
+    ];
+    removeFields(itemData, removeKeys);
+
+    // combine multiple rows of a binned field into a single row
+    combineBinFields(options.fields, itemData);
+
+    // TODO(zening): use Vega-Lite layering to support tooltip on line and area charts (#1)
+    dropQuanFieldsForLineArea(item.mark.marktype, itemData);
+
+    // get formatted fields for tooltip
     if ( options.showAllFields === true || options.showAllFields === undefined ) {
-      tooltipData = getAllFields(item, options);
+      tooltipData = getAllFields(itemData, options);
     }
     else {
-      tooltipData = getCustomFields(item, options);
+      tooltipData = getCustomFields(itemData, options);
     }
 
     return tooltipData;
@@ -305,18 +328,17 @@
   * @return An array of formatted fields
   * [{ title: ..., value: ...}]
   */
-  function getCustomFields(item, options) {
+  function getCustomFields(itemData, options) {
 
     var tooltipData = [];
 
     options.fields.forEach(function(fld) {
-      // TODO(zening): binned fields
 
       // get field title
       var title = fld.title? fld.title : fld.field;
 
       // get field value
-      var value = getValue(item.datum, fld.field);
+      var value = getValue(itemData, fld.field);
       if (value === undefined) return;
 
       // format value
@@ -331,38 +353,33 @@
   }
 
   /**
-  * Get one field value from a datum.
+  * Get a field value from a data map.
+  * @param {d3.map} itemData - a map of item.datum
   * @param {string} field - the name of the field. It can contain '.' to specify
   * that the field is not a direct child of datum
-  * @return the field value if successful,
-  * undefined if the field cannot be found in item.datum
+  * @return the field value on success, undefined otherwise
   */
-  function getValue(datum, field) {
-    if (field.includes('.')) {
-      var accessors = field.split('.');
-      var value = datum;
-      var path = '';
+  function getValue(itemData, field) {
+    var value;
+
+    var accessors = field.split('.');
+
+    // get the first accessor and remove it from the array
+    var firstAccessor = accessors[0];
+    accessors.shift();
+
+    if (itemData.has(firstAccessor)) {
+      value = itemData.get(firstAccessor);
+
+      // if we still have accessors, use them to get the value
       accessors.forEach(function(a) {
         if (value[a]) {
           value = value[a];
-          path = path + '.' + a;
-        }
-        else {
-          console.warn('[VgTooltip] Cannot find field ' + path + ' in data.');
-          return undefined;
         }
       });
-      return value;
     }
-    else {
-      if (datum[field]) {
-        return datum[field];
-      }
-      else {
-        console.warn('[VgTooltip] Cannot find field ' + field + ' in data.');
-        return undefined;
-      }
-    }
+
+    return value;
   }
 
 
@@ -371,23 +388,10 @@
   * @return An array of formatted fields
   * [{ title: ..., value: ...}]
   */
-  function getAllFields(item, options) {
+  function getAllFields(itemData, options) {
     var tooltipData = [];
 
     var fieldConfigs = d3.map(options.fields, function(d) { return d.field; });
-
-    var itemData = d3.map(item.datum);
-
-    var removeKeys = [
-      "_id", "_prev",
-      "count_start", "count_end",
-      "layout_start", "layout_mid", "layout_end", "layout_path", "layout_x", "layout_y"
-    ];
-    removeFields(itemData, removeKeys);
-
-    // TODO(zening): if there are binned fields, remove _start, _end, _mid, _range fields, add bin_field and its value
-
-    dropQuanFieldsForLineArea(item.mark.marktype, itemData);
 
     itemData.forEach(function(field, value) {
       // get title
@@ -417,6 +421,42 @@
     removeKeys.forEach(function(key) {
       dataMap.remove(key);
     })
+  }
+
+  /**
+  * @return itemData
+  */
+  // if there are binned fields, remove _end, _mid, _range fields,
+  // keep bin_field_start and compute the range
+  // for now, don't support formatting for binned fields
+  function combineBinFields(optFields, itemData) {
+    if (!optFields) return;
+
+    optFields.forEach(function(optFld) {
+      if (optFld.bin === true) {
+
+        var bin_start = optFld.field;
+        var bin_end = bin_start.replace('_start', '_end');
+        var bin_mid = bin_start.replace('_start', '_mid');
+        var bin_range = bin_start.replace('_start', '_range');
+
+        // use start value and end value to compute range
+        // save the computed range in bin_start
+        var start = itemData.get(bin_start);
+        var end = itemData.get(bin_end);
+        if ((start != undefined) && (end != undefined)) {
+          var range = start + '-' + end;
+          itemData.set(bin_start, range);
+        }
+
+        // remove bin_mid, bin_end, and bin_range from itemData
+        var binRemoveKeys = [];
+        binRemoveKeys.push(bin_mid, bin_end, bin_range);
+        removeFields(itemData, binRemoveKeys);
+      }
+    });
+
+    return itemData;
   }
 
   /* Drop number and date data for line charts and area charts */
