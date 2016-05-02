@@ -6,6 +6,7 @@
   * options can specify to show all fields or to show custom fields in the tooltip
   * and can provide titles and formats for those fields
   */
+  window.vg = window.vg || {};
   window.vg.tooltip = function(vgView, options) {
     if (!options) {
       options = {};
@@ -33,6 +34,7 @@
   * options can specify to show all fields or to show custom fields in the tooltip
   * we use vlSpec to supplement options
   */
+  window.vl = window.vl || {};
   window.vl.tooltip = function(vgView, vlSpec, options) {
     if (!options) {
       options = {};
