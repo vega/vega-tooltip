@@ -5,11 +5,11 @@
       if (error) {
         return console.warn(error);
       }
-      var stackedbarEmbed = {
+      var embedSpec = {
         mode: "vega-lite",
         spec: vlSpec
       };
-      vg.embed(id, stackedbarEmbed, function(error, result) {
+      vg.embed(id, embedSpec, function(error, result) {
         vl.tooltip(result.view, vlSpec, options);
       });
     });
