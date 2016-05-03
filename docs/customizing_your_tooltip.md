@@ -1,4 +1,5 @@
 # Customizing Your Tooltip
+
 If you are looking at this page, you should already have created a default tooltip. If you haven't, please read [Creating Your Tooltip](creating_your_tooltip.md).
 
 You can customize the look and the content of your tooltip by passing in an optional `options` parameter to `vl.tooltip()` or `vg.tooltip()`. For example:
