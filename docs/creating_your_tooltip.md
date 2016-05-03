@@ -1,22 +1,36 @@
 # Creating Your Tooltip
 
-##### Step 1. Add The Library
+## Step 1. Add The Library
 
-Include the `vg-tooltip` library and its dependencies (`d3`, `vega`, `vega-lite`, `vega-embed` and `datalib`) in your HTML `<head>`.
+We recommend installing the tooltip library and its dependencies via `npm`:
+
+```bash
+npm install vega-lite-tooltip
+```
+
+The tooltip library contains a `js` file and a `css` file:
+
+```
+node_modules/vega-lite-tooltip/vl-tooltip.min.js
+node_modules/vega-lite-tooltip/vl-tooltip.css
+```
+
+Alternatively, if you want to manually include the tooltip library and its dependencies, you can add the following lines to your HTML `<head>`. Vega-Lite Tooltip depends on `d3`, `vega`, `vega-lite`, `vega-embed` and `datalib`.
 
 ```html
 <!-- Dependencies -->
-<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="https://d3js.org/d3.v3.min.js"></script>
 <script src="https://vega.github.io/vega/vega.min.js"></script>
-<script src="http://vega.github.io/vega-lite/vega-lite.min.js"></script>
-<script src="http://vega.github.io/vega-editor/vendor/vega-embed.js" charset="utf-8"></script>
-<script src="http://vega.github.io/datalib/datalib.min.js"></script>
-<!-- Tooltip Library -->
-<script src="vg-tooltip.js" charset="utf-8"></script>
-<link rel="stylesheet" type="text/css" href="vg-tooltip.css">
+<script src="https://vega.github.io/vega-lite/vega-lite.min.js"></script>
+<script src="https://vega.github.io/vega-editor/vendor/vega-embed.min.js"></script>
+<script src="https://vega.github.io/datalib/datalib.min.js"></script>
+
+<!-- Vega-Lite Tooltip -->
+<script src="https://vega.github.io/vega-lite-tooltip/vl-tooltip.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://vega.github.io/vega-lite-tooltip/vl-tooltip.css">
 ```
 
-##### Step 2. Create A Visualization
+## Step 2. Create A Visualization
 
 In your HTML `<body>`, create a placeholder for your Vega-Lite or Vega visualization. Give the placeholder a unique `id`, which you can refer to in your JavaScript. For example:
 
@@ -42,7 +56,7 @@ vg.parse.spec(vgSpec, function(error, chart) {
 });
 ```
 
-##### Step 3. Create A Tooltip
+## Step 3. Create A Tooltip
 
 In your HTML `<body>`, create a placeholder for the tooltip. Give the placeholder an `id` named `vis-tooltip` so that it can be recognized by our plugin. Assign `class` `vg-tooltip` to the tooltip placeholder so that it can pick up the default CSS style our library provides.
 

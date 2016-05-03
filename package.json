@@ -1,17 +1,22 @@
 {
   "name": "vega-lite-tooltip",
   "version": "0.1.0",
-  "description": "A tooltip plugin for vega-lite visualization grammar.",
-  "main": "vega-lite-tooltip.js",
+  "description": "A tooltip plugin for vega-lite and vega visualizations.",
+  "main": "vl-tooltip.js",
   "scripts": {
-    "build": "tsc && npm run data",
-    "prestart": "npm run build",
-    "start": "python -m SimpleHTTPServer 4000",
-    "test": "echo TODO:test",
-    "data": "rsync -r node_modules/vega-datasets/data/* data"
+    "prebuild": "npm run data",
+    "build": "uglifyjs src/vl-tooltip.js -cm > vl-tooltip.min.js && cp src/vl-tooltip.css vl-tooltip.css",
+    "data": "rsync -r node_modules/vega-datasets/data/* data",
+    "start": "npm run build && python -m SimpleHTTPServer 4000"
   },
   "devDependencies": {
-    "vega-datasets": "vega/vega-datasets#gh-pages"
+    "d3": "^3.5.16",
+    "datalib": "^1.6.3",
+    "uglify-js": "^2.6.2",
+    "vega": "^2.5.0",
+    "vega-datasets": "vega/vega-datasets#gh-pages",
+    "vega-embed": "^2.1.0",
+    "vega-lite": "^1.0.8"
   },
   "repository": {
     "type": "git",
@@ -19,6 +24,7 @@
   },
   "keywords": [
     "vega-lite",
+    "vega",
     "tooltip"
   ],
   "author": "Zening Qu",
