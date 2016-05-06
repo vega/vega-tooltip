@@ -492,7 +492,7 @@
   * Bind tooltipData to the tooltip element
   */
   function bindData(tooltipData) {
-    var tooltipRows = d3.select("#vis-tooltip").selectAll(".tooltip-row").data(tooltipData);
+    var tooltipRows = d3.select("#vis-tooltip").append("table").selectAll(".tooltip-row").data(tooltipData);
 
     tooltipRows.exit().remove();
 
