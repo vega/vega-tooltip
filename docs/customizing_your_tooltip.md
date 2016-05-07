@@ -24,6 +24,8 @@ vg.parse.spec(vgSpec, function(error, chart) {
 ```
 
 
+## Options
+
 Here is a template `options`. All of its properties are optional. `options` itself is optional too.
 
 ```js
