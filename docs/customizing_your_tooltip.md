@@ -1,20 +1,30 @@
 # Customizing Your Tooltip
 
-If you are looking at this page, you should already have created a default tooltip. If you haven't, please read [Creating Your Tooltip](creating_your_tooltip.md).
+If you are looking at this page, you should already have created a tooltip (see [Creating Your Tooltip](creating_your_tooltip.md)).
 
-You can customize the look and the content of your tooltip by passing in an optional `options` parameter to `vl.tooltip()` or `vg.tooltip()`. For example:
+You can customize the content and look of your tooltip by passing in an optional `options` parameter to the tooltip API.
+
+If you are using Vega-Lite:
 
 ```js
-// in vg.embed callback
-vl.tooltip(result.view, vlSpec, options);
-```
-or
-```js
-// in vg.parse.spec callback
-vg.tooltip(view, options);
+vg.embed("#vis-scatter", embedSpec, function(error, result) {
+    // result.view is the Vega View, vlSpec is the original Vega-Lite specification
+    vl.tooltip(result.view, vlSpec, options); // pass in options
+});
 ```
 
-The complete structure of `options` looks like this:
+If you are using Vega:
+
+```js
+vg.parse.spec(vgSpec, function(error, chart) {
+    // view is the Vega View
+    var view = chart({el:"#vis-scatter"}).update();
+    vg.tooltip(view, options); // pass in options
+});
+```
+
+
+Here is a template `options`. All of its properties are optional. `options` itself is optional too.
 
 ```js
 var options =
@@ -34,23 +44,21 @@ var options =
 };
 ```
 
-Here are the list of options:  (All of them are optional)
+| Property        | Type           | Description     |
+| :-------------- |:--------------:| :-------------- |
+| `showAllFields` | Boolean        | If `true`, show all data fields of a visualization in the tooltip. If `false`, only show fields specified in the `fields` array in the tooltip. <br>__Default value:__ `true`|
+| `fields`        | Array          | An array of fields to be displayed in the tooltip when `showAllFields` is `false`. |
+| `colorTheme`    | String         | A color theme picker. <br>__Supported values:__ `'light'` and `'dark'`. <br>__Default value:__ `'light'` <br>To further customize, overwrite the `.vl-tooltip` class in your CSS. |
 
-| Option | Description |
-| :------| :-----------|
-| `showAllFields` | A boolean that specifies whether tooltip should show all fields or only fields in the `options.fields[]` array. If `showAllFields` is `true`, tooltip shows all fields bind to the mark being hovered. The order of the fields in the tooltip is the order they are bind to the mark item. If `showAllFields` is `false`, tooltip only shows fields specified in the `fields[]` array. The order of the fields in the tooltip is the same as the order specified in the `fields[]` array. `showAllFields` defaults to `true`. |
-| `fields` | An array of objects that customize the title and format of fields. When `showAllFields` is `false`, only fields in this array will be shown in the tooltip. When `showAllFields` is `true`, the `fields[]` array can still provide custom titles and formats for its member fields. |
-| `colorTheme` | A string theme picker. By default, tooltip uses a `'light'` color theme. Tooltip also provides a `'dark'` color theme. To further customize, you can overwrite the `.vl-tooltip` class in your CSS. |
-
-Each object in the `fields` array has the following properties.
-
-| Property | Description |
-| :--------| :-----------|
-| `field` | The name of the field. With Vega-Lite, this is the field you provided to each encoding channel. |
-| `title` | A custom string title for the field. |
-| `formatType` | Tells what kind of field this is: `'number'`, `'time'`, or `'string'`. |
-| `format` | If `formatType` is `'number'`, you can provide a [number format string-specifier](https://github.com/mbostock/d3/wiki/Formatting). If `formatType` is `'time'`, you can provide a [time format string-specifier](https://github.com/mbostock/d3/wiki/Time-Formatting). If `formatType` is `'string'`, there is no need to provide a `format`. |
-| `aggregate` | (Vega-Lite only) If your Vega-Lite visualization has multiple aggregations of the same field, you can provide a [aggregation operation](https://vega.github.io/vega-lite/docs/aggregate.html#supported-aggregation-operations) here to specify the particular aggregated field that you want to customize. |
+> Tip: You can customize the order of the fields in your tooltip by setting `showAllFields` to `false` and providing a `fields` array. Your tooltip will display fields in the order they appear in the `fields` array.
 
 
-[//]: # (TODO(zening): tooltip fields order: can we recommend which fields should go first and which ones should go later? I feel that the fields that are most frequently changing as the mouse moves, as well as the field that's encoded with color should go first.)
+Each member in the `fields` array can customize the format of a field. These custom formats are applied whenever applicable (no matter `showAllFields` is `true` or `false`).
+
+| Property        | Type           | Description     |
+| :-------------- |:--------------:| :-------------- |
+| `field`         | String         | The unique name of the field. With Vega-Lite, this is the field you provided to each encoding channel. |
+| `title`         | String         | A custom title for the field. |
+| `formatType`    | String         | Tells what kind of field this is (for formatting the field value in the tooltip) <br>__Supported values:__ `'number'`, `'time'`, and `'string'`. |
+| `format`        | String         | A string specifier for formatting the field value in the tooltip. If `formatType` is `'number'`, you can provide a [number format string-specifier](https://github.com/mbostock/d3/wiki/Formatting). If `formatType` is `'time'`, you can provide a [time format string-specifier](https://github.com/mbostock/d3/wiki/Time-Formatting). If `formatType` is `'string'`, there is no need to provide a `format`. |
+| `aggregate`     | String         | (Vega-Lite only) If your Vega-Lite visualization has multiple aggregations of the same field, you can specify the aggregation to identify the particular aggregated field. <br>__Supported values:__ [Vega-Lite aggregate operations](https://vega.github.io/vega-lite/docs/aggregate.html#supported-aggregation-operations)|
