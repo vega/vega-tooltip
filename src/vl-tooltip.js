@@ -247,11 +247,15 @@
   function init(event, item, options) {
     if( shouldShowTooltip(item) === false ) return;
 
+    // get tooltip placeholder
+    var tooltipPlaceholder = getTooltipPlaceholder();
+
     // prepare data for tooltip
     var tooltipData = getTooltipData(item, options);
     if (!tooltipData || tooltipData.length === 0) return;
 
-    bindData(tooltipData);
+    // bind data to tooltip
+    bindData(tooltipPlaceholder, tooltipData);
 
     updatePosition(event, options);
     updateTheme(options);
@@ -489,10 +493,27 @@
 
 
   /**
-  * Bind tooltipData to the tooltip element
+  * Get the HTML placeholder by id "#vis-tooltip"
+  * If none exists, create an element
+  * @returns the HTML placeholder for tooltip
   */
-  function bindData(tooltipData) {
-    var tooltipRows = d3.select("#vis-tooltip").append("table").selectAll(".tooltip-row").data(tooltipData);
+  function getTooltipPlaceholder {
+    var tooltipPlaceholder;
+    if (d3.select("#vis-tooltip").empty()) {
+      tooltipPlaceholder = d3.select("body").append("div")
+        .attr("id", "vis-tooltip");
+    }
+    else {
+      tooltipPlaceholder = d3.select("#vis-tooltip");
+    }
+    return tooltipPlaceholder;
+  }
+
+  /**
+  * Bind tooltipData to the tooltip placeholder
+  */
+  function bindData(tooltipPlaceholder, tooltipData) {
+    var tooltipRows = tooltipPlaceholder.append("table").selectAll(".tooltip-row").data(tooltipData);
 
     tooltipRows.exit().remove();
 
