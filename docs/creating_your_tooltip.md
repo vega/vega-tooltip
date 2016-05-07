@@ -63,7 +63,7 @@ In your HTML `<body>`, create a placeholder for the tooltip. Give the placeholde
 
 ```html
 <!-- Placeholder for Tooltip -->
-<table id="vis-tooltip" class="vg-tooltip"></table>
+<div id="vis-tooltip" class="vg-tooltip"></div>
 ```
 
 > Tip: Generally speaking you only need one tooltip placeholder per HTML page (even if you have multiple visualizations in that page) because the mouse only points at one thing at a time.
