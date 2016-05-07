@@ -59,11 +59,11 @@ vg.parse.spec(vgSpec, function(error, chart) {
 
 ## Step 3. Create A Tooltip
 
-In your HTML `<body>`, create a placeholder for the tooltip. Give the placeholder an `id` named `vis-tooltip` so that it can be recognized by our plugin. Assign `class` `vg-tooltip` to the tooltip placeholder so that it can pick up the default CSS style our library provides.
+In your HTML `<body>`, create a placeholder for the tooltip. Give the placeholder an `id` named `vis-tooltip` so that it can be recognized by our plugin. Assign `class` `vl-tooltip` to the tooltip placeholder so that it can pick up the default CSS style our library provides.
 
 ```html
 <!-- Placeholder for Tooltip -->
-<div id="vis-tooltip" class="vg-tooltip"></div>
+<div id="vis-tooltip" class="vl-tooltip"></div>
 ```
 
 > Tip: Generally speaking you only need one tooltip placeholder per HTML page (even if you have multiple visualizations in that page) because the mouse only points at one thing at a time.

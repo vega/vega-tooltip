@@ -354,7 +354,7 @@
           path = path + '.' + a;
         }
         else {
-          console.warn('[VgTooltip] Cannot find field ' + path + ' in data.');
+          console.warn('[Tooltip] Cannot find field ' + path + ' in data.');
           return undefined;
         }
       });
@@ -365,7 +365,7 @@
         return datum[field];
       }
       else {
-        console.warn('[VgTooltip] Cannot find field ' + field + ' in data.');
+        console.warn('[Tooltip] Cannot find field ' + field + ' in data.');
         return undefined;
       }
     }
@@ -428,7 +428,7 @@
   /* Drop number and date data for line charts and area charts */
   function dropQuanFieldsForLineArea(marktype, itemData) {
     if (marktype === "line" || marktype === "area") {
-      console.warn('[VgTooltip]: By default, we only show qualitative data in tooltip.');
+      console.warn('[Tooltip]: By default, we only show qualitative data in tooltip.');
 
       var quanKeys = [];
       itemData.forEach(function(field, value) {

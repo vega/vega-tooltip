@@ -40,7 +40,7 @@ Here are the list of options:  (All of them are optional)
 | :------| :-----------|
 | `showAllFields` | A boolean that specifies whether tooltip should show all fields or only fields in the `options.fields[]` array. If `showAllFields` is `true`, tooltip shows all fields bind to the mark being hovered. The order of the fields in the tooltip is the order they are bind to the mark item. If `showAllFields` is `false`, tooltip only shows fields specified in the `fields[]` array. The order of the fields in the tooltip is the same as the order specified in the `fields[]` array. `showAllFields` defaults to `true`. |
 | `fields` | An array of objects that customize the title and format of fields. When `showAllFields` is `false`, only fields in this array will be shown in the tooltip. When `showAllFields` is `true`, the `fields[]` array can still provide custom titles and formats for its member fields. |
-| `colorTheme` | A string theme picker. By default, tooltip uses a `'light'` color theme. Tooltip also provides a `'dark'` color theme. To further customize, you can overwrite the `.vg-tooltip` class in your CSS. |
+| `colorTheme` | A string theme picker. By default, tooltip uses a `'light'` color theme. Tooltip also provides a `'dark'` color theme. To further customize, you can overwrite the `.vl-tooltip` class in your CSS. |
 
 Each object in the `fields` array has the following properties.
 
