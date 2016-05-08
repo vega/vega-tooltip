@@ -212,15 +212,15 @@
 
     // supplement field name with underscore prefixes
     suppFieldConfig.field = fieldDef.field ?
-    vl.fieldDef.field(fieldDef) : userFieldConfig.field;
+      vl.fieldDef.field(fieldDef) : userFieldConfig.field;
 
     // supplement title
     suppFieldConfig.title = userFieldConfig.title ?
-    userFieldConfig.title : vl.fieldDef.title(fieldDef);
+      userFieldConfig.title : vl.fieldDef.title(fieldDef);
 
     // supplement formatType
     suppFieldConfig.formatType = userFieldConfig.formatType ?
-    userFieldConfig.formatType : formatTypeMap[fieldDef.type];
+      userFieldConfig.formatType : formatTypeMap[fieldDef.type];
 
     // supplement format based on formatType, using timeUnit, timeFormat, numberFormat
     if (userFieldConfig.format) {
@@ -229,11 +229,12 @@
     else {
       switch (suppFieldConfig.formatType) {
         case 'time':
-        suppFieldConfig.format = fieldDef.timeUnit ? vl.timeUnit.format(fieldDef.timeUnit) : timeFormat;
-        break;
+          suppFieldConfig.format = fieldDef.timeUnit ?
+            vl.timeUnit.format(fieldDef.timeUnit) : timeFormat;
+          break;
         case 'number':
-        suppFieldConfig.format = numberFormat;
-        break;
+          suppFieldConfig.format = numberFormat;
+          break;
         case 'string':
         default:
       }
@@ -319,7 +320,7 @@
       // TODO(zening): binned fields
 
       // get field title
-      var title = fld.title? fld.title : fld.field;
+      var title = fld.title ? fld.title : fld.field;
 
       // get field value
       var value = getValue(item.datum, fld.field);
@@ -458,16 +459,16 @@
     var formattedValue;
     switch (formatType) {
       case 'time':
-      var formatter = format? dl.format.time(format) : dl.format.auto.time();
-      formattedValue = formatter(value);
-      break;
+        var formatter = format ? dl.format.time(format) : dl.format.auto.time();
+        formattedValue = formatter(value);
+        break;
       case 'number':
-      var formatter = format? dl.format.number(format) : dl.format.auto.number();
-      formattedValue = formatter(value);
-      break;
+        var formatter = format ? dl.format.number(format) : dl.format.auto.number();
+        formattedValue = formatter(value);
+        break;
       case 'string':
       default:
-      formattedValue = value;
+        formattedValue = value;
     }
     return formattedValue;
   }
