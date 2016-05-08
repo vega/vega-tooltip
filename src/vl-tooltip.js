@@ -64,7 +64,7 @@
     'quantitative': 'number',
     'ordinal': undefined,
     'temporal': 'time',
-    'nominal': 'string'
+    'nominal': undefined
   }
 
   /**

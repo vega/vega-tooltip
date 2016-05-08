@@ -71,7 +71,10 @@
         formatType: "number",
         format: ".2f"
       },
-      {field: "year"},
+      {
+        field: "year",
+        formatType: "string"
+      },
       {field: "variety"},
       {field: "site"}
     ]
@@ -82,29 +85,9 @@
   addVlExample("exampleSpecs/bar.json", "#vis-bar");
 
   // Stacked Bar Chart
-  // var stackedBarOpts = {
-  //   showAllFields: false,
-  //   fields: [
-  //     {field: "weather"},
-  //     {field: "*"},
-  //     {field: "date"}
-  //   ]
-  // };
   addVlExample("exampleSpecs/stacked_bar_weather.json", "#vis-stacked-bar");
 
   // Layered Bar Chart
-  // var layeredBarOpts = {
-  //   showAllFields: false,
-  //   fields: [
-  //     {field: "gender"},
-  //     {field: "age"},
-  //     {
-  //       field: "people",
-  //       title: "population",
-  //       formatType: "number"
-  //     }
-  //   ]
-  // };
   addVlExample("exampleSpecs/bar_layered_transparent.json", "#vis-layered-bar");
 
   // Line Chart
@@ -123,12 +106,6 @@
 
   /* Vega Examples */
   // Arc
-  // var arcOpts = {
-  //   showAllFields: false,
-  //   fields: [
-  //     {field: "data"}
-  //   ]
-  // }
   addVgExample("exampleSpecs/arc.json", "#vis-arc");
 
   // Choropleth
