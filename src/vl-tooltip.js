@@ -436,12 +436,10 @@
         switch (dl.type(value)) {
           case 'number':
           case 'date':
-          quanKeys.push(field);
-          break;
+            quanKeys.push(field);
+            break;
           case 'boolean':
           case 'string':
-          default:
-            break;
         }
       });
       removeFields(itemData, quanKeys);
@@ -480,15 +478,15 @@
   function autoFormat(value) {
     switch (dl.type(value)) {
       case 'date':
-      var formatter = dl.format.auto.time();
-      return formatter(value);
+        var formatter = dl.format.auto.time();
+        return formatter(value);
       case 'number':
-      var formatter = dl.format.auto.number();
-      return formatter(value);
+        var formatter = dl.format.auto.number();
+        return formatter(value);
       case 'boolean':
       case 'string':
       default:
-      return value;
+        return value;
     }
   }
 
@@ -577,10 +575,9 @@
       clearTheme();
       switch (options.colorTheme) {
         case 'dark':
-        d3.select("#vis-tooltip").classed('dark-theme', true);
-        break;
+          d3.select("#vis-tooltip").classed('dark-theme', true);
+          break;
         case 'light':
-        default:
       }
     }
   }
