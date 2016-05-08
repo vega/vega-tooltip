@@ -82,7 +82,7 @@
     var numberFormat = vlSpec.config ? vlSpec.config.numberFormat : undefined;
 
     // if showAllFields, supplement all fields
-    if (options.showAllFields === true || options.showAllFields === undefined) {
+    if (options.showAllFields !== false) {
       vl.spec.fieldDefs(vlSpec).forEach(function(fieldDef){
         var field = fieldDef.field;
 
@@ -133,17 +133,17 @@
     // if aggregate, match field name and aggregate operation
     if (fieldDef.aggregate) {
       // try find the perfect match: field name equals, aggregate operation equals
-      optFields.forEach(function(optFld) {
-        if (!userFieldConfig && optFld.field === fieldDef.field && optFld.aggregate === fieldDef.aggregate) {
-          userFieldConfig = optFld;
+      optFields.forEach(function(optField) {
+        if (!userFieldConfig && optField.field === fieldDef.field && optField.aggregate === fieldDef.aggregate) {
+          userFieldConfig = optField;
         }
       });
 
-      // try find the second-best match: field name equals, optFld.aggregate = undefined
+      // try find the second-best match: field name equals, optField.aggregate = undefined
       if (!userFieldConfig) {
-        optFields.forEach(function(optFld) {
-          if (!userFieldConfig && optFld.field === fieldDef.field && optFld.aggregate === undefined) {
-            userFieldConfig = optFld;
+        optFields.forEach(function(optField) {
+          if (!userFieldConfig && optField.field === fieldDef.field && optField.aggregate === undefined) {
+            userFieldConfig = optField;
           }
         });
       }
@@ -151,9 +151,9 @@
     }
     // if not aggregate, just match field name
     else {
-      optFields.forEach(function(optFld) {
-        if (!userFieldConfig && optFld.field === fieldDef.field) {
-          userFieldConfig = optFld;
+      optFields.forEach(function(optField) {
+        if (!userFieldConfig && optField.field === fieldDef.field) {
+          userFieldConfig = optField;
         }
       });
     }
