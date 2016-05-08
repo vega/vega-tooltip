@@ -316,18 +316,18 @@
 
     var tooltipData = [];
 
-    options.fields.forEach(function(fld) {
+    options.fields.forEach(function(field) {
       // TODO(zening): binned fields
 
       // get field title
-      var title = fld.title ? fld.title : fld.field;
+      var title = field.title ? field.title : field.field;
 
       // get field value
-      var value = getValue(item.datum, fld.field);
+      var value = getValue(item.datum, field.field);
       if (value === undefined) return;
 
       // format value
-      var formattedValue = custFormat(value, fld.formatType, fld.format) || autoFormat(value);
+      var formattedValue = customFormat(value, field.formatType, field.format) || autoFormat(value);
 
       // add formatted data to tooltipData
       tooltipData.push({title: title, value: formattedValue});
@@ -394,7 +394,7 @@
 
     // TODO(zening): if there are binned fields, remove _start, _end, _mid, _range fields, add bin_field and its value
 
-    dropQuanFieldsForLineArea(item.mark.marktype, itemData);
+    dropQuantFieldsForLineArea(item.mark.marktype, itemData);
 
     itemData.forEach(function(field, value) {
       // get title
@@ -411,7 +411,7 @@
         var formatType = fieldConfigs.get(field).formatType;
         var format = fieldConfigs.get(field).format;
       }
-      var formattedValue = custFormat(value, formatType, format) || autoFormat(value);
+      var formattedValue = customFormat(value, formatType, format) || autoFormat(value);
 
       tooltipData.push({title: title, value: formattedValue});
     });
@@ -427,7 +427,7 @@
   }
 
   /* Drop number and date data for line charts and area charts */
-  function dropQuanFieldsForLineArea(marktype, itemData) {
+  function dropQuantFieldsForLineArea(marktype, itemData) {
     if (marktype === "line" || marktype === "area") {
       console.warn('[Tooltip]: By default, we only show qualitative data in tooltip.');
 
@@ -451,24 +451,18 @@
   * @return the formatted time, number or string value, or undefined if value or
   * formatType is missing
   */
-  function custFormat(value, formatType, format) {
+  function customFormat(value, formatType, format) {
     if (!value || !formatType) return;
 
-    var formattedValue;
     switch (formatType) {
       case 'time':
-        var formatter = format ? dl.format.time(format) : dl.format.auto.time();
-        formattedValue = formatter(value);
-        break;
+        return format ? dl.format.time(format)(value) : dl.format.auto.time()(value);
       case 'number':
-        var formatter = format ? dl.format.number(format) : dl.format.auto.number();
-        formattedValue = formatter(value);
-        break;
+        return format ? dl.format.number(format)(value) : dl.format.auto.number()(value);
       case 'string':
       default:
-        formattedValue = value;
+        return value;
     }
-    return formattedValue;
   }
 
   /**
@@ -478,11 +472,9 @@
   function autoFormat(value) {
     switch (dl.type(value)) {
       case 'date':
-        var formatter = dl.format.auto.time();
-        return formatter(value);
+        return dl.format.auto.time()(value);
       case 'number':
-        var formatter = dl.format.auto.number();
-        return formatter(value);
+        return dl.format.auto.number()(value);
       case 'boolean':
       case 'string':
       default:
@@ -512,12 +504,13 @@
   * Bind tooltipData to the tooltip placeholder
   */
   function bindData(tooltipPlaceholder, tooltipData) {
-    var tooltipRows = tooltipPlaceholder.append("table").selectAll(".tooltip-row").data(tooltipData);
+    var tooltipRows = tooltipPlaceholder.append("table").selectAll(".tooltip-row")
+      .data(tooltipData);
 
     tooltipRows.exit().remove();
 
     var row = tooltipRows.enter().append("tr")
-    .attr("class", "tooltip-row");
+      .attr("class", "tooltip-row");
     row.append("td").attr("class", "key").text(function(d) { return d.title + ":"; });
     row.append("td").attr("class", "value").text(function(d) { return d.value; });
   }
@@ -547,26 +540,26 @@
     }
 
     d3.select("#vis-tooltip")
-    .style("top", function() {
-      // by default: put tooltip 10px below cursor
-      // if tooltip is close to the bottom of the window, put tooltip 10px above cursor
-      var tooltipHeight = parseInt(d3.select(this).style("height"));
-      if (event.clientY + tooltipHeight + offsetY < window.innerHeight) {
-        return "" + (event.clientY + offsetY) + "px";
-      } else {
-        return "" + (event.clientY - tooltipHeight - offsetY) + "px";
-      }
-    })
-    .style("left", function() {
-      // by default: put tooltip 10px to the right of cursor
-      // if tooltip is close to the right edge of the window, put tooltip 10 px to the left of cursor
-      var tooltipWidth = parseInt(d3.select(this).style("width"));
-      if (event.clientX + tooltipWidth + offsetX < window.innerWidth) {
-        return "" + (event.clientX + offsetX) + "px";
-      } else {
-        return "" + (event.clientX - tooltipWidth - offsetX) + "px";
-      }
-    });
+      .style("top", function() {
+        // by default: put tooltip 10px below cursor
+        // if tooltip is close to the bottom of the window, put tooltip 10px above cursor
+        var tooltipHeight = parseInt(d3.select(this).style("height"));
+        if (event.clientY + tooltipHeight + offsetY < window.innerHeight) {
+          return "" + (event.clientY + offsetY) + "px";
+        } else {
+          return "" + (event.clientY - tooltipHeight - offsetY) + "px";
+        }
+      })
+      .style("left", function() {
+        // by default: put tooltip 10px to the right of cursor
+        // if tooltip is close to the right edge of the window, put tooltip 10 px to the left of cursor
+        var tooltipWidth = parseInt(d3.select(this).style("width"));
+        if (event.clientX + tooltipWidth + offsetX < window.innerWidth) {
+          return "" + (event.clientX + offsetX) + "px";
+        } else {
+          return "" + (event.clientX - tooltipWidth - offsetX) + "px";
+        }
+      });
   }
 
   /* Update tooltip color theme according to options.colorTheme */
