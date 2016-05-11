@@ -428,15 +428,24 @@
 
   /**
   * Drop fields for line charts and area charts.
-  * Reason:
+  *
   * Lines and areas are defined by a series of datum. Without layering, tooltip
-  * will only show one datum per line / area mark. As a partial fix, we drop fields
-  * in the x and y channels and show fields in the other channels (typically color)
-  * for line charts and area charts. In the future, we will use vega-lite layering
-  * to properly show all fields.
+  * will only show one datum per line / area mark. As a partial fix, we drop
+  * quantitative fields for line charts and area charts. This is the current
+  * implementation of the function.
+  *
+  * This doesn't completely solve the problem: if a data set contains a field
+  * that is not used for encoding, it will still show up in the tooltip and
+  * confuse users. The additional qualitative field's value may vary for a line
+  * or area mark but tooltip will only be able to show one value. As a better
+  * partial fix, we may drop fields in the x and y channels and only show fields
+  * in the other channels (typically color). In this way, if a qualitative field
+  * is not used for encoding, it will not show up in the tooltip.
+  *
+  * Eventually, we will use vega-lite layering to properly show all fields.
   */
-  // TODO(zening): use vega-lite layering to tooltip on line charts and area charts (issue #1)
-  // TODO(zening): change the logic from drop quantitative fields to drop x and y fields for line charts and area charts
+  // TODO(zening): use vega-lite layering to support tooltip on line charts and area charts (issue #1)
+  // TODO(zening): change the logic from drop quant fields to only show non-x-y fields in fieldDefs
   function dropFieldsForLineArea(marktype, itemData) {
     if (marktype === "line" || marktype === "area") {
       console.warn('[Tooltip]: By default, we only show qualitative data for ' + marktype + ' charts.');
