@@ -394,7 +394,7 @@
 
     // TODO(zening): if there are binned fields, remove _start, _end, _mid, _range fields, add bin_field and its value
 
-    dropQuantFieldsForLineArea(item.mark.marktype, itemData);
+    dropFieldsForLineArea(item.mark.marktype, itemData);
 
     itemData.forEach(function(field, value) {
       // get title
@@ -426,10 +426,20 @@
     })
   }
 
-  /* Drop number and date data for line charts and area charts */
-  function dropQuantFieldsForLineArea(marktype, itemData) {
+  /**
+  * Drop fields for line charts and area charts.
+  * Reason:
+  * Lines and areas are defined by a series of datum. Without layering, tooltip
+  * will only show one datum per line / area mark. As a partial fix, we drop fields
+  * in the x and y channels and show fields in the other channels (typically color)
+  * for line charts and area charts. In the future, we will use vega-lite layering
+  * to properly show all fields.
+  */
+  // TODO(zening): use vega-lite layering to tooltip on line charts and area charts (issue #1)
+  // TODO(zening): change the logic from drop quantitative fields to drop x and y fields for line charts and area charts
+  function dropFieldsForLineArea(marktype, itemData) {
     if (marktype === "line" || marktype === "area") {
-      console.warn('[Tooltip]: By default, we only show qualitative data in tooltip.');
+      console.warn('[Tooltip]: By default, we only show qualitative data for ' + marktype + ' charts.');
 
       var quanKeys = [];
       itemData.forEach(function(field, value) {
