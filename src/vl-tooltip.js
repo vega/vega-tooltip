@@ -419,7 +419,14 @@
     return tooltipData;
   }
 
-  /* Remove multiple fields from a data map, using removeKeys */
+  /**
+  * Remove multiple fields from a tooltip data map, using removeKeys
+  *
+  * Certain meta data fields (e.g. "_id", "_prev") should be hidden in the tooltip
+  * by default. This function can be used to remove these fields from tooltip data.
+  * @param {d3.map} dataMap - the data map that contains tooltip data
+  * @param {string[]} removeKeys - the fields that should be removed from dataMap
+  */
   function removeFields(dataMap, removeKeys) {
     removeKeys.forEach(function(key) {
       dataMap.remove(key);
