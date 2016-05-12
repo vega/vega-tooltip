@@ -3,7 +3,7 @@
 
 ## Step 1. Add The Library
 
-We recommend installing the tooltip library and its dependencies via `npm`:
+We recommend installing the tooltip library and its dependencies via [`npm`](https://www.npmjs.com/):
 
 ```bash
 npm install vega-lite-tooltip
@@ -41,14 +41,14 @@ In your HTML `<body>`, create a placeholder for your visualization. Give the pla
 <div id="vis-scatter"></div>
 ```
 
-If you are using [Vega-Lite](https://vega.github.io/vega-lite/), you can create your visualization using [`vg.embed`](https://github.com/vega/vega/wiki/Embed-Vega-Web-Components). Note that the following JavaScript code refers to the visualization placeholder by `id`.
+For [Vega-Lite](https://vega.github.io/vega-lite/), you can create your visualization using [`vg.embed`](https://github.com/vega/vega/wiki/Embed-Vega-Web-Components). Note that the following JavaScript code refers to the visualization placeholder by id selector (`#vis-scatter`).
 
 ```js
 vg.embed("#vis-scatter", embedSpec, function(error, result) {
 });
 ```
 
-If you are using [Vega](http://vega.github.io/vega/), you can create a visualization using [`vg.parse.spec`](https://github.com/vega/vega/wiki/Runtime). Note that the following JavaScript code refers to the visualization placeholder by `id`.
+For [Vega](http://vega.github.io/vega/), you can create a visualization using [`vg.parse.spec`](https://github.com/vega/vega/wiki/Runtime). Note that the following JavaScript code refers to the visualization placeholder by `id`.
 
 ```js
 vg.parse.spec(vgSpec, function(error, chart) {
@@ -68,7 +68,7 @@ In your HTML `<body>`, create a placeholder for the tooltip. Give the placeholde
 
 > Tip: Generally speaking you only need one tooltip placeholder per HTML page (even if you have multiple visualizations in that page) because the mouse only points at one thing at a time.
 
-If you are using [Vega-Lite](https://vega.github.io/vega-lite/), you can create your tooltip using `vl.tooltip()`. This function requires the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) and the original Vega-Lite specification as inputs.
+For [Vega-Lite](https://vega.github.io/vega-lite/), you can create your tooltip using `vl.tooltip()`. This function requires the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) and the original Vega-Lite specification as inputs.
 
 ```js
 vg.embed("#vis-scatter", embedSpec, function(error, result) {
@@ -77,7 +77,7 @@ vg.embed("#vis-scatter", embedSpec, function(error, result) {
 });
 ```
 
-If you are using [Vega](http://vega.github.io/vega/), you can create your tooltip using `vg.tooltip()`. This function only requires the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) as input.
+For [Vega](http://vega.github.io/vega/), you can create your tooltip using `vg.tooltip()`. This function only requires the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) as input.
 
 ```js
 vg.parse.spec(vgSpec, function(error, chart) {

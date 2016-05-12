@@ -4,7 +4,7 @@ If you are looking at this page, you should already have created a tooltip (see 
 
 You can customize the content and look of your tooltip by passing in an optional `options` parameter to the tooltip API.
 
-If you are using Vega-Lite:
+For Vega-Lite:
 
 ```js
 vg.embed("#vis-scatter", embedSpec, function(error, result) {
@@ -13,7 +13,7 @@ vg.embed("#vis-scatter", embedSpec, function(error, result) {
 });
 ```
 
-If you are using Vega:
+For Vega:
 
 ```js
 vg.parse.spec(vgSpec, function(error, chart) {
