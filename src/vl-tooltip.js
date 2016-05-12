@@ -260,7 +260,7 @@
 
     updatePosition(event, options);
     updateTheme(options);
-    d3.select("#vis-tooltip").style("opacity", 1);
+    d3.select("#vis-tooltip").style("display", "block");
   }
 
   /* Update tooltip position on mousemove */
@@ -272,7 +272,7 @@
   function clear() {
     clearData();
     clearTheme();
-    d3.select("#vis-tooltip").style("opacity", 0);
+    d3.select("#vis-tooltip").style("display", "none");
   }
 
 
