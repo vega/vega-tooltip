@@ -1,5 +1,4 @@
 # Creating Your Tooltip
-<br>
 
 ## Step 1. Add The Library
 
@@ -15,7 +14,6 @@ The tooltip library contains a `js` file and a `css` file:
 node_modules/vega-lite-tooltip/vl-tooltip.min.js
 node_modules/vega-lite-tooltip/vl-tooltip.css
 ```
-<br>
 
 Alternatively, if you want to manually include the tooltip library and its dependencies, you can add the following lines to your HTML `<head>`. Vega-Lite Tooltip depends on `d3`, `vega`, `vega-lite`, `vega-embed` and `datalib`.
 
@@ -73,7 +71,7 @@ In your HTML `<body>`, create a placeholder for the tooltip. Give the placeholde
 
 > Tip: Generally speaking you only need one tooltip placeholder per HTML page (even if you have multiple visualizations in that page) because the mouse only points at one thing at a time.
 
-<br>
+
 
 For [Vega-Lite](https://vega.github.io/vega-lite/): <br>
 You can create your tooltip using `vl.tooltip()`. This function requires the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) and the original Vega-Lite specification as inputs.
@@ -102,4 +100,4 @@ vg.parse.spec(vgSpec, function(error, chart) {
 
 Now you should be able to see a tooltip working with your visualization.
 
-__Next step__: [Customizing Your Tooltip](customizing_your_tooltip.md)
+__Next step:__ [Customizing Your Tooltip](customizing_your_tooltip.md)

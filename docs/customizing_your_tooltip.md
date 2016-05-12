@@ -1,10 +1,10 @@
 # Customizing Your Tooltip
 
-If you are looking at this page, you should already have created a tooltip (see [Creating Your Tooltip](creating_your_tooltip.md)).
+__Previous Tutorial:__ [Creating Your Tooltip](creating_your_tooltip.md).
 
 You can customize the content and look of your tooltip by passing in an optional `options` parameter to the tooltip API.
 
-For Vega-Lite:
+For [Vega-Lite](https://vega.github.io/vega-lite/):
 
 ```js
 vg.embed("#vis-scatter", embedSpec, function(error, result) {
@@ -13,7 +13,7 @@ vg.embed("#vis-scatter", embedSpec, function(error, result) {
 });
 ```
 
-For Vega:
+For [Vega](http://vega.github.io/vega/):
 
 ```js
 vg.parse.spec(vgSpec, function(error, chart) {
@@ -54,6 +54,7 @@ var options =
 
 > Tip: You can customize the order of the fields in your tooltip by setting `showAllFields` to `false` and providing a `fields` array. Your tooltip will display fields in the order they appear in the `fields` array.
 
+<br>
 
 Each member in the `fields` array can customize the format of a field. These custom formats are applied whenever applicable (no matter `showAllFields` is `true` or `false`).
 
