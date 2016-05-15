@@ -259,7 +259,7 @@
     bindData(tooltipPlaceholder, tooltipData);
 
     updatePosition(event, options);
-    updateTheme(options);
+    updateColorTheme(options);
     d3.select("#vis-tooltip").style("display", "block");
   }
 
@@ -271,7 +271,7 @@
   /* Clear tooltip */
   function clear() {
     clearData();
-    clearTheme();
+    clearColorTheme();
     d3.select("#vis-tooltip").style("display", "none");
   }
 
@@ -588,21 +588,24 @@
       });
   }
 
-  /* Update tooltip color theme according to options.colorTheme */
-  function updateTheme(options) {
-    if (options && options.colorTheme) {
-      clearTheme();
-      switch (options.colorTheme) {
-        case 'dark':
-          d3.select("#vis-tooltip").classed('dark-theme', true);
-          break;
-        case 'light':
-      }
+  /**
+  * Update tooltip color theme according to options.colorTheme
+  *
+  * If colorTheme === "dark", apply dark theme to tooltip.
+  * Otherwise apply light color theme. 
+  */
+  function updateColorTheme(options) {
+    clearColorTheme();
+    if (options && options.colorTheme === "dark") {
+      d3.select("#vis-tooltip").classed("dark-theme", true);
+    }
+    else {
+      d3.select("#vis-tooltip").classed("light-theme", true);
     }
   }
 
-  /* Reset color themes to default */
-  function clearTheme() {
+  /* Clear color themes */
+  function clearColorTheme() {
     d3.select("#vis-tooltip").classed('dark-theme light-theme', false);
   }
 
