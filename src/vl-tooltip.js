@@ -61,10 +61,10 @@
 
   /* Mapping from fieldDef.type to options.formatType */
   var formatTypeMap = {
-    'quantitative': 'number',
-    'ordinal': undefined,
-    'temporal': 'time',
-    'nominal': undefined
+    "quantitative": "number",
+    "ordinal": undefined,
+    "temporal": "time",
+    "nominal": undefined
   }
 
   /**
@@ -201,7 +201,7 @@
   function supplementField(userFieldConfig, fieldDef, timeFormat, numberFormat) {
     // at least one of userFieldConfig and fieldDef should exist
     if (!userFieldConfig && !fieldDef) {
-      console.warn('[VgTooltip] Cannot supplement a field when user-specified field config and vlSpec field config are both empty.');
+      console.warn("[VgTooltip] Cannot supplement a field when user-specified field config and vlSpec field config are both empty.");
       return;
     }
     if (!userFieldConfig && fieldDef) userFieldConfig = {};
@@ -228,14 +228,14 @@
     }
     else {
       switch (suppFieldConfig.formatType) {
-        case 'time':
+        case "time":
           suppFieldConfig.format = fieldDef.timeUnit ?
             vl.timeUnit.format(fieldDef.timeUnit) : timeFormat;
           break;
-        case 'number':
+        case "number":
           suppFieldConfig.format = numberFormat;
           break;
-        case 'string':
+        case "string":
         default:
       }
     }
@@ -339,23 +339,23 @@
 
   /**
   * Get one field value from a datum.
-  * @param {string} field - the name of the field. It can contain '.' to specify
+  * @param {string} field - the name of the field. It can contain "." to specify
   * that the field is not a direct child of datum
   * @return the field value if successful,
   * undefined if the field cannot be found in item.datum
   */
   function getValue(datum, field) {
-    if (field.includes('.')) {
-      var accessors = field.split('.');
+    if (field.includes(".")) {
+      var accessors = field.split(".");
       var value = datum;
-      var path = '';
+      var path = "";
       accessors.forEach(function(a) {
         if (value[a]) {
           value = value[a];
-          path = path + '.' + a;
+          path = path + "." + a;
         }
         else {
-          console.warn('[Tooltip] Cannot find field ' + path + ' in data.');
+          console.warn("[Tooltip] Cannot find field " + path + " in data.");
           return undefined;
         }
       });
@@ -366,7 +366,7 @@
         return datum[field];
       }
       else {
-        console.warn('[Tooltip] Cannot find field ' + field + ' in data.');
+        console.warn("[Tooltip] Cannot find field " + field + " in data.");
         return undefined;
       }
     }
@@ -455,17 +455,17 @@
   // TODO(zening): change the logic from drop quant fields to only show non-x-y fields in fieldDefs
   function dropFieldsForLineArea(marktype, itemData) {
     if (marktype === "line" || marktype === "area") {
-      console.warn('[Tooltip]: By default, we only show qualitative data for ' + marktype + ' charts.');
+      console.warn("[Tooltip]: By default, we only show qualitative data for " + marktype + " charts.");
 
       var quanKeys = [];
       itemData.forEach(function(field, value) {
         switch (dl.type(value)) {
-          case 'number':
-          case 'date':
+          case "number":
+          case "date":
             quanKeys.push(field);
             break;
-          case 'boolean':
-          case 'string':
+          case "boolean":
+          case "string":
         }
       });
       removeFields(itemData, quanKeys);
@@ -481,11 +481,11 @@
     if (!value || !formatType) return;
 
     switch (formatType) {
-      case 'time':
+      case "time":
         return format ? dl.format.time(format)(value) : dl.format.auto.time()(value);
-      case 'number':
+      case "number":
         return format ? dl.format.number(format)(value) : dl.format.auto.number()(value);
-      case 'string':
+      case "string":
       default:
         return value;
     }
@@ -497,12 +497,12 @@
   */
   function autoFormat(value) {
     switch (dl.type(value)) {
-      case 'date':
+      case "date":
         return dl.format.auto.time()(value);
-      case 'number':
+      case "number":
         return dl.format.auto.number()(value);
-      case 'boolean':
-      case 'string':
+      case "boolean":
+      case "string":
       default:
         return value;
     }
@@ -592,7 +592,7 @@
   * Update tooltip color theme according to options.colorTheme
   *
   * If colorTheme === "dark", apply dark theme to tooltip.
-  * Otherwise apply light color theme. 
+  * Otherwise apply light color theme.
   */
   function updateColorTheme(options) {
     clearColorTheme();
@@ -606,7 +606,7 @@
 
   /* Clear color themes */
   function clearColorTheme() {
-    d3.select("#vis-tooltip").classed('dark-theme light-theme', false);
+    d3.select("#vis-tooltip").classed("dark-theme light-theme", false);
   }
 
 
