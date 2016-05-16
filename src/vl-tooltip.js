@@ -3,8 +3,8 @@
 (function() {
   /**
   * Export Vega Tooltip API: vg.tooltip(vgView, options)
-  * options can specify to show all fields or to show custom fields in the tooltip
-  * and can provide titles and formats for those fields
+  * options can specify whether to show all fields or to show only custom fields
+  * It can also provide custom title and format for fields
   */
   window.vg = window.vg || {};
   window.vg.tooltip = function(vgView, options) {
@@ -12,7 +12,7 @@
       options = {};
     }
 
-    // initialize tooltip with data
+    // initialize tooltip with item data and options on mouse over
     vgView.on("mouseover", function(event, item) {
       init(event, item, options);
     });
@@ -23,7 +23,7 @@
       update(event, item, options);
     });
 
-    // clear tooltip
+    // clear tooltip on mouse out
     vgView.on("mouseout", function(event, item) {
       clear();
     });
@@ -31,8 +31,9 @@
 
   /**
   * Export Vega-Lite Tooltip API: vl.tooltip(vgView, vlSpec, options)
-  * options can specify to show all fields or to show custom fields in the tooltip
-  * we use vlSpec to supplement options
+  * options can specify whether to show all fields or to show only custom fields
+  * It can also provide custom title and format for fields
+  * options can be supplemented by vlSpec
   */
   window.vl = window.vl || {};
   window.vl.tooltip = function(vgView, vlSpec, options) {
@@ -42,7 +43,7 @@
 
     options = supplementOptions(options, vlSpec);
 
-    // initialize tooltip with data
+    // initialize tooltip with item data and options on mouse over
     vgView.on("mouseover", function(event, item) {
       init(event, item, options);
     });
@@ -53,35 +54,35 @@
       update(event, item, options);
     });
 
-    // clear tooltip
+    // clear tooltip on mouse out
     vgView.on("mouseout", function(event, item) {
       clear();
     });
   };
 
-  /* Mapping from fieldDef.type to options.formatType */
+  /* Mapping from fieldDef.type to formatType */
   var formatTypeMap = {
     "quantitative": "number",
-    "ordinal": undefined,
     "temporal": "time",
+    "ordinal": undefined,
     "nominal": undefined
   }
 
   /**
-  * Supplement options with vlSpec
-  * if options.showAllFields is true or undefined, vlSpec will supplement options.fields
-  * with all fields in the spec
+  * (Vega-Lite only) Supplement options with vlSpec
+  * if options.showAllFields is true or undefined, vlSpec will supplement
+  * options.fields with all fields in the spec
   * if options.showAllFields is false, vlSpec will only supplement existing fields
   * in options.fields
   */
   function supplementOptions(options, vlSpec) {
     // vlSpec supplemented field configs
-    var supplementedConfigs = [];
+    var supplementedFieldOptions = [];
 
     var timeFormat = vlSpec.config ? vlSpec.config.timeFormat : undefined;
     var numberFormat = vlSpec.config ? vlSpec.config.numberFormat : undefined;
 
-    // if showAllFields, supplement all fields
+    // if showAllFields is true or undefined, supplement all fields in vlSpec
     if (options.showAllFields !== false) {
       vl.spec.fieldDefs(vlSpec).forEach(function(fieldDef){
         var field = fieldDef.field;
@@ -92,10 +93,10 @@
         // supplemented field config
         var suppFieldConfig = supplementField(userFieldConfig, fieldDef, timeFormat, numberFormat);
 
-        supplementedConfigs.push(suppFieldConfig);
+        supplementedFieldOptions.push(suppFieldConfig);
       });
     }
-    // if showAllFields is false, only supplement existing fields
+    // if showAllFields is false, only supplement existing fields in options.fields
     else {
       if (options.fields && options.fields.length > 0) {
         options.fields.forEach(function(userFieldConfig) {
@@ -105,14 +106,14 @@
           // supplement the field config
           var suppFieldConfig = supplementField(userFieldConfig, fieldDef, timeFormat, numberFormat);
 
-          supplementedConfigs.push(suppFieldConfig);
+          supplementedFieldOptions.push(suppFieldConfig);
         })
       }
     }
 
     // TODO(zening): supplement binned fields
 
-    options.fields = supplementedConfigs;
+    options.fields = supplementedFieldOptions;
 
     return options;
   }

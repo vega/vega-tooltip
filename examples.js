@@ -1,3 +1,5 @@
+"use strict";
+
 (function() {
 
   function addVlExample(path, id, options) {
@@ -32,8 +34,8 @@
   var scatterOpts = {
     showAllFields: false,
     fields: [
-      {field: "Name"},
-      {field: "Horsepower"},
+      { field: "Name" },
+      { field: "Horsepower" },
       {
         field: "Miles_per_Gallon",
         title: "Miles per Gallon"
@@ -60,10 +62,10 @@
       }
     ]
   }
-  addVlExample("exampleSpecs/bubble_multiple_aggregation.json", "#vis-bubble-multiagg", bubbleOpts);
+  addVlExample("exampleSpecs/bubble_multiple_aggregation.json", "#vis-bubble-multi-aggr", bubbleOpts);
 
   // Trellis Barley
-  var trellisBarOpts = {
+  var trellisBarleyOpts = {
     showAllFields: false,
     fields: [
       {
@@ -75,11 +77,11 @@
         field: "year",
         formatType: "string"
       },
-      {field: "variety"},
-      {field: "site"}
+      { field: "variety" },
+      { field: "site" }
     ]
   };
-  addVlExample("exampleSpecs/trellis_barley.json", "#vis-trellis-barley", trellisBarOpts);
+  addVlExample("exampleSpecs/trellis_barley.json", "#vis-trellis-barley", trellisBarleyOpts);
 
   // Simple Bar Chart
   addVlExample("exampleSpecs/bar.json", "#vis-bar");
@@ -131,7 +133,7 @@
   var forceOpts = {
     showAllFields: false,
     fields: [
-      {field: "name"}
+      { field: "name" }
     ]
   }
   addVgExample("exampleSpecs/force.json", "#vis-force", forceOpts);
@@ -149,7 +151,7 @@
         formatType: "time",
         format: "%B %e"
       },
-      {field: "hour"}
+      { field: "hour" }
     ]
   }
   addVgExample("exampleSpecs/heatmap.json", "#vis-heatmap", heatmapOpts);
