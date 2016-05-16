@@ -344,6 +344,7 @@
   * @return the field value if successful,
   * undefined if the field cannot be found in item.datum
   */
+  // TODO(zening): Mute "Cannot find field" warnings for composite vis (issue #39)
   function getValue(datum, field) {
     if (field.includes(".")) {
       var accessors = field.split(".");
