@@ -37,7 +37,7 @@ Alternatively, if you want to manually include the tooltip library and its depen
 In your HTML `<body>`, create a placeholder for your visualization. Give the placeholder a unique `id`, which you can later refer to in your JavaScript. For example:
 
 ```html
-<!-- Placeholder for my Scatter Plot -->
+<!-- Placeholder for my scatter plot -->
 <div id="vis-scatter"></div>
 ```
 
@@ -46,15 +46,17 @@ You can create your visualization using [`vg.embed`](https://github.com/vega/veg
 
 ```js
 vg.embed("#vis-scatter", embedSpec, function(error, result) {
+  ...
 });
 ```
 
 For [Vega](http://vega.github.io/vega/): <br>
-You can create a visualization using [`vg.parse.spec`](https://github.com/vega/vega/wiki/Runtime). Note that the following JavaScript code refers to the visualization placeholder by `id`.
+You can create a visualization using [`vg.parse.spec`](https://github.com/vega/vega/wiki/Runtime). Note that the following JavaScript code refers to the visualization placeholder by id selector (`#vis-scatter`).
 
 ```js
 vg.parse.spec(vgSpec, function(error, chart) {
-    var view = chart({el:"#vis-scatter"}).update();
+  var view = chart({el:"#vis-scatter"}).update();
+  ...
 });
 ```
 <br>
@@ -65,32 +67,32 @@ vg.parse.spec(vgSpec, function(error, chart) {
 In your HTML `<body>`, create a placeholder for the tooltip. Give the placeholder an `id` named `vis-tooltip` so that it can be recognized by our plugin. Assign `class` `vl-tooltip` to the tooltip placeholder so that it can pick up the default CSS style our library provides.
 
 ```html
-<!-- Placeholder for Tooltip -->
+<!-- Placeholder for the tooltip -->
 <div id="vis-tooltip" class="vl-tooltip"></div>
 ```
 
-> Tip: Generally speaking you only need one tooltip placeholder per HTML page (even if you have multiple visualizations in that page) because the mouse only points at one thing at a time.
+> Tip: Generally speaking you will only need one tooltip placeholder per page because the mouse typically only points to one thing at a time. If you have more than one visualizations in a page, the visualizations will share one tooltip placeholder.
 
 
 
 For [Vega-Lite](https://vega.github.io/vega-lite/): <br>
-You can create your tooltip using `vl.tooltip()`. This function requires the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) and the original Vega-Lite specification as inputs.
+You can create your tooltip using [`vl.tooltip`](https://github.com/vega/vega-lite-tooltip/wiki/APIs#vltooltip). This function requires the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) and the original Vega-Lite specification as inputs.
 
 ```js
 vg.embed("#vis-scatter", embedSpec, function(error, result) {
-    // result.view is the Vega View, vlSpec is the original Vega-Lite specification
-    vl.tooltip(result.view, vlSpec);
+  // result.view is the Vega View, vlSpec is the original Vega-Lite specification
+  vl.tooltip(result.view, vlSpec);
 });
 ```
 
 For [Vega](http://vega.github.io/vega/): <br>
-You can create your tooltip using `vg.tooltip()`. This function only requires the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) as input.
+You can create your tooltip using [`vg.tooltip`](https://github.com/vega/vega-lite-tooltip/wiki/APIs#vgtooltip). This function only requires the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) as input.
 
 ```js
 vg.parse.spec(vgSpec, function(error, chart) {
-    // view is the Vega View
-    var view = chart({el:"#vis-scatter"}).update();
-    vg.tooltip(view);
+  // view is the Vega View
+  var view = chart({el:"#vis-scatter"}).update();
+  vg.tooltip(view);
 });
 ```
 <br>
