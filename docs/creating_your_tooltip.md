@@ -15,7 +15,7 @@ node_modules/vega-lite-tooltip/vl-tooltip.min.js
 node_modules/vega-lite-tooltip/vl-tooltip.css
 ```
 
-Alternatively, if you want to manually include the tooltip library and its dependencies, you can add the following lines to your HTML `<head>`. Vega-Lite Tooltip depends on `d3`, `vega`, `vega-lite`, `vega-embed` and `datalib`.
+Alternatively, if you want to manually include the tooltip library and its dependencies, you can add the following lines to your HTML `<head>`. Vega-Lite Tooltip depends on [`d3`](https://d3js.org/), [`vega`](https://vega.github.io/vega/), [`vega-lite`](https://vega.github.io/vega-lite/), [`vega-embed`](https://github.com/vega/vega-embed) and [`datalib`](http://vega.github.io/datalib/).
 
 ```html
 <!-- Dependencies -->
