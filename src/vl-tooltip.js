@@ -119,7 +119,7 @@
   /**
   * Find a field in fields that matches a fieldDef
   * If the fieldDef is aggregated, find a field that matches the field name and
-  * the aggregation of fieldDef.
+  * the aggregation of the fieldDef.
   * If the fieldDef is not aggregated, find a field that matches the field name.
   * @return the matching field, or undefined if no match was found
   */
@@ -199,13 +199,15 @@
       console.error("[Tooltip] Cannot supplement a field when field and fieldDef are both empty.");
       return;
     }
+    
+    // if either one of field and fieldDef is undefined, make it an empty object
     if (!field && fieldDef) field = {};
     if (field && !fieldDef) fieldDef = {};
 
     // the supplemented field config
     var supplementedField = {};
 
-    // supplement field name with underscore prefixes (e.g. "mean_", "yearmonth_")
+    // supplement field name with underscore prefixes (e.g. "mean_", "yearmonth_") to match the field names in item.datum
     supplementedField.field = fieldDef.field ?
       vl.fieldDef.field(fieldDef) : field.field;
 
@@ -244,14 +246,14 @@
   function init(event, item, options) {
     if( shouldShowTooltip(item) === false ) return;
 
-    // get tooltip placeholder
+    // get tooltip HTML placeholder
     var tooltipPlaceholder = getTooltipPlaceholder();
 
     // prepare data for tooltip
     var tooltipData = getTooltipData(item, options);
     if (!tooltipData || tooltipData.length === 0) return;
 
-    // bind data to tooltip
+    // bind data to tooltip HTML placeholder
     bindData(tooltipPlaceholder, tooltipData);
 
     updatePosition(event, options);
@@ -272,11 +274,12 @@
   }
 
 
-  /* Decide if a chart element deserves tooltip */
+  /* Decide if a scenegraph item deserves tooltip */
   function shouldShowTooltip (item) {
+    // no data, no show
     if (!item || !item.datum) return false;
 
-    // avoid showing tooltip for facet's background
+    // (small multiples) avoid showing tooltip for a facet's background
     if (item.datum._facetID) return false;
 
     // avoid showing tooltip for axis title and labels
@@ -286,17 +289,17 @@
   }
 
   /**
-  * Prepare data to be bound to the tooltip element
-  * @return [{ title: ..., value: ...}]
+  * Prepare data for the tooltip
+  * @return An array of tooltip data [{ title: ..., value: ...}]
   */
   function getTooltipData(item, options) {
-
-    var tooltipData; // this array will be bind to the tooltip element
-    if ( options.showAllFields === true || options.showAllFields === undefined ) {
-      tooltipData = getAllFields(item, options);
+    var tooltipData; // this array will be bind to the tooltip HTML placeholder
+    
+    if ( options.showAllFields !== false ) {
+      tooltipData = prepareAllFieldsData(item, options);
     }
     else {
-      tooltipData = getCustomFields(item, options);
+      tooltipData = prepareCustomFieldsData(item, options);
     }
 
     return tooltipData;
@@ -304,21 +307,20 @@
 
 
   /**
-  * Prepare custom fields (specified by options) for tooltip.
-  * @return An array of formatted fields
-  * [{ title: ..., value: ...}]
+  * Prepare custom fields data for tooltip. This function foramts 
+  * field titles and values and returns an array of formatted fields.
+  * @return An array of formatted fields [{ title: ..., value: ...}]
   */
-  function getCustomFields(item, options) {
-
+  function prepareCustomFieldsData(item, options) {
     var tooltipData = [];
 
     options.fields.forEach(function(field) {
       // TODO(zening): binned fields
 
-      // get field title
+      // prepare field title
       var title = field.title ? field.title : field.field;
 
-      // get field value
+      // get (raw) field value
       var value = getValue(item.datum, field.field);
       if (value === undefined) return;
 
@@ -335,10 +337,10 @@
 
   /**
   * Get one field value from a datum.
+  * @param {Object} datum - the datum of an item.
   * @param {string} field - the name of the field. It can contain "." to specify
-  * that the field is not a direct child of datum
-  * @return the field value if successful,
-  * undefined if the field cannot be found in item.datum
+  * that the field is not a direct child of datum.
+  * @return the field value, or undefined if the value cannot be found.
   */
   // TODO(zening): Mute "Cannot find field" warnings for composite vis (issue #39)
   function getValue(datum, field) {
@@ -371,17 +373,20 @@
 
 
   /**
-  * Prepare all fields (item.datum's direct children) for tooltip.
-  * @return An array of formatted fields
-  * [{ title: ..., value: ...}]
+  * Prepare data for all fields in item.datum for tooltip. This function 
+  * foramts field titles and values and returns an array of formatted fields.
+  * Note that this function doesn't expect any field in item.datum to be objects.
+  * If item.datum contains object fields, please use prepareCustomFieldsData().
+  * @return An array of formatted fields [{ title: ..., value: ...}]
   */
-  function getAllFields(item, options) {
+  function prepareAllFieldsData(item, options) {
     var tooltipData = [];
 
-    var fieldConfigs = d3.map(options.fields, function(d) { return d.field; });
+    var fields = d3.map(options.fields, function(d) { return d.field; });
 
     var itemData = d3.map(item.datum);
 
+    // these fields should be hidden by default in tooltip
     var removeKeys = [
       "_id", "_prev",
       "count_start", "count_end",
@@ -389,27 +394,30 @@
     ];
     removeFields(itemData, removeKeys);
 
-    // TODO(zening): if there are binned fields, remove _start, _end, _mid, _range fields, add bin_field and its value
+    /* TODO(zening): if there are binned fields, remove bin_start, bin_end, bin_mid, and
+    bin_range fields; add bin_field and its value */
 
+    // partial fix for issue #1: drop quantitative fields for line charts and area charts
     dropFieldsForLineArea(item.mark.marktype, itemData);
 
     itemData.forEach(function(field, value) {
-      // get title
+      // prepare title
       var title;
-      if(fieldConfigs.has(field) && fieldConfigs.get(field).title) {
-        title = fieldConfigs.get(field).title;
+      if(fields.has(field) && fields.get(field).title) {
+        title = fields.get(field).title;
       }
       else {
         title = field;
       }
 
       // format value
-      if (fieldConfigs.has(field)) {
-        var formatType = fieldConfigs.get(field).formatType;
-        var format = fieldConfigs.get(field).format;
+      if (fields.has(field)) {
+        var formatType = fields.get(field).formatType;
+        var format = fields.get(field).format;
       }
       var formattedValue = customFormat(value, formatType, format) || autoFormat(value);
 
+      // add formatted data to tooltipData
       tooltipData.push({title: title, value: formattedValue});
     });
 
@@ -421,8 +429,8 @@
   *
   * Certain meta data fields (e.g. "_id", "_prev") should be hidden in the tooltip
   * by default. This function can be used to remove these fields from tooltip data.
-  * @param {d3.map} dataMap - the data map that contains tooltip data
-  * @param {string[]} removeKeys - the fields that should be removed from dataMap
+  * @param {d3.map} dataMap - the data map that contains tooltip data.
+  * @param {string[]} removeKeys - the fields that should be removed from dataMap.
   */
   function removeFields(dataMap, removeKeys) {
     removeKeys.forEach(function(key) {
@@ -470,12 +478,15 @@
   }
 
   /**
-  * Use formatType and format to format time, number or string value
-  * @return the formatted time, number or string value, or undefined if value or
-  * formatType is missing
+  * Format value using formatType and format
+  * @param value - a field value to be formatted
+  * @param formatType - the foramtType can be: "time", "number", or "string"
+  * @param format - a d3 time format specifier, or a d3 number format specifier, or undefined
+  * @return the formatted value, or undefined if value or formatType is missing
   */
   function customFormat(value, formatType, format) {
-    if (!value || !formatType) return;
+    if (value === undefined || value === null) return;
+    if (!formatType) return;
 
     switch (formatType) {
       case "time":
@@ -490,7 +501,7 @@
 
   /**
   * Automatically format a time, number or string value
-  * @return the formated time, number or string value
+  * @return the formatted time, number or string value
   */
   function autoFormat(value) {
     switch (dl.type(value)) {
@@ -507,12 +518,13 @@
 
 
   /**
-  * Get the HTML placeholder by id "#vis-tooltip"
-  * If none exists, create an element
+  * Get the tooltip HTML placeholder by id selector "#vis-tooltip"
+  * If none exists, create a placeholder.
   * @returns the HTML placeholder for tooltip
   */
   function getTooltipPlaceholder() {
     var tooltipPlaceholder;
+    
     if (d3.select("#vis-tooltip").empty()) {
       tooltipPlaceholder = d3.select("body").append("div")
         .attr("id", "vis-tooltip");
@@ -520,6 +532,7 @@
     else {
       tooltipPlaceholder = d3.select("#vis-tooltip");
     }
+    
     return tooltipPlaceholder;
   }
 
@@ -542,23 +555,23 @@
   * Clear tooltip data
   */
   function clearData() {
-    var tooltipRows = d3.select("#vis-tooltip").selectAll(".tooltip-row").data([]);
-    tooltipRows.exit().remove();
+    d3.select("#vis-tooltip").selectAll(".tooltip-row").data([])
+      .exit().remove();
   }
 
   /**
   * Update tooltip position
   * Default position is 10px right of and 10px below the cursor. This can be
-  * overwritten by options.
+  * overwritten by options.offset
   */
   function updatePosition(event, options) {
     // determine x and y offsets, defaults are 10px
     var offsetX = 10;
     var offsetY = 10;
-    if (options && options.offset && !(options.offset.x === undefined)) {
+    if (options && options.offset && (options.offset.x !== undefined) && (options.offset.x !== null)) {
       offsetX = options.offset.x;
     }
-    if (options && options.offset && !(options.offset.y === undefined)) {
+    if (options && options.offset && (options.offset.y !== undefined) && (options.offset.y !== null)) {
       offsetY = options.offset.y;
     }
 
@@ -593,6 +606,7 @@
   */
   function updateColorTheme(options) {
     clearColorTheme();
+    
     if (options && options.colorTheme === "dark") {
       d3.select("#vis-tooltip").classed("dark-theme", true);
     }
