@@ -16,7 +16,7 @@
     "vega": "^2.5.0",
     "vega-datasets": "vega/vega-datasets#gh-pages",
     "vega-embed": "^2.1.0",
-    "vega-lite": "^1.0.8"
+    "vega-lite": "^1.0.9"
   },
   "repository": {
     "type": "git",
