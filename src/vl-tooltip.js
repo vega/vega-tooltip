@@ -90,26 +90,26 @@
     // if showAllFields is true or undefined, supplement all fields in vlSpec
     if (options.showAllFields !== false) {
       vl.spec.fieldDefs(vlSpec).forEach(function(fieldDef){
-        // get a field in options that matches the fieldDef
-        var field = getField(options.fields, fieldDef);
+        // get a fieldOption in options that matches the fieldDef
+        var fieldOption = getFieldOption(options.fields, fieldDef);
 
-        // supplement the field with fieldDef, timeFormat and numberFormat
-        var supplementedField = supplementField(field, fieldDef, timeFormat, numberFormat);
+        // supplement the fieldOption with fieldDef, timeFormat and numberFormat
+        var supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, timeFormat, numberFormat);
 
-        supplementedFields.push(supplementedField);
+        supplementedFields.push(supplementedFieldOption);
       });
     }
     // if showAllFields is false, only supplement existing fields in options.fields
     else {
       if (options.fields && options.fields.length > 0) {
-        options.fields.forEach(function(field) {
-          // get the fieldDef in vlSpec that matches the field
-          var fieldDef = getFieldDef(vl.spec.fieldDefs(vlSpec), field);
+        options.fields.forEach(function(fieldOption) {
+          // get the fieldDef in vlSpec that matches the fieldOption
+          var fieldDef = getFieldDef(vl.spec.fieldDefs(vlSpec), fieldOption);
 
-          // supplement the field with fieldDef, timeFormat and numberFormat
-          var supplementedField = supplementField(field, fieldDef, timeFormat, numberFormat);
+          // supplement the fieldOption with fieldDef, timeFormat and numberFormat
+          var supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, timeFormat, numberFormat);
 
-          supplementedFields.push(supplementedField);
+          supplementedFields.push(supplementedFieldOption);
         })
       }
     }
@@ -122,34 +122,34 @@
   }
 
   /**
-  * Find a field in fields that matches a fieldDef
+  * Find a fieldOption in fieldOptions that matches a fieldDef
   *
-  * @param {Object[]} fields - list of field options (i.e. options.fields)
+  * @param {Object[]} fieldOptionss - a list of field options (i.e. options.fields[])
   * @param {Object} fieldDef - from vlSpec
-  * @return the matching field, or undefined if no match was found
+  * @return the matching fieldOption, or undefined if no match was found
   *
-  * If the fieldDef is aggregated, find a field that matches the field name and
+  * If the fieldDef is aggregated, find a fieldOption that matches the field name and
   * the aggregation of the fieldDef.
-  * If the fieldDef is not aggregated, find a field that matches the field name.
+  * If the fieldDef is not aggregated, find a fieldOption that matches the field name.
   */
-  function getField(fields, fieldDef) {
-    if (!fieldDef || !fields || fields.length <= 0) return;
+  function getFieldOption(fieldOptions, fieldDef) {
+    if (!fieldDef || !fieldOptions || fieldOptions.length <= 0) return;
 
     // if aggregate, match field name and aggregate operation
     if (fieldDef.aggregate) {
       // try find the perfect match: field name equals, aggregate operation equals
-      for (var i = 0; i < fields.length; i++) {
-        var field = fields[i];
-        if (field.field === fieldDef.field && field.aggregate === fieldDef.aggregate) {
-          return field;
+      for (var i = 0; i < fieldOptions.length; i++) {
+        var fieldOption = fieldOptions[i];
+        if (fieldOption.field === fieldDef.field && fieldOption.aggregate === fieldDef.aggregate) {
+          return fieldOption;
         }
       }
 
       // try find the second-best match: field name equals, field.aggregate is not specified
-      for (var i = 0; i < fields.length; i++) {
-        var field = fields[i];
-        if (field.field === fieldDef.field && !field.aggregate) {
-          return field;
+      for (var i = 0; i < fieldOptions.length; i++) {
+        var fieldOption = fieldOptions[i];
+        if (fieldOption.field === fieldDef.field && !fieldOption.aggregate) {
+          return fieldOption;
         }
       }
       
@@ -158,10 +158,10 @@
     }
     // if not aggregate, just match field name
     else {
-      for (var i = 0; i < fields.length; i++) {
-        var field = fields[i];
-        if (field.field === fieldDef.field) {
-          return field;
+      for (var i = 0; i < fieldOptions.length; i++) {
+        var fieldOption = fieldOptions[i];
+        if (fieldOption.field === fieldDef.field) {
+          return fieldOption;
         }
       }
       
@@ -171,25 +171,25 @@
   }
 
   /**
-  * Find a fieldDef that matches field
+  * Find a fieldDef that matches a fieldOption
   *
   * @param {Object[]} fieldDefs - array of fieldDefs from vlSpec
-  * @param {Object} field - a field option (a member in options.fields[] array)
+  * @param {Object} fieldOption - a field option (a member in options.fields[])
   * @return the matching fieldDef, or undefined if no match was found
   *
-  * A matching fieldDef should have the same field name as field.
+  * A matching fieldDef should have the same field name as fieldOption.
   * If the matching fieldDef is aggregated, the aggregation should not contradict
-  * with that of the field.
+  * with that of the fieldOption.
   */
-  function getFieldDef(fieldDefs, field) {
-    if (!field || !field.field || !fieldDefs) return;
+  function getFieldDef(fieldDefs, fieldOption) {
+    if (!fieldOption || !fieldOption.field || !fieldDefs) return;
 
     // field name should match, aggregation should not disagree
     for (var i = 0; i < fieldDefs.length; i++) {
       var fieldDef = fieldDefs[i];
-      if (fieldDef.field === field.field) {
+      if (fieldDef.field === fieldOption.field) {
         if (fieldDef.aggregate) {
-          if (fieldDef.aggregate === field.aggregate || !field.aggregate) {
+          if (fieldDef.aggregate === fieldOption.aggregate || !fieldOption.aggregate) {
             return fieldDef;
           }
         }
@@ -204,57 +204,57 @@
   }
 
   /**
-  * Supplement a field (from options) with a fieldDef, timeFormat and numberFormat
-  * Either field or fieldDef can be undefined, but they cannot both be undefined.
+  * Supplement a fieldOption (from options.fields[]) with a fieldDef, timeFormat and numberFormat
+  * Either fieldOption or fieldDef can be undefined, but they cannot both be undefined.
   * timeFormat and numberFormat can be undefined.
-  * @return the supplemented field, or undefined on error
+  * @return the supplemented fieldOption, or undefined on error
   */
-  function supplementField(field, fieldDef, timeFormat, numberFormat) {
-    // at least one of field and fieldDef should exist
-    if (!field && !fieldDef) {
+  function supplementFieldOption(fieldOption, fieldDef, timeFormat, numberFormat) {
+    // at least one of fieldOption and fieldDef should exist
+    if (!fieldOption && !fieldDef) {
       console.error("[Tooltip] Cannot supplement a field when field and fieldDef are both empty.");
       return;
     }
     
-    // if either one of field and fieldDef is undefined, make it an empty object
-    if (!field && fieldDef) field = {};
-    if (field && !fieldDef) fieldDef = {};
+    // if either one of fieldOption and fieldDef is undefined, make it an empty object
+    if (!fieldOption && fieldDef) fieldOption = {};
+    if (fieldOption && !fieldDef) fieldDef = {};
 
-    // the supplemented field config
-    var supplementedField = {};
+    // the supplemented field option
+    var supplementedFieldOption = {};
 
     // supplement field name with underscore prefixes (e.g. "mean_", "yearmonth_") to match the field names in item.datum
-    supplementedField.field = fieldDef.field ?
-      vl.fieldDef.field(fieldDef) : field.field;
+    supplementedFieldOption.field = fieldDef.field ?
+      vl.fieldDef.field(fieldDef) : fieldOption.field;
 
     // supplement title
-    supplementedField.title = field.title ?
-      field.title : vl.fieldDef.title(fieldDef);
+    supplementedFieldOption.title = fieldOption.title ?
+      fieldOption.title : vl.fieldDef.title(fieldDef);
 
     // supplement formatType
-    supplementedField.formatType = field.formatType ?
-      field.formatType : formatTypeMap[fieldDef.type];
+    supplementedFieldOption.formatType = fieldOption.formatType ?
+      fieldOption.formatType : formatTypeMap[fieldDef.type];
 
     // supplement format
-    if (field.format) {
-      supplementedField.format = field.format;
+    if (fieldOption.format) {
+      supplementedFieldOption.format = fieldOption.format;
     }
     // when user doesn't provide format, supplement format using timeUnit, timeFormat, and numberFormat
     else {
-      switch (supplementedField.formatType) {
+      switch (supplementedFieldOption.formatType) {
         case "time":
-          supplementedField.format = fieldDef.timeUnit ?
+          supplementedFieldOption.format = fieldDef.timeUnit ?
             vl.timeUnit.format(fieldDef.timeUnit) : timeFormat;
           break;
         case "number":
-          supplementedField.format = numberFormat;
+          supplementedFieldOption.format = numberFormat;
           break;
         case "string":
         default:
       }
     }
 
-  return supplementedField;
+  return supplementedFieldOption;
   }
 
 
