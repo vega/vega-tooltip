@@ -172,31 +172,35 @@
 
   /**
   * Find a fieldDef that matches field
+  *
+  * @param {Object[]} fieldDefs - array of fieldDefs from vlSpec
+  * @param {Object} field - a field option (a member in options.fields[] array)
+  * @return the matching fieldDef, or undefined if no match was found
+  *
   * A matching fieldDef should have the same field name as field.
   * If the matching fieldDef is aggregated, the aggregation should not contradict
   * with that of the field.
-  * @return the matching fieldDef, or undefined if no match was found
   */
   function getFieldDef(fieldDefs, field) {
     if (!field || !field.field || !fieldDefs) return;
 
-    var matchedFieldDef = undefined;
-
     // field name should match, aggregation should not disagree
-    fieldDefs.forEach(function(fieldDef) {
-      if (!matchedFieldDef && fieldDef.field === field.field) {
+    for (var i = 0; i < fieldDefs.length; i++) {
+      var fieldDef = fieldDefs[i];
+      if (fieldDef.field === field.field) {
         if (fieldDef.aggregate) {
-          if (fieldDef.aggregate === field.aggregate || field.aggregate === undefined) {
-            matchedFieldDef = fieldDef;
+          if (fieldDef.aggregate === field.aggregate || !field.aggregate) {
+            return fieldDef;
           }
         }
         else {
-          matchedFieldDef = fieldDef;
+          return fieldDef;
         }
       }
-    });
+    }
 
-    return matchedFieldDef;
+    // return undefined if no match was found
+    return;
   }
 
   /**
