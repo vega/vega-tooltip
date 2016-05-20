@@ -13,6 +13,7 @@ http://vega.github.io/vega-lite-tooltip/
 
 ## APIs
 For Vega-Lite: [`vl.tooltip(vgView, vlSpec[, options])`](https://github.com/vega/vega-lite-tooltip/wiki/APIs#vltooltip)
+
 For Vega: [`vg.tooltip(vgView[, options])`](https://github.com/vega/vega-lite-tooltip/wiki/APIs#vltooltip)
 
 ## Tutorials
