@@ -374,7 +374,7 @@
 
   /**
   * Prepare data for all fields in item.datum for tooltip. This function 
-  * foramts field titles and values and returns an array of formatted fields.
+  * formats field titles and values and returns an array of formatted fields.
   * Note that this function doesn't expect any field in item.datum to be objects.
   * If item.datum contains object fields, please use prepareCustomFieldsData().
   * @return An array of formatted fields [{ title: ..., value: ...}]
