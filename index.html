@@ -1,115 +1,74 @@
 <!DOCTYPE html>
 <head>
-  <title>Vega Lite Bar Chart</title>
+  <title>Tooltip Examples</title>
   <meta charset="utf-8">
 
-  <script src="https://d3js.org/d3.v3.min.js"></script>
-  <script src="https://vega.github.io/vega/vega.js"></script>
-  <script src="https://vega.github.io/vega-lite/vega-lite.js"></script>
-  <script src="https://vega.github.io/vega-editor/vendor/vega-embed.js" charset="utf-8"></script>
-  <script src="src/vl-tooltip.js" charset="utf-8"></script>
+  <!-- Dependencies -->
+  <script src="node_modules/d3/d3.min.js"></script>
+  <script src="node_modules/vega/vega.min.js"></script>
+  <script src="node_modules/vega-lite/vega-lite.min.js"></script>
+  <script src="node_modules/vega-embed/vega-embed.js" charset="utf-8"></script>
+  <script src="node_modules/datalib/datalib.min.js"></script>
+
+  <!-- Tooltip Library -->
+  <script src="src/vl-tooltip.js"></script>
   <link rel="stylesheet" type="text/css" href="src/vl-tooltip.css">
 
-  <style media="screen">
-    /* Add space between vega-embed links  */
-    .vega-actions a {
-      margin-right: 5px;
-    }
-  </style>
+  <!-- Example Page -->
+  <script src="examples.js"></script>
+  <link rel="stylesheet" type="text/css" href="examples.css">
 
-  <script>
-  // Scatter Plot
-  var scatterSpec = {
-    "data": {"url": "data/cars.json"},
-    "mark": "circle",
-    "encoding": {
-      "x": {"field": "Horsepower", "type": "quantitative"},
-      "y": {"field": "Miles_per_Gallon", "type": "quantitative"}
-    }};
-  var scatterEmbed = {
-    mode: "vega-lite",  // Instruct Vega-Embed to use the Vega-Lite compiler
-    spec: scatterSpec
-  };
-  vg.embed("#vis-scatter", scatterEmbed, function(error, result) {
-    addTooltip(result.view);
-  });
-
-  // Stacked Bar Chart
-  var stackedbarSpec = {
-    "data": {"url": "data/seattle-weather.csv", "formatType": "csv"},
-    "mark": "bar",
-    "encoding": {
-      "x": {
-        "field": "date",
-        "type": "temporal",
-        "timeUnit": "month",
-        "axis": {"title": "Month of the year"}
-      },
-      "y": {
-        "field": "*",
-        "type": "quantitative",
-        "aggregate": "count"
-      },
-      "color": {
-        "field": "weather",
-        "type": "nominal",
-        "scale": {
-          "domain": ["sun","fog","drizzle","rain","snow"],
-          "range": ["#e7ba52","#c7c7c7","#aec7e8","#1f77b4","#9467bd"]
-        },
-        "legend": {
-          "title": "Weather type"
-        }
-      }
-    }
-  };
-  var stackedbarEmbed = {
-    mode: "vega-lite",
-    spec: stackedbarSpec
-  };
-  vg.embed("#vis-stacked-bar", stackedbarEmbed, function(error, result) {
-    addTooltip(result.view);
-  });
-
-  // Simple Bar Chart
-  var barSpec = {
-    "description": "A simple bar chart with embedded data.",
-    "data": {
-      "values": [
-        {"a": "A","b": 28}, {"a": "B","b": 55}, {"a": "C","b": 43},
-        {"a": "D","b": 91}, {"a": "E","b": 81}, {"a": "F","b": 53},
-        {"a": "G","b": 19}, {"a": "H","b": 87}, {"a": "I","b": 52}
-      ]
-    },
-    "mark": "bar",
-    "encoding": {
-      "x": {"field": "a", "type": "ordinal"},
-      "y": {"field": "b", "type": "quantitative"}
-    }
-  };
-  var barEmbed = {
-    mode: "vega-lite",
-    spec: barSpec
-  }
-  vg.embed("#vis-bar", barEmbed, function(error, result) {
-    addTooltip(result.view);
-  })
-
-  </script>
 </head>
+
 <body>
-  <!-- Scatter Plot Tooltip Example -->
+  <h1>Vega-Lite Tooltip Examples</h1>
+
+  <!-- Scatter Plot -->
   <div id="vis-scatter" class="tooltip-example"></div>
 
-  <!-- Stacked Bar Chart Tooltip Example -->
-  <div id="vis-stacked-bar" class="tooltip-example"></div>
+  <!-- Bubble Plot -->
+  <div id="vis-bubble-multi-aggr" class="tooltip-example"></div>
 
-  <!-- Simple Bar Chart Example -->
+  <!-- Trellis Barley -->
+  <div id="vis-trellis-barley" class="tooltip-example"></div>
+
+
+  <!-- Simple Bar Chart -->
   <div id="vis-bar" class="tooltip-example"></div>
 
+  <!-- Stacked Bar Chart -->
+  <div id="vis-stacked-bar" class="tooltip-example"></div>
+
+  <!-- Layered Bar Chart -->
+  <div id="vis-layered-bar" class="tooltip-example"></div>
+
+
+  <!-- TODO(zening): use vega-lite layering to support line charts and area charts (issue #1) -->
+  <!-- Line Chart -->
+  <div id="vis-line" class="tooltip-example"></div>
+
+  <!-- Color Line Chart -->
+  <div id="vis-color-line" class="tooltip-example"></div>
+
+  <!-- Area Chart -->
+  <div id="vis-area-vertical" class="tooltip-example"></div>
+
+
+  <h1>Vega Tooltip Examples</h1>
+  <!-- Arc -->
+  <div id="vis-arc" class="tooltip-example"></div>
+
+  <!-- Choropleth -->
+  <div id="vis-choropleth" class="tooltip-example"></div>
+
+  <!-- Force -->
+  <div id="vis-force" class="tooltip-example"></div>
+
+  <!-- Heatmap -->
+  <div id="vis-heatmap" class="tooltip-example"></div>
+
   <!-- Placeholder for Tooltip -->
-  <table class="vis-tooltip">
-  </table>
+  <div id="vis-tooltip" class="vl-tooltip"></div>
 
 </body>
 </html>
