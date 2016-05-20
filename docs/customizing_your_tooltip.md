@@ -7,6 +7,10 @@ You can customize the content and look of your tooltip by passing in an optional
 For [Vega-Lite](https://vega.github.io/vega-lite/):
 
 ```js
+var embedSpec = {
+  mode: "vega-lite",
+  spec: vlSpec
+};
 vg.embed("#vis-scatter", embedSpec, function(error, result) {
   // result.view is the Vega View, vlSpec is the original Vega-Lite specification
   vl.tooltip(result.view, vlSpec, options); // pass in options
