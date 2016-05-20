@@ -70,6 +70,11 @@
 
   /**
   * (Vega-Lite only) Supplement options with vlSpec
+  *
+  * @param options - user-provided options
+  * @param vlSpec - vega-lite spec
+  * @return the vlSpec-supplemented options object
+  * 
   * if options.showAllFields is true or undefined, vlSpec will supplement
   * options.fields with all fields in the spec
   * if options.showAllFields is false, vlSpec will only supplement existing fields
@@ -118,44 +123,51 @@
 
   /**
   * Find a field in fields that matches a fieldDef
+  *
+  * @param {Object[]} fields - list of field options (i.e. options.fields)
+  * @param {Object} fieldDef - from vlSpec
+  * @return the matching field, or undefined if no match was found
+  *
   * If the fieldDef is aggregated, find a field that matches the field name and
   * the aggregation of the fieldDef.
   * If the fieldDef is not aggregated, find a field that matches the field name.
-  * @return the matching field, or undefined if no match was found
   */
   function getField(fields, fieldDef) {
     if (!fieldDef || !fields || fields.length <= 0) return;
 
-    var matchedField = undefined;
-
     // if aggregate, match field name and aggregate operation
     if (fieldDef.aggregate) {
       // try find the perfect match: field name equals, aggregate operation equals
-      fields.forEach(function(field) {
-        if (!matchedField && field.field === fieldDef.field && field.aggregate === fieldDef.aggregate) {
-          matchedField = field;
+      for (var i = 0; i < fields.length; i++) {
+        var field = fields[i];
+        if (field.field === fieldDef.field && field.aggregate === fieldDef.aggregate) {
+          return field;
         }
-      });
-
-      // try find the second-best match: field name equals, field.aggregate = undefined
-      if (!matchedField) {
-        fields.forEach(function(field) {
-          if (!matchedField && field.field === fieldDef.field && field.aggregate === undefined) {
-            matchedField = field;
-          }
-        });
       }
+
+      // try find the second-best match: field name equals, field.aggregate is not specified
+      for (var i = 0; i < fields.length; i++) {
+        var field = fields[i];
+        if (field.field === fieldDef.field && !field.aggregate) {
+          return field;
+        }
+      }
+      
+      // return undefined if no match was found
+      return;
     }
     // if not aggregate, just match field name
     else {
-      fields.forEach(function(field) {
-        if (!matchedField && field.field === fieldDef.field) {
-          matchedField = field;
+      for (var i = 0; i < fields.length; i++) {
+        var field = fields[i];
+        if (field.field === fieldDef.field) {
+          return field;
         }
-      });
+      }
+      
+      // return undefined if no match was found
+      return;
     }
-
-    return matchedField;
   }
 
   /**
