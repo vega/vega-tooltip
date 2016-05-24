@@ -1,3 +1,5 @@
+"use strict";
+
 (function() {
 
   function addVlExample(path, id, options) {
@@ -5,11 +7,11 @@
       if (error) {
         return console.warn(error);
       }
-      var stackedbarEmbed = {
+      var embedSpec = {
         mode: "vega-lite",
         spec: vlSpec
       };
-      vg.embed(id, stackedbarEmbed, function(error, result) {
+      vg.embed(id, embedSpec, function(error, result) {
         vl.tooltip(result.view, vlSpec, options);
       });
     });
@@ -32,8 +34,8 @@
   var scatterOpts = {
     showAllFields: false,
     fields: [
-      {field: "Name"},
-      {field: "Horsepower"},
+      { field: "Name" },
+      { field: "Horsepower" },
       {
         field: "Miles_per_Gallon",
         title: "Miles per Gallon"
@@ -60,10 +62,10 @@
       }
     ]
   }
-  addVlExample("exampleSpecs/bubble_multiple_aggregation.json", "#vis-bubble-multiagg", bubbleOpts);
+  addVlExample("exampleSpecs/bubble_multiple_aggregation.json", "#vis-bubble-multi-aggr", bubbleOpts);
 
   // Trellis Barley
-  var trellisBarOpts = {
+  var trellisBarleyOpts = {
     showAllFields: false,
     fields: [
       {
@@ -71,12 +73,15 @@
         formatType: "number",
         format: ".2f"
       },
-      {field: "year"},
-      {field: "variety"},
-      {field: "site"}
+      {
+        field: "year",
+        formatType: "string"
+      },
+      { field: "variety" },
+      { field: "site" }
     ]
   };
-  addVlExample("exampleSpecs/trellis_barley.json", "#vis-trellis-barley", trellisBarOpts);
+  addVlExample("exampleSpecs/trellis_barley.json", "#vis-trellis-barley", trellisBarleyOpts);
 
   // Scatter Binned
   var binMovieOpts = {
@@ -88,34 +93,14 @@
     ]
   };
   addVlExample("exampleSpecs/scatter_binned.json", "#vis-scatter-binned", binMovieOpts);
-
+  
   // Simple Bar Chart
   addVlExample("exampleSpecs/bar.json", "#vis-bar");
 
   // Stacked Bar Chart
-  // var stackedBarOpts = {
-  //   showAllFields: false,
-  //   fields: [
-  //     {field: "weather"},
-  //     {field: "*"},
-  //     {field: "date"}
-  //   ]
-  // };
   addVlExample("exampleSpecs/stacked_bar_weather.json", "#vis-stacked-bar");
 
   // Layered Bar Chart
-  // var layeredBarOpts = {
-  //   showAllFields: false,
-  //   fields: [
-  //     {field: "gender"},
-  //     {field: "age"},
-  //     {
-  //       field: "people",
-  //       title: "population",
-  //       formatType: "number"
-  //     }
-  //   ]
-  // };
   addVlExample("exampleSpecs/bar_layered_transparent.json", "#vis-layered-bar");
 
   // Line Chart
@@ -134,12 +119,6 @@
 
   /* Vega Examples */
   // Arc
-  // var arcOpts = {
-  //   showAllFields: false,
-  //   fields: [
-  //     {field: "data"}
-  //   ]
-  // }
   addVgExample("exampleSpecs/arc.json", "#vis-arc");
 
   // Choropleth
@@ -165,7 +144,7 @@
   var forceOpts = {
     showAllFields: false,
     fields: [
-      {field: "name"}
+      { field: "name" }
     ]
   }
   addVgExample("exampleSpecs/force.json", "#vis-force", forceOpts);
@@ -183,7 +162,7 @@
         formatType: "time",
         format: "%B %e"
       },
-      {field: "hour"}
+      { field: "hour" }
     ]
   }
   addVgExample("exampleSpecs/heatmap.json", "#vis-heatmap", heatmapOpts);

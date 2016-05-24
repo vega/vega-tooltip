@@ -1,20 +1,18 @@
 <!DOCTYPE html>
 <head>
-  <title>Vega Lite Bar Chart</title>
+  <title>Tooltip Examples</title>
   <meta charset="utf-8">
 
   <!-- Dependencies -->
-  <script src="https://d3js.org/d3.v3.min.js"></script>
-  <script src="https://vega.github.io/vega/vega.min.js"></script>
-  <script src="https://vega.github.io/vega-lite/vega-lite.min.js"></script>
-  <script src="https://vega.github.io/vega-editor/vendor/vega-embed.js" charset="utf-8"></script>
-  <script src="https://vega.github.io/vega-editor/vendor/d3.geo.projection.min.js"></script>
-  <script src="https://vega.github.io/vega-editor/vendor/topojson.js"></script>
-  <script src="https://vega.github.io/datalib/datalib.min.js"></script>
+  <script src="node_modules/d3/d3.min.js"></script>
+  <script src="node_modules/vega/vega.min.js"></script>
+  <script src="node_modules/vega-lite/vega-lite.min.js"></script>
+  <script src="node_modules/vega-embed/vega-embed.js" charset="utf-8"></script>
+  <script src="node_modules/datalib/datalib.min.js"></script>
 
   <!-- Tooltip Library -->
-  <script src="src/vg-tooltip.js"></script>
-  <link rel="stylesheet" type="text/css" href="src/vg-tooltip.css">
+  <script src="src/vl-tooltip.js"></script>
+  <link rel="stylesheet" type="text/css" href="src/vl-tooltip.css">
 
   <!-- Example Page -->
   <script src="examples.js"></script>
@@ -29,7 +27,7 @@
   <div id="vis-scatter" class="tooltip-example"></div>
 
   <!-- Bubble Plot -->
-  <div id="vis-bubble-multiagg" class="tooltip-example"></div>
+  <div id="vis-bubble-multi-aggr" class="tooltip-example"></div>
 
   <!-- Trellis Barley -->
   <div id="vis-trellis-barley" class="tooltip-example"></div>
@@ -47,6 +45,7 @@
   <div id="vis-layered-bar" class="tooltip-example"></div>
 
 
+  <!-- TODO(zening): use vega-lite layering to support line charts and area charts (issue #1) -->
   <!-- Line Chart -->
   <div id="vis-line" class="tooltip-example"></div>
 
@@ -71,7 +70,7 @@
   <div id="vis-heatmap" class="tooltip-example"></div>
 
   <!-- Placeholder for Tooltip -->
-  <table id="vis-tooltip" class="vg-tooltip"></table>
+  <div id="vis-tooltip" class="vl-tooltip"></div>
 
 </body>
 </html>

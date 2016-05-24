@@ -1,2 +1,5 @@
 data
 node_modules
+/vl-tooltip.min.js
+/vl-tooltip.css
+settings.json
