@@ -114,8 +114,6 @@
       }
     }
 
-    // TODO(zening): supplement binned fields
-
     options.fields = supplementedFields;
 
     return options;
@@ -257,7 +255,7 @@
     // supplement bin from fieldDef, user should never have to provide bin
     if (fieldDef.bin) {
       supplementedFieldOption.bin = true;
-      supplementedFieldOption.formatType = 'string'; // we show bin range as string (e.g. 5-10)
+      supplementedFieldOption.formatType = 'string'; // we show bin range as string (e.g. "5-10")
       supplementedFieldOption.format = undefined;
     }
 
@@ -331,7 +329,7 @@
     removeFields(itemData, removeKeys);
 
     // combine multiple rows of a binned field into a single row
-    combineBinFields(options.fields, itemData);
+    combineBinFields(itemData, options.fields);
 
     // TODO(zening): use Vega-Lite layering to support tooltip on line and area charts (#1)
     dropFieldsForLineArea(item.mark.marktype, itemData);
@@ -350,21 +348,24 @@
   /**
   * Prepare custom fields data for tooltip. This function foramts 
   * field titles and values and returns an array of formatted fields.
-  * @return An array of formatted fields [{ title: ..., value: ...}]
+  *
+  * @param {d3.map} itemData - a map of item.datum
+  * #param {Object} options - user-provided options
+  * @return An array of formatted fields specified by options [{ title: ..., value: ...}]
   */
   function prepareCustomFieldsData(itemData, options) {
     var tooltipData = [];
 
-    options.fields.forEach(function(field) {
+    options.fields.forEach(function(fieldOption) {
       // prepare field title
-      var title = field.title ? field.title : field.field;
+      var title = fieldOption.title ? fieldOption.title : fieldOption.field;
 
       // get (raw) field value
-      var value = getValue(itemData, field.field);
+      var value = getValue(itemData, fieldOption.field);
       if (value === undefined) return;
 
       // format value
-      var formattedValue = customFormat(value, field.formatType, field.format) || autoFormat(value);
+      var formattedValue = customFormat(value, fieldOption.formatType, fieldOption.format) || autoFormat(value);
 
       // add formatted data to tooltipData
       tooltipData.push({title: title, value: formattedValue});
@@ -414,15 +415,23 @@
 
 
   /**
-  * Prepare data for all fields in item.datum for tooltip. This function 
+  * Prepare data for all fields in itemData for tooltip. This function 
   * formats field titles and values and returns an array of formatted fields.
-  * Note that this function doesn't expect any field in itemData to be objects.
-  * If itemData contains object fields, please use prepareCustomFieldsData().
-  * @return An array of formatted fields [{ title: ..., value: ...}]
+  * 
+  * @param {d3.map} itemData - a map of item.datum
+  * @param {Object} options - user-provided options
+  * @return All fields in itemData, formatted, in the form of an array: [{ title: ..., value: ...}]
+  *
+  * Please note that this function expects itemData to be simple {field:value} pairs.
+  * It will not try to parse value if it is an object. If value is an object, please
+  * use prepareCustomFieldsData() instead.
   */
   function prepareAllFieldsData(itemData, options) {
+    console.log(itemData);
+    
     var tooltipData = [];
 
+    // here, fieldOptions still provides format
     var fieldOptions = d3.map(options.fields, function(d) { return d.field; });
 
     itemData.forEach(function(field, value) {
@@ -464,34 +473,37 @@
   }
 
   /**
-  * @return itemData
+  * Combine multiple binned fields in itemData into one field. The value of the field
+  * is a string that describes the bin range.
+  *
+  * @param {d3.map} itemData - a map of item.datum
+  * @param {Object[]} fieldOptions - a list of field options (i.e. options.fields[])
+  * @return itemData with combined bin fields
   */
-  // if there are binned fields, remove bin_end, bin_mid, bin_range fields,
-  // keep bin_field_start and compute the range
-  // for now, don't support formatting for binned fields
-  function combineBinFields(optFields, itemData) {
-    if (!optFields) return;
+  function combineBinFields(itemData, fieldOptions) {
+    if (!fieldOptions) return;
 
-    optFields.forEach(function(optFld) {
-      if (optFld.bin === true) {
+    fieldOptions.forEach(function(fieldOption) {
+      if (fieldOption.bin === true) {
 
-        var bin_start = optFld.field;
-        var bin_end = bin_start.replace('_start', '_end');
-        var bin_mid = bin_start.replace('_start', '_mid');
-        var bin_range = bin_start.replace('_start', '_range');
+        // get binned field names
+        var bin_field_start = fieldOption.field;
+        var bin_field_end = bin_field_start.replace('_start', '_end');
+        var bin_field_mid = bin_field_start.replace('_start', '_mid');
+        var bin_field_range = bin_field_start.replace('_start', '_range');
 
         // use start value and end value to compute range
-        // save the computed range in bin_start
-        var start = itemData.get(bin_start);
-        var end = itemData.get(bin_end);
-        if ((start != undefined) && (end != undefined)) {
-          var range = start + '-' + end;
-          itemData.set(bin_start, range);
+        // save the computed range in bin_field_start
+        var startValue = itemData.get(bin_field_start);
+        var endValue = itemData.get(bin_field_end);
+        if ((startValue !== undefined) && (endValue !== undefined)) {
+          var range = startValue + '-' + endValue;
+          itemData.set(bin_field_start, range);
         }
 
-        // remove bin_mid, bin_end, and bin_range from itemData
+        // remove bin_field_mid, bin_field_end, and bin_field_range from itemData
         var binRemoveKeys = [];
-        binRemoveKeys.push(bin_mid, bin_end, bin_range);
+        binRemoveKeys.push(bin_field_mid, bin_field_end, bin_field_range);
         removeFields(itemData, binRemoveKeys);
       }
     });
