@@ -427,8 +427,6 @@
   * use prepareCustomFieldsData() instead.
   */
   function prepareAllFieldsData(itemData, options) {
-    console.log(itemData);
-    
     var tooltipData = [];
 
     // here, fieldOptions still provides format
