@@ -1,4 +1,4 @@
-.vl-tooltip {
+.vg-tooltip {
   display: none;
   padding: 6px;
   border-radius: 3px;
@@ -13,35 +13,35 @@
   border: 1px solid #d9d9d9;
   color: black;
 }
-.vl-tooltip td.key, .vl-tooltip td.value {
+.vg-tooltip td.key, .vg-tooltip td.value {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.vl-tooltip td.key {
+.vg-tooltip td.key {
   color: #808080;
   max-width: 150px;
   text-align: right;
   padding-right: 1px;
 }
-.vl-tooltip td.value {
+.vg-tooltip td.value {
   max-width: 200px;
   text-align: left;
 }
 
 /* Dark and light color themes */
-.vl-tooltip.dark-theme {
+.vg-tooltip.dark-theme {
   background-color: rgba(64, 64, 64, 0.9);
   border: none;
   color: white;
 }
-.vl-tooltip.dark-theme td.key {
+.vg-tooltip.dark-theme td.key {
   color: #bfbfbf;
 }
-.vl-tooltip.light-theme {
+.vg-tooltip.light-theme {
   background-color: rgba(255, 255, 255, 0.9);
   border: 1px solid #d9d9d9;
   color: black;
 }
-.vl-tooltip.light-theme td.key {
+.vg-tooltip.light-theme td.key {
   color: #808080;
 }

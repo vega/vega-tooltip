@@ -2,7 +2,7 @@
 
 (function() {
   /**
-  * Export Vega Tooltip API: vg.tooltip(vgView, options)
+  * Export API for Vega visualizations: vg.tooltip(vgView, options)
   * options can specify whether to show all fields or to show only custom fields
   * It can also provide custom title and format for fields
   */
@@ -30,7 +30,7 @@
   };
 
   /**
-  * Export Vega-Lite Tooltip API: vl.tooltip(vgView, vlSpec, options)
+  * Export API for Vega-Lite visualizations: vl.tooltip(vgView, vlSpec, options)
   * options can specify whether to show all fields or to show only custom fields
   * It can also provide custom title and format for fields
   * options can be supplemented by vlSpec

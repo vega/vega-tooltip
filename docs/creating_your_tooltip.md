@@ -5,17 +5,17 @@
 We recommend installing the tooltip library and its dependencies via [`npm`](https://www.npmjs.com/):
 
 ```bash
-npm install vega-lite-tooltip
+npm install vega-tooltip
 ```
 
 The tooltip library contains a `js` file and a `css` file:
 
 ```
-node_modules/vega-lite-tooltip/vl-tooltip.min.js
-node_modules/vega-lite-tooltip/vl-tooltip.css
+node_modules/vega-tooltip/vg-tooltip.min.js
+node_modules/vega-tooltip/vg-tooltip.css
 ```
 
-Alternatively, if you want to manually include the tooltip library and its dependencies, you can add the following lines to your HTML `<head>`. Vega-Lite Tooltip depends on [`d3`](https://d3js.org/), [`vega`](https://vega.github.io/vega/), [`vega-lite`](https://vega.github.io/vega-lite/), [`vega-embed`](https://github.com/vega/vega-embed) and [`datalib`](http://vega.github.io/datalib/).
+Alternatively, if you want to manually include the tooltip library and its dependencies, you can add the following lines to your HTML `<head>`. Vega Tooltip depends on [`d3`](https://d3js.org/), [`vega`](https://vega.github.io/vega/), [`vega-lite`](https://vega.github.io/vega-lite/), [`vega-embed`](https://github.com/vega/vega-embed) and [`datalib`](http://vega.github.io/datalib/).
 
 ```html
 <!-- Dependencies -->
@@ -25,9 +25,9 @@ Alternatively, if you want to manually include the tooltip library and its depen
 <script src="https://vega.github.io/vega-editor/vendor/vega-embed.min.js"></script>
 <script src="https://vega.github.io/datalib/datalib.min.js"></script>
 
-<!-- Vega-Lite Tooltip -->
-<script src="https://vega.github.io/vega-lite-tooltip/vl-tooltip.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://vega.github.io/vega-lite-tooltip/vl-tooltip.css">
+<!-- Vega Tooltip -->
+<script src="https://vega.github.io/vega-tooltip/vg-tooltip.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://vega.github.io/vega-tooltip/vg-tooltip.css">
 ```
 <br>
 
@@ -70,11 +70,11 @@ vg.parse.spec(vgSpec, function(error, chart) {
 
 ## Step 3. Create A Tooltip
 
-In your HTML `<body>`, create a placeholder for the tooltip. Give the placeholder an `id` named `vis-tooltip` so that it can be recognized by our plugin. Assign `class` `vl-tooltip` to the tooltip placeholder so that it can pick up the default CSS style our library provides.
+In your HTML `<body>`, create a placeholder for the tooltip. Give the placeholder an `id` named `vis-tooltip` so that it can be recognized by our plugin. Assign `class` `vg-tooltip` to the tooltip placeholder so that it can pick up the default CSS style our library provides.
 
 ```html
 <!-- Placeholder for the tooltip -->
-<div id="vis-tooltip" class="vl-tooltip"></div>
+<div id="vis-tooltip" class="vg-tooltip"></div>
 ```
 
 > Tip: Generally speaking you will only need one tooltip placeholder per page because the mouse typically only points to one thing at a time. If you have more than one visualizations in a page, the visualizations will share one tooltip placeholder.
@@ -83,7 +83,7 @@ In your HTML `<body>`, create a placeholder for the tooltip. Give the placeholde
 
 For [Vega-Lite](https://vega.github.io/vega-lite/):
 
-You can create your tooltip using [`vl.tooltip`](https://github.com/vega/vega-lite-tooltip/wiki/APIs#vltooltip). This function requires the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) and the original Vega-Lite specification as inputs.
+You can create your tooltip using [`vl.tooltip`](https://github.com/vega/vega-tooltip/wiki/APIs#vltooltip). This function requires the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) and the original Vega-Lite specification as inputs.
 
 ```js
 var embedSpec = {
@@ -98,7 +98,7 @@ vg.embed("#vis-scatter", embedSpec, function(error, result) {
 
 For [Vega](http://vega.github.io/vega/):
 
-You can create your tooltip using [`vg.tooltip`](https://github.com/vega/vega-lite-tooltip/wiki/APIs#vgtooltip). This function only requires the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) as input.
+You can create your tooltip using [`vg.tooltip`](https://github.com/vega/vega-tooltip/wiki/APIs#vgtooltip). This function only requires the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) as input.
 
 ```js
 vg.parse.spec(vgSpec, function(error, chart) {
