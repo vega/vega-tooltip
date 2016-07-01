@@ -221,8 +221,10 @@
     // the supplemented field option
     var supplementedFieldOption = {};
 
-    // supplement field name with underscore prefixes (e.g. "mean_", "yearmonth_") to match the field names in item.datum
-    supplementedFieldOption.field = fieldDef.field ?
+    // supplement field name with underscore prefixes and suffixes to match the field names in item.datum
+    // for aggregation and timeUnit, this will add prefix "mean_", "yearmonth_"
+    // for bin, this will add prefix "bin_" and suffix "_start". Later we will replace "_start" with "_range".
+    supplementedFieldOption.field = fieldDef.field ? 
       vl.fieldDef.field(fieldDef) : fieldOption.field;
 
     // supplement title
@@ -254,11 +256,10 @@
     
     // supplement bin from fieldDef, user should never have to provide bin
     if (fieldDef.bin) {
+      supplementedFieldOption.field = supplementedFieldOption.field.replace("_start", "_range"); // replace suffix
       supplementedFieldOption.bin = true;
-      supplementedFieldOption.formatType = 'string'; // we show bin range as string (e.g. "5-10")
-      supplementedFieldOption.format = undefined;
+      supplementedFieldOption.formatType = "string"; // we show bin range as string (e.g. "5-10")
     }
-
 
   return supplementedFieldOption;
   }
@@ -317,7 +318,7 @@
   function getTooltipData(item, options) {
     // this array will be bind to the tooltip element
     var tooltipData;
-    
+
     var itemData = d3.map(item.datum);
     
     // TODO(zening): find more keys which we should remove from data (#35)
@@ -485,10 +486,10 @@
       if (fieldOption.bin === true) {
 
         // get binned field names
-        var bin_field_start = fieldOption.field;
-        var bin_field_end = bin_field_start.replace('_start', '_end');
-        var bin_field_mid = bin_field_start.replace('_start', '_mid');
-        var bin_field_range = bin_field_start.replace('_start', '_range');
+        var bin_field_range = fieldOption.field;
+        var bin_field_start = bin_field_range.replace('_range', '_start');
+        var bin_field_mid = bin_field_range.replace('_range', '_mid');
+        var bin_field_end = bin_field_range.replace('_range', '_end');
 
         // use start value and end value to compute range
         // save the computed range in bin_field_start
@@ -496,12 +497,12 @@
         var endValue = itemData.get(bin_field_end);
         if ((startValue !== undefined) && (endValue !== undefined)) {
           var range = startValue + '-' + endValue;
-          itemData.set(bin_field_start, range);
+          itemData.set(bin_field_range, range);
         }
 
         // remove bin_field_mid, bin_field_end, and bin_field_range from itemData
         var binRemoveKeys = [];
-        binRemoveKeys.push(bin_field_mid, bin_field_end, bin_field_range);
+        binRemoveKeys.push(bin_field_start, bin_field_mid, bin_field_end);
         removeFields(itemData, binRemoveKeys);
       }
     });
