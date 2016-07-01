@@ -83,7 +83,7 @@ In your HTML `<body>`, create a placeholder for the tooltip. Give the placeholde
 
 For [Vega-Lite](https://vega.github.io/vega-lite/):
 
-You can create your tooltip using [`vl.tooltip`](docs/APIs.md#vltooltip). This function requires the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) and the original Vega-Lite specification as inputs.
+You can create your tooltip using [`vl.tooltip`](APIs.md#vltooltip). This function requires the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) and the original Vega-Lite specification as inputs.
 
 ```js
 var embedSpec = {
@@ -98,7 +98,7 @@ vg.embed("#vis-scatter", embedSpec, function(error, result) {
 
 For [Vega](http://vega.github.io/vega/):
 
-You can create your tooltip using [`vg.tooltip`](docs/APIs.md#vgtooltip). This function only requires the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) as input.
+You can create your tooltip using [`vg.tooltip`](APIs.md#vgtooltip). This function only requires the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) as input.
 
 ```js
 vg.parse.spec(vgSpec, function(error, chart) {
