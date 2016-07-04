@@ -244,7 +244,9 @@
       switch (supplementedFieldOption.formatType) {
         case "time":
           supplementedFieldOption.format = fieldDef.timeUnit ?
-            vl.timeUnit.format(fieldDef.timeUnit) : timeFormat;
+            // TODO(zening): use template for all time fields, to be consistent with Vega-Lite
+            vl.timeUnit.template(fieldDef.timeUnit, "", false).match(/time:'[%-a-z]*'/i)[0].split("'")[1]
+            : timeFormat;
           break;
         case "number":
           supplementedFieldOption.format = numberFormat;
