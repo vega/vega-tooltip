@@ -114,8 +114,6 @@
       }
     }
 
-    // TODO(zening): supplement binned fields
-
     options.fields = supplementedFields;
 
     return options;
@@ -223,8 +221,10 @@
     // the supplemented field option
     var supplementedFieldOption = {};
 
-    // supplement field name with underscore prefixes (e.g. "mean_", "yearmonth_") to match the field names in item.datum
-    supplementedFieldOption.field = fieldDef.field ?
+    // supplement field name with underscore prefixes and suffixes to match the field names in item.datum
+    // for aggregation and timeUnit, this will add prefix "mean_", "yearmonth_"
+    // for bin, this will add prefix "bin_" and suffix "_start". Later we will replace "_start" with "_range".
+    supplementedFieldOption.field = fieldDef.field ? 
       vl.fieldDef.field(fieldDef) : fieldOption.field;
 
     // supplement title
@@ -252,6 +252,13 @@
         case "string":
         default:
       }
+    }
+    
+    // supplement bin from fieldDef, user should never have to provide bin
+    if (fieldDef.bin) {
+      supplementedFieldOption.field = supplementedFieldOption.field.replace("_start", "_range"); // replace suffix
+      supplementedFieldOption.bin = true;
+      supplementedFieldOption.formatType = "string"; // we show bin range as string (e.g. "5-10")
     }
 
   return supplementedFieldOption;
@@ -309,13 +316,30 @@
   * @return An array of tooltip data [{ title: ..., value: ...}]
   */
   function getTooltipData(item, options) {
-    var tooltipData; // this array will be bind to the tooltip HTML placeholder
+    // this array will be bind to the tooltip element
+    var tooltipData;
+
+    var itemData = d3.map(item.datum);
     
+    // TODO(zening): find more keys which we should remove from data (#35)
+    var removeKeys = [
+      "_id", "_prev",
+      "count_start", "count_end",
+      "layout_start", "layout_mid", "layout_end", "layout_path", "layout_x", "layout_y"
+    ];
+    removeFields(itemData, removeKeys);
+
+    // combine multiple rows of a binned field into a single row
+    combineBinFields(itemData, options.fields);
+
+    // TODO(zening): use Vega-Lite layering to support tooltip on line and area charts (#1)
+    dropFieldsForLineArea(item.mark.marktype, itemData);
+
     if ( options.showAllFields !== false ) {
-      tooltipData = prepareAllFieldsData(item, options);
+      tooltipData = prepareAllFieldsData(itemData, options);
     }
     else {
-      tooltipData = prepareCustomFieldsData(item, options);
+      tooltipData = prepareCustomFieldsData(itemData, options);
     }
 
     return tooltipData;
@@ -325,23 +349,24 @@
   /**
   * Prepare custom fields data for tooltip. This function foramts 
   * field titles and values and returns an array of formatted fields.
-  * @return An array of formatted fields [{ title: ..., value: ...}]
+  *
+  * @param {d3.map} itemData - a map of item.datum
+  * #param {Object} options - user-provided options
+  * @return An array of formatted fields specified by options [{ title: ..., value: ...}]
   */
-  function prepareCustomFieldsData(item, options) {
+  function prepareCustomFieldsData(itemData, options) {
     var tooltipData = [];
 
-    options.fields.forEach(function(field) {
-      // TODO(zening): binned fields
-
+    options.fields.forEach(function(fieldOption) {
       // prepare field title
-      var title = field.title ? field.title : field.field;
+      var title = fieldOption.title ? fieldOption.title : fieldOption.field;
 
       // get (raw) field value
-      var value = getValue(item.datum, field.field);
+      var value = getValue(itemData, fieldOption.field);
       if (value === undefined) return;
 
       // format value
-      var formattedValue = customFormat(value, field.formatType, field.format) || autoFormat(value);
+      var formattedValue = customFormat(value, fieldOption.formatType, fieldOption.format) || autoFormat(value);
 
       // add formatted data to tooltipData
       tooltipData.push({title: title, value: formattedValue});
@@ -352,84 +377,76 @@
   }
 
   /**
-  * Get one field value from a datum.
-  * @param {Object} datum - the datum of an item.
+  * Get a field value from a data map.
+  * @param {d3.map} itemData - a map of item.datum
   * @param {string} field - the name of the field. It can contain "." to specify
-  * that the field is not a direct child of datum.
-  * @return the field value, or undefined if the value cannot be found.
+  * that the field is not a direct child of item.datum
+  * @return the field value on success, undefined otherwise
   */
   // TODO(zening): Mute "Cannot find field" warnings for composite vis (issue #39)
-  function getValue(datum, field) {
-    if (field.includes(".")) {
-      var accessors = field.split(".");
-      var value = datum;
-      var path = "";
+  function getValue(itemData, field) {
+    var value;
+    
+    var accessors = field.split('.');
+    
+    // get the first accessor and remove it from the array
+    var firstAccessor = accessors[0];
+    accessors.shift();
+    
+    if (itemData.has(firstAccessor)) {
+      value = itemData.get(firstAccessor);
+
+      // if we still have accessors, use them to get the value
       accessors.forEach(function(a) {
         if (value[a]) {
           value = value[a];
-          path = path + "." + a;
-        }
-        else {
-          console.warn("[Tooltip] Cannot find field " + path + " in data.");
-          return undefined;
         }
       });
-      return value;
+    }
+
+    if (value === undefined) {
+      console.warn("[Tooltip] Cannot find field " + field + " in data.");
+      return;
     }
     else {
-      if (datum[field]) {
-        return datum[field];
-      }
-      else {
-        console.warn("[Tooltip] Cannot find field " + field + " in data.");
-        return undefined;
-      }
+      return value;
     }
+
   }
 
 
   /**
-  * Prepare data for all fields in item.datum for tooltip. This function 
+  * Prepare data for all fields in itemData for tooltip. This function 
   * formats field titles and values and returns an array of formatted fields.
-  * Note that this function doesn't expect any field in item.datum to be objects.
-  * If item.datum contains object fields, please use prepareCustomFieldsData().
-  * @return An array of formatted fields [{ title: ..., value: ...}]
+  * 
+  * @param {d3.map} itemData - a map of item.datum
+  * @param {Object} options - user-provided options
+  * @return All fields in itemData, formatted, in the form of an array: [{ title: ..., value: ...}]
+  *
+  * Please note that this function expects itemData to be simple {field:value} pairs.
+  * It will not try to parse value if it is an object. If value is an object, please
+  * use prepareCustomFieldsData() instead.
   */
-  function prepareAllFieldsData(item, options) {
+  function prepareAllFieldsData(itemData, options) {
     var tooltipData = [];
 
-    var fields = d3.map(options.fields, function(d) { return d.field; });
-
-    var itemData = d3.map(item.datum);
-
-    // these fields should be hidden by default in tooltip
-    var removeKeys = [
-      "_id", "_prev",
-      "count_start", "count_end",
-      "layout_start", "layout_mid", "layout_end", "layout_path", "layout_x", "layout_y"
-    ];
-    removeFields(itemData, removeKeys);
-
-    /* TODO(zening): if there are binned fields, remove bin_start, bin_end, bin_mid, and
-    bin_range fields; add bin_field and its value */
-
-    // partial fix for issue #1: drop quantitative fields for line charts and area charts
-    dropFieldsForLineArea(item.mark.marktype, itemData);
+    // here, fieldOptions still provides format
+    var fieldOptions = d3.map(options.fields, function(d) { return d.field; });
 
     itemData.forEach(function(field, value) {
       // prepare title
       var title;
-      if(fields.has(field) && fields.get(field).title) {
-        title = fields.get(field).title;
+      if(fieldOptions.has(field) && fieldOptions.get(field).title) {
+        title = fieldOptions.get(field).title;
       }
       else {
         title = field;
       }
 
       // format value
-      if (fields.has(field)) {
-        var formatType = fields.get(field).formatType;
-        var format = fields.get(field).format;
+      if (fieldOptions.has(field)) {
+        var formatType = fieldOptions.get(field).formatType;
+        var format = fieldOptions.get(field).format;
       }
       var formattedValue = customFormat(value, formatType, format) || autoFormat(value);
 
@@ -452,6 +469,45 @@
     removeKeys.forEach(function(key) {
       dataMap.remove(key);
     })
+  }
+
+  /**
+  * Combine multiple binned fields in itemData into one field. The value of the field
+  * is a string that describes the bin range.
+  *
+  * @param {d3.map} itemData - a map of item.datum
+  * @param {Object[]} fieldOptions - a list of field options (i.e. options.fields[])
+  * @return itemData with combined bin fields
+  */
+  function combineBinFields(itemData, fieldOptions) {
+    if (!fieldOptions) return;
+
+    fieldOptions.forEach(function(fieldOption) {
+      if (fieldOption.bin === true) {
+
+        // get binned field names
+        var bin_field_range = fieldOption.field;
+        var bin_field_start = bin_field_range.replace('_range', '_start');
+        var bin_field_mid = bin_field_range.replace('_range', '_mid');
+        var bin_field_end = bin_field_range.replace('_range', '_end');
+
+        // use start value and end value to compute range
+        // save the computed range in bin_field_start
+        var startValue = itemData.get(bin_field_start);
+        var endValue = itemData.get(bin_field_end);
+        if ((startValue !== undefined) && (endValue !== undefined)) {
+          var range = startValue + '-' + endValue;
+          itemData.set(bin_field_range, range);
+        }
+
+        // remove bin_field_mid, bin_field_end, and bin_field_range from itemData
+        var binRemoveKeys = [];
+        binRemoveKeys.push(bin_field_start, bin_field_mid, bin_field_end);
+        removeFields(itemData, binRemoveKeys);
+      }
+    });
+
+    return itemData;
   }
 
   /**

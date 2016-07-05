@@ -83,6 +83,17 @@
   };
   addVlExample("exampleSpecs/trellis_barley.json", "#vis-trellis-barley", trellisBarleyOpts);
 
+  // Scatter Binned
+  var binMovieOpts = {
+    showAllFields: false,
+    fields: [
+      {field: "Rotten_Tomatoes_Rating"},
+      {field: "IMDB_Rating"},
+      {field: "*"}
+    ]
+  };
+  addVlExample("exampleSpecs/scatter_binned.json", "#vis-scatter-binned", binMovieOpts);
+  
   // Simple Bar Chart
   addVlExample("exampleSpecs/bar.json", "#vis-bar");
 
