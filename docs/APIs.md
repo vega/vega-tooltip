@@ -1,37 +1,27 @@
-# Customizing Your Tooltip
+# [vg.tooltip](#vgtooltip)
 
-__Previous Tutorial:__ [Creating Your Tooltip](creating_your_tooltip.md).
+`vg.tooltip(vgView[, options])`
 
-You can customize the content and look of your tooltip by passing in an optional `options` parameter to the tooltip API.
-
-For [Vega-Lite](https://vega.github.io/vega-lite/):
-
-```js
-var embedSpec = {
-  mode: "vega-lite",
-  spec: vlSpec
-};
-vg.embed("#vis-scatter", embedSpec, function(error, result) {
-  // result.view is the Vega View, vlSpec is the original Vega-Lite specification
-  vl.tooltip(result.view, vlSpec, options); // pass in options
-});
-```
-
-For [Vega](http://vega.github.io/vega/):
-
-```js
-vg.parse.spec(vgSpec, function(error, chart) {
-  // view is the Vega View
-  var view = chart({el:"#vis-scatter"}).update();
-  vg.tooltip(view, options); // pass in options
-});
-```
+| Parameter       | Type           | Description     |
+| :-------------- |:--------------:| :-------------- |
+| `vgView`        | [Vega View](https://github.com/vega/vega/wiki/Runtime#view-component-api) | The visualization view. |
+| `options`       | Object         | Options to customize the tooltip. See [options](#options) for details. |
 
 
-## Options
-<!-- TODO(zening): The complete structure of options is now documented in our "APIs" page (docs/APIs.md#options). We can use this section to give some concrete examples of using options to customize fields. (issue #40)-->
+# [vl.tooltip](#vltooltip)
 
-Here is a template of `options`. All of its properties are optional. `options` itself is optional too.
+`vl.tooltip(vgView, vlSpec[, options])`
+
+| Parameter       | Type           | Description     |
+| :-------------- |:--------------:| :-------------- |
+| `vgView`        | [Vega View](https://github.com/vega/vega/wiki/Runtime#view-component-api) | The visualization view. |
+| `vlSpec`        | Object         | The Vega-Lite specification of the visualization. |
+| `options`       | Object         | Options to customize the tooltip. See [options](#options) for details. |
+
+
+# [options](#options)
+
+`options` can customize the content and look of the tooltip. Here is a template of `options`. All of its properties are optional.
 
 ```js
 var options =
@@ -55,7 +45,7 @@ var options =
 | :-------------- |:--------------:| :-------------- |
 | `showAllFields` | Boolean        | If `true`, show all data fields of a visualization in the tooltip. If `false`, only show fields specified in the `fields` array in the tooltip. <br>__Default value:__ `true`|
 | `fields`        | Array          | An array of fields to be displayed in the tooltip when `showAllFields` is `false`. |
-| `colorTheme`    | String         | A color theme picker. <br>__Supported values:__ `"light"` and `"dark"`. <br>__Default value:__ `"light"` <br>To further customize, overwrite the `.vg-tooltip` class in your CSS. |
+| `colorTheme`    | String         | A color theme picker. <br>__Supported values:__ `"light"` and `"dark"`. <br>__Default value:__ `"light"` <br>To further customize, overwrite the `.vl-tooltip` class in your CSS. |
 
 > Tip: You can customize the order of the fields in your tooltip by setting `showAllFields` to `false` and providing a `fields` array. Your tooltip will display fields in the order they appear in the `fields` array.
 

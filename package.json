@@ -1,11 +1,11 @@
 {
-  "name": "vega-lite-tooltip",
+  "name": "vega-tooltip",
   "version": "0.1.0",
   "description": "A tooltip plugin for vega-lite and vega visualizations.",
-  "main": "src/vl-tooltip.js",
+  "main": "src/vg-tooltip.js",
   "scripts": {
     "prebuild": "npm run data",
-    "build": "uglifyjs src/vl-tooltip.js -cm > vl-tooltip.min.js && cp src/vl-tooltip.css vl-tooltip.css",
+    "build": "uglifyjs src/vg-tooltip.js -cm > vg-tooltip.min.js && cp src/vg-tooltip.css vg-tooltip.css",
     "data": "rsync -r node_modules/vega-datasets/data/* data",
     "start": "npm run build && python -m SimpleHTTPServer 4000"
   },
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vega/vega-lite-tooltip.git"
+    "url": "git+https://github.com/vega/vega-tooltip.git"
   },
   "keywords": [
     "vega-lite",
@@ -30,7 +30,7 @@
   "author": "Zening Qu",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/vega/vega-lite-tooltip/issues"
+    "url": "https://github.com/vega/vega-tooltip/issues"
   },
-  "homepage": "https://github.com/vega/vega-lite-tooltip#readme"
+  "homepage": "https://github.com/vega/vega-tooltip#readme"
 }

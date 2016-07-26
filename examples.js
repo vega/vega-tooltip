@@ -12,6 +12,9 @@
         spec: vlSpec
       };
       vg.embed(id, embedSpec, function(error, result) {
+        if (error) {
+          return console.error(error);
+        }
         vl.tooltip(result.view, vlSpec, options);
       });
     });
@@ -20,7 +23,7 @@
   function addVgExample(path, id, options) {
     d3.json(path, function(error, vgSpec) {
       if (error) {
-        return console.warn(error);
+        return console.error(error);
       }
       vg.parse.spec(vgSpec, function(error, chart) {
         var view = chart({el:id}).update();
