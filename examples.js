@@ -106,18 +106,33 @@
   // Layered Bar Chart
   addVlExample("exampleSpecs/bar_layered_transparent.json", "#vis-layered-bar");
 
-  // Line Chart
-  var lineOpts = {
-    colorTheme: "dark"
-  }
-  addVlExample("exampleSpecs/line.json", "#vis-line", lineOpts);
-
   // Colored Line Chart
   var colorLineOpts = {}
   addVlExample("exampleSpecs/line_color.json", "#vis-color-line", colorLineOpts);
 
-  // Area Chart
-  addVlExample("exampleSpecs/area_vertical.json", "#vis-area-vertical");
+  // Overlay Line Chart
+  var overlayLineOpts = {
+    fields: [
+      {
+        field: "date",
+        formatType: "time",
+        format: "%Y-%m-%d"
+      }
+    ]
+  }
+  addVlExample("exampleSpecs/overlay_line_short.json", "#vis-overlay-line", overlayLineOpts);
+
+  // Overlay Area Chart
+  var overlayAreaOpts = {
+    fields: [
+      {
+        field: "date",
+        formatType: "time",
+        format: "%Y-%m-%d"
+      }
+    ]
+  }
+  addVlExample("exampleSpecs/overlay_area_short.json", "#vis-overlay-area", overlayAreaOpts);
 
 
   /* Vega Examples */
