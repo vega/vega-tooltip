@@ -74,7 +74,7 @@
   * @param options - user-provided options
   * @param vlSpec - vega-lite spec
   * @return the vlSpec-supplemented options object
-  * 
+  *
   * if options.showAllFields is true or undefined, vlSpec will supplement
   * options.fields with all fields in the spec
   * if options.showAllFields is false, vlSpec will only supplement existing fields
@@ -84,17 +84,14 @@
     // fields to be supplemented by vlSpec
     var supplementedFields = [];
 
-    var timeFormat = vlSpec.config ? vlSpec.config.timeFormat : undefined;
-    var numberFormat = vlSpec.config ? vlSpec.config.numberFormat : undefined;
-
     // if showAllFields is true or undefined, supplement all fields in vlSpec
     if (options.showAllFields !== false) {
       vl.spec.fieldDefs(vlSpec).forEach(function(fieldDef){
         // get a fieldOption in options that matches the fieldDef
         var fieldOption = getFieldOption(options.fields, fieldDef);
 
-        // supplement the fieldOption with fieldDef, timeFormat and numberFormat
-        var supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, timeFormat, numberFormat);
+        // supplement the fieldOption with fieldDef and config
+        var supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec.config);
 
         supplementedFields.push(supplementedFieldOption);
       });
@@ -106,8 +103,8 @@
           // get the fieldDef in vlSpec that matches the fieldOption
           var fieldDef = getFieldDef(vl.spec.fieldDefs(vlSpec), fieldOption);
 
-          // supplement the fieldOption with fieldDef, timeFormat and numberFormat
-          var supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, timeFormat, numberFormat);
+          // supplement the fieldOption with fieldDef and config
+          var supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec.config);
 
           supplementedFields.push(supplementedFieldOption);
         })
@@ -150,7 +147,7 @@
           return fieldOption;
         }
       }
-      
+
       // return undefined if no match was found
       return;
     }
@@ -162,7 +159,7 @@
           return fieldOption;
         }
       }
-      
+
       // return undefined if no match was found
       return;
     }
@@ -202,18 +199,22 @@
   }
 
   /**
-  * Supplement a fieldOption (from options.fields[]) with a fieldDef, timeFormat and numberFormat
+  * Supplement a fieldOption (from options.fields[]) with a fieldDef, config
+  * (which provides timeFormat, numberFormat, countTitle)
   * Either fieldOption or fieldDef can be undefined, but they cannot both be undefined.
-  * timeFormat and numberFormat can be undefined.
+  * config (and its members timeFormat, numberFormat and countTitle) can be undefined.
   * @return the supplemented fieldOption, or undefined on error
   */
-  function supplementFieldOption(fieldOption, fieldDef, timeFormat, numberFormat) {
+  function supplementFieldOption(fieldOption, fieldDef, config) {
+    // many specs don't have config
+    if (!config) config = {};
+
     // at least one of fieldOption and fieldDef should exist
     if (!fieldOption && !fieldDef) {
       console.error("[Tooltip] Cannot supplement a field when field and fieldDef are both empty.");
       return;
     }
-    
+
     // if either one of fieldOption and fieldDef is undefined, make it an empty object
     if (!fieldOption && fieldDef) fieldOption = {};
     if (fieldOption && !fieldDef) fieldDef = {};
@@ -224,12 +225,13 @@
     // supplement field name with underscore prefixes and suffixes to match the field names in item.datum
     // for aggregation and timeUnit, this will add prefix "mean_", "yearmonth_"
     // for bin, this will add prefix "bin_" and suffix "_start". Later we will replace "_start" with "_range".
-    supplementedFieldOption.field = fieldDef.field ? 
+    supplementedFieldOption.field = fieldDef.field ?
       vl.fieldDef.field(fieldDef) : fieldOption.field;
 
     // supplement title
+    if (!config.countTitle) config.countTitle = vl.config.defaultConfig.countTitle; // use vl default countTitle
     supplementedFieldOption.title = fieldOption.title ?
-      fieldOption.title : vl.fieldDef.title(fieldDef);
+      fieldOption.title : vl.fieldDef.title(fieldDef, config);
 
     // supplement formatType
     supplementedFieldOption.formatType = fieldOption.formatType ?
@@ -246,16 +248,16 @@
           supplementedFieldOption.format = fieldDef.timeUnit ?
             // TODO(zening): use template for all time fields, to be consistent with Vega-Lite
             vl.timeUnit.template(fieldDef.timeUnit, "", false).match(/time:'[%-a-z]*'/i)[0].split("'")[1]
-            : timeFormat;
+              : config.timeFormat;
           break;
         case "number":
-          supplementedFieldOption.format = numberFormat;
+          supplementedFieldOption.format = config.numberFormat;
           break;
         case "string":
         default:
       }
     }
-    
+
     // supplement bin from fieldDef, user should never have to provide bin
     if (fieldDef.bin) {
       supplementedFieldOption.field = supplementedFieldOption.field.replace("_start", "_range"); // replace suffix
@@ -322,7 +324,7 @@
     var tooltipData;
 
     var itemData = d3.map(item.datum);
-    
+
     // TODO(zening): find more keys which we should remove from data (#35)
     var removeKeys = [
       "_id", "_prev",
@@ -349,7 +351,7 @@
 
 
   /**
-  * Prepare custom fields data for tooltip. This function foramts 
+  * Prepare custom fields data for tooltip. This function foramts
   * field titles and values and returns an array of formatted fields.
   *
   * @param {d3.map} itemData - a map of item.datum
@@ -388,13 +390,13 @@
   // TODO(zening): Mute "Cannot find field" warnings for composite vis (issue #39)
   function getValue(itemData, field) {
     var value;
-    
+
     var accessors = field.split('.');
-    
+
     // get the first accessor and remove it from the array
     var firstAccessor = accessors[0];
     accessors.shift();
-    
+
     if (itemData.has(firstAccessor)) {
       value = itemData.get(firstAccessor);
 
@@ -418,9 +420,9 @@
 
 
   /**
-  * Prepare data for all fields in itemData for tooltip. This function 
+  * Prepare data for all fields in itemData for tooltip. This function
   * formats field titles and values and returns an array of formatted fields.
-  * 
+  *
   * @param {d3.map} itemData - a map of item.datum
   * @param {Object} options - user-provided options
   * @return All fields in itemData, formatted, in the form of an array: [{ title: ..., value: ...}]
@@ -515,10 +517,10 @@
   /**
   * Drop fields for line and area marks.
   *
-  * Lines and areas are defined by a series of datum. We overlay point marks 
+  * Lines and areas are defined by a series of datum. We overlay point marks
   * on top of lines and areas to allow tooltip to show all data in the series.
   * For the line marks and area marks underneath, we only show nominal fields
-  * in tooltip. This is because line / area marks only give us the last datum 
+  * in tooltip. This is because line / area marks only give us the last datum
   * in their series. It only make sense to show the nominal fields (e.g., symbol
   * = APPL, AMZN, GOOG, IBM, MSFT) because these fields don't tend to change along
   * the line / area border.
@@ -587,7 +589,7 @@
   */
   function getTooltipPlaceholder() {
     var tooltipPlaceholder;
-    
+
     if (d3.select("#vis-tooltip").empty()) {
       tooltipPlaceholder = d3.select("body").append("div")
         .attr("id", "vis-tooltip");
@@ -595,7 +597,7 @@
     else {
       tooltipPlaceholder = d3.select("#vis-tooltip");
     }
-    
+
     return tooltipPlaceholder;
   }
 
@@ -669,7 +671,7 @@
   */
   function updateColorTheme(options) {
     clearColorTheme();
-    
+
     if (options && options.colorTheme === "dark") {
       d3.select("#vis-tooltip").classed("dark-theme", true);
     }
