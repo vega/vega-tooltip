@@ -590,7 +590,8 @@
     
     if (d3.select("#vis-tooltip").empty()) {
       tooltipPlaceholder = d3.select("body").append("div")
-        .attr("id", "vis-tooltip");
+          .attr("id", "vis-tooltip")
+          .attr("class", "vg-tooltip");
     }
     else {
       tooltipPlaceholder = d3.select("#vis-tooltip");
