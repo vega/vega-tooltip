@@ -604,6 +604,7 @@
   * Bind tooltipData to the tooltip placeholder
   */
   function bindData(tooltipPlaceholder, tooltipData) {
+    tooltipPlaceholder.selectAll("table").remove();
     var tooltipRows = tooltipPlaceholder.append("table").selectAll(".tooltip-row")
       .data(tooltipData);
 
