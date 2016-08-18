@@ -590,7 +590,8 @@
     
     if (d3.select("#vis-tooltip").empty()) {
       tooltipPlaceholder = d3.select("body").append("div")
-        .attr("id", "vis-tooltip");
+          .attr("id", "vis-tooltip")
+          .attr("class", "vg-tooltip");
     }
     else {
       tooltipPlaceholder = d3.select("#vis-tooltip");
@@ -603,6 +604,7 @@
   * Bind tooltipData to the tooltip placeholder
   */
   function bindData(tooltipPlaceholder, tooltipData) {
+    tooltipPlaceholder.selectAll("table").remove();
     var tooltipRows = tooltipPlaceholder.append("table").selectAll(".tooltip-row")
       .data(tooltipData);
 
