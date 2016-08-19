@@ -2,7 +2,7 @@
 
 ## Step 1. Add The Library
 
-We recommend installing the tooltip library and its dependencies via [`npm`](https://www.npmjs.com/):
+We recommend installing vega-tooltip and its dependencies via [`npm`](https://www.npmjs.com/):
 
 ```bash
 npm install vega-tooltip
@@ -11,11 +11,16 @@ npm install vega-tooltip
 The tooltip library contains a `js` file and a `css` file:
 
 ```
-node_modules/vega-tooltip/vg-tooltip.min.js
-node_modules/vega-tooltip/vg-tooltip.css
+vega-tooltip/src/vg-tooltip.js
+vega-tooltip/src/vg-tooltip.css
 ```
 
-Alternatively, if you want to manually include the tooltip library and its dependencies, you can add the following lines to your HTML `<head>`. Vega Tooltip depends on [`d3`](https://d3js.org/), [`vega`](https://vega.github.io/vega/), [`vega-lite`](https://vega.github.io/vega-lite/), [`vega-embed`](https://github.com/vega/vega-embed) and [`datalib`](http://vega.github.io/datalib/).
+Alternatively, you can get vega-tooltip via [`bower`](https://bower.io/):
+```bash
+bower install vega-tooltip
+```
+
+If you want to manually include the tooltip library and its dependencies, you can add the following lines to your HTML `<head>`. Vega Tooltip depends on [`d3`](https://d3js.org/), [`vega`](https://vega.github.io/vega/), [`vega-lite`](https://vega.github.io/vega-lite/), [`vega-embed`](https://github.com/vega/vega-embed) and [`datalib`](http://vega.github.io/datalib/).
 
 ```html
 <!-- Dependencies -->
