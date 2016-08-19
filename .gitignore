@@ -1,4 +1,5 @@
 data
+bower_components
 node_modules
 /vg-tooltip.min.js
 /vg-tooltip.css
