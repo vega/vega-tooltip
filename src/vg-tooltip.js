@@ -25,7 +25,7 @@
 
     // clear tooltip on mouse out
     vgView.on("mouseout.tooltipClear", function(event, item) {
-      clear();
+      clear(event, item, options);
     });
 
     return {
@@ -64,7 +64,7 @@
 
     // clear tooltip on mouse out
     vgView.on("mouseout.tooltipClear", function(event, item) {
-      clear();
+      clear(event, item, options);
     });
 
     return {
@@ -287,7 +287,7 @@
 
   /* Initialize tooltip with data */
   function init(event, item, options) {
-    if( shouldShowTooltip(item) === false ) return;
+    if ( shouldShowTooltip(item) === false ) return;
 
     // get tooltip HTML placeholder
     var tooltipPlaceholder = getTooltipPlaceholder();
@@ -302,15 +302,27 @@
     updatePosition(event, options);
     updateColorTheme(options);
     d3.select("#vis-tooltip").style("display", "block");
+
+    if (options.onInit) {
+      options.onInit(event, item);
+    }
   }
 
   /* Update tooltip position on mousemove */
   function update(event, item, options) {
     updatePosition(event, options);
+
+    if (options.onUpdate) {
+      options.onUpdate(event, item);
+    }
   }
 
   /* Clear tooltip */
-  function clear() {
+  function clear(event, item, options) {
+    if (options.onClear) {
+      options.onClear(event, item);
+    }
+
     clearData();
     clearColorTheme();
     d3.select("#vis-tooltip").style("display", "none");
@@ -456,7 +468,7 @@
     itemData.forEach(function(field, value) {
       // prepare title
       var title;
-      if(fieldOptions.has(field) && fieldOptions.get(field).title) {
+      if (fieldOptions.has(field) && fieldOptions.get(field).title) {
         title = fieldOptions.get(field).title;
       }
       else {
