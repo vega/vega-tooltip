@@ -1,4 +1,6 @@
-# [vg.tooltip](#vgtooltip)
+# Constructors
+
+## [vg.tooltip](#vgtooltip)
 
 `vg.tooltip(vgView[, options])`
 
@@ -7,8 +9,9 @@
 | `vgView`        | [Vega View](https://github.com/vega/vega/wiki/Runtime#view-component-api) | The visualization view. |
 | `options`       | Object         | Options to customize the tooltip. See [options](#options) for details. |
 
+__Returns:__ [`tooltip`](#tooltip) object
 
-# [vl.tooltip](#vltooltip)
+## [vl.tooltip](#vltooltip)
 
 `vl.tooltip(vgView, vlSpec[, options])`
 
@@ -18,8 +21,9 @@
 | `vlSpec`        | Object         | The Vega-Lite specification of the visualization. |
 | `options`       | Object         | Options to customize the tooltip. See [options](#options) for details. |
 
+__Returns:__ [`tooltip`](#tooltip) object
 
-# [options](#options)
+## [options](#options)
 
 `options` can customize the content and look of the tooltip. Here is a template of `options`. All of its properties are optional.
 
@@ -31,7 +35,7 @@ var options =
     {
       field: "field1",
       title: "Field One",
-      formatType: "time" | "number" | "string", 			
+      formatType: "time" | "number" | "string",
       format: string-specifier,
       aggregate: operation,
     },
@@ -60,3 +64,9 @@ Each member in the `fields` array can customize the format of a field. These cus
 | `formatType`    | String         | Tells what kind of field this is (for formatting the field value in the tooltip) <br>__Supported values:__ `"number"`, `"time"`, and `"string"`. |
 | `format`        | String         | A string specifier for formatting the field value in the tooltip. If `formatType` is `"number"`, you can provide a [number format string-specifier](https://github.com/mbostock/d3/wiki/Formatting). If `formatType` is `"time"`, you can provide a [time format string-specifier](https://github.com/mbostock/d3/wiki/Time-Formatting). If `formatType` is `"string"`, there is no need to provide a `format`. |
 | `aggregate`     | String         | (Vega-Lite only) If your Vega-Lite visualization has multiple aggregations of the same field, you can specify the aggregation to identify the particular aggregated field. <br>__Supported values:__ [Vega-Lite aggregate operations](https://vega.github.io/vega-lite/docs/aggregate.html#supported-aggregation-operations)|
+
+# [tooltip Object](#tooltip)
+
+| Method          | Parameter(s)   | Description     |
+| :-------------- |:--------------:| :-------------- |
+| .destroy        | none           | unregister tooltip event listners on `vgView` |

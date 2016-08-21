@@ -13,20 +13,28 @@
     }
 
     // initialize tooltip with item data and options on mouse over
-    vgView.on("mouseover", function(event, item) {
+    vgView.on("mouseover.tooltipInit", function(event, item) {
       init(event, item, options);
     });
 
     // update tooltip position on mouse move
     // (important for large marks e.g. bars)
-    vgView.on("mousemove", function(event, item) {
+    vgView.on("mousemove.tooltipUpdate", function(event, item) {
       update(event, item, options);
     });
 
     // clear tooltip on mouse out
-    vgView.on("mouseout", function(event, item) {
+    vgView.on("mouseout.tooltipClear", function(event, item) {
       clear();
     });
+
+    return {
+      destroy: function() {
+        vgView.off("mouseover.tooltipInit");
+        vgView.off("mousemove.tooltipUpdate");
+        vgView.off("mouseout.tooltipClear");
+      }
+    }
   };
 
   /**
@@ -44,20 +52,28 @@
     options = supplementOptions(options, vlSpec);
 
     // initialize tooltip with item data and options on mouse over
-    vgView.on("mouseover", function(event, item) {
+    vgView.on("mouseover.tooltipInit", function(event, item) {
       init(event, item, options);
     });
 
     // update tooltip position on mouse move
     // (important for large marks e.g. bars)
-    vgView.on("mousemove", function(event, item) {
+    vgView.on("mousemove.tooltipUpdate", function(event, item) {
       update(event, item, options);
     });
 
     // clear tooltip on mouse out
-    vgView.on("mouseout", function(event, item) {
+    vgView.on("mouseout.tooltipClear", function(event, item) {
       clear();
     });
+
+    return {
+      destroy: function() {
+        vgView.off("mouseover.tooltipInit");
+        vgView.off("mousemove.tooltipUpdate");
+        vgView.off("mouseout.tooltipClear");
+      }
+    }
   };
 
   /* Mapping from fieldDef.type to formatType */

@@ -96,7 +96,7 @@
     ]
   };
   addVlExample("exampleSpecs/scatter_binned.json", "#vis-scatter-binned", binMovieOpts);
-  
+
   // Simple Bar Chart
   addVlExample("exampleSpecs/bar.json", "#vis-bar");
 
