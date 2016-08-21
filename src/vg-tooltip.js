@@ -14,18 +14,24 @@
 
     // initialize tooltip with item data and options on mouse over
     vgView.on("mouseover.tooltipInit", function(event, item) {
-      init(event, item, options);
+      if (shouldShowTooltip(item)) {
+        init(event, item, options);
+      }
     });
 
     // update tooltip position on mouse move
     // (important for large marks e.g. bars)
     vgView.on("mousemove.tooltipUpdate", function(event, item) {
-      update(event, item, options);
+      if (shouldShowTooltip(item)) {
+        update(event, item, options);
+      }
     });
 
     // clear tooltip on mouse out
     vgView.on("mouseout.tooltipClear", function(event, item) {
-      clear(event, item, options);
+      if (shouldShowTooltip(item)) {
+        clear(event, item, options);
+      }
     });
 
     return {
@@ -53,18 +59,24 @@
 
     // initialize tooltip with item data and options on mouse over
     vgView.on("mouseover.tooltipInit", function(event, item) {
-      init(event, item, options);
+      if (shouldShowTooltip(item)) {
+        init(event, item, options);
+      }
     });
 
     // update tooltip position on mouse move
     // (important for large marks e.g. bars)
     vgView.on("mousemove.tooltipUpdate", function(event, item) {
-      update(event, item, options);
+      if (shouldShowTooltip(item)) {
+        update(event, item, options);
+      }
     });
 
     // clear tooltip on mouse out
     vgView.on("mouseout.tooltipClear", function(event, item) {
-      clear(event, item, options);
+      if (shouldShowTooltip(item)) {
+        clear(event, item, options);
+      }
     });
 
     return {
@@ -287,8 +299,6 @@
 
   /* Initialize tooltip with data */
   function init(event, item, options) {
-    if ( shouldShowTooltip(item) === false ) return;
-
     // get tooltip HTML placeholder
     var tooltipPlaceholder = getTooltipPlaceholder();
 
@@ -303,6 +313,7 @@
     updateColorTheme(options);
     d3.select("#vis-tooltip").style("display", "block");
 
+    // invoke user-provided callback
     if (options.onInit) {
       options.onInit(event, item);
     }
@@ -312,6 +323,7 @@
   function update(event, item, options) {
     updatePosition(event, options);
 
+    // invoke user-provided callback
     if (options.onUpdate) {
       options.onUpdate(event, item);
     }
@@ -319,13 +331,14 @@
 
   /* Clear tooltip */
   function clear(event, item, options) {
-    if (options.onClear) {
-      options.onClear(event, item);
-    }
-
     clearData();
     clearColorTheme();
     d3.select("#vis-tooltip").style("display", "none");
+
+    // invoke user-provided callback
+    if (options.onClear) {
+      options.onClear(event, item);
+    }
   }
 
 
