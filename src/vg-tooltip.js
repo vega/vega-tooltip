@@ -64,7 +64,6 @@
       if (shouldShowTooltip(item)) {
         timeoutID = window.setTimeout(function() {
           init(event, item, options);
-          console.log('initiating', timeoutID);
         }, 250);
       }
     });
@@ -318,7 +317,7 @@
 
     updatePosition(event, options);
     updateColorTheme(options);
-    d3.select("#vis-tooltip").style("display", "block");
+    d3.select("#vis-tooltip").style("visibility", "visible");
 
     // invoke user-provided callback
     if (options.onAppear) {
@@ -340,7 +339,10 @@
   function clear(event, item, options) {
     clearData();
     clearColorTheme();
-    d3.select("#vis-tooltip").style("display", "none");
+
+    // visibility hidden instead of display none
+    // because we need computed tooltip width and height to best position it
+    d3.select("#vis-tooltip").style("visibility", "hidden");
 
     // invoke user-provided callback
     if (options.onDisappear) {
@@ -694,7 +696,9 @@
       .style("top", function() {
         // by default: put tooltip 10px below cursor
         // if tooltip is close to the bottom of the window, put tooltip 10px above cursor
-        var tooltipHeight = parseInt(d3.select(this).style("height"));
+        var tooltipHeight = this.getBoundingClientRect().height;
+        console.log("tooltipHeight:", tooltipHeight);
+
         if (event.clientY + tooltipHeight + offsetY < window.innerHeight) {
           return "" + (event.clientY + offsetY) + "px";
         } else {
@@ -704,7 +708,7 @@
       .style("left", function() {
         // by default: put tooltip 10px to the right of cursor
         // if tooltip is close to the right edge of the window, put tooltip 10 px to the left of cursor
-        var tooltipWidth = parseInt(d3.select(this).style("width"));
+        var tooltipWidth = this.getBoundingClientRect().width;
         if (event.clientX + tooltipWidth + offsetX < window.innerWidth) {
           return "" + (event.clientX + offsetX) + "px";
         } else {
