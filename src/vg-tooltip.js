@@ -314,8 +314,8 @@
     d3.select("#vis-tooltip").style("display", "block");
 
     // invoke user-provided callback
-    if (options.onInit) {
-      options.onInit(event, item);
+    if (options.onAppear) {
+      options.onAppear(event, item);
     }
   }
 
@@ -324,8 +324,8 @@
     updatePosition(event, options);
 
     // invoke user-provided callback
-    if (options.onUpdate) {
-      options.onUpdate(event, item);
+    if (options.onMove) {
+      options.onMove(event, item);
     }
   }
 
@@ -336,8 +336,8 @@
     d3.select("#vis-tooltip").style("display", "none");
 
     // invoke user-provided callback
-    if (options.onClear) {
-      options.onClear(event, item);
+    if (options.onDisappear) {
+      options.onDisappear(event, item);
     }
   }
 
