@@ -57,10 +57,15 @@
 
     options = supplementOptions(options, vlSpec);
 
+    var timeoutID = undefined;
+
     // initialize tooltip with item data and options on mouse over
     vgView.on("mouseover.tooltipInit", function(event, item) {
       if (shouldShowTooltip(item)) {
-        init(event, item, options);
+        timeoutID = window.setTimeout(function() {
+          init(event, item, options);
+          console.log('initiating', timeoutID);
+        }, 250);
       }
     });
 
@@ -76,6 +81,8 @@
     vgView.on("mouseout.tooltipClear", function(event, item) {
       if (shouldShowTooltip(item)) {
         clear(event, item, options);
+        window.clearTimeout(timeoutID);
+        console.log("clearing", timeoutID);
       }
     });
 
