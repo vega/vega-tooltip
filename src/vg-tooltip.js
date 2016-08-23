@@ -1,6 +1,11 @@
 "use strict";
 
 (function() {
+  // by default, delay showing tooltip for 100 ms
+  const DELAY = 100;
+  var tooltipPromise = undefined;
+  var tooltipActive = false;
+
   /**
   * Export API for Vega visualizations: vg.tooltip(vgView, options)
   * options can specify whether to show all fields or to show only custom fields
@@ -15,14 +20,20 @@
     // initialize tooltip with item data and options on mouse over
     vgView.on("mouseover.tooltipInit", function(event, item) {
       if (shouldShowTooltip(item)) {
-        init(event, item, options);
+        // clear existing promise because mouse can only point at one thing at a time
+        cancelPromise();
+
+        tooltipPromise = window.setTimeout(function() {
+          init(event, item, options);
+          tooltipActive = true;
+        }, options.delay || DELAY);
       }
     });
 
     // update tooltip position on mouse move
     // (important for large marks e.g. bars)
     vgView.on("mousemove.tooltipUpdate", function(event, item) {
-      if (shouldShowTooltip(item)) {
+      if (shouldShowTooltip(item) && tooltipActive) {
         update(event, item, options);
       }
     });
@@ -30,7 +41,12 @@
     // clear tooltip on mouse out
     vgView.on("mouseout.tooltipClear", function(event, item) {
       if (shouldShowTooltip(item)) {
-        clear(event, item, options);
+        cancelPromise();
+
+        if (tooltipActive) {
+          clear(event, item, options);
+          tooltipActive = false;
+        }
       }
     });
 
@@ -57,21 +73,24 @@
 
     options = supplementOptions(options, vlSpec);
 
-    var timeoutID = undefined;
-
     // initialize tooltip with item data and options on mouse over
     vgView.on("mouseover.tooltipInit", function(event, item) {
       if (shouldShowTooltip(item)) {
-        timeoutID = window.setTimeout(function() {
+        // clear existing promise because mouse can only point at one thing at a time
+        cancelPromise();
+
+        // make a new promise with time delay for tooltip
+        tooltipPromise = window.setTimeout(function() {
           init(event, item, options);
-        }, 250);
+          tooltipActive = true;
+        }, options.delay || DELAY);
       }
     });
 
     // update tooltip position on mouse move
     // (important for large marks e.g. bars)
     vgView.on("mousemove.tooltipUpdate", function(event, item) {
-      if (shouldShowTooltip(item)) {
+      if (shouldShowTooltip(item) && tooltipActive) {
         update(event, item, options);
       }
     });
@@ -79,9 +98,12 @@
     // clear tooltip on mouse out
     vgView.on("mouseout.tooltipClear", function(event, item) {
       if (shouldShowTooltip(item)) {
-        clear(event, item, options);
-        window.clearTimeout(timeoutID);
-        console.log("clearing", timeoutID);
+        cancelPromise();
+
+        if (tooltipActive) {
+          clear(event, item, options);
+          tooltipActive = false;
+        }
       }
     });
 
@@ -93,6 +115,12 @@
       }
     }
   };
+
+  // cancel tooltip promise
+  function cancelPromise() {
+    window.clearTimeout(tooltipPromise);
+    tooltipPromise = undefined;
+  }
 
   /* Mapping from fieldDef.type to formatType */
   var formatTypeMap = {
@@ -697,7 +725,6 @@
         // by default: put tooltip 10px below cursor
         // if tooltip is close to the bottom of the window, put tooltip 10px above cursor
         var tooltipHeight = this.getBoundingClientRect().height;
-        console.log("tooltipHeight:", tooltipHeight);
 
         if (event.clientY + tooltipHeight + offsetY < window.innerHeight) {
           return "" + (event.clientY + offsetY) + "px";
