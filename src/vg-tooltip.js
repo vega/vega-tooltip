@@ -25,7 +25,6 @@
 
         tooltipPromise = window.setTimeout(function() {
           init(event, item, options);
-          tooltipActive = true;
         }, options.delay || DELAY);
       }
     });
@@ -45,7 +44,6 @@
 
         if (tooltipActive) {
           clear(event, item, options);
-          tooltipActive = false;
         }
       }
     });
@@ -85,7 +83,6 @@
         // make a new promise with time delay for tooltip
         tooltipPromise = window.setTimeout(function() {
           init(event, item, options);
-          tooltipActive = true;
         }, options.delay || DELAY);
       }
     });
@@ -105,7 +102,6 @@
 
         if (tooltipActive) {
           clear(event, item, options);
-          tooltipActive = false;
         }
       }
     });
@@ -352,6 +348,7 @@
     updatePosition(event, options);
     updateColorTheme(options);
     d3.select("#vis-tooltip").style("visibility", "visible");
+    tooltipActive = true;
 
     // invoke user-provided callback
     if (options.onAppear) {
@@ -371,13 +368,13 @@
 
   /* Clear tooltip */
   function clear(event, item, options) {
-    clearData();
-    clearColorTheme();
-
     // visibility hidden instead of display none
     // because we need computed tooltip width and height to best position it
     d3.select("#vis-tooltip").style("visibility", "hidden");
 
+    tooltipActive = false;
+    clearData();
+    clearColorTheme();
     clearPosition();
 
     // invoke user-provided callback
