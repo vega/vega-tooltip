@@ -52,9 +52,12 @@
 
     return {
       destroy: function() {
+        // remove event listeners
         vgView.off("mouseover.tooltipInit");
         vgView.off("mousemove.tooltipUpdate");
         vgView.off("mouseout.tooltipClear");
+
+        cancelPromise(); // clear tooltip promise
       }
     }
   };
@@ -109,9 +112,12 @@
 
     return {
       destroy: function() {
+        // remove event listeners
         vgView.off("mouseover.tooltipInit");
         vgView.off("mousemove.tooltipUpdate");
         vgView.off("mouseout.tooltipClear");
+
+        cancelPromise(); // clear tooltip promise
       }
     }
   };
