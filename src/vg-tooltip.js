@@ -372,6 +372,8 @@
     // because we need computed tooltip width and height to best position it
     d3.select("#vis-tooltip").style("visibility", "hidden");
 
+    clearPosition();
+
     // invoke user-provided callback
     if (options.onDisappear) {
       options.onDisappear(event, item);
@@ -725,7 +727,6 @@
         // by default: put tooltip 10px below cursor
         // if tooltip is close to the bottom of the window, put tooltip 10px above cursor
         var tooltipHeight = this.getBoundingClientRect().height;
-
         if (event.clientY + tooltipHeight + offsetY < window.innerHeight) {
           return "" + (event.clientY + offsetY) + "px";
         } else {
@@ -742,6 +743,13 @@
           return "" + (event.clientX - tooltipWidth - offsetX) + "px";
         }
       });
+  }
+
+  /* Clear tooltip position */
+  function clearPosition() {
+    d3.select("#vis-tooltip")
+      .style("top", "-9999px")
+      .style("left", "-9999px");
   }
 
   /**
