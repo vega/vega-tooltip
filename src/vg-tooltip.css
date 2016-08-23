@@ -1,5 +1,5 @@
 .vg-tooltip {
-  display: none;
+  visibility: hidden;
   padding: 6px;
   border-radius: 3px;
   position: fixed;

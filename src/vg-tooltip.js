@@ -1,6 +1,11 @@
 "use strict";
 
 (function() {
+  // by default, delay showing tooltip for 100 ms
+  var DELAY = 100;
+  var tooltipPromise = undefined;
+  var tooltipActive = false;
+
   /**
   * Export API for Vega visualizations: vg.tooltip(vgView, options)
   * options can specify whether to show all fields or to show only custom fields
@@ -15,14 +20,19 @@
     // initialize tooltip with item data and options on mouse over
     vgView.on("mouseover.tooltipInit", function(event, item) {
       if (shouldShowTooltip(item)) {
-        init(event, item, options);
+        // clear existing promise because mouse can only point at one thing at a time
+        cancelPromise();
+
+        tooltipPromise = window.setTimeout(function() {
+          init(event, item, options);
+        }, options.delay || DELAY);
       }
     });
 
     // update tooltip position on mouse move
     // (important for large marks e.g. bars)
     vgView.on("mousemove.tooltipUpdate", function(event, item) {
-      if (shouldShowTooltip(item)) {
+      if (shouldShowTooltip(item) && tooltipActive) {
         update(event, item, options);
       }
     });
@@ -30,15 +40,22 @@
     // clear tooltip on mouse out
     vgView.on("mouseout.tooltipClear", function(event, item) {
       if (shouldShowTooltip(item)) {
-        clear(event, item, options);
+        cancelPromise();
+
+        if (tooltipActive) {
+          clear(event, item, options);
+        }
       }
     });
 
     return {
       destroy: function() {
+        // remove event listeners
         vgView.off("mouseover.tooltipInit");
         vgView.off("mousemove.tooltipUpdate");
         vgView.off("mouseout.tooltipClear");
+
+        cancelPromise(); // clear tooltip promise
       }
     }
   };
@@ -60,14 +77,20 @@
     // initialize tooltip with item data and options on mouse over
     vgView.on("mouseover.tooltipInit", function(event, item) {
       if (shouldShowTooltip(item)) {
-        init(event, item, options);
+        // clear existing promise because mouse can only point at one thing at a time
+        cancelPromise();
+
+        // make a new promise with time delay for tooltip
+        tooltipPromise = window.setTimeout(function() {
+          init(event, item, options);
+        }, options.delay || DELAY);
       }
     });
 
     // update tooltip position on mouse move
     // (important for large marks e.g. bars)
     vgView.on("mousemove.tooltipUpdate", function(event, item) {
-      if (shouldShowTooltip(item)) {
+      if (shouldShowTooltip(item) && tooltipActive) {
         update(event, item, options);
       }
     });
@@ -75,18 +98,34 @@
     // clear tooltip on mouse out
     vgView.on("mouseout.tooltipClear", function(event, item) {
       if (shouldShowTooltip(item)) {
-        clear(event, item, options);
+        cancelPromise();
+
+        if (tooltipActive) {
+          clear(event, item, options);
+        }
       }
     });
 
     return {
       destroy: function() {
+        // remove event listeners
         vgView.off("mouseover.tooltipInit");
         vgView.off("mousemove.tooltipUpdate");
         vgView.off("mouseout.tooltipClear");
+
+        cancelPromise(); // clear tooltip promise
       }
     }
   };
+
+  /* Cancel tooltip promise */
+  function cancelPromise() {
+    /* We don't check if tooltipPromise is valid because passing
+     an invalid ID to clearTimeout does not have any effect
+     (and doesn't throw an exception). */
+    window.clearTimeout(tooltipPromise);
+    tooltipPromise = undefined;
+  }
 
   /* Mapping from fieldDef.type to formatType */
   var formatTypeMap = {
@@ -311,7 +350,8 @@
 
     updatePosition(event, options);
     updateColorTheme(options);
-    d3.select("#vis-tooltip").style("display", "block");
+    d3.select("#vis-tooltip").style("visibility", "visible");
+    tooltipActive = true;
 
     // invoke user-provided callback
     if (options.onAppear) {
@@ -331,9 +371,14 @@
 
   /* Clear tooltip */
   function clear(event, item, options) {
+    // visibility hidden instead of display none
+    // because we need computed tooltip width and height to best position it
+    d3.select("#vis-tooltip").style("visibility", "hidden");
+
+    tooltipActive = false;
     clearData();
     clearColorTheme();
-    d3.select("#vis-tooltip").style("display", "none");
+    clearPosition();
 
     // invoke user-provided callback
     if (options.onDisappear) {
@@ -687,7 +732,7 @@
       .style("top", function() {
         // by default: put tooltip 10px below cursor
         // if tooltip is close to the bottom of the window, put tooltip 10px above cursor
-        var tooltipHeight = parseInt(d3.select(this).style("height"));
+        var tooltipHeight = this.getBoundingClientRect().height;
         if (event.clientY + tooltipHeight + offsetY < window.innerHeight) {
           return "" + (event.clientY + offsetY) + "px";
         } else {
@@ -697,13 +742,20 @@
       .style("left", function() {
         // by default: put tooltip 10px to the right of cursor
         // if tooltip is close to the right edge of the window, put tooltip 10 px to the left of cursor
-        var tooltipWidth = parseInt(d3.select(this).style("width"));
+        var tooltipWidth = this.getBoundingClientRect().width;
         if (event.clientX + tooltipWidth + offsetX < window.innerWidth) {
           return "" + (event.clientX + offsetX) + "px";
         } else {
           return "" + (event.clientX - tooltipWidth - offsetX) + "px";
         }
       });
+  }
+
+  /* Clear tooltip position */
+  function clearPosition() {
+    d3.select("#vis-tooltip")
+      .style("top", "-9999px")
+      .style("left", "-9999px");
   }
 
   /**

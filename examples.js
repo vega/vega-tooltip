@@ -63,7 +63,16 @@
         formatType: "number",
         format: ".2f"
       }
-    ]
+    ],
+    onAppear: function() {
+      console.log("tooltip appears!");
+    },
+    onDisappear: function() {
+      console.log("tooltip disappears!");
+    },
+    onMove: function() {
+      console.log("tooltip moves!");
+    }
   }
   addVlExample("exampleSpecs/bubble_multiple_aggregation.json", "#vis-bubble-multi-aggr", bubbleOpts);
 
@@ -154,7 +163,16 @@
         formatType: "number",
         format: ".1%"
       }
-    ]
+    ],
+    onAppear: function() {
+      console.log("tooltip appears!");
+    },
+    onDisappear: function() {
+      console.log("tooltip disappears!");
+    },
+    onMove: function() {
+      console.log("tooltip moves!");
+    }
   }
   addVgExample("exampleSpecs/choropleth.json", "#vis-choropleth", choroplethOpts);
 
