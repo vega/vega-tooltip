@@ -118,8 +118,11 @@
     }
   };
 
-  // cancel tooltip promise
+  /* Cancel tooltip promise */
   function cancelPromise() {
+    /* We don't check if tooltipPromise is valid because passing
+     an invalid ID to clearTimeout does not have any effect
+     (and doesn't throw an exception). */
     window.clearTimeout(tooltipPromise);
     tooltipPromise = undefined;
   }
