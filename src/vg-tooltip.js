@@ -2,7 +2,7 @@
 
 (function() {
   // by default, delay showing tooltip for 100 ms
-  const DELAY = 100;
+  var DELAY = 100;
   var tooltipPromise = undefined;
   var tooltipActive = false;
 
