@@ -289,11 +289,20 @@
     // the supplemented field option
     var supplementedFieldOption = {};
 
-    // supplement field name with underscore prefixes and suffixes to match the field names in item.datum
-    // for aggregation and timeUnit, this will add prefix "mean_", "yearmonth_"
+    // supplement a user-provided field name with underscore prefixes and suffixes to
+    // match the field names in item.datum
+    // for aggregation, this will add prefix "mean_" etc.
+    // for timeUnit, this will add prefix "yearmonth_" etc.
     // for bin, this will add prefix "bin_" and suffix "_start". Later we will replace "_start" with "_range".
     supplementedFieldOption.field = fieldDef.field ?
       vl.fieldDef.field(fieldDef) : fieldOption.field;
+
+    // if a temporal fieldDef has timeUnit, we store the unprefixed field name in options
+    // because we need the unprefixed field name in function removeDuplicateTimeFields()
+    // user should never have to provide unprefixedFieldName in options
+    if (fieldDef.type === "temporal" && fieldDef.timeUnit) {
+      supplementedFieldOption.unprefixedFieldName = fieldDef.field;
+    }
 
     // supplement title
     if (!config.countTitle) config.countTitle = vl.config.defaultConfig.countTitle; // use vl default countTitle
@@ -325,7 +334,7 @@
       }
     }
 
-    // supplement bin from fieldDef, user should never have to provide bin
+    // supplement bin from fieldDef, user should never have to provide bin in options
     if (fieldDef.bin) {
       supplementedFieldOption.field = supplementedFieldOption.field.replace("_start", "_range"); // replace suffix
       supplementedFieldOption.bin = true;
@@ -418,6 +427,9 @@
       "layout_start", "layout_mid", "layout_end", "layout_path", "layout_x", "layout_y"
     ];
     removeFields(itemData, removeKeys);
+
+    // remove duplicate time fields (if any)
+    removeDuplicateTimeFields(itemData, options.fields);
 
     // combine multiple rows of a binned field into a single row
     combineBinFields(itemData, options.fields);
@@ -559,6 +571,21 @@
     removeKeys.forEach(function(key) {
       dataMap.remove(key);
     })
+  }
+
+  /**
+   * When a temporal field has timeUnit, itemData will give us duplicated fields
+   * (e.g., Year and YEAR(Year)). In tooltip want to display the field WITH the
+   * timeUnit and remove the field that doesn't have timeUnit.
+   */
+  function removeDuplicateTimeFields(itemData, optFields) {
+    if (!optFields) return;
+
+    optFields.forEach(function(optField) {
+      if (optField.unprefixedFieldName) {
+        removeFields(itemData, [optField.unprefixedFieldName]);
+      }
+    });
   }
 
   /**
