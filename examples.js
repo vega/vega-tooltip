@@ -136,13 +136,14 @@
     fields: [
       {
         field: "date",
-        formatType: "time",
-        format: "%Y-%m-%d"
+        formatType: "time"
       }
     ]
   }
   addVlExample("exampleSpecs/overlay_area_short.json", "#vis-overlay-area", overlayAreaOpts);
 
+  // Quarter Line Chart
+  addVlExample("exampleSpecs/line_quarter.vl.json", "#vis-quarter-line");
 
   /* Vega Examples */
   // Arc
