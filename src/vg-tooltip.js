@@ -158,7 +158,7 @@
         var fieldOption = getFieldOption(options.fields, fieldDef);
 
         // supplement the fieldOption with fieldDef and config
-        var supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec.config);
+        var supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec);
 
         supplementedFields.push(supplementedFieldOption);
       });
@@ -171,7 +171,7 @@
           var fieldDef = getFieldDef(vl.spec.fieldDefs(vlSpec), fieldOption);
 
           // supplement the fieldOption with fieldDef and config
-          var supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec.config);
+          var supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec);
 
           supplementedFields.push(supplementedFieldOption);
         })
@@ -272,9 +272,9 @@
   * config (and its members timeFormat, numberFormat and countTitle) can be undefined.
   * @return the supplemented fieldOption, or undefined on error
   */
-  function supplementFieldOption(fieldOption, fieldDef, config) {
+  function supplementFieldOption(fieldOption, fieldDef, vlSpec) {
     // many specs don't have config
-    if (!config) config = {};
+    var config = vlSpec.config ? vlSpec.config : {};
 
     // at least one of fieldOption and fieldDef should exist
     if (!fieldOption && !fieldDef) {
@@ -297,11 +297,27 @@
     supplementedFieldOption.field = fieldDef.field ?
       vl.fieldDef.field(fieldDef) : fieldOption.field;
 
-    // if a temporal fieldDef has timeUnit, we store the unprefixed field name in options
-    // because we need the unprefixed field name in function removeDuplicateTimeFields()
-    // user should never have to provide unprefixedFieldName in options
+    // If a fieldDef is a (TIMEUNIT)T, we check if the original T is present in the vlSpec.
+    // If only (TIMEUNIT)T is present in vlSpec, we set `removeOriginalTemporalField` to T,
+    // which will cause function removeDuplicateTimeFields() to remove T and only keep (TIMEUNIT)T
+    // in item data.
+    // If both (TIMEUNIT)T and T are in vlSpec, we set `removeOriginalTemporalField` to undefined,
+    // which will leave both T and (TIMEUNIT)T in item data.
+    // Note: user should never have to provide this boolean in options
     if (fieldDef.type === "temporal" && fieldDef.timeUnit) {
-      supplementedFieldOption.unprefixedFieldName = fieldDef.field;
+      // in most cases, if it's a (TIMEUNIT)T, we remove original T
+      var originalTemporalField = fieldDef.field;
+      supplementedFieldOption.removeOriginalTemporalField = originalTemporalField;
+
+      // handle corner case: if T is present in vlSpec, then we keep both T and (TIMEUNIT)T
+      var fieldDefs = vl.spec.fieldDefs(vlSpec);
+      for (var i = 0; i < fieldDefs.length; i++) {
+        if (fieldDefs[i].field === originalTemporalField && !fieldDefs[i].timeUnit) {
+          supplementedFieldOption.removeOriginalTemporalField = undefined;
+          break;
+        }
+      }
+
     }
 
     // supplement title
@@ -582,8 +598,8 @@
     if (!optFields) return;
 
     optFields.forEach(function(optField) {
-      if (optField.unprefixedFieldName) {
-        removeFields(itemData, [optField.unprefixedFieldName]);
+      if (optField.removeOriginalTemporalField) {
+        removeFields(itemData, [optField.removeOriginalTemporalField]);
       }
     });
   }
