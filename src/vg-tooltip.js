@@ -158,7 +158,7 @@
         var fieldOption = getFieldOption(options.fields, fieldDef);
 
         // supplement the fieldOption with fieldDef and config
-        var supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec.config);
+        var supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec);
 
         supplementedFields.push(supplementedFieldOption);
       });
@@ -171,7 +171,7 @@
           var fieldDef = getFieldDef(vl.spec.fieldDefs(vlSpec), fieldOption);
 
           // supplement the fieldOption with fieldDef and config
-          var supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec.config);
+          var supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec);
 
           supplementedFields.push(supplementedFieldOption);
         })
@@ -272,9 +272,9 @@
   * config (and its members timeFormat, numberFormat and countTitle) can be undefined.
   * @return the supplemented fieldOption, or undefined on error
   */
-  function supplementFieldOption(fieldOption, fieldDef, config) {
+  function supplementFieldOption(fieldOption, fieldDef, vlSpec) {
     // many specs don't have config
-    if (!config) config = {};
+    var config = vlSpec.config ? vlSpec.config : {};
 
     // at least one of fieldOption and fieldDef should exist
     if (!fieldOption && !fieldDef) {
@@ -289,11 +289,36 @@
     // the supplemented field option
     var supplementedFieldOption = {};
 
-    // supplement field name with underscore prefixes and suffixes to match the field names in item.datum
-    // for aggregation and timeUnit, this will add prefix "mean_", "yearmonth_"
+    // supplement a user-provided field name with underscore prefixes and suffixes to
+    // match the field names in item.datum
+    // for aggregation, this will add prefix "mean_" etc.
+    // for timeUnit, this will add prefix "yearmonth_" etc.
     // for bin, this will add prefix "bin_" and suffix "_start". Later we will replace "_start" with "_range".
     supplementedFieldOption.field = fieldDef.field ?
       vl.fieldDef.field(fieldDef) : fieldOption.field;
+
+    // If a fieldDef is a (TIMEUNIT)T, we check if the original T is present in the vlSpec.
+    // If only (TIMEUNIT)T is present in vlSpec, we set `removeOriginalTemporalField` to T,
+    // which will cause function removeDuplicateTimeFields() to remove T and only keep (TIMEUNIT)T
+    // in item data.
+    // If both (TIMEUNIT)T and T are in vlSpec, we set `removeOriginalTemporalField` to undefined,
+    // which will leave both T and (TIMEUNIT)T in item data.
+    // Note: user should never have to provide this boolean in options
+    if (fieldDef.type === "temporal" && fieldDef.timeUnit) {
+      // in most cases, if it's a (TIMEUNIT)T, we remove original T
+      var originalTemporalField = fieldDef.field;
+      supplementedFieldOption.removeOriginalTemporalField = originalTemporalField;
+
+      // handle corner case: if T is present in vlSpec, then we keep both T and (TIMEUNIT)T
+      var fieldDefs = vl.spec.fieldDefs(vlSpec);
+      for (var i = 0; i < fieldDefs.length; i++) {
+        if (fieldDefs[i].field === originalTemporalField && !fieldDefs[i].timeUnit) {
+          supplementedFieldOption.removeOriginalTemporalField = undefined;
+          break;
+        }
+      }
+
+    }
 
     // supplement title
     if (!config.countTitle) config.countTitle = vl.config.defaultConfig.countTitle; // use vl default countTitle
@@ -315,7 +340,7 @@
           supplementedFieldOption.format = fieldDef.timeUnit ?
             // TODO(zening): use template for all time fields, to be consistent with Vega-Lite
             vl.timeUnit.template(fieldDef.timeUnit, "", false).match(/time:'[%-a-z]*'/i)[0].split("'")[1]
-              : config.timeFormat;
+              : config.timeFormat || vl.config.defaultConfig.timeFormat;
           break;
         case "number":
           supplementedFieldOption.format = config.numberFormat;
@@ -325,7 +350,7 @@
       }
     }
 
-    // supplement bin from fieldDef, user should never have to provide bin
+    // supplement bin from fieldDef, user should never have to provide bin in options
     if (fieldDef.bin) {
       supplementedFieldOption.field = supplementedFieldOption.field.replace("_start", "_range"); // replace suffix
       supplementedFieldOption.bin = true;
@@ -418,6 +443,9 @@
       "layout_start", "layout_mid", "layout_end", "layout_path", "layout_x", "layout_y"
     ];
     removeFields(itemData, removeKeys);
+
+    // remove duplicate time fields (if any)
+    removeDuplicateTimeFields(itemData, options.fields);
 
     // combine multiple rows of a binned field into a single row
     combineBinFields(itemData, options.fields);
@@ -559,6 +587,21 @@
     removeKeys.forEach(function(key) {
       dataMap.remove(key);
     })
+  }
+
+  /**
+   * When a temporal field has timeUnit, itemData will give us duplicated fields
+   * (e.g., Year and YEAR(Year)). In tooltip want to display the field WITH the
+   * timeUnit and remove the field that doesn't have timeUnit.
+   */
+  function removeDuplicateTimeFields(itemData, optFields) {
+    if (!optFields) return;
+
+    optFields.forEach(function(optField) {
+      if (optField.removeOriginalTemporalField) {
+        removeFields(itemData, [optField.removeOriginalTemporalField]);
+      }
+    });
   }
 
   /**
