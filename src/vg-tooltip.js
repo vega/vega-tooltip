@@ -274,7 +274,7 @@
   */
   function supplementFieldOption(fieldOption, fieldDef, vlSpec) {
     // many specs don't have config
-    var config = vlSpec.config ? vlSpec.config : {};
+    var config = vl.util.extend({}, vlSpec.config);
 
     // at least one of fieldOption and fieldDef should exist
     if (!fieldOption && !fieldDef) {
