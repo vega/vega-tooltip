@@ -26,6 +26,9 @@
         return console.error(error);
       }
       vg.parse.spec(vgSpec, function(error, chart) {
+        if (error) {
+          return console.error(error);
+        }
         var view = chart({el:id}).update();
         vg.tooltip(view, options);
       });
