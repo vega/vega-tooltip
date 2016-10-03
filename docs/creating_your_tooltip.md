@@ -103,7 +103,19 @@ vg.embed("#vis-scatter", embedSpec, function(error, result) {
 
 For [Vega](http://vega.github.io/vega/):
 
-You can create your tooltip using [`vg.tooltip`](APIs.md#vgtooltip). This function only requires the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) as input.
+You can create your tooltip using [`vg.tooltip`](APIs.md#vgtooltip). This function only requires the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) as input. For example:
+
+```js
+var embedSpec = {
+  spec: vgSpec
+}
+vg.embed(id, embedSpec, function(error, result) {
+  // result.view is the Vega View
+  vg.tooltip(result.view, options);
+});
+```
+
+As another example:
 
 ```js
 vg.parse.spec(vgSpec, function(error, chart) {
