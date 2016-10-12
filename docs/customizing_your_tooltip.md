@@ -41,8 +41,8 @@ var options =
     {
       field: "field1",
       title: "Field One",
-      formatType: "time" | "number" | "string", 			
-      format: string-specifier,
+      formatType: "time" | "number" | "string",
+      format: String | undefined,
       aggregate: operation,
     },
     ...
@@ -68,5 +68,5 @@ Each member in the `fields` array can customize the format of a field. These cus
 | `field`         | String         | The unique name of the field. With Vega-Lite, this is the field you provided to each encoding channel. |
 | `title`         | String         | A custom title for the field. |
 | `formatType`    | String         | Tells what kind of field this is (for formatting the field value in the tooltip) <br>__Supported values:__ `"number"`, `"time"`, and `"string"`. |
-| `format`        | String         | A string specifier for formatting the field value in the tooltip. If `formatType` is `"number"`, you can provide a [number format string-specifier](https://github.com/mbostock/d3/wiki/Formatting). If `formatType` is `"time"`, you can provide a [time format string-specifier](https://github.com/mbostock/d3/wiki/Time-Formatting). If `formatType` is `"string"`, there is no need to provide a `format`. |
+| `format`        | String         | A string for formatting the field value in the tooltip. If `formatType` is `"number"`, you can provide a [d3 number format specifier](https://github.com/mbostock/d3/wiki/Formatting). If `formatType` is `"time"`, you can provide a [d3 time format specifier](https://github.com/mbostock/d3/wiki/Time-Formatting) or a [vega-lite timeUnit](https://vega.github.io/vega-lite/docs/timeunit.html). If `formatType` is `"string"`, there is no need to provide a `format`. |
 | `aggregate`     | String         | (Vega-Lite only) If your Vega-Lite visualization has multiple aggregations of the same field, you can specify the aggregation to identify the particular aggregated field. <br>__Supported values:__ [Vega-Lite aggregate operations](https://vega.github.io/vega-lite/docs/aggregate.html#supported-aggregation-operations)|

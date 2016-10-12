@@ -330,6 +330,8 @@
       fieldOption.formatType : formatTypeMap[fieldDef.type];
 
     // supplement format
+    // if formatType is "time", format can be a d3 time format specifier or a vega-lite timeUnit
+    // if formatType is "number", format is a d3 number format specifier
     if (fieldOption.format) {
       supplementedFieldOption.format = fieldOption.format;
     }
@@ -338,9 +340,7 @@
       switch (supplementedFieldOption.formatType) {
         case "time":
           supplementedFieldOption.format = fieldDef.timeUnit ?
-            // TODO(zening): use template for all time fields, to be consistent with Vega-Lite
-            vl.timeUnit.template(fieldDef.timeUnit, "", false).match(/time:'[%-a-z]*'/i)[0].split("'")[1]
-              : config.timeFormat || vl.config.defaultConfig.timeFormat;
+            fieldDef.timeUnit : (config.timeFormat || vl.config.defaultConfig.timeFormat);
           break;
         case "number":
           supplementedFieldOption.format = config.numberFormat;
@@ -667,15 +667,20 @@
           case "string":
         }
       });
+      console.warn("Dropping field(s) " + quanKeys.join(", ") + " from tooltip. Please use vega-lite layers to add quantitative fields to tooltip.")
       removeFields(itemData, quanKeys);
     }
   }
 
   /**
   * Format value using formatType and format
+  * If value or formatType is undefined, this function will not perform and will return undefined.
+  * If formatType is specified but format is undefined, this function will use formatType to automatically format value.
+  * Note that in this situation, customFormat() is still different from autoFormat() because the later has to infer type.
+  *
   * @param value - a field value to be formatted
   * @param formatType - the foramtType can be: "time", "number", or "string"
-  * @param format - a d3 time format specifier, or a d3 number format specifier, or undefined
+  * @param format - a d3 time format specifier, or a vega-lite timeUnit, or a d3 number format specifier, or undefined
   * @return the formatted value, or undefined if value or formatType is missing
   */
   function customFormat(value, formatType, format) {
@@ -684,7 +689,16 @@
 
     switch (formatType) {
       case "time":
-        return format ? dl.format.time(format)(value) : dl.format.auto.time()(value);
+        if (format) {
+          // create a template using vega-lite timeUnit or d3 time format specifier
+          var timeTemplate = vl.timeUnit.TIMEUNITS.includes(format) ?
+            vl.timeUnit.template(format, 'stamp', false) : // TODO(zening): support shortTimeLabels
+            "{{stamp|time:\'" + format + "\'}}";
+          return dl.template(timeTemplate)({stamp: value});
+        }
+        else {
+          return dl.format.auto.time()(value);
+        }
       case "number":
         return format ? dl.format.number(format)(value) : dl.format.auto.number()(value);
       case "string":
