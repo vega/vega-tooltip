@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "isolatedModules": false,
+    "declaration": true,
+    "noImplicitAny": false,
+    "suppressImplicitAnyIndexErrors": true,
+    "removeComments": false,
+    "preserveConstEnums": true,
+    "noEmitOnError": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
+    "sourceMap": true,
+    "typeRoots" : ["./typings", "node_modules/@types"]
+  },
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts",
+    "examples/**/*.ts",
+    "typings/*.d.ts",
+    "node_modules/@types/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "bower_components",
+    "data",
+    "_site",
+    "lib"
+  ]
+}
