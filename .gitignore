@@ -3,4 +3,5 @@ bower_components
 node_modules
 /vg-tooltip.min.js
 /vg-tooltip.css
+src/vg-tooltip.js
 settings.json
