@@ -1,12 +1,20 @@
 "use strict";
+
+// yarn add @types/d3
+
 import {supplementedFieldOption} from "./supplementedFieldOption";
-import d3 = require('d3-collection');
-import vl = require('vega-lite');
-import dl = require('datalib');
+import {map, Map} from 'd3-collection';
+import {select} from 'd3-selection';
+import {Option} from "./options";
+import * as vl from 'vega-lite';
+// look at datalib src to see what it does
+
+import {FieldDef} from 'vega-lite/src/fielddef';
+import {Spec} from 'vega-lite/src/spec';
 
 // by default, delay showing tooltip for 100 ms
 var DELAY = 100;
-var tooltipPromise = undefined;
+var tooltipPromise: TimerID = undefined;
 var tooltipActive = false;
 
 declare global {
@@ -15,6 +23,9 @@ declare global {
   vl: any;
   }
 }
+type VgView = any;
+type VgViewItem = any;
+type TimerID = any;
 
 /**
 * Export API for Vega visualizations: vg.tooltip(vgView, options)
@@ -22,13 +33,14 @@ declare global {
 * It can also provide custom title and format for fields
 */
 window.vg = window.vg || {};
-window.vg.tooltip = function (vgView, options) {
+window.vg.tooltip = function (vgView: VgView, options: Option) {
+  // TODO: check if we should delete this
   if (!options) {
     options = {};
   }
 
   // initialize tooltip with item data and options on mouse over
-  vgView.on("mouseover.tooltipInit", function (event, item) {
+  vgView.on("mouseover.tooltipInit", function (event: Event, item: VgViewItem) {
     if (shouldShowTooltip(item)) {
       // clear existing promise because mouse can only point at one thing at a time
       cancelPromise();
@@ -41,14 +53,14 @@ window.vg.tooltip = function (vgView, options) {
 
   // update tooltip position on mouse move
   // (important for large marks e.g. bars)
-  vgView.on("mousemove.tooltipUpdate", function (event, item) {
+  vgView.on("mousemove.tooltipUpdate", function (event: Event, item) {
     if (shouldShowTooltip(item) && tooltipActive) {
       update(event, item, options);
     }
   });
 
   // clear tooltip on mouse out
-  vgView.on("mouseout.tooltipClear", function (event, item) {
+  vgView.on("mouseout.tooltipClear", function (event: Event, item) {
     if (shouldShowTooltip(item)) {
       cancelPromise();
 
@@ -77,7 +89,7 @@ window.vg.tooltip = function (vgView, options) {
 * options can be supplemented by vlSpec
 */
 window.vl = window.vl || {};
-window.vl.tooltip = function (vgView, vlSpec, options) {
+window.vl.tooltip = function (vgView: VgView, vlSpec: Spec, options: Option) {
   if (!options) {
     options = {};
   }
@@ -85,7 +97,7 @@ window.vl.tooltip = function (vgView, vlSpec, options) {
   options = supplementOptions(options, vlSpec);
 
   // initialize tooltip with item data and options on mouse over
-  vgView.on("mouseover.tooltipInit", function (event, item) {
+  vgView.on("mouseover.tooltipInit", function (event: Event, item) {
     if (shouldShowTooltip(item)) {
       // clear existing promise because mouse can only point at one thing at a time
       cancelPromise();
@@ -99,14 +111,14 @@ window.vl.tooltip = function (vgView, vlSpec, options) {
 
   // update tooltip position on mouse move
   // (important for large marks e.g. bars)
-  vgView.on("mousemove.tooltipUpdate", function (event, item) {
+  vgView.on("mousemove.tooltipUpdate", function (event: Event, item) {
     if (shouldShowTooltip(item) && tooltipActive) {
       update(event, item, options);
     }
   });
 
   // clear tooltip on mouse out
-  vgView.on("mouseout.tooltipClear", function (event, item) {
+  vgView.on("mouseout.tooltipClear", function (event: Event, item) {
     if (shouldShowTooltip(item)) {
       cancelPromise();
 
@@ -157,7 +169,7 @@ var formatTypeMap = {
 * if options.showAllFields is false, vlSpec will only supplement existing fields
 * in options.fields
 */
-function supplementOptions(options, vlSpec) {
+function supplementOptions(options: Option, vlSpec: Spec) {
   // fields to be supplemented by vlSpec
   var supplementedFields = [];
 
@@ -245,7 +257,6 @@ function getFieldOption(fieldOptions, fieldDef) {
 /**
 * Find a fieldDef that matches a fieldOption
 *
-* @param {Object[]} fieldDefs - array of fieldDefs from vlSpec
 * @param {Object} fieldOption - a field option (a member in options.fields[])
 * @return the matching fieldDef, or undefined if no match was found
 *
@@ -253,8 +264,10 @@ function getFieldOption(fieldOptions, fieldDef) {
 * If the matching fieldDef is aggregated, the aggregation should not contradict
 * with that of the fieldOption.
 */
-function getFieldDef(fieldDefs, fieldOption) {
-  if (!fieldOption || !fieldOption.field || !fieldDefs) return;
+function getFieldDef(fieldDefs: FieldDef[], fieldOption): FieldDef {
+  if (!fieldOption || !fieldOption.field || !fieldDefs) {
+    return undefined;
+  }
 
   // field name should match, aggregation should not disagree
   for (var i = 0; i < fieldDefs.length; i++) {
@@ -272,7 +285,7 @@ function getFieldDef(fieldDefs, fieldOption) {
   }
 
   // return undefined if no match was found
-  return;
+  return undefined;
 }
 
 /**
@@ -282,14 +295,14 @@ function getFieldDef(fieldDefs, fieldOption) {
 * config (and its members timeFormat, numberFormat and countTitle) can be undefined.
 * @return the supplemented fieldOption, or undefined on error
 */
-function supplementFieldOption(fieldOption, fieldDef, vlSpec) {
+function supplementFieldOption(fieldOption, fieldDef: FieldDef, vlSpec: Spec) {
   // many specs don't have config
   var config = vl.util.extend({}, vlSpec.config);
 
   // at least one of fieldOption and fieldDef should exist
   if (!fieldOption && !fieldDef) {
     console.error("[Tooltip] Cannot supplement a field when field and fieldDef are both empty.");
-    return;
+    return undefined;
   }
 
   // if either one of fieldOption and fieldDef is undefined, make it an empty object
@@ -385,7 +398,7 @@ function init(event, item, options) {
 
   updatePosition(event, options);
   updateColorTheme(options);
-  d3.select("#vis-tooltip").style("visibility", "visible");
+  select("#vis-tooltip").style("visibility", "visible");
   tooltipActive = true;
 
   // invoke user-provided callback
@@ -395,7 +408,7 @@ function init(event, item, options) {
 }
 
 /* Update tooltip position on mousemove */
-function update(event, item, options) {
+function update(event: Event, item, options: Option) {
   updatePosition(event, options);
 
   // invoke user-provided callback
@@ -405,10 +418,10 @@ function update(event, item, options) {
 }
 
 /* Clear tooltip */
-function clear(event, item, options) {
+function clear(event: Event, item, options: Option) {
   // visibility hidden instead of display none
   // because we need computed tooltip width and height to best position it
-  d3.select("#vis-tooltip").style("visibility", "hidden");
+  select("#vis-tooltip").style("visibility", "hidden");
 
   tooltipActive = false;
   clearData();
@@ -440,11 +453,11 @@ function shouldShowTooltip(item) {
 * Prepare data for the tooltip
 * @return An array of tooltip data [{ title: ..., value: ...}]
 */
-function getTooltipData(item, options) {
+function getTooltipData(item, options: Option) {
   // this array will be bind to the tooltip element
   var tooltipData;
 
-  var itemData = d3.map(item.datum);
+  var itemData = map(item.datum);
 
   // TODO(zening): find more keys which we should remove from data (#35)
   var removeKeys = [
@@ -482,7 +495,7 @@ function getTooltipData(item, options) {
 * #param {Object} options - user-provided options
 * @return An array of formatted fields specified by options [{ title: ..., value: ...}]
 */
-function prepareCustomFieldsData(itemData, options) {
+function prepareCustomFieldsData(itemData, options: Option) {
   var tooltipData = [];
 
   options.fields.forEach(function (fieldOption) {
@@ -512,7 +525,7 @@ function prepareCustomFieldsData(itemData, options) {
 * @return the field value on success, undefined otherwise
 */
 // TODO(zening): Mute "Cannot find field" warnings for composite vis (issue #39)
-function getValue(itemData, field) {
+function getValue(itemData, field: string) {
   var value;
 
   var accessors = field.split('.');
@@ -555,13 +568,13 @@ function getValue(itemData, field) {
 * It will not try to parse value if it is an object. If value is an object, please
 * use prepareCustomFieldsData() instead.
 */
-function prepareAllFieldsData(itemData, options) {
+function prepareAllFieldsData(itemData, options: Option) {
   var tooltipData = [];
 
   // here, fieldOptions still provides format
-  var fieldOptions = d3.map(options.fields, function (d) { return d.field; });
+  var fieldOptions = map(options.fields, function (d) { return d.field; });
 
-  itemData.forEach(function (field, value) {
+  itemData.forEach(function (field: string, value) {
     // prepare title
     var title;
     if (fieldOptions.has(field) && fieldOptions.get(field).title) {
@@ -593,7 +606,7 @@ function prepareAllFieldsData(itemData, options) {
 * @param {d3.map} dataMap - the data map that contains tooltip data.
 * @param {string[]} removeKeys - the fields that should be removed from dataMap.
 */
-function removeFields(dataMap, removeKeys) {
+function removeFields(dataMap: Map, removeKeys: string[]) {
   removeKeys.forEach(function (key) {
     dataMap.remove(key);
   })
@@ -729,13 +742,13 @@ function autoFormat(value) {
 function getTooltipPlaceholder() {
   var tooltipPlaceholder;
 
-  if (d3.select("#vis-tooltip").empty()) {
-    tooltipPlaceholder = d3.select("body").append("div")
+  if (select("#vis-tooltip").empty()) {
+    tooltipPlaceholder = select("body").append("div")
       .attr("id", "vis-tooltip")
       .attr("class", "vg-tooltip");
   }
   else {
-    tooltipPlaceholder = d3.select("#vis-tooltip");
+    tooltipPlaceholder = select("#vis-tooltip");
   }
 
   return tooltipPlaceholder;
@@ -761,7 +774,7 @@ function bindData(tooltipPlaceholder, tooltipData) {
 * Clear tooltip data
 */
 function clearData() {
-  d3.select("#vis-tooltip").selectAll(".tooltip-row").data([])
+  select("#vis-tooltip").selectAll(".tooltip-row").data([])
     .exit().remove();
 }
 
@@ -781,7 +794,7 @@ function updatePosition(event, options) {
     offsetY = options.offset.y;
   }
 
-  d3.select("#vis-tooltip")
+  select("#vis-tooltip")
     .style("top", function () {
       // by default: put tooltip 10px below cursor
       // if tooltip is close to the bottom of the window, put tooltip 10px above cursor
@@ -806,7 +819,7 @@ function updatePosition(event, options) {
 
 /* Clear tooltip position */
 function clearPosition() {
-  d3.select("#vis-tooltip")
+  select("#vis-tooltip")
     .style("top", "-9999px")
     .style("left", "-9999px");
 }
@@ -821,14 +834,14 @@ function updateColorTheme(options) {
   clearColorTheme();
 
   if (options && options.colorTheme === "dark") {
-    d3.select("#vis-tooltip").classed("dark-theme", true);
+    select("#vis-tooltip").classed("dark-theme", true);
   }
   else {
-    d3.select("#vis-tooltip").classed("light-theme", true);
+    select("#vis-tooltip").classed("light-theme", true);
   }
 }
 
 /* Clear color themes */
 function clearColorTheme() {
-  d3.select("#vis-tooltip").classed("dark-theme light-theme", false);
+  select("#vis-tooltip").classed("dark-theme light-theme", false);
 }
