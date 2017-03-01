@@ -1,17 +1,17 @@
-import {FormatSpecifier} from 'd3-format'
-import {AggregateOp} from 'vega-lite/src/aggregate'
+import {FormatSpecifier} from 'd3-format';
+import {AggregateOp} from 'vega-lite/src/aggregate';
+import {FieldDef} from 'vega-lite/src/fielddef';
 export interface Option {
-  showAllFields: boolean,
-  fields: [{
-    field: string,
-    title: string,
-    formatType: 'number' | 'time' | 'string'
-    format: FormatSpecifier,
-    aggregate: AggregateOp
-  }],
-  delay: number,
-  onAppear: (event: Event, item: any) => void,
-  onMove: (event: Event, item: any) => void,
-  onDisappear: (event: Event, item: any) => void,
-  colorTheme: 'light' | 'dark'
+  showAllFields?: boolean,
+  fields?: Field[],
+  delay?: number,
+  onAppear?(event: Event, item: any): void,
+  onMove?(event: Event, item: any): void,
+  onDisappear?(event: Event, item: any): void,
+  colorTheme?: 'light' | 'dark'
+}
+
+export interface Field extends FieldDef {
+    formatType?: 'number' | 'time' | 'string'
+    format?: FormatSpecifier
 }

@@ -3,10 +3,13 @@
 // yarn add @types/d3
 
 import {supplementedFieldOption} from "./supplementedFieldOption";
-import {map, Map} from 'd3-collection';
+import {map as d3map, Map} from 'd3-collection';
 import {select} from 'd3-selection';
-import {Option} from "./options";
+import {Option, Field} from "./options";
+import {TEMPORAL} from 'vega-lite/src/type';
+import {FormatSpecifier} from 'd3-format';
 import * as vl from 'vega-lite';
+
 // look at datalib src to see what it does
 
 import {FieldDef} from 'vega-lite/src/fielddef';
@@ -24,7 +27,7 @@ declare global {
   }
 }
 type VgView = any;
-type VgViewItem = any;
+type SceneGraph = any;
 type TimerID = any;
 
 /**
@@ -33,14 +36,11 @@ type TimerID = any;
 * It can also provide custom title and format for fields
 */
 window.vg = window.vg || {};
-window.vg.tooltip = function (vgView: VgView, options: Option) {
-  // TODO: check if we should delete this
-  if (!options) {
-    options = {};
-  }
+window.vg.tooltip = function (vgView: VgView, options: Option = {}) {
+  // TODO: change item type to vega scenegraph
 
   // initialize tooltip with item data and options on mouse over
-  vgView.on("mouseover.tooltipInit", function (event: Event, item: VgViewItem) {
+  vgView.on("mouseover.tooltipInit", function (event: Event, item: SceneGraph) {
     if (shouldShowTooltip(item)) {
       // clear existing promise because mouse can only point at one thing at a time
       cancelPromise();
@@ -53,14 +53,14 @@ window.vg.tooltip = function (vgView: VgView, options: Option) {
 
   // update tooltip position on mouse move
   // (important for large marks e.g. bars)
-  vgView.on("mousemove.tooltipUpdate", function (event: Event, item) {
+  vgView.on("mousemove.tooltipUpdate", function (event: Event, item: SceneGraph) {
     if (shouldShowTooltip(item) && tooltipActive) {
       update(event, item, options);
     }
   });
 
   // clear tooltip on mouse out
-  vgView.on("mouseout.tooltipClear", function (event: Event, item) {
+  vgView.on("mouseout.tooltipClear", function (event: Event, item: SceneGraph) {
     if (shouldShowTooltip(item)) {
       cancelPromise();
 
@@ -89,15 +89,12 @@ window.vg.tooltip = function (vgView: VgView, options: Option) {
 * options can be supplemented by vlSpec
 */
 window.vl = window.vl || {};
-window.vl.tooltip = function (vgView: VgView, vlSpec: Spec, options: Option) {
-  if (!options) {
-    options = {};
-  }
+window.vl.tooltip = function (vgView: VgView, vlSpec: Spec, options: Option = {}) {
 
   options = supplementOptions(options, vlSpec);
 
   // initialize tooltip with item data and options on mouse over
-  vgView.on("mouseover.tooltipInit", function (event: Event, item) {
+  vgView.on("mouseover.tooltipInit", function (event: Event, item: SceneGraph) {
     if (shouldShowTooltip(item)) {
       // clear existing promise because mouse can only point at one thing at a time
       cancelPromise();
@@ -111,14 +108,14 @@ window.vl.tooltip = function (vgView: VgView, vlSpec: Spec, options: Option) {
 
   // update tooltip position on mouse move
   // (important for large marks e.g. bars)
-  vgView.on("mousemove.tooltipUpdate", function (event: Event, item) {
+  vgView.on("mousemove.tooltipUpdate", function (event: Event, item: SceneGraph) {
     if (shouldShowTooltip(item) && tooltipActive) {
       update(event, item, options);
     }
   });
 
   // clear tooltip on mouse out
-  vgView.on("mouseout.tooltipClear", function (event: Event, item) {
+  vgView.on("mouseout.tooltipClear", function (event: Event, item: SceneGraph) {
     if (shouldShowTooltip(item)) {
       cancelPromise();
 
@@ -137,7 +134,7 @@ window.vl.tooltip = function (vgView: VgView, vlSpec: Spec, options: Option) {
 
       cancelPromise(); // clear tooltip promise
     }
-  }
+  } 
 };
 
 /* Cancel tooltip promise */
@@ -149,7 +146,7 @@ function cancelPromise() {
   tooltipPromise = undefined;
 }
 
-/* Mapping from fieldDef.type to formatType */
+/* d3mapping from fieldDef.type to formatType */
 var formatTypeMap = {
   "quantitative": "number",
   "temporal": "time",
@@ -171,7 +168,7 @@ var formatTypeMap = {
 */
 function supplementOptions(options: Option, vlSpec: Spec) {
   // fields to be supplemented by vlSpec
-  var supplementedFields = [];
+  var supplementedFields: Field[];
 
   // if showAllFields is true or undefined, supplement all fields in vlSpec
   if (options.showAllFields !== false) {
@@ -216,8 +213,8 @@ function supplementOptions(options: Option, vlSpec: Spec) {
 * the aggregation of the fieldDef.
 * If the fieldDef is not aggregated, find a fieldOption that matches the field name.
 */
-function getFieldOption(fieldOptions, fieldDef) {
-  if (!fieldDef || !fieldOptions || fieldOptions.length <= 0) return;
+function getFieldOption(fieldOptions: Field[], fieldDef: FieldDef) {
+  if (!fieldDef || !fieldOptions || fieldOptions.length <= 0) return undefined;
 
   // if aggregate, match field name and aggregate operation
   if (fieldDef.aggregate) {
@@ -238,7 +235,7 @@ function getFieldOption(fieldOptions, fieldDef) {
     }
 
     // return undefined if no match was found
-    return;
+    return undefined;
   }
   // if not aggregate, just match field name
   else {
@@ -250,7 +247,7 @@ function getFieldOption(fieldOptions, fieldDef) {
     }
 
     // return undefined if no match was found
-    return;
+    return undefined;
   }
 }
 
@@ -264,7 +261,7 @@ function getFieldOption(fieldOptions, fieldDef) {
 * If the matching fieldDef is aggregated, the aggregation should not contradict
 * with that of the fieldOption.
 */
-function getFieldDef(fieldDefs: FieldDef[], fieldOption): FieldDef {
+function getFieldDef(fieldDefs: FieldDef[], fieldOption: Field): FieldDef {
   if (!fieldOption || !fieldOption.field || !fieldDefs) {
     return undefined;
   }
@@ -295,7 +292,7 @@ function getFieldDef(fieldDefs: FieldDef[], fieldOption): FieldDef {
 * config (and its members timeFormat, numberFormat and countTitle) can be undefined.
 * @return the supplemented fieldOption, or undefined on error
 */
-function supplementFieldOption(fieldOption, fieldDef: FieldDef, vlSpec: Spec) {
+function supplementFieldOption(fieldOption: Field, fieldDef: FieldDef, vlSpec: Spec) {
   // many specs don't have config
   var config = vl.util.extend({}, vlSpec.config);
 
@@ -327,7 +324,7 @@ function supplementFieldOption(fieldOption, fieldDef: FieldDef, vlSpec: Spec) {
   // If both (TIMEUNIT)T and T are in vlSpec, we set `removeOriginalTemporalField` to undefined,
   // which will leave both T and (TIMEUNIT)T in item data.
   // Note: user should never have to provide this boolean in options
-  if (fieldDef.type === "temporal" && fieldDef.timeUnit) {
+  if (fieldDef.type === TEMPORAL && fieldDef.timeUnit) {
     // in most cases, if it's a (TIMEUNIT)T, we remove original T
     var originalTemporalField = fieldDef.field;
     supplementedFieldOption.removeOriginalTemporalField = originalTemporalField;
@@ -385,7 +382,7 @@ function supplementFieldOption(fieldOption, fieldDef: FieldDef, vlSpec: Spec) {
 
 
 /* Initialize tooltip with data */
-function init(event, item, options) {
+function init(event: Event, item: SceneGraph, options: Option) {
   // get tooltip HTML placeholder
   var tooltipPlaceholder = getTooltipPlaceholder();
 
@@ -408,7 +405,7 @@ function init(event, item, options) {
 }
 
 /* Update tooltip position on mousemove */
-function update(event: Event, item, options: Option) {
+function update(event: Event, item: SceneGraph, options: Option) {
   updatePosition(event, options);
 
   // invoke user-provided callback
@@ -418,7 +415,7 @@ function update(event: Event, item, options: Option) {
 }
 
 /* Clear tooltip */
-function clear(event: Event, item, options: Option) {
+function clear(event: Event, item: SceneGraph, options: Option) {
   // visibility hidden instead of display none
   // because we need computed tooltip width and height to best position it
   select("#vis-tooltip").style("visibility", "hidden");
@@ -436,7 +433,7 @@ function clear(event: Event, item, options: Option) {
 
 
 /* Decide if a scenegraph item deserves tooltip */
-function shouldShowTooltip(item) {
+function shouldShowTooltip(item: SceneGraph) {
   // no data, no show
   if (!item || !item.datum) return false;
 
@@ -453,11 +450,11 @@ function shouldShowTooltip(item) {
 * Prepare data for the tooltip
 * @return An array of tooltip data [{ title: ..., value: ...}]
 */
-function getTooltipData(item, options: Option) {
+function getTooltipData(item: SceneGraph, options: Option) {
   // this array will be bind to the tooltip element
   var tooltipData;
 
-  var itemData = map(item.datum);
+  var itemData: Map<{}> = d3map(item.datum);
 
   // TODO(zening): find more keys which we should remove from data (#35)
   var removeKeys = [
@@ -488,15 +485,15 @@ function getTooltipData(item, options: Option) {
 
 
 /**
-* Prepare custom fields data for tooltip. This function foramts
+* Prepare custom fields data for tooltip. This function formats
 * field titles and values and returns an array of formatted fields.
 *
 * @param {d3.map} itemData - a map of item.datum
-* #param {Object} options - user-provided options
+* @param {Object} options - user-provided options
 * @return An array of formatted fields specified by options [{ title: ..., value: ...}]
 */
-function prepareCustomFieldsData(itemData, options: Option) {
-  var tooltipData = [];
+function prepareCustomFieldsData(itemData: Map<{}>, options: Option) {
+  var tooltipData: {title: string, value: Field}[];
 
   options.fields.forEach(function (fieldOption) {
     // prepare field title
@@ -525,13 +522,13 @@ function prepareCustomFieldsData(itemData, options: Option) {
 * @return the field value on success, undefined otherwise
 */
 // TODO(zening): Mute "Cannot find field" warnings for composite vis (issue #39)
-function getValue(itemData, field: string) {
-  var value;
+function getValue(itemData: Map<{}>, field: string) {
+  var value: Field;
 
-  var accessors = field.split('.');
+  var accessors: string[] = field.split('.');
 
   // get the first accessor and remove it from the array
-  var firstAccessor = accessors[0];
+  var firstAccessor: string = accessors[0];
   accessors.shift();
 
   if (itemData.has(firstAccessor)) {
@@ -547,12 +544,11 @@ function getValue(itemData, field: string) {
 
   if (value === undefined) {
     console.warn("[Tooltip] Cannot find field " + field + " in data.");
-    return;
+    return undefined;
   }
   else {
     return value;
   }
-
 }
 
 
@@ -568,13 +564,13 @@ function getValue(itemData, field: string) {
 * It will not try to parse value if it is an object. If value is an object, please
 * use prepareCustomFieldsData() instead.
 */
-function prepareAllFieldsData(itemData, options: Option) {
-  var tooltipData = [];
+function prepareAllFieldsData(itemData: Map<{}>, options: Option) {
+  var tooltipData: {title: string, value: Field}[];
 
   // here, fieldOptions still provides format
-  var fieldOptions = map(options.fields, function (d) { return d.field; });
+  var fieldOptions = d3map(options.fields, function (d) { return d.field; });
 
-  itemData.forEach(function (field: string, value) {
+  itemData.each(function (field: string, value: Field) {
     // prepare title
     var title;
     if (fieldOptions.has(field) && fieldOptions.get(field).title) {
@@ -606,7 +602,7 @@ function prepareAllFieldsData(itemData, options: Option) {
 * @param {d3.map} dataMap - the data map that contains tooltip data.
 * @param {string[]} removeKeys - the fields that should be removed from dataMap.
 */
-function removeFields(dataMap: Map, removeKeys: string[]) {
+function removeFields(dataMap: Map<{}>, removeKeys: string[]) {
   removeKeys.forEach(function (key) {
     dataMap.remove(key);
   })
@@ -617,7 +613,7 @@ function removeFields(dataMap: Map, removeKeys: string[]) {
  * (e.g., Year and YEAR(Year)). In tooltip want to display the field WITH the
  * timeUnit and remove the field that doesn't have timeUnit.
  */
-function removeDuplicateTimeFields(itemData, optFields) {
+function removeDuplicateTimeFields(itemData: Map<{}>, optFields: supplementedFieldOption[]) {
   if (!optFields) return;
 
   optFields.forEach(function (optField) {
@@ -635,8 +631,8 @@ function removeDuplicateTimeFields(itemData, optFields) {
 * @param {Object[]} fieldOptions - a list of field options (i.e. options.fields[])
 * @return itemData with combined bin fields
 */
-function combineBinFields(itemData, fieldOptions) {
-  if (!fieldOptions) return;
+function combineBinFields(itemData: Map<{}>, fieldOptions: Field[]) {
+  if (!fieldOptions) return undefined;
 
   fieldOptions.forEach(function (fieldOption) {
     if (fieldOption.bin === true) {
@@ -677,10 +673,10 @@ function combineBinFields(itemData, fieldOptions) {
 * = APPL, AMZN, GOOG, IBM, MSFT) because these fields don't tend to change along
 * the line / area border.
 */
-function dropFieldsForLineArea(marktype, itemData) {
+function dropFieldsForLineArea(marktype, itemData: Map<Field>) {
   if (marktype === "line" || marktype === "area") {
     var quanKeys = [];
-    itemData.forEach(function (field, value) {
+    itemData.each(function (field, value) {
       switch (dl.type(value)) {
         case "number":
         case "date":
@@ -701,7 +697,7 @@ function dropFieldsForLineArea(marktype, itemData) {
 * @param format - a d3 time format specifier, or a d3 number format specifier, or undefined
 * @return the formatted value, or undefined if value or formatType is missing
 */
-function customFormat(value, formatType, format) {
+function customFormat(value: Field, formatType: string, format: FormatSpecifier) {
   if (value === undefined || value === null) return;
   if (!formatType) return;
 
@@ -720,7 +716,7 @@ function customFormat(value, formatType, format) {
 * Automatically format a time, number or string value
 * @return the formatted time, number or string value
 */
-function autoFormat(value) {
+function autoFormat(value: Field) {
   switch (dl.type(value)) {
     case "date":
       return dl.format.auto.time()(value);
@@ -783,7 +779,7 @@ function clearData() {
 * Default position is 10px right of and 10px below the cursor. This can be
 * overwritten by options.offset
 */
-function updatePosition(event, options) {
+function updatePosition(event: Event, options: Option) {
   // determine x and y offsets, defaults are 10px
   var offsetX = 10;
   var offsetY = 10;
@@ -830,7 +826,7 @@ function clearPosition() {
 * If colorTheme === "dark", apply dark theme to tooltip.
 * Otherwise apply light color theme.
 */
-function updateColorTheme(options) {
+function updateColorTheme(options: Option) {
   clearColorTheme();
 
   if (options && options.colorTheme === "dark") {
