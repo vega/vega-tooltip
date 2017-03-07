@@ -1,10 +1,15 @@
 import {FormatSpecifier} from 'd3-format';
 import {AggregateOp} from 'vega-lite/src/aggregate';
 import {FieldDef} from 'vega-lite/src/fielddef';
+
 export interface Option {
   showAllFields?: boolean,
   fields?: Field[],
   delay?: number,
+  offset?: {
+    x: number,
+    y: number
+  },
   onAppear?(event: Event, item: any): void,
   onMove?(event: Event, item: any): void,
   onDisappear?(event: Event, item: any): void,
