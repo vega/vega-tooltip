@@ -1,5 +1,3 @@
-"use strict";
-
 import {supplementedFieldOption} from "./supplementedFieldOption";
 import {map as d3map, Map} from 'd3-collection';
 import {select, Selection, EnterElement} from 'd3-selection';
@@ -174,7 +172,7 @@ var formatTypeMap: {[type: string]: 'number' | 'time'} = {
 */
 function supplementOptions(options: Option, vlSpec: Spec) {
   // fields to be supplemented by vlSpec
-  var supplementedFields: Field[];
+  var supplementedFields: Field[] = [];
 
   // if showAllFields is true or undefined, supplement all fields in vlSpec
   if (options.showAllFields !== false) {
@@ -313,7 +311,7 @@ function supplementFieldOption(fieldOption: Field, fieldDef: FieldDef, vlSpec: S
   if (fieldOption && !fieldDef) fieldDef = {};
 
   // the supplemented field option
-  var supplementedFieldOption: supplementedFieldOption;
+  var supplementedFieldOption: supplementedFieldOption = {};
 
   // supplement a user-provided field name with underscore prefixes and suffixes to
   // match the field names in item.datum
@@ -500,7 +498,7 @@ function getTooltipData(item: SceneGraph, options: Option) {
 * @return An array of formatted fields specified by options [{ title: ..., value: ...}]
 */
 function prepareCustomFieldsData(itemData: Map<string>, options: Option) {
-  var tooltipData: ToolTipData[];
+  var tooltipData: ToolTipData[] = [];
 
   options.fields.forEach(function (fieldOption) {
     // prepare field title
@@ -572,7 +570,7 @@ function getValue(itemData: Map<string>, field: string) {
 * use prepareCustomFieldsData() instead.
 */
 function prepareAllFieldsData(itemData: Map<string>, options: Option) {
-  var tooltipData: ToolTipData[];
+  var tooltipData: ToolTipData[] = [];
 
   // here, fieldOptions still provides format
   var fieldOptions = d3map(options.fields, function (d) { return d.field; });

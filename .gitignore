@@ -1,7 +1,8 @@
 data
 bower_components
 node_modules
-/vg-tooltip.min.js
-/vg-tooltip.css
+vg-tooltip.min.js
+vg-tooltip.css
+vg-tooltip.js
 src/vg-tooltip.js
 settings.json
