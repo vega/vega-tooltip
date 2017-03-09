@@ -4,19 +4,19 @@ import {FieldDef} from 'vega-lite/src/fielddef';
 
 export interface Option {
   showAllFields?: boolean,
-  fields?: Field[],
+  fields?: FieldOption[],
   delay?: number,
   offset?: {
     x: number,
     y: number
   },
-  onAppear?(event: Event, item: any): void,
-  onMove?(event: Event, item: any): void,
-  onDisappear?(event: Event, item: any): void,
+  onAppear?(event: Event, item: object): void,
+  onMove?(event: Event, item: object): void,
+  onDisappear?(event: Event, item: object): void,
   colorTheme?: 'light' | 'dark'
 }
 
-export interface Field extends FieldDef {
+export interface FieldOption extends FieldDef {
     formatType?: 'number' | 'time' | 'string'
     format?: FormatSpecifier
 }

@@ -1,7 +1,7 @@
 import {supplementedFieldOption} from "./supplementedFieldOption";
 import {map as d3map, Map} from 'd3-collection';
 import {select, Selection, EnterElement} from 'd3-selection';
-import {Option, Field} from "./options";
+import {Option, FieldOption} from "./options";
 import {TEMPORAL} from 'vega-lite/src/type';
 import {FormatSpecifier} from 'd3-format';
 import {FieldDef} from 'vega-lite/src/fielddef';
@@ -11,7 +11,7 @@ import * as vl from 'vega-lite';
 
 // by default, delay showing tooltip for 100 ms
 var DELAY = 100;
-var tooltipPromise: TimerID = undefined;
+var tooltipPromise: number = undefined;
 var tooltipActive = false;
 
 declare global {
@@ -31,7 +31,6 @@ type SceneGraph = {
     marktype: string 
   }
 };
-type TimerID = any;
 type ToolTipData = {title: string, value: string};
 
 /**
@@ -172,7 +171,7 @@ var formatTypeMap: {[type: string]: 'number' | 'time'} = {
 */
 function supplementOptions(options: Option, vlSpec: Spec) {
   // fields to be supplemented by vlSpec
-  var supplementedFields: Field[] = [];
+  var supplementedFields: FieldOption[] = [];
 
   // if showAllFields is true or undefined, supplement all fields in vlSpec
   if (options.showAllFields !== false) {
@@ -188,7 +187,7 @@ function supplementOptions(options: Option, vlSpec: Spec) {
   }
   // if showAllFields is false, only supplement existing fields in options.fields
   else {
-    if (options.fields && options.fields.length > 0) {
+    if (options.fields) {
       options.fields.forEach(function (fieldOption) {
         // get the fieldDef in vlSpec that matches the fieldOption
         var fieldDef = getFieldDef(vl.spec.fieldDefs(vlSpec), fieldOption);
@@ -217,7 +216,7 @@ function supplementOptions(options: Option, vlSpec: Spec) {
 * the aggregation of the fieldDef.
 * If the fieldDef is not aggregated, find a fieldOption that matches the field name.
 */
-function getFieldOption(fieldOptions: Field[], fieldDef: FieldDef) {
+function getFieldOption(fieldOptions: FieldOption[], fieldDef: FieldDef) {
   if (!fieldDef || !fieldOptions || fieldOptions.length <= 0) return undefined;
 
   // if aggregate, match field name and aggregate operation
@@ -265,7 +264,7 @@ function getFieldOption(fieldOptions: Field[], fieldDef: FieldDef) {
 * If the matching fieldDef is aggregated, the aggregation should not contradict
 * with that of the fieldOption.
 */
-function getFieldDef(fieldDefs: FieldDef[], fieldOption: Field): FieldDef {
+function getFieldDef(fieldDefs: FieldDef[], fieldOption: FieldOption): FieldDef {
   if (!fieldOption || !fieldOption.field || !fieldDefs) {
     return undefined;
   }
@@ -296,7 +295,7 @@ function getFieldDef(fieldDefs: FieldDef[], fieldOption: Field): FieldDef {
 * config (and its members timeFormat, numberFormat and countTitle) can be undefined.
 * @return the supplemented fieldOption, or undefined on error
 */
-function supplementFieldOption(fieldOption: Field, fieldDef: FieldDef, vlSpec: Spec) {
+function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldDef, vlSpec: Spec) {
   // many specs don't have config
   var config = vl.util.extend({}, vlSpec.config);
 
@@ -636,7 +635,7 @@ function removeDuplicateTimeFields(itemData: Map<string>, optFields: supplemente
 * @param {Object[]} fieldOptions - a list of field options (i.e. options.fields[])
 * @return itemData with combined bin fields
 */
-function combineBinFields(itemData: Map<string>, fieldOptions: Field[]) {
+function combineBinFields(itemData: Map<string>, fieldOptions: FieldOption[]) {
   if (!fieldOptions) return undefined;
 
   fieldOptions.forEach(function (fieldOption) {
