@@ -14,14 +14,7 @@ var DELAY = 100;
 var tooltipPromise: number = undefined;
 var tooltipActive = false;
 
-declare global {
-  interface Window {
-  vg: any;
-  vl: any;
-  }
-}
-
-type VgView = any;
+export type VgView = any;
 type SceneGraph = {
   datum: {
     _facetID: any,
@@ -38,8 +31,7 @@ type ToolTipData = {title: string, value: string};
 * options can specify whether to show all fields or to show only custom fields
 * It can also provide custom title and format for fields
 */
-window.vg = window.vg || {};
-window.vg.tooltip = function (vgView: VgView, options: Option = {}) {
+export function vega(vgView: VgView, options: Option = {}) {
   // TODO: change item type to vega scenegraph
 
   // initialize tooltip with item data and options on mouse over
@@ -91,11 +83,11 @@ window.vg.tooltip = function (vgView: VgView, options: Option = {}) {
 * It can also provide custom title and format for fields
 * options can be supplemented by vlSpec
 */
-window.vl = window.vl || {};
-window.vl.tooltip = function (vgView: VgView, vlSpec: Spec, options: Option = {}) {
+export function vegaLite(vgView: VgView, vlSpec: Spec, options: Option = {}) {
 
   options = supplementOptions(options, vlSpec);
 
+  // TODO: update this to use new vega-view api (addEventListener)
   // initialize tooltip with item data and options on mouse over
   vgView.on("mouseover.tooltipInit", function (event: MouseEvent, item: SceneGraph) {
     if (shouldShowTooltip(item)) {
