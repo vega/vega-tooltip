@@ -15,7 +15,7 @@
         if (error) {
           return console.error(error);
         }
-        vl.tooltip(result.view, vlSpec, options);
+        vegaTooltip.vegaLite(result.view, vlSpec, options);
       });
     });
   }
@@ -30,7 +30,7 @@
           return console.error(error);
         }
         var view = chart({el:id}).update();
-        vg.tooltip(view, options);
+        vegaTooltip.vega(view, options);
       });
     })
   }
