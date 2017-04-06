@@ -4,7 +4,7 @@
   "description": "A tooltip plugin for vega-lite and vega visualizations.",
   "main": "src/index.js",
   "scripts": {
-    "prebuild": "npm run data && mkdir build",
+    "prebuild": "npm run data && mkdir -p build",
     "build": "browserify src/index.ts -p tsify -d -s vegaTooltip > build/index.js",
     "postbuild": "uglifyjs build/index.js -cm > build/index.min.js && cp src/vg-tooltip.css build/vg-tooltip.css",
     "watch": "watchify -v -p tsify src/index.ts -o build/index.js",
@@ -13,17 +13,17 @@
   },
   "devDependencies": {
     "browserify": "^14.1.0",
-    "d3": "^3.5.0",
+    "d3": "^4.0.0",
     "d3-collection": "^1.0.2",
     "d3-selection": "^1.0.4",
     "datalib": "^1.7.3",
     "tsify": "^3.0.1",
-    "typescript": "^2.2.1",
+    "typescript": "^2.2.2",
     "uglify-js": "^2.6.2",
-    "vega": "^2.5.0",
+    "vega": "^3.0.0-beta.28",
     "vega-datasets": "vega/vega-datasets#gh-pages",
-    "vega-embed": "^2.1.0",
-    "vega-lite": "^1.3.1",
+    "vega-embed": "^3.0.0-beta.0",
+    "vega-lite": "^2.0.0-alpha.8",
     "watchify": "^3.9.0"
   },
   "repository": {
