@@ -2,12 +2,12 @@ import {supplementedFieldOption} from "./supplementedFieldOption";
 import {map as d3map, Map} from 'd3-collection';
 import {select, Selection, EnterElement} from 'd3-selection';
 import {Option, FieldOption} from "./options";
-import {TEMPORAL} from 'vega-lite/src/type';
+import {TEMPORAL} from 'vega-lite/build/src/type';
 import {FormatSpecifier} from 'd3-format';
-import {FieldDef} from 'vega-lite/src/fielddef';
-import {Spec} from 'vega-lite/src/spec';
+import {FieldDef} from 'vega-lite/build/src/fielddef';
+import {Spec} from 'vega-lite/build/src/spec';
 import * as dl from 'datalib';
-import * as vl from 'vega-lite';
+import * as vl from 'vega-lite/build/src/vl';
 
 // by default, delay showing tooltip for 100 ms
 var DELAY = 100;
@@ -35,7 +35,7 @@ export function vega(vgView: VgView, options: Option = {}) {
   // TODO: change item type to vega scenegraph
 
   // initialize tooltip with item data and options on mouse over
-  vgView.on("mouseover.tooltipInit", function (event: MouseEvent, item: SceneGraph) {
+  vgView.addEventListener("mouseover", function (event: MouseEvent, item: SceneGraph) {
     if (shouldShowTooltip(item)) {
       // clear existing promise because mouse can only point at one thing at a time
       cancelPromise();
@@ -48,14 +48,14 @@ export function vega(vgView: VgView, options: Option = {}) {
 
   // update tooltip position on mouse move
   // (important for large marks e.g. bars)
-  vgView.on("mousemove.tooltipUpdate", function (event: MouseEvent, item: SceneGraph) {
+  vgView.addEventListener("mousemove", function (event: MouseEvent, item: SceneGraph) {
     if (shouldShowTooltip(item) && tooltipActive) {
       update(event, item, options);
     }
   });
 
   // clear tooltip on mouse out
-  vgView.on("mouseout.tooltipClear", function (event: MouseEvent, item: SceneGraph) {
+  vgView.addEventListeneron("mouseout", function (event: MouseEvent, item: SceneGraph) {
     if (shouldShowTooltip(item)) {
       cancelPromise();
 
@@ -68,9 +68,9 @@ export function vega(vgView: VgView, options: Option = {}) {
   return {
     destroy: function () {
       // remove event listeners
-      vgView.off("mouseover.tooltipInit");
-      vgView.off("mousemove.tooltipUpdate");
-      vgView.off("mouseout.tooltipClear");
+      vgView.removeEventListener("mouseover");
+      vgView.removeEventListener("mousemove");
+      vgView.removeEventListener("mouseout");
 
       cancelPromise(); // clear tooltip promise
     }
@@ -89,7 +89,7 @@ export function vegaLite(vgView: VgView, vlSpec: Spec, options: Option = {}) {
 
   // TODO: update this to use new vega-view api (addEventListener)
   // initialize tooltip with item data and options on mouse over
-  vgView.on("mouseover.tooltipInit", function (event: MouseEvent, item: SceneGraph) {
+  vgView.addEventListener("mouseover", function (event: MouseEvent, item: SceneGraph) {
     if (shouldShowTooltip(item)) {
       // clear existing promise because mouse can only point at one thing at a time
       cancelPromise();
@@ -103,14 +103,14 @@ export function vegaLite(vgView: VgView, vlSpec: Spec, options: Option = {}) {
 
   // update tooltip position on mouse move
   // (important for large marks e.g. bars)
-  vgView.on("mousemove.tooltipUpdate", function (event: MouseEvent, item: SceneGraph) {
+  vgView.addEventListener("mousemove", function (event: MouseEvent, item: SceneGraph) {
     if (shouldShowTooltip(item) && tooltipActive) {
       update(event, item, options);
     }
   });
 
   // clear tooltip on mouse out
-  vgView.on("mouseout.tooltipClear", function (event: MouseEvent, item: SceneGraph) {
+  vgView.addEventListener("mouseout", function (event: MouseEvent, item: SceneGraph) {
     if (shouldShowTooltip(item)) {
       cancelPromise();
 
@@ -123,9 +123,9 @@ export function vegaLite(vgView: VgView, vlSpec: Spec, options: Option = {}) {
   return {
     destroy: function () {
       // remove event listeners
-      vgView.off("mouseover.tooltipInit");
-      vgView.off("mousemove.tooltipUpdate");
-      vgView.off("mouseout.tooltipClear");
+      vgView.removeEventListener("mouseover");
+      vgView.removeEventListener("mousemove");
+      vgView.removeEventListener("mouseout");
 
       cancelPromise(); // clear tooltip promise
     }
@@ -354,7 +354,7 @@ function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldDef, vlS
       case "time":
         supplementedFieldOption.format = fieldDef.timeUnit ?
           // TODO(zening): use template for all time fields, to be consistent with Vega-Lite
-          vl.timeUnit.template(fieldDef.timeUnit, "", false).match(/time:'[%-a-z]*'/i)[0].split("'")[1]
+          vl.timeUnit.formatExpression(fieldDef.timeUnit, "", false).split("'")[1]
           : config.timeFormat || vl.config.defaultConfig.timeFormat;
         break;
       case "number":
@@ -693,7 +693,7 @@ function dropFieldsForLineArea(marktype: string, itemData: Map<string>) {
 * @param format - a d3 time format specifier, or a d3 number format specifier, or undefined
 * @return the formatted value, or undefined if value or formatType is missing
 */
-function customFormat(value: string, formatType: string, format: FormatSpecifier) {
+function customFormat(value: string, formatType: string, format: string) {
   if (value === undefined || value === null) return;
   if (!formatType) return;
 

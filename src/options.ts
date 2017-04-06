@@ -18,5 +18,5 @@ export interface Option {
 
 export interface FieldOption extends FieldDef {
     formatType?: 'number' | 'time' | 'string'
-    format?: FormatSpecifier
+    format?: string
 }
