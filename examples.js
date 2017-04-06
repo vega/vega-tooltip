@@ -112,6 +112,7 @@
 
   // Overlay Line Chart
   var overlayLineOpts = {
+    showAllFields: false,
     fields: [
       {
         field: "date",
@@ -124,6 +125,7 @@
 
   // Overlay Area Chart
   var overlayAreaOpts = {
+    showAllFields: false,
     fields: [
       {
         field: "date",

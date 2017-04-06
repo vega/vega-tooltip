@@ -452,7 +452,7 @@ function getTooltipData(item: SceneGraph, options: Option) {
 
   // TODO(zening): find more keys which we should remove from data (#35)
   var removeKeys = [
-    "_id", "_prev",
+    "_id", "_prev", "width", "height",
     "count_start", "count_end",
     "layout_start", "layout_mid", "layout_end", "layout_path", "layout_x", "layout_y"
   ];
@@ -564,7 +564,7 @@ function prepareAllFieldsData(itemData: Map<string>, options: Option) {
   // here, fieldOptions still provides format
   var fieldOptions = d3map(options.fields, function (d) { return d.field; });
 
-  itemData.each(function (field: string, value: string) {
+  itemData.each(function (value: string, field: string) {
     // prepare title
     var title;
     if (fieldOptions.has(field) && fieldOptions.get(field).title) {
@@ -747,8 +747,7 @@ function getTooltipPlaceholder() {
 /**
 * Bind tooltipData to the tooltip placeholder
 */
-function bindData(tooltipPlaceholder: Selection<Element | EnterElement | Document | Window, {}, HTMLElement, any>
-, tooltipData: ToolTipData[]) {
+function bindData(tooltipPlaceholder: Selection<Element | EnterElement | Document | Window, {}, HTMLElement, any>, tooltipData: ToolTipData[]) {
   tooltipPlaceholder.selectAll("table").remove();
   var tooltipRows = tooltipPlaceholder.append("table").selectAll(".tooltip-row")
     .data(tooltipData);
