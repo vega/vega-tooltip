@@ -9,7 +9,7 @@
     "postbuild": "uglifyjs build/index.js -cm > build/index.min.js && cp src/vg-tooltip.css build/vg-tooltip.css",
     "watch": "watchify -v -p tsify src/index.ts -o build/index.js",
     "data": "rsync -r node_modules/vega-datasets/data/* data",
-    "start": "npm run build && python -m SimpleHTTPServer 4001"
+    "start": "npm run build && python -m SimpleHTTPServer 4002"
   },
   "devDependencies": {
     "browserify": "^14.1.0",

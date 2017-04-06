@@ -7,11 +7,10 @@
       if (error) {
         return console.warn(error);
       }
-      var embedSpec = {
-        mode: "vega-lite",
-        spec: vlSpec
+      var opt = {
+        mode: "vega-lite"
       };
-      vg.embed(id, embedSpec, function(error, result) {
+      vega.embed(id, vlSpec, opt, function(error, result) {
         if (error) {
           return console.error(error);
         }
@@ -25,7 +24,7 @@
       if (error) {
         return console.error(error);
       }
-      vg.parse.spec(vgSpec, function(error, chart) {
+      vega.parse(vgSpec, function(error, chart) {
         if (error) {
           return console.error(error);
         }
