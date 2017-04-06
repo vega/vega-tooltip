@@ -55,7 +55,7 @@ export function vega(vgView: VgView, options: Option = {}) {
   });
 
   // clear tooltip on mouse out
-  vgView.addEventListeneron("mouseout", function (event: MouseEvent, item: SceneGraph) {
+  vgView.addEventListener("mouseout", function (event: MouseEvent, item: SceneGraph) {
     if (shouldShowTooltip(item)) {
       cancelPromise();
 
@@ -332,7 +332,6 @@ function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldDef, vlS
         break;
       }
     }
-
   }
 
   // supplement title
