@@ -5,9 +5,9 @@
   "main": "src/index.js",
   "scripts": {
     "prebuild": "npm run data && mkdir -p build",
-    "build": "browserify src/index.ts -p tsify -d -s vegaTooltip > build/index.js",
+    "build": "browserify src/index.ts -p tsify -d -s vegaTooltip -o build/index.js",
     "postbuild": "uglifyjs build/index.js -cm > build/index.min.js && cp src/vg-tooltip.css build/vg-tooltip.css",
-    "watch": "watchify -v -p tsify src/index.ts -o build/index.js",
+    "watch": "watchify src/index.ts -v -p tsify -d -s vegaTooltip -o build/index.js",
     "data": "rsync -r node_modules/vega-datasets/data/* data",
     "start": "npm run build && python -m SimpleHTTPServer 4002"
   },
