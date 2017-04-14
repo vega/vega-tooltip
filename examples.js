@@ -24,12 +24,11 @@
       if (error) {
         return console.error(error);
       }
-      vega.parse(vgSpec, function(error, chart) {
+      vega.embed(id, vgSpec, undefined, function(error, result) {
         if (error) {
           return console.error(error);
         }
-        var view = chart({el:id}).update();
-        vegaTooltip.vega(view, options);
+        vegaTooltip.vega(result.view, options);
       });
     })
   }
@@ -51,7 +50,7 @@
 
   // Bubble Plot with Multiple Aggregations on the same field
   var bubbleOpts = {
-    showAllFields: true,
+    showAllFields: false,
     fields: [
       {
         field: "Horsepower",
@@ -66,17 +65,8 @@
         format: ".2f"
       }
     ],
-    onAppear: function() {
-      console.log("tooltip appears!");
-    },
-    onDisappear: function() {
-      console.log("tooltip disappears!");
-    },
-    onMove: function() {
-      console.log("tooltip moves!");
-    }
   }
-  addVlExample("exampleSpecs/bubble_multiple_aggregation.json", "#vis-bubble-multi-aggr", bubbleOpts);
+  // addVlExample("exampleSpecs/bubble_multiple_aggregation.json", "#vis-bubble-multi-aggr", bubbleOpts);
 
   // Trellis Barley
   var trellisBarleyOpts = {
@@ -95,7 +85,7 @@
       { field: "site" }
     ]
   };
-  addVlExample("exampleSpecs/trellis_barley.json", "#vis-trellis-barley", trellisBarleyOpts);
+  // addVlExample("exampleSpecs/trellis_barley.json", "#vis-trellis-barley", trellisBarleyOpts);
 
   // Scatter Binned
   var binMovieOpts = {
@@ -106,20 +96,19 @@
       {field: "*"}
     ]
   };
-  addVlExample("exampleSpecs/scatter_binned.json", "#vis-scatter-binned", binMovieOpts);
+  // addVlExample("exampleSpecs/scatter_binned.json", "#vis-scatter-binned", binMovieOpts);
 
   // Simple Bar Chart
-  addVlExample("exampleSpecs/bar.json", "#vis-bar");
+  // addVlExample("exampleSpecs/bar.json", "#vis-bar");
 
   // Stacked Bar Chart
   addVlExample("exampleSpecs/stacked_bar_weather.json", "#vis-stacked-bar");
 
   // Layered Bar Chart
-  addVlExample("exampleSpecs/bar_layered_transparent.json", "#vis-layered-bar");
+  // addVlExample("exampleSpecs/bar_layered_transparent.json", "#vis-layered-bar");
 
   // Colored Line Chart
-  var colorLineOpts = {}
-  addVlExample("exampleSpecs/line_color.json", "#vis-color-line", colorLineOpts);
+  // addVlExample("exampleSpecs/line_color.json", "#vis-color-line");
 
   // Overlay Line Chart
   var overlayLineOpts = {
@@ -131,7 +120,7 @@
       }
     ]
   }
-  addVlExample("exampleSpecs/overlay_line_short.json", "#vis-overlay-line", overlayLineOpts);
+  // addVlExample("exampleSpecs/overlay_line_short.json", "#vis-overlay-line", overlayLineOpts);
 
   // Overlay Area Chart
   var overlayAreaOpts = {
@@ -143,10 +132,9 @@
       }
     ]
   }
-  addVlExample("exampleSpecs/overlay_area_short.json", "#vis-overlay-area", overlayAreaOpts);
-
-
-  /* Vega Examples */
+  // addVlExample("exampleSpecs/overlay_area_short.json", "#vis-overlay-area", overlayAreaOpts);
+  
+  // Vega Examples 
   // Arc
   addVgExample("exampleSpecs/arc.json", "#vis-arc");
 
@@ -204,5 +192,4 @@
     ]
   }
   addVgExample("exampleSpecs/heatmap.json", "#vis-heatmap", heatmapOpts);
-
 }());
