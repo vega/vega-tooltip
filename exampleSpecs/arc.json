@@ -1,6 +1,8 @@
 {
-  "width": 400,
-  "height": 400,
+  "$schema": "https://vega.github.io/schema/vega/v3.0.json",
+  "width": 200,
+  "height": 200,
+
   "data": [
     {
       "name": "table",
@@ -8,24 +10,27 @@
       "transform": [{"type": "pie", "field": "data"}]
     }
   ],
+
   "scales": [
     {
       "name": "r",
       "type": "sqrt",
       "domain": {"data": "table", "field": "data"},
+      "zero": true,
       "range": [20, 100]
     }
   ],
+
   "marks": [
     {
       "type": "arc",
       "from": {"data": "table"},
-      "properties": {
+      "encode": {
         "enter": {
           "x": {"field": {"group": "width"}, "mult": 0.5},
           "y": {"field": {"group": "height"}, "mult": 0.5},
-          "startAngle": {"field": "layout_start"},
-          "endAngle": {"field": "layout_end"},
+          "startAngle": {"field": "startAngle"},
+          "endAngle": {"field": "endAngle"},
           "innerRadius": {"value": 20},
           "outerRadius": {"scale": "r", "field": "data"},
           "stroke": {"value": "#fff"}
@@ -38,15 +43,16 @@
         }
       }
     },
+
     {
       "type": "text",
       "from": {"data": "table"},
-      "properties": {
+      "encode": {
         "enter": {
           "x": {"field": {"group": "width"}, "mult": 0.5},
           "y": {"field": {"group": "height"}, "mult": 0.5},
           "radius": {"scale": "r", "field": "data", "offset": 8},
-          "theta": {"field": "layout_mid"},
+          "theta": {"signal": "(datum.startAngle + datum.endAngle)/2"},
           "fill": {"value": "#000"},
           "align": {"value": "center"},
           "baseline": {"value": "middle"},

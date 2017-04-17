@@ -24,12 +24,11 @@
       if (error) {
         return console.error(error);
       }
-      vega.parse(vgSpec, function(error, chart) {
+      vega.embed(id, vgSpec, undefined, function(error, result) {
         if (error) {
           return console.error(error);
         }
-        var view = chart({el:id}).update();
-        vegaTooltip.vega(view, options);
+        vegaTooltip.vega(result.view, options);
       });
     })
   }
@@ -51,7 +50,7 @@
 
   // Bubble Plot with Multiple Aggregations on the same field
   var bubbleOpts = {
-    showAllFields: true,
+    showAllFields: false,
     fields: [
       {
         field: "Horsepower",
@@ -66,15 +65,6 @@
         format: ".2f"
       }
     ],
-    onAppear: function() {
-      console.log("tooltip appears!");
-    },
-    onDisappear: function() {
-      console.log("tooltip disappears!");
-    },
-    onMove: function() {
-      console.log("tooltip moves!");
-    }
   }
   addVlExample("exampleSpecs/bubble_multiple_aggregation.json", "#vis-bubble-multi-aggr", bubbleOpts);
 
@@ -118,11 +108,11 @@
   addVlExample("exampleSpecs/bar_layered_transparent.json", "#vis-layered-bar");
 
   // Colored Line Chart
-  var colorLineOpts = {}
-  addVlExample("exampleSpecs/line_color.json", "#vis-color-line", colorLineOpts);
+  addVlExample("exampleSpecs/line_color.json", "#vis-color-line");
 
   // Overlay Line Chart
   var overlayLineOpts = {
+    showAllFields: false,
     fields: [
       {
         field: "date",
@@ -135,6 +125,7 @@
 
   // Overlay Area Chart
   var overlayAreaOpts = {
+    showAllFields: false,
     fields: [
       {
         field: "date",
@@ -144,9 +135,8 @@
     ]
   }
   addVlExample("exampleSpecs/overlay_area_short.json", "#vis-overlay-area", overlayAreaOpts);
-
-
-  /* Vega Examples */
+  
+  // Vega Examples 
   // Arc
   addVgExample("exampleSpecs/arc.json", "#vis-arc");
 
@@ -204,5 +194,4 @@
     ]
   }
   addVgExample("exampleSpecs/heatmap.json", "#vis-heatmap", heatmapOpts);
-
 }());
