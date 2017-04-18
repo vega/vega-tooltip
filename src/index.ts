@@ -1,12 +1,11 @@
-import {supplementedFieldOption} from "./supplementedFieldOption";
-import {map as d3map, Map} from 'd3-collection';
-import {select, Selection, EnterElement} from 'd3-selection';
-import {Option, FieldOption} from "./options";
-import {TEMPORAL} from 'vega-lite/build/src/type';
-import {FormatSpecifier} from 'd3-format';
-import {FieldDef} from 'vega-lite/build/src/fielddef';
-import {Spec} from 'vega-lite/build/src/spec';
+import {FieldOption, Option} from './options';
+import {supplementedFieldOption} from './supplementedFieldOption';
+import {Map, map as d3map} from 'd3-collection';
+import {EnterElement, select, Selection} from 'd3-selection';
 import * as dl from 'datalib';
+import {FieldDef} from 'vega-lite/build/src/fielddef';
+import {TopLevelExtendedSpec} from 'vega-lite/build/src/spec';
+import {TEMPORAL} from 'vega-lite/build/src/type';
 import * as vl from 'vega-lite/build/src/vl';
 
 // by default, delay showing tooltip for 100 ms
@@ -35,7 +34,7 @@ export function vega(vgView: VgView, options: Option = {}) {
   // TODO: change item type to vega scenegraph
 
   // initialize tooltip with item data and options on mouse over
-  vgView.addEventListener("mouseover", function (event: MouseEvent, item: SceneGraph) {
+  vgView.addEventListener("mouseover.tooltipInit", function (event: MouseEvent, item: SceneGraph) {
     if (shouldShowTooltip(item)) {
       // clear existing promise because mouse can only point at one thing at a time
       cancelPromise();
@@ -48,14 +47,14 @@ export function vega(vgView: VgView, options: Option = {}) {
 
   // update tooltip position on mouse move
   // (important for large marks e.g. bars)
-  vgView.addEventListener("mousemove", function (event: MouseEvent, item: SceneGraph) {
+  vgView.addEventListener("mousemove.tooltipUpdate", function (event: MouseEvent, item: SceneGraph) {
     if (shouldShowTooltip(item) && tooltipActive) {
       update(event, item, options);
     }
   });
 
   // clear tooltip on mouse out
-  vgView.addEventListeneron("mouseout", function (event: MouseEvent, item: SceneGraph) {
+  vgView.addEventListener("mouseout.tooltipRemove", function (event: MouseEvent, item: SceneGraph) {
     if (shouldShowTooltip(item)) {
       cancelPromise();
 
@@ -68,9 +67,9 @@ export function vega(vgView: VgView, options: Option = {}) {
   return {
     destroy: function () {
       // remove event listeners
-      vgView.removeEventListener("mouseover");
-      vgView.removeEventListener("mousemove");
-      vgView.removeEventListener("mouseout");
+      vgView.removeEventListener("mouseover.tooltipInit");
+      vgView.removeEventListener("mousemove.tooltipUpdate");
+      vgView.removeEventListener("mouseout.tooltipRemove");
 
       cancelPromise(); // clear tooltip promise
     }
@@ -83,7 +82,7 @@ export function vega(vgView: VgView, options: Option = {}) {
 * It can also provide custom title and format for fields
 * options can be supplemented by vlSpec
 */
-export function vegaLite(vgView: VgView, vlSpec: Spec, options: Option = {}) {
+export function vegaLite(vgView: VgView, vlSpec: TopLevelExtendedSpec, options: Option = {}) {
 
   options = supplementOptions(options, vlSpec);
 
@@ -123,9 +122,9 @@ export function vegaLite(vgView: VgView, vlSpec: Spec, options: Option = {}) {
   return {
     destroy: function () {
       // remove event listeners
-      vgView.removeEventListener("mouseover");
-      vgView.removeEventListener("mousemove");
-      vgView.removeEventListener("mouseout");
+      vgView.removeEventListener("mouseover.tooltipInit");
+      vgView.removeEventListener("mousemove.tooltipUpdate");
+      vgView.removeEventListener("mouseout.tooltipRemove");
 
       cancelPromise(); // clear tooltip promise
     }
@@ -161,7 +160,7 @@ var formatTypeMap: {[type: string]: 'number' | 'time'} = {
 * if options.showAllFields is false, vlSpec will only supplement existing fields
 * in options.fields
 */
-function supplementOptions(options: Option, vlSpec: Spec) {
+function supplementOptions(options: Option, vlSpec: TopLevelExtendedSpec) {
   // fields to be supplemented by vlSpec
   var supplementedFields: FieldOption[] = [];
 
@@ -287,7 +286,7 @@ function getFieldDef(fieldDefs: FieldDef[], fieldOption: FieldOption): FieldDef 
 * config (and its members timeFormat, numberFormat and countTitle) can be undefined.
 * @return the supplemented fieldOption, or undefined on error
 */
-function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldDef, vlSpec: Spec) {
+function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldDef, vlSpec: TopLevelExtendedSpec) {
   // many specs don't have config
   var config = vl.util.extend({}, vlSpec.config);
 
@@ -332,7 +331,6 @@ function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldDef, vlS
         break;
       }
     }
-
   }
 
   // supplement title
@@ -454,7 +452,7 @@ function getTooltipData(item: SceneGraph, options: Option) {
 
   // TODO(zening): find more keys which we should remove from data (#35)
   var removeKeys = [
-    "_id", "_prev",
+    "_id", "_prev", "width", "height",
     "count_start", "count_end",
     "layout_start", "layout_mid", "layout_end", "layout_path", "layout_x", "layout_y"
   ];
@@ -566,7 +564,7 @@ function prepareAllFieldsData(itemData: Map<string>, options: Option) {
   // here, fieldOptions still provides format
   var fieldOptions = d3map(options.fields, function (d) { return d.field; });
 
-  itemData.each(function (field: string, value: string) {
+  itemData.each(function (value: string, field: string) {
     // prepare title
     var title;
     if (fieldOptions.has(field) && fieldOptions.get(field).title) {
@@ -749,8 +747,7 @@ function getTooltipPlaceholder() {
 /**
 * Bind tooltipData to the tooltip placeholder
 */
-function bindData(tooltipPlaceholder: Selection<Element | EnterElement | Document | Window, {}, HTMLElement, any>
-, tooltipData: ToolTipData[]) {
+function bindData(tooltipPlaceholder: Selection<Element | EnterElement | Document | Window, {}, HTMLElement, any>, tooltipData: ToolTipData[]) {
   tooltipPlaceholder.selectAll("table").remove();
   var tooltipRows = tooltipPlaceholder.append("table").selectAll(".tooltip-row")
     .data(tooltipData);

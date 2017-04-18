@@ -1,6 +1,9 @@
 {
+  "$schema": "https://vega.github.io/schema/vega/v3.0.json",
   "width": 960,
   "height": 500,
+  "autosize": "none",
+
   "data": [
     {
       "name": "unemp",
@@ -12,32 +15,58 @@
       "url": "data/us-10m.json",
       "format": {"type": "topojson", "feature": "counties"},
       "transform": [
-        { "type": "geopath", "projection": "albersUsa" },
-        { "type": "lookup", "on": "unemp", "onKey": "id",
-          "keys": ["id"], "as": ["unemp"] },
-        { "type": "filter",
-          "test": "datum.layout_path!=null && datum.unemp!=null" }
+        { "type": "lookup", "from": "unemp", "key": "id", "fields": ["id"], "as": ["unemp"] },
+        { "type": "filter", "expr": "datum.unemp != null" }
       ]
     }
   ],
+
+  "projections": [
+    {
+      "name": "projection",
+      "type": "albersUsa"
+    }
+  ],
+
   "scales": [
     {
       "name": "color",
       "type": "quantize",
       "domain": [0, 0.15],
-      "range": ["#f7fbff", "#deebf7", "#c6dbef", "#9ecae1", "#6baed6",
-                "#4292c6", "#2171b5", "#08519c", "#08306b"]
+      "range": {"scheme": "blues-9"}
     }
   ],
+
+  "legends": [
+    {
+      "fill": "color",
+      "orient": "bottom-right",
+      "title": "Unemployment",
+      "format": "0.1%",
+      "encode": {
+        "symbols": {
+          "update": {
+            "shape": {"value": "square"},
+            "stroke": {"value": "#ccc"},
+            "strokeWidth": {"value": 0.2}
+          }
+        }
+      }
+    }
+  ],
+
   "marks": [
     {
-      "type": "path",
+      "type": "shape",
       "from": {"data": "counties"},
-      "properties": {
-        "enter": { "path": {"field": "layout_path"} },
+      "encode": {
+        "enter": { "tooltip": {"signal": "format(datum.unemp.rate, '0.1%')"}},
         "update": { "fill": {"scale": "color", "field": "unemp.rate"} },
         "hover": { "fill": {"value": "red"} }
-      }
+      },
+      "transform": [
+        { "type": "geoshape", "projection": "projection" }
+      ]
     }
   ]
 }

@@ -1,1 +1,5 @@
-src/vg-tooltip.js
+/node_modules
+
+yarn.lock
+
+tsconfig.json
