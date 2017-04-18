@@ -5,7 +5,7 @@
   "main": "build/vega-tooltip.js",
   "scripts": {
     "prebuild": "npm run data && mkdir -p build",
-    "build": "browserify src/index.ts -p tsify -d -s vegaTooltip -o build/vega-tooltip.js",
+    "build": "browserify src/index.ts -t browserify-shim -p tsify -d -s vegaTooltip -o build/vega-tooltip.js",
     "postbuild": "uglifyjs build/vega-tooltip.js -cm > build/vega-tooltip.min.js && cp src/vega-tooltip.css build/vega-tooltip.css",
     "watch": "watchify src/index.ts -v -p tsify -d -s vegaTooltip -o build/vega-tooltip.js",
     "data": "rsync -r node_modules/vega-datasets/data/* data",
@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "browserify": "^14.1.0",
+    "browserify-shim": "^3.8.14",
     "d3": "^4.0.0",
     "d3-collection": "^1.0.2",
     "d3-selection": "^1.0.4",
@@ -25,24 +26,31 @@
     "vega-datasets": "vega/vega-datasets#gh-pages",
     "vega-embed": "^3.0.0-beta.0",
     "vega-lite": "^2.0.0-alpha.8",
-    "watchify": "^3.9.0"
+    "watchify": "^3.9.0",
+    "@types/d3": "^4.5.0"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vega/vega-tooltip.git"
+    "url": "https://github.com/vega/vega-tooltip.git"
   },
   "keywords": [
     "vega-lite",
     "vega",
     "tooltip"
   ],
-  "author": "Zening Qu",
+  "author": "Zening Qu, Sira Horradarn",
   "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/vega/vega-tooltip/issues"
   },
   "homepage": "https://github.com/vega/vega-tooltip#readme",
   "dependencies": {
-    "@types/d3": "^4.5.0"
+    "vega": "^3.0.0-beta.28",
+    "vega-embed": "^3.0.0-beta.0",
+    "vega-lite": "^2.0.0-alpha.8"
+  },
+  "browserify-shim": {
+    "vega": "global:vega",
+    "vega-lite": "global:vl"
   }
 }
