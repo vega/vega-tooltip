@@ -1,6 +1,8 @@
 # Tooltip for Vega & Vega-Lite
 A tooltip plugin for [Vega](http://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/) visualizations.
 
+[![npm version](https://img.shields.io/npm/v/vega-tooltip.svg)](https://www.npmjs.com/package/vega-tooltip)
+
 ![demo image](demo.png "a tooltip for a Vega-Lite scatterplot")
 
 
