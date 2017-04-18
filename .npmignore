@@ -1,5 +1,6 @@
-/node_modules
-
+.DS_Store
+.gitignore
+bower_components
+node_modules
 yarn.lock
-
 tsconfig.json
