@@ -66,7 +66,7 @@
       }
     ],
   }
-  // addVlExample("exampleSpecs/bubble_multiple_aggregation.json", "#vis-bubble-multi-aggr", bubbleOpts);
+  addVlExample("exampleSpecs/bubble_multiple_aggregation.json", "#vis-bubble-multi-aggr", bubbleOpts);
 
   // Trellis Barley
   var trellisBarleyOpts = {
@@ -85,7 +85,7 @@
       { field: "site" }
     ]
   };
-  // addVlExample("exampleSpecs/trellis_barley.json", "#vis-trellis-barley", trellisBarleyOpts);
+  addVlExample("exampleSpecs/trellis_barley.json", "#vis-trellis-barley", trellisBarleyOpts);
 
   // Scatter Binned
   var binMovieOpts = {
@@ -96,19 +96,19 @@
       {field: "*"}
     ]
   };
-  // addVlExample("exampleSpecs/scatter_binned.json", "#vis-scatter-binned", binMovieOpts);
+  addVlExample("exampleSpecs/scatter_binned.json", "#vis-scatter-binned", binMovieOpts);
 
   // Simple Bar Chart
-  // addVlExample("exampleSpecs/bar.json", "#vis-bar");
+  addVlExample("exampleSpecs/bar.json", "#vis-bar");
 
   // Stacked Bar Chart
   addVlExample("exampleSpecs/stacked_bar_weather.json", "#vis-stacked-bar");
 
   // Layered Bar Chart
-  // addVlExample("exampleSpecs/bar_layered_transparent.json", "#vis-layered-bar");
+  addVlExample("exampleSpecs/bar_layered_transparent.json", "#vis-layered-bar");
 
   // Colored Line Chart
-  // addVlExample("exampleSpecs/line_color.json", "#vis-color-line");
+  addVlExample("exampleSpecs/line_color.json", "#vis-color-line");
 
   // Overlay Line Chart
   var overlayLineOpts = {
@@ -120,7 +120,7 @@
       }
     ]
   }
-  // addVlExample("exampleSpecs/overlay_line_short.json", "#vis-overlay-line", overlayLineOpts);
+  addVlExample("exampleSpecs/overlay_line_short.json", "#vis-overlay-line", overlayLineOpts);
 
   // Overlay Area Chart
   var overlayAreaOpts = {
@@ -132,7 +132,7 @@
       }
     ]
   }
-  // addVlExample("exampleSpecs/overlay_area_short.json", "#vis-overlay-area", overlayAreaOpts);
+  addVlExample("exampleSpecs/overlay_area_short.json", "#vis-overlay-area", overlayAreaOpts);
   
   // Vega Examples 
   // Arc
