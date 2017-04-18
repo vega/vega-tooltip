@@ -155,16 +155,7 @@
         formatType: "number",
         format: ".1%"
       }
-    ],
-    onAppear: function() {
-      console.log("tooltip appears!");
-    },
-    onDisappear: function() {
-      console.log("tooltip disappears!");
-    },
-    onMove: function() {
-      console.log("tooltip moves!");
-    }
+    ]
   }
   addVgExample("exampleSpecs/choropleth.json", "#vis-choropleth", choroplethOpts);
 
