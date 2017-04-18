@@ -1,12 +1,11 @@
-import {supplementedFieldOption} from "./supplementedFieldOption";
-import {map as d3map, Map} from 'd3-collection';
-import {select, Selection, EnterElement} from 'd3-selection';
-import {Option, FieldOption} from "./options";
-import {TEMPORAL} from 'vega-lite/build/src/type';
-import {FormatSpecifier} from 'd3-format';
+import {FieldOption, Option} from './options';
+import {supplementedFieldOption} from './supplementedFieldOption';
+import {Map, map as d3map} from 'd3-collection';
+import {EnterElement, select, Selection} from 'd3-selection';
+import * as dl from 'datalib';
 import {FieldDef} from 'vega-lite/build/src/fielddef';
 import {TopLevelExtendedSpec} from 'vega-lite/build/src/spec';
-import * as dl from 'datalib';
+import {TEMPORAL} from 'vega-lite/build/src/type';
 import * as vl from 'vega-lite/build/src/vl';
 
 // by default, delay showing tooltip for 100 ms
