@@ -7,24 +7,24 @@ You can customize the content and look of your tooltip by passing in an optional
 For [Vega-Lite](https://vega.github.io/vega-lite/):
 
 ```js
-var embedSpec = {
+var opt = {
   mode: "vega-lite",
-  spec: vlSpec
 };
-vg.embed("#vis-scatter", embedSpec, function(error, result) {
+vega.embed("#vis-scatter", vlSpec, opt, function (error, result) {
   // result.view is the Vega View, vlSpec is the original Vega-Lite specification
-  vl.tooltip(result.view, vlSpec, options); // pass in options
+  vegaTooltip.vegaLite(result.view, vlSpec, options); // pass in options
 });
 ```
 
 For [Vega](http://vega.github.io/vega/):
 
 ```js
-vg.parse.spec(vgSpec, function(error, chart) {
-  // view is the Vega View
-  var view = chart({el:"#vis-scatter"}).update();
-  vg.tooltip(view, options); // pass in options
-});
+var runtime = vega.parse(vgSpec);
+var view = new vega.View(runtime)
+  .initialize(document.querySelector(id))
+  .hover()
+  .run();
+vegaTooltip.vega(view, options); // pass in options
 ```
 
 
