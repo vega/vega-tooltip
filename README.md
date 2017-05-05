@@ -14,9 +14,9 @@ The development of Vega Tooltip is led by Zening Qu, with significant help from 
 http://vega.github.io/vega-tooltip/
 
 ## APIs
-For Vega-Lite: [`vl.tooltip(vgView, vlSpec[, options])`](docs/APIs.md#vltooltip)
+For Vega-Lite: [`vegaTooltip.vegaLite(vgView, vlSpec[, options])`](docs/APIs.md#vltooltip)
 
-For Vega: [`vg.tooltip(vgView[, options])`](docs/APIs.md#vgtooltip)
+For Vega: [`vegaTooltip.vega(vgView[, options])`](docs/APIs.md#vgtooltip)
 
 ## Tutorials
 1. [Creating Your Tooltip](docs/creating_your_tooltip.md)
