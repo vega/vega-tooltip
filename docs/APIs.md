@@ -9,7 +9,7 @@
 | `vgView`        | [Vega View](https://github.com/vega/vega/wiki/Runtime#view-component-api) | The visualization view. |
 | `options`       | Object         | Options to customize the tooltip. See [options](#options) for details. |
 
-__Returns:__ [`tooltip`](#tooltip) object
+__Returns:__ [`vegaTooltip`](#tooltip) object
 
 ## [vegaTooltip.vegaLite](#vltooltip)
 
@@ -21,7 +21,7 @@ __Returns:__ [`tooltip`](#tooltip) object
 | `vlSpec`        | Object         | The Vega-Lite specification of the visualization. |
 | `options`       | Object         | Options to customize the tooltip. See [options](#options) for details. |
 
-__Returns:__ [`tooltip`](#tooltip) object
+__Returns:__ [`vegaTooltip`](#tooltip) object
 
 ## [options](#options)
 
