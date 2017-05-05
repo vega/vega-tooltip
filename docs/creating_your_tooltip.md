@@ -11,8 +11,8 @@ npm install vega-tooltip
 The tooltip library contains a `js` file and a `css` file:
 
 ```
-vega-tooltip/build/vg-tooltip.js
-vega-tooltip/build/vg-tooltip.css
+vega-tooltip/build/vega-tooltip.js
+vega-tooltip/build/vega-tooltip.css
 ```
 
 Alternatively, you can get vega-tooltip via [`bower`](https://bower.io/):
@@ -31,8 +31,8 @@ If you want to manually include the tooltip library and its dependencies, you ca
 <script src="https://vega.github.io/datalib/datalib.min.js"></script>
 
 <!-- Vega Tooltip -->
-<script src="https://vega.github.io/vega-tooltip/vg-tooltip.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://vega.github.io/vega-tooltip/vg-tooltip.css">
+<script src="https://vega.github.io/vega-tooltip/vega-tooltip.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://vega.github.io/vega-tooltip/vega-tooltip.css">
 ```
 <br>
 
@@ -65,7 +65,7 @@ For [Vega](http://vega.github.io/vega/):
 You can create a runtime dataflow of the visualization using [`vega.parse`](https://vega.github.io/vega/docs/api/parser/), then pass this runtime dataflow to create a [`View`](https://vega.github.io/vega/docs/api/view/). Note that the following JavaScript code refers to the visualization placeholder by id selector (`#vis-scatter`).
 
 ```js
-var runtime = vega.parse(vgSpec);
+var runtime = vega.parse(Spec);
 var view = new vega.View(runtime)
   .initialize(document.querySelector("#vis-scatter"))
   .hover()
@@ -76,7 +76,7 @@ var view = new vega.View(runtime)
 
 ## Step 3. Create A Tooltip
 
-In your HTML `<body>`, create a placeholder for the tooltip. Give the placeholder an `id` named `vis-tooltip` so that it can be recognized by our plugin. Assign `class` `vg-tooltip` to the tooltip placeholder so that it can pick up the default CSS style our library provides.
+In your HTML `<body>`, create a placeholder for the tooltip. Give the placeholder an `id` named `vis-tooltip` so that it can be recognized by our plugin. Assign `class` `vega-tooltip` to the tooltip placeholder so that it can pick up the default CSS style our library provides.
 
 ```html
 <!-- Placeholder for the tooltip -->
