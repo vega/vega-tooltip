@@ -1,8 +1,8 @@
 # Constructors
 
-## [vg.tooltip](#vgtooltip)
+## [vegaTooltip.vega](#vgtooltip)
 
-`vg.tooltip(vgView[, options])`
+`vegaTooltip.vega(vgView[, options])`
 
 | Parameter       | Type           | Description     |
 | :-------------- |:--------------:| :-------------- |
@@ -11,9 +11,9 @@
 
 __Returns:__ [`tooltip`](#tooltip) object
 
-## [vl.tooltip](#vltooltip)
+## [vegaTooltip.vegaLite](#vltooltip)
 
-`vl.tooltip(vgView, vlSpec[, options])`
+`vegaTooltip.vegaLite(vgView, vlSpec[, options])`
 
 | Parameter       | Type           | Description     |
 | :-------------- |:--------------:| :-------------- |
