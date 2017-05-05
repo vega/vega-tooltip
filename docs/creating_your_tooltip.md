@@ -11,8 +11,8 @@ npm install vega-tooltip
 The tooltip library contains a `js` file and a `css` file:
 
 ```
-vega-tooltip/src/vg-tooltip.js
-vega-tooltip/src/vg-tooltip.css
+vega-tooltip/build/vg-tooltip.js
+vega-tooltip/build/vg-tooltip.css
 ```
 
 Alternatively, you can get vega-tooltip via [`bower`](https://bower.io/):
@@ -48,27 +48,28 @@ In your HTML `<body>`, create a placeholder for your visualization. Give the pla
 
 For [Vega-Lite](https://vega.github.io/vega-lite/):
 
-You can create your visualization using [`vg.embed`](https://github.com/vega/vega/wiki/Embed-Vega-Web-Components). Note that the following JavaScript code refers to the visualization placeholder by id selector (`#vis-scatter`).
+You can create your visualization using [`vega.embed`](https://github.com/vega/vega/wiki/Embed-Vega-Web-Components). Note that the following JavaScript code refers to the visualization placeholder by id selector (`#vis-scatter`).
 
 ```js
 var embedSpec = {
   mode: "vega-lite",
   spec: vlSpec
 };
-vg.embed("#vis-scatter", embedSpec, function(error, result) {
+vega.embed("#vis-scatter", embedSpec, function(error, result) {
   ...
 });
 ```
 
 For [Vega](http://vega.github.io/vega/):
 
-You can create a visualization using [`vg.parse.spec`](https://github.com/vega/vega/wiki/Runtime). Note that the following JavaScript code refers to the visualization placeholder by id selector (`#vis-scatter`).
+You can create a runtime dataflow of the visualization using [`vega.parse`](https://vega.github.io/vega/docs/api/parser/), then pass this runtime dataflow to create a [`View`](https://vega.github.io/vega/docs/api/view/). Note that the following JavaScript code refers to the visualization placeholder by id selector (`#vis-scatter`).
 
 ```js
-vg.parse.spec(vgSpec, function(error, chart) {
-  var view = chart({el:"#vis-scatter"}).update();
-  ...
-});
+var runtime = vega.parse(vgSpec);
+var view = new vega.View(runtime)
+  .initialize(document.querySelector("#vis-scatter"))
+  .hover()
+  .run();
 ```
 <br>
 
@@ -82,47 +83,48 @@ In your HTML `<body>`, create a placeholder for the tooltip. Give the placeholde
 <div id="vis-tooltip" class="vg-tooltip"></div>
 ```
 
-> Tip: Generally speaking you will only need one tooltip placeholder per page because the mouse typically only points to one thing at a time. If you have more than one visualizations in a page, the visualizations will share one tooltip placeholder.
+> Tip: Generally, you will only need one tooltip placeholder per page because the mouse typically only points to one thing at a time. If you have more than one visualizations in a page, the visualizations will share one tooltip placeholder.
 
 
 
 For [Vega-Lite](https://vega.github.io/vega-lite/):
 
-You can create your tooltip using [`vl.tooltip`](APIs.md#vltooltip). This function requires the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) and the original Vega-Lite specification as inputs.
+You can create your tooltip using [`vegaTooltip.vegaLite`](APIs.md#vltooltip). This function requires the [`Vega View`](https://vega.github.io/vega/docs/api/view/) and the original Vega-Lite specification as inputs.
 
 ```js
-var embedSpec = {
+var opt = {
   mode: "vega-lite",
-  spec: vlSpec
 };
-vg.embed("#vis-scatter", embedSpec, function(error, result) {
+vega.embed("#vis-scatter", vlSpec, opt, function(error, result) {
   // result.view is the Vega View, vlSpec is the original Vega-Lite specification
-  vl.tooltip(result.view, vlSpec);
+  vegaTooltip.vegaLite(result.view, vlSpec);
 });
 ```
 
 For [Vega](http://vega.github.io/vega/):
 
-You can create your tooltip using [`vg.tooltip`](APIs.md#vgtooltip). This function only requires the [`Vega View`](https://github.com/vega/vega/wiki/Runtime#view-component-api) as input. For example:
+You can create your tooltip using [`vegaTooltip.vega`](APIs.md#vgtooltip). This function only requires the [`Vega View`](https://vega.github.io/vega/docs/api/view/) as input. For example:
 
 ```js
 var embedSpec = {
   spec: vgSpec
 }
-vg.embed(id, embedSpec, function(error, result) {
+vega.embed(id, embedSpec, function(error, result) {
   // result.view is the Vega View
-  vg.tooltip(result.view, options);
+  vegaTooltip.vega(result.view, options);
 });
 ```
 
-As another example:
+Another example using existing [`Vega View`](https://vega.github.io/vega/docs/api/view/) object:
 
 ```js
-vg.parse.spec(vgSpec, function(error, chart) {
-  // view is the Vega View
-  var view = chart({el:"#vis-scatter"}).update();
-  vg.tooltip(view);
-});
+var runtime = vega.parse(vgSpec);
+var view = new vega.View(runtime)
+  .initialize(document.querySelector("#vis-scatter"))
+  .hover()
+  .run();
+
+vegaTooltip.vega(view, options);
 ```
 <br>
 
