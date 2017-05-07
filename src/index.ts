@@ -1,20 +1,19 @@
-import {FieldOption, Option} from './options';
-import {supplementedFieldOption} from './supplementedFieldOption';
 import {Map, map as timemap} from 'd3-collection';
+import {format as d3NumberFormat} from 'd3-format';
 import {EnterElement, select, Selection} from 'd3-selection';
+import {timeDay, timeHour, timeMinute, timeMonth, timeSecond, timeWeek, timeYear} from 'd3-time';
+import {timeFormat} from 'd3-time-format';
 import {FieldDef} from 'vega-lite/build/src/fielddef';
 import {TopLevelExtendedSpec} from 'vega-lite/build/src/spec';
 import {TEMPORAL} from 'vega-lite/build/src/type';
 import * as vl from 'vega-lite/build/src/vl';
-import {Field} from 'vega-lite/build/src/fielddef';
-import {format as d3NumberFormat} from 'd3-format';
-import {timeFormat} from 'd3-time-format';
-import {timeSecond, timeMinute, timeHour, timeDay, timeWeek, timeMonth, timeYear} from 'd3-time';
+import {FieldOption, Option} from './options';
+import {SupplementedFieldOption} from './supplementedFieldOption';
 
 // by default, delay showing tooltip for 100 ms
-var DELAY = 100;
-var tooltipPromise: number = undefined;
-var tooltipActive = false;
+let DELAY = 100;
+let tooltipPromise: number = undefined;
+let tooltipActive = false;
 
 export type VgView = any;
 type SceneGraph = {
@@ -22,7 +21,7 @@ type SceneGraph = {
     _facetID: number,
     _id: number
   },
-  mark: { 
+  mark: {
     marktype: string
   }
 };
@@ -37,7 +36,7 @@ export function vega(vgView: VgView, options: Option = {showAllFields: true}) {
   // TODO: change item type to vega scenegraph
 
   // initialize tooltip with item data and options on mouse over
-  vgView.addEventListener("mouseover.tooltipInit", function (event: MouseEvent, item: SceneGraph) {
+  vgView.addEventListener('mouseover.tooltipInit', function (event: MouseEvent, item: SceneGraph) {
     if (shouldShowTooltip(item)) {
       // clear existing promise because mouse can only point at one thing at a time
       cancelPromise();
@@ -50,14 +49,14 @@ export function vega(vgView: VgView, options: Option = {showAllFields: true}) {
 
   // update tooltip position on mouse move
   // (important for large marks e.g. bars)
-  vgView.addEventListener("mousemove.tooltipUpdate", function (event: MouseEvent, item: SceneGraph) {
+  vgView.addEventListener('mousemove.tooltipUpdate', function (event: MouseEvent, item: SceneGraph) {
     if (shouldShowTooltip(item) && tooltipActive) {
       update(event, item, options);
     }
   });
 
   // clear tooltip on mouse out
-  vgView.addEventListener("mouseout.tooltipRemove", function (event: MouseEvent, item: SceneGraph) {
+  vgView.addEventListener('mouseout.tooltipRemove', function (event: MouseEvent, item: SceneGraph) {
     if (shouldShowTooltip(item)) {
       cancelPromise();
 
@@ -70,13 +69,13 @@ export function vega(vgView: VgView, options: Option = {showAllFields: true}) {
   return {
     destroy: function () {
       // remove event listeners
-      vgView.removeEventListener("mouseover.tooltipInit");
-      vgView.removeEventListener("mousemove.tooltipUpdate");
-      vgView.removeEventListener("mouseout.tooltipRemove");
+      vgView.removeEventListener('mouseover.tooltipInit');
+      vgView.removeEventListener('mousemove.tooltipUpdate');
+      vgView.removeEventListener('mouseout.tooltipRemove');
 
       cancelPromise(); // clear tooltip promise
     }
-  }
+  };
 };
 
 /**
@@ -91,7 +90,7 @@ export function vegaLite(vgView: VgView, vlSpec: TopLevelExtendedSpec, options: 
 
   // TODO: update this to use new vega-view api (addEventListener)
   // initialize tooltip with item data and options on mouse over
-  vgView.addEventListener("mouseover.tooltipInit", function (event: MouseEvent, item: SceneGraph) {
+  vgView.addEventListener('mouseover.tooltipInit', function (event: MouseEvent, item: SceneGraph) {
     if (shouldShowTooltip(item)) {
       // clear existing promise because mouse can only point at one thing at a time
       cancelPromise();
@@ -105,14 +104,14 @@ export function vegaLite(vgView: VgView, vlSpec: TopLevelExtendedSpec, options: 
 
   // update tooltip position on mouse move
   // (important for large marks e.g. bars)
-  vgView.addEventListener("mousemove.tooltipUpdate", function (event: MouseEvent, item: SceneGraph) {
+  vgView.addEventListener('mousemove.tooltipUpdate', function (event: MouseEvent, item: SceneGraph) {
     if (shouldShowTooltip(item) && tooltipActive) {
       update(event, item, options);
     }
   });
 
   // clear tooltip on mouse out
-  vgView.addEventListener("mouseout.tooltipRemove", function (event: MouseEvent, item: SceneGraph) {
+  vgView.addEventListener('mouseout.tooltipRemove', function (event: MouseEvent, item: SceneGraph) {
     if (shouldShowTooltip(item)) {
       cancelPromise();
 
@@ -125,13 +124,13 @@ export function vegaLite(vgView: VgView, vlSpec: TopLevelExtendedSpec, options: 
   return {
     destroy: function () {
       // remove event listeners
-      vgView.removeEventListener("mouseover.tooltipInit");
-      vgView.removeEventListener("mousemove.tooltipUpdate");
-      vgView.removeEventListener("mouseout.tooltipRemove");
+      vgView.removeEventListener('mouseover.tooltipInit');
+      vgView.removeEventListener('mousemove.tooltipUpdate');
+      vgView.removeEventListener('mouseout.tooltipRemove');
 
       cancelPromise(); // clear tooltip promise
     }
-  } 
+  };
 };
 
 /* Cancel tooltip promise */
@@ -144,12 +143,12 @@ function cancelPromise() {
 }
 
 /* timemapping from fieldDef.type to formatType */
-var formatTypeMap: {[type: string]: 'number' | 'time'} = {
-  "quantitative": "number",
-  "temporal": "time",
-  "ordinal": undefined,
-  "nominal": undefined
-}
+let formatTypeMap: {[type: string]: 'number' | 'time'} = {
+  'quantitative': 'number',
+  'temporal': 'time',
+  'ordinal': undefined,
+  'nominal': undefined
+};
 
 /**
 * (Vega-Lite only) Supplement options with vlSpec
@@ -165,32 +164,30 @@ var formatTypeMap: {[type: string]: 'number' | 'time'} = {
 */
 function supplementOptions(options: Option, vlSpec: TopLevelExtendedSpec) {
   // fields to be supplemented by vlSpec
-  var supplementedFields: FieldOption[] = [];
+  let supplementedFields: FieldOption[] = [];
 
   // if showAllFields is true or undefined, supplement all fields in vlSpec
   if (options.showAllFields !== false) {
     vl.spec.fieldDefs(vlSpec).forEach(function (fieldDef: FieldDef<string>) {
       // get a fieldOption in options that matches the fieldDef
-      var fieldOption = getFieldOption(options.fields, fieldDef);
+      let fieldOption = getFieldOption(options.fields, fieldDef);
 
       // supplement the fieldOption with fieldDef and config
-      var supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec);
+      let supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec);
 
       supplementedFields.push(supplementedFieldOption);
     });
-  }
-  // if showAllFields is false, only supplement existing fields in options.fields
-  else {
+  } else { // if showAllFields is false, only supplement existing fields in options.fields
     if (options.fields) {
       options.fields.forEach(function (fieldOption: FieldOption) {
         // get the fieldDef in vlSpec that matches the fieldOption
-        var fieldDef = getFieldDef(vl.spec.fieldDefs(vlSpec) as FieldDef<string>[], fieldOption);
+        let fieldDef = getFieldDef(vl.spec.fieldDefs(vlSpec) as FieldDef<string>[], fieldOption);
 
         // supplement the fieldOption with fieldDef and config
-        var supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec);
+        let supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec);
 
         supplementedFields.push(supplementedFieldOption);
-      })
+      });
     }
   }
 
@@ -211,35 +208,32 @@ function supplementOptions(options: Option, vlSpec: TopLevelExtendedSpec) {
 * If the fieldDef is not aggregated, find a fieldOption that matches the field name.
 */
 function getFieldOption(fieldOptions: FieldOption[], fieldDef: FieldDef<string>) {
-  if (!fieldDef || !fieldOptions || fieldOptions.length <= 0) return undefined;
+  if (!fieldDef || !fieldOptions || fieldOptions.length <= 0) {
+    return undefined;
+  }
 
   // if aggregate, match field name and aggregate operation
   if (fieldDef.aggregate) {
     // try find the perfect match: field name equals, aggregate operation equals
-    for (var i = 0; i < fieldOptions.length; i++) {
-      var fieldOption = fieldOptions[i];
-      if (fieldOption.field === fieldDef.field && fieldOption.aggregate === fieldDef.aggregate) {
-        return fieldOption;
+    for (let item of fieldOptions) {
+      if (item.field === fieldDef.field && item.aggregate === fieldDef.aggregate) {
+        return item;
       }
     }
 
     // try find the second-best match: field name equals, field.aggregate is not specified
-    for (var i = 0; i < fieldOptions.length; i++) {
-      var fieldOption = fieldOptions[i];
-      if (fieldOption.field === fieldDef.field && !fieldOption.aggregate) {
-        return fieldOption;
+    for (let item of fieldOptions) {
+      if (item.field === fieldDef.field && !item.aggregate) {
+        return item;
       }
     }
 
     // return undefined if no match was found
     return undefined;
-  }
-  // if not aggregate, just match field name
-  else {
-    for (var i = 0; i < fieldOptions.length; i++) {
-      var fieldOption = fieldOptions[i];
-      if (fieldOption.field === fieldDef.field) {
-        return fieldOption;
+  } else { // if not aggregate, just match field name
+    for (let item of fieldOptions) {
+      if (item.field === fieldDef.field) {
+        return item;
       }
     }
 
@@ -264,16 +258,14 @@ function getFieldDef(fieldDefs: FieldDef<string>[], fieldOption: FieldOption): F
   }
 
   // field name should match, aggregation should not disagree
-  for (var i = 0; i < fieldDefs.length; i++) {
-    var fieldDef = fieldDefs[i];
-    if (fieldDef.field === fieldOption.field) {
-      if (fieldDef.aggregate) {
-        if (fieldDef.aggregate === fieldOption.aggregate || !fieldOption.aggregate) {
-          return fieldDef;
+  for (let item of fieldDefs) {
+    if (item.field === fieldOption.field) {
+      if (item.aggregate) {
+        if (item.aggregate === fieldOption.aggregate || !fieldOption.aggregate) {
+          return item;
         }
-      }
-      else {
-        return fieldDef;
+      } else {
+        return item;
       }
     }
   }
@@ -291,20 +283,24 @@ function getFieldDef(fieldDefs: FieldDef<string>[], fieldOption: FieldOption): F
 */
 function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldDef<string>, vlSpec: TopLevelExtendedSpec) {
   // many specs don't have config
-  var config = vl.util.extend({}, vlSpec.config);
+  let config = vl.util.extend({}, vlSpec.config);
 
   // at least one of fieldOption and fieldDef should exist
   if (!fieldOption && !fieldDef) {
-    console.error("[Tooltip] Cannot supplement a field when field and fieldDef are both empty.");
+    console.error('[Tooltip] Cannot supplement a field when field and fieldDef are both empty.');
     return undefined;
   }
 
   // if either one of fieldOption and fieldDef is undefined, make it an empty object
-  if (!fieldOption && fieldDef) fieldOption = {};
-  if (fieldOption && !fieldDef) fieldDef = {};
+  if (!fieldOption && fieldDef) {
+    fieldOption = {};
+  }
+  if (fieldOption && !fieldDef) {
+    fieldDef = {};
+  }
 
   // the supplemented field option
-  var supplementedFieldOption: supplementedFieldOption = {};
+  let supplementedFieldOption: SupplementedFieldOption = {};
 
   // supplement a user-provided field name with underscore prefixes and suffixes to
   // match the field names in item.datum
@@ -323,21 +319,23 @@ function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldDef<stri
   // Note: user should never have to provide this boolean in options
   if (fieldDef.type === TEMPORAL && fieldDef.timeUnit) {
     // in most cases, if it's a (TIMEUNIT)T, we remove original T
-    var originalTemporalField = fieldDef.field;
+    let originalTemporalField = fieldDef.field;
     supplementedFieldOption.removeOriginalTemporalField = originalTemporalField;
 
     // handle corner case: if T is present in vlSpec, then we keep both T and (TIMEUNIT)T
-    var fieldDefs = vl.spec.fieldDefs(vlSpec);
-    for (var i = 0; i < fieldDefs.length; i++) {
-      if (fieldDefs[i].field === originalTemporalField && !fieldDefs[i].timeUnit) {
+    let fieldDefs = vl.spec.fieldDefs(vlSpec);
+    for (let items of fieldDefs) {
+      if (items.field === originalTemporalField && !items.timeUnit) {
         supplementedFieldOption.removeOriginalTemporalField = undefined;
         break;
       }
     }
-  } 
+  }
 
   // supplement title
-  if (!config.countTitle) config.countTitle = vl.config.defaultConfig.countTitle; // use vl default countTitle
+  if (!config.countTitle) {
+    config.countTitle = vl.config.defaultConfig.countTitle; // use vl default countTitle
+  }
   supplementedFieldOption.title = fieldOption.title ?
     fieldOption.title : vl.fieldDef.title(fieldDef, config);
 
@@ -348,29 +346,27 @@ function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldDef<stri
   // supplement format
   if (fieldOption.format) {
     supplementedFieldOption.format = fieldOption.format;
-  }
-  // when user doesn't provide format, supplement format using timeUnit, timeFormat, and numberFormat
-  else {
+  } else { // when user doesn't provide format, supplement format using timeUnit, timeFormat, and numberFormat
     switch (supplementedFieldOption.formatType) {
-      case "time":
+      case 'time':
         supplementedFieldOption.format = fieldDef.timeUnit ?
           // TODO(zening): use template for all time fields, to be consistent with Vega-Lite
-          vl.timeUnit.formatExpression(fieldDef.timeUnit, "", false).split("'")[1]
+          vl.timeUnit.formatExpression(fieldDef.timeUnit, '', false).split("'")[1]
           : config.timeFormat || vl.config.defaultConfig.timeFormat;
         break;
-      case "number":
+      case 'number':
         supplementedFieldOption.format = config.numberFormat;
         break;
-      case "string":
+      case 'string':
       default:
     }
   }
 
   // supplement bin from fieldDef, user should never have to provide bin in options
   if (fieldDef.bin) {
-    supplementedFieldOption.field = supplementedFieldOption.field.replace("_start", "_range"); // replace suffix
+    supplementedFieldOption.field = supplementedFieldOption.field.replace('_start', '_range'); // replace suffix
     supplementedFieldOption.bin = true;
-    supplementedFieldOption.formatType = "string"; // we show bin range as string (e.g. "5-10")
+    supplementedFieldOption.formatType = 'string'; // we show bin range as string (e.g. "5-10")
   }
 
   return supplementedFieldOption;
@@ -380,18 +376,20 @@ function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldDef<stri
 /* Initialize tooltip with data */
 function init(event: MouseEvent, item: SceneGraph, options: Option) {
   // get tooltip HTML placeholder
-  var tooltipPlaceholder = getTooltipPlaceholder();
+  let tooltipPlaceholder = getTooltipPlaceholder();
 
   // prepare data for tooltip
-  var tooltipData = getTooltipData(item, options);
-  if (!tooltipData || tooltipData.length === 0) return;
+  let tooltipData = getTooltipData(item, options);
+  if (!tooltipData || tooltipData.length === 0) {
+    return undefined;
+  }
 
   // bind data to tooltip HTML placeholder
   bindData(tooltipPlaceholder, tooltipData);
 
   updatePosition(event, options);
   updateColorTheme(options);
-  select("#vis-tooltip").style("visibility", "visible");
+  select('#vis-tooltip').style('visibility', 'visible');
   tooltipActive = true;
 
   // invoke user-provided callback
@@ -414,7 +412,7 @@ function update(event: MouseEvent, item: SceneGraph, options: Option) {
 function clear(event: MouseEvent, item: SceneGraph, options: Option) {
   // visibility hidden instead of display none
   // because we need computed tooltip width and height to best position it
-  select("#vis-tooltip").style("visibility", "hidden");
+  select('#vis-tooltip').style('visibility', 'hidden');
 
   tooltipActive = false;
   clearData();
@@ -431,14 +429,17 @@ function clear(event: MouseEvent, item: SceneGraph, options: Option) {
 /* Decide if a scenegraph item deserves tooltip */
 function shouldShowTooltip(item: SceneGraph) {
   // no data, no show
-  if (!item || !item.datum) return false;
-
+  if (!item || !item.datum)  {
+    return false;
+  }
   // (small multiples) avoid showing tooltip for a facet's background
-  if (item.datum._facetID) return false;
-
+  if (item.datum._facetID) {
+    return false;
+  }
   // avoid showing tooltip for axis title and labels
-  if (!item.datum._id) return false;
-
+  if (!item.datum._id) {
+    return false;
+  }
   return true;
 }
 
@@ -449,16 +450,16 @@ function shouldShowTooltip(item: SceneGraph) {
 // TODO: add marktype
 function getTooltipData(item: SceneGraph, options: Option) {
   // this array will be bind to the tooltip element
-  var tooltipData: ToolTipData[];
-  console.log(item.datum)
-  console.log(item.mark)
-  var itemData: Map<any> = timemap(item.datum);
+  let tooltipData: ToolTipData[];
+  console.log(item.datum);
+  console.log(item.mark);
+  let itemData: Map<any> = timemap(item.datum);
 
   // TODO(zening): find more keys which we should remove from data (#35)
-  var removeKeys = [
-    "_id", "_prev", "width", "height",
-    "count_start", "count_end",
-    "layout_start", "layout_mid", "layout_end", "layout_path", "layout_x", "layout_y"
+  let removeKeys = [
+    '_id', '_prev', 'width', 'height',
+    'count_start', 'count_end',
+    'layout_start', 'layout_mid', 'layout_end', 'layout_path', 'layout_x', 'layout_y'
   ];
   removeFields(itemData, removeKeys);
 
@@ -473,8 +474,7 @@ function getTooltipData(item: SceneGraph, options: Option) {
 
   if (options.showAllFields === true) {
     tooltipData = prepareAllFieldsData(itemData, options);
-  }
-  else {
+  } else {
     tooltipData = prepareCustomFieldsData(itemData, options);
   }
 
@@ -491,21 +491,23 @@ function getTooltipData(item: SceneGraph, options: Option) {
 * @return An array of formatted fields specified by options [{ title: ..., value: ...}]
 */
 function prepareCustomFieldsData(itemData: Map<any>, options: Option) {
-  var tooltipData: ToolTipData[] = [];
+  let tooltipData: ToolTipData[] = [];
 
   options.fields.forEach(function (fieldOption) {
     // prepare field title
-    var title = fieldOption.title ? fieldOption.title : fieldOption.field;
+    let title = fieldOption.title ? fieldOption.title : fieldOption.field;
 
     // get (raw) field value
-    var value = getValue(itemData, fieldOption.field);
-    if (value === undefined) return;
+    let value = getValue(itemData, fieldOption.field);
+    if (value === undefined) {
+      return undefined;
+    }
 
     // format value
-    var formattedValue = customFormat(value, fieldOption.formatType, fieldOption.format) || autoFormat(value);
+    let formattedValue = customFormat(value, fieldOption.formatType, fieldOption.format) || autoFormat(value);
 
     // add formatted data to tooltipData
-    tooltipData.push({ title: title, value: formattedValue });
+    tooltipData.push({title: title, value: formattedValue});
 
   });
 
@@ -521,12 +523,12 @@ function prepareCustomFieldsData(itemData: Map<any>, options: Option) {
 */
 // TODO(zening): Mute "Cannot find field" warnings for composite vis (issue #39)
 function getValue(itemData: Map<any>, field: string) {
-  var value: string | number | Date;
+  let value: string | number | Date;
 
-  var accessors: string[] = field.split('.');
+  let accessors: string[] = field.split('.');
 
   // get the first accessor and remove it from the array
-  var firstAccessor: string = accessors[0];
+  let firstAccessor: string = accessors[0];
   accessors.shift();
 
   if (itemData.has(firstAccessor)) {
@@ -541,10 +543,9 @@ function getValue(itemData: Map<any>, field: string) {
   }
 
   if (value === undefined) {
-    console.warn("[Tooltip] Cannot find field " + field + " in data.");
+    console.warn('[Tooltip] Cannot find field ' + field + ' in data.');
     return undefined;
-  }
-  else {
+  } else {
     return value;
   }
 }
@@ -563,30 +564,31 @@ function getValue(itemData: Map<any>, field: string) {
 * use prepareCustomFieldsData() instead.
 */
 function prepareAllFieldsData(itemData: Map<any>, options: Option) {
-  var tooltipData: ToolTipData[] = [];
+  let tooltipData: ToolTipData[] = [];
 
   // here, fieldOptions still provides format
-  var fieldOptions = timemap(options.fields, function (d) { return d.field; });
+  let fieldOptions = timemap(options.fields, function (d) { return d.field; });
 
   itemData.each(function (value: string, field: string) {
     // prepare title
-    var title;
+    let title;
     if (fieldOptions.has(field) && fieldOptions.get(field).title) {
       title = fieldOptions.get(field).title;
-    }
-    else {
+    } else {
       title = field;
     }
 
+    let formatType;
+    let format;
     // format value
     if (fieldOptions.has(field)) {
-      var formatType = fieldOptions.get(field).formatType;
-      var format = fieldOptions.get(field).format;
+      formatType = fieldOptions.get(field).formatType;
+      format = fieldOptions.get(field).format;
     }
-    var formattedValue = customFormat(value, formatType, format) || autoFormat(value);
+    let formattedValue = customFormat(value, formatType, format) || autoFormat(value);
 
     // add formatted data to tooltipData
-    tooltipData.push({ title: title, value: formattedValue });
+    tooltipData.push({title: title, value: formattedValue});
   });
 
   return tooltipData;
@@ -603,7 +605,7 @@ function prepareAllFieldsData(itemData: Map<any>, options: Option) {
 function removeFields(dataMap: Map<any>, removeKeys: string[]) {
   removeKeys.forEach(function (key) {
     dataMap.remove(key);
-  })
+  });
 }
 
 /**
@@ -611,8 +613,10 @@ function removeFields(dataMap: Map<any>, removeKeys: string[]) {
  * (e.g., Year and YEAR(Year)). In tooltip want to display the field WITH the
  * timeUnit and remove the field that doesn't have timeUnit.
  */
-function removeDuplicateTimeFields(itemData: Map<any>, optFields: supplementedFieldOption[]) {
-  if (!optFields) return;
+function removeDuplicateTimeFields(itemData: Map<any>, optFields: SupplementedFieldOption[]) {
+  if (!optFields) {
+    return undefined;
+  }
 
   optFields.forEach(function (optField) {
     if (optField.removeOriginalTemporalField) {
@@ -630,29 +634,31 @@ function removeDuplicateTimeFields(itemData: Map<any>, optFields: supplementedFi
 * @return itemData with combined bin fields
 */
 function combineBinFields(itemData: Map<any>, fieldOptions: FieldOption[]) {
-  if (!fieldOptions) return undefined;
+  if (!fieldOptions) {
+    return undefined;
+  }
 
   fieldOptions.forEach(function (fieldOption) {
     if (fieldOption.bin === true) {
 
       // get binned field names
-      var bin_field_range = fieldOption.field;
-      var bin_field_start = bin_field_range.replace('_range', '_start');
-      var bin_field_mid = bin_field_range.replace('_range', '_mid');
-      var bin_field_end = bin_field_range.replace('_range', '_end');
+      let binFieldRange = fieldOption.field;
+      let binFieldStart = binFieldRange.replace('_range', '_start');
+      let binFieldMid = binFieldRange.replace('_range', '_mid');
+      let binFieldEnd = binFieldRange.replace('_range', '_end');
 
       // use start value and end value to compute range
-      // save the computed range in bin_field_start
-      var startValue = itemData.get(bin_field_start);
-      var endValue = itemData.get(bin_field_end);
+      // save the computed range in binFieldStart
+      let startValue = itemData.get(binFieldStart);
+      let endValue = itemData.get(binFieldEnd);
       if ((startValue !== undefined) && (endValue !== undefined)) {
-        var range = startValue + '-' + endValue;
-        itemData.set(bin_field_range, range);
+        let range = startValue + '-' + endValue;
+        itemData.set(binFieldRange, range);
       }
 
-      // remove bin_field_mid, bin_field_end, and bin_field_range from itemData
-      var binRemoveKeys = [];
-      binRemoveKeys.push(bin_field_start, bin_field_mid, bin_field_end);
+      // remove binFieldMid, binFieldEnd, and binFieldRange from itemData
+      let binRemoveKeys = [];
+      binRemoveKeys.push(binFieldStart, binFieldMid, binFieldEnd);
       removeFields(itemData, binRemoveKeys);
     }
   });
@@ -672,13 +678,13 @@ function combineBinFields(itemData: Map<any>, fieldOptions: FieldOption[]) {
 * the line / area border.
 */
 function dropFieldsForLineArea(marktype: string, itemData: Map<any>) {
-  if (marktype === "line" || marktype === "area") {
-    var quanKeys: string[] = [];
+  if (marktype === 'line' || marktype === 'area') {
+    let quanKeys: string[] = [];
     itemData.each(function (value, field) {
         if (value instanceof Date) {
           quanKeys.push(field);
         }
-          
+
     });
     removeFields(itemData, quanKeys);
   }
@@ -692,15 +698,19 @@ function dropFieldsForLineArea(marktype: string, itemData: Map<any>) {
 * @return the formatted value, or undefined if value or formatType is missing
 */
 function customFormat(value: number | string | Date, formatType: string, format: string) {
-  if (value === undefined || value === null) return undefined;
-  if (!formatType) return undefined;
+  if (value === undefined || value === null)  {
+    return undefined;
+  }
+  if (!formatType) {
+    return undefined;
+  }
 
   switch (formatType) {
-    case "time":
+    case 'time':
       return format ? timeFormat(format)(value as Date) : autoTimeFormat(value as Date);
-    case "number":
+    case 'number':
       return format ? d3NumberFormat(format)(value as number) : autoNumberFormat(value as number);
-    case "string":
+    case 'string':
     default:
       return value as string;
   }
@@ -721,18 +731,18 @@ function autoFormat(value: string | number | Date) {
 }
 
 function autoNumberFormat(value: number) {
-  return d3NumberFormat(",.2r")(value);
+  return d3NumberFormat(',.2r')(value);
 }
 
 function autoTimeFormat(date: Date) {
-  var formatMillisecond = timeFormat(".%L"),
-    formatSecond = timeFormat(":%S"),
-    formatMinute = timeFormat("%I:%M"),
-    formatHour = timeFormat("%I %p"),
-    formatDay = timeFormat("%a %d"),
-    formatWeek = timeFormat("%b %d"),
-    formatMonth = timeFormat("%B"),
-    formatYear = timeFormat("%Y");
+  let formatMillisecond = timeFormat('.%L'),
+    formatSecond = timeFormat(':%S'),
+    formatMinute = timeFormat('%I:%M'),
+    formatHour = timeFormat('%I %p'),
+    formatDay = timeFormat('%a %d'),
+    formatWeek = timeFormat('%b %d'),
+    formatMonth = timeFormat('%B'),
+    formatYear = timeFormat('%Y');
 
   return (timeSecond(date) < date ? formatMillisecond
       : timeMinute(date) < date ? formatSecond
@@ -750,15 +760,14 @@ function autoTimeFormat(date: Date) {
 * @returns the HTML placeholder for tooltip
 */
 function getTooltipPlaceholder() {
-  var tooltipPlaceholder;
+  let tooltipPlaceholder;
 
-  if (select("#vis-tooltip").empty()) {
-    tooltipPlaceholder = select("body").append("div")
-      .attr("id", "vis-tooltip")
-      .attr("class", "vg-tooltip");
-  }
-  else {
-    tooltipPlaceholder = select("#vis-tooltip");
+  if (select('#vis-tooltip').empty()) {
+    tooltipPlaceholder = select('body').append('div')
+      .attr('id', 'vis-tooltip')
+      .attr('class', 'vg-tooltip');
+  } else {
+    tooltipPlaceholder = select('#vis-tooltip');
   }
 
   return tooltipPlaceholder;
@@ -768,23 +777,23 @@ function getTooltipPlaceholder() {
 * Bind tooltipData to the tooltip placeholder
 */
 function bindData(tooltipPlaceholder: Selection<Element | EnterElement | Document | Window, {}, HTMLElement, any>, tooltipData: ToolTipData[]) {
-  tooltipPlaceholder.selectAll("table").remove();
-  var tooltipRows = tooltipPlaceholder.append("table").selectAll(".tooltip-row")
+  tooltipPlaceholder.selectAll('table').remove();
+  let tooltipRows = tooltipPlaceholder.append('table').selectAll('.tooltip-row')
     .data(tooltipData);
 
   tooltipRows.exit().remove();
 
-  var row = tooltipRows.enter().append("tr")
-    .attr("class", "tooltip-row");
-  row.append("td").attr("class", "key").text(function (d: ToolTipData) { return d.title + ":"; });
-  row.append("td").attr("class", "value").text(function (d: ToolTipData) { return d.value; });
+  let row = tooltipRows.enter().append('tr')
+    .attr('class', 'tooltip-row');
+  row.append('td').attr('class', 'key').text(function (d: ToolTipData) { return d.title + ':'; });
+  row.append('td').attr('class', 'value').text(function (d: ToolTipData) { return d.value; });
 }
 
 /**
 * Clear tooltip data
 */
 function clearData() {
-  select("#vis-tooltip").selectAll(".tooltip-row").data([])
+  select('#vis-tooltip').selectAll('.tooltip-row').data([])
     .exit().remove();
 }
 
@@ -795,8 +804,8 @@ function clearData() {
 */
 function updatePosition(event: MouseEvent, options: Option) {
   // determine x and y offsets, defaults are 10px
-  var offsetX = 10;
-  var offsetY = 10;
+  let offsetX = 10;
+  let offsetY = 10;
   if (options && options.offset && (options.offset.x !== undefined) && (options.offset.x !== null)) {
     offsetX = options.offset.x;
   }
@@ -804,35 +813,35 @@ function updatePosition(event: MouseEvent, options: Option) {
     offsetY = options.offset.y;
   }
 
-  //TODO: use the correct time type
-  select("#vis-tooltip")
-    .style("top", function (this: HTMLElement) {
+  // TODO: use the correct time type
+  select('#vis-tooltip')
+    .style('top', function (this: HTMLElement) {
       // by default: put tooltip 10px below cursor
       // if tooltip is close to the bottom of the window, put tooltip 10px above cursor
-      var tooltipHeight = this.getBoundingClientRect().height;
+      let tooltipHeight = this.getBoundingClientRect().height;
       if (event.clientY + tooltipHeight + offsetY < window.innerHeight) {
-        return "" + (event.clientY + offsetY) + "px";
+        return '' + (event.clientY + offsetY) + 'px';
       } else {
-        return "" + (event.clientY - tooltipHeight - offsetY) + "px";
+        return '' + (event.clientY - tooltipHeight - offsetY) + 'px';
       }
     })
-    .style("left", function (this: HTMLElement) {
+    .style('left', function (this: HTMLElement) {
       // by default: put tooltip 10px to the right of cursor
       // if tooltip is close to the right edge of the window, put tooltip 10 px to the left of cursor
-      var tooltipWidth = this.getBoundingClientRect().width;
+      let tooltipWidth = this.getBoundingClientRect().width;
       if (event.clientX + tooltipWidth + offsetX < window.innerWidth) {
-        return "" + (event.clientX + offsetX) + "px";
+        return '' + (event.clientX + offsetX) + 'px';
       } else {
-        return "" + (event.clientX - tooltipWidth - offsetX) + "px";
+        return '' + (event.clientX - tooltipWidth - offsetX) + 'px';
       }
     });
 }
 
 /* Clear tooltip position */
 function clearPosition() {
-  select("#vis-tooltip")
-    .style("top", "-9999px")
-    .style("left", "-9999px");
+  select('#vis-tooltip')
+    .style('top', '-9999px')
+    .style('left', '-9999px');
 }
 
 /**
@@ -844,15 +853,14 @@ function clearPosition() {
 function updateColorTheme(options: Option) {
   clearColorTheme();
 
-  if (options && options.colorTheme === "dark") {
-    select("#vis-tooltip").classed("dark-theme", true);
-  }
-  else {
-    select("#vis-tooltip").classed("light-theme", true);
+  if (options && options.colorTheme === 'dark') {
+    select('#vis-tooltip').classed('dark-theme', true);
+  } else {
+    select('#vis-tooltip').classed('light-theme', true);
   }
 }
 
 /* Clear color themes */
 function clearColorTheme() {
-  select("#vis-tooltip").classed("dark-theme light-theme", false);
+  select('#vis-tooltip').classed('dark-theme light-theme', false);
 }

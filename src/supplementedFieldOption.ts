@@ -1,5 +1,5 @@
-import {FieldOption} from './options'
-export interface supplementedFieldOption extends FieldOption {
-  removeOriginalTemporalField?: string,
-  bin?: boolean
+import {FieldOption} from './options';
+export interface SupplementedFieldOption extends FieldOption {
+  removeOriginalTemporalField?: string;
+  bin?: boolean;
 }
