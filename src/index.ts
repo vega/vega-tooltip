@@ -451,8 +451,6 @@ function shouldShowTooltip(item: SceneGraph) {
 function getTooltipData(item: SceneGraph, options: Option) {
   // this array will be bind to the tooltip element
   let tooltipData: ToolTipData[];
-  console.log(item.datum);
-  console.log(item.mark);
   let itemData: Map<any> = timemap(item.datum);
 
   // TODO(zening): find more keys which we should remove from data (#35)
@@ -721,6 +719,7 @@ function customFormat(value: number | string | Date, formatType: string, format:
 * @return the formatted time, number or string value
 */
 function autoFormat(value: string | number | Date) {
+  console.log(value);
   if (typeof value === 'number') {
     return autoNumberFormat(value);
   } else if (value instanceof Date) {
@@ -731,7 +730,8 @@ function autoFormat(value: string | number | Date) {
 }
 
 function autoNumberFormat(value: number) {
-  return d3NumberFormat(',.2r')(value);
+  return value % 1 === 0 ? d3NumberFormat(',')(value) : d3NumberFormat(',.2f')(value);
+  // return d3NumberFormat(',.2f')(value);
 }
 
 function autoTimeFormat(date: Date) {
