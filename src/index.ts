@@ -1,12 +1,15 @@
 import {FieldOption, Option} from './options';
 import {supplementedFieldOption} from './supplementedFieldOption';
-import {Map, map as d3map} from 'd3-collection';
+import {Map, map as timemap} from 'd3-collection';
 import {EnterElement, select, Selection} from 'd3-selection';
-import * as dl from 'datalib';
 import {FieldDef} from 'vega-lite/build/src/fielddef';
 import {TopLevelExtendedSpec} from 'vega-lite/build/src/spec';
 import {TEMPORAL} from 'vega-lite/build/src/type';
 import * as vl from 'vega-lite/build/src/vl';
+import {Field} from 'vega-lite/build/src/fielddef';
+import {format as d3NumberFormat} from 'd3-format';
+import * as d3TimeFormat from 'd3-time-format';
+import * as d3Time from 'd3-time';
 
 // by default, delay showing tooltip for 100 ms
 var DELAY = 100;
@@ -23,14 +26,14 @@ type SceneGraph = {
     marktype: string 
   }
 };
-type ToolTipData = {title: string, value: string};
+type ToolTipData = {title: string, value: string | number };
 
 /**
 * Export API for Vega visualizations: vg.tooltip(vgView, options)
 * options can specify whether to show all fields or to show only custom fields
 * It can also provide custom title and format for fields
 */
-export function vega(vgView: VgView, options: Option = {}) {
+export function vega(vgView: VgView, options: Option = {showAllFields: true}) {
   // TODO: change item type to vega scenegraph
 
   // initialize tooltip with item data and options on mouse over
@@ -140,7 +143,7 @@ function cancelPromise() {
   tooltipPromise = undefined;
 }
 
-/* d3mapping from fieldDef.type to formatType */
+/* timemapping from fieldDef.type to formatType */
 var formatTypeMap: {[type: string]: 'number' | 'time'} = {
   "quantitative": "number",
   "temporal": "time",
@@ -166,7 +169,7 @@ function supplementOptions(options: Option, vlSpec: TopLevelExtendedSpec) {
 
   // if showAllFields is true or undefined, supplement all fields in vlSpec
   if (options.showAllFields !== false) {
-    vl.spec.fieldDefs(vlSpec).forEach(function (fieldDef) {
+    vl.spec.fieldDefs(vlSpec).forEach(function (fieldDef: FieldDef<string>) {
       // get a fieldOption in options that matches the fieldDef
       var fieldOption = getFieldOption(options.fields, fieldDef);
 
@@ -179,9 +182,9 @@ function supplementOptions(options: Option, vlSpec: TopLevelExtendedSpec) {
   // if showAllFields is false, only supplement existing fields in options.fields
   else {
     if (options.fields) {
-      options.fields.forEach(function (fieldOption) {
+      options.fields.forEach(function (fieldOption: FieldOption) {
         // get the fieldDef in vlSpec that matches the fieldOption
-        var fieldDef = getFieldDef(vl.spec.fieldDefs(vlSpec), fieldOption);
+        var fieldDef = getFieldDef(vl.spec.fieldDefs(vlSpec) as FieldDef<string>[], fieldOption);
 
         // supplement the fieldOption with fieldDef and config
         var supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec);
@@ -207,7 +210,7 @@ function supplementOptions(options: Option, vlSpec: TopLevelExtendedSpec) {
 * the aggregation of the fieldDef.
 * If the fieldDef is not aggregated, find a fieldOption that matches the field name.
 */
-function getFieldOption(fieldOptions: FieldOption[], fieldDef: FieldDef) {
+function getFieldOption(fieldOptions: FieldOption[], fieldDef: FieldDef<string>) {
   if (!fieldDef || !fieldOptions || fieldOptions.length <= 0) return undefined;
 
   // if aggregate, match field name and aggregate operation
@@ -255,7 +258,7 @@ function getFieldOption(fieldOptions: FieldOption[], fieldDef: FieldDef) {
 * If the matching fieldDef is aggregated, the aggregation should not contradict
 * with that of the fieldOption.
 */
-function getFieldDef(fieldDefs: FieldDef[], fieldOption: FieldOption): FieldDef {
+function getFieldDef(fieldDefs: FieldDef<string>[], fieldOption: FieldOption): FieldDef<string> {
   if (!fieldOption || !fieldOption.field || !fieldDefs) {
     return undefined;
   }
@@ -286,7 +289,7 @@ function getFieldDef(fieldDefs: FieldDef[], fieldOption: FieldOption): FieldDef 
 * config (and its members timeFormat, numberFormat and countTitle) can be undefined.
 * @return the supplemented fieldOption, or undefined on error
 */
-function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldDef, vlSpec: TopLevelExtendedSpec) {
+function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldDef<string>, vlSpec: TopLevelExtendedSpec) {
   // many specs don't have config
   var config = vl.util.extend({}, vlSpec.config);
 
@@ -331,7 +334,7 @@ function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldDef, vlS
         break;
       }
     }
-  }
+  } 
 
   // supplement title
   if (!config.countTitle) config.countTitle = vl.config.defaultConfig.countTitle; // use vl default countTitle
@@ -447,8 +450,9 @@ function shouldShowTooltip(item: SceneGraph) {
 function getTooltipData(item: SceneGraph, options: Option) {
   // this array will be bind to the tooltip element
   var tooltipData: ToolTipData[];
-
-  var itemData: Map<string> = d3map(item.datum);
+  console.log(item.datum)
+  console.log(item.mark)
+  var itemData: Map<string> = timemap(item.datum);
 
   // TODO(zening): find more keys which we should remove from data (#35)
   var removeKeys = [
@@ -467,7 +471,7 @@ function getTooltipData(item: SceneGraph, options: Option) {
   // TODO(zening): use Vega-Lite layering to support tooltip on line and area charts (#1)
   dropFieldsForLineArea(item.mark.marktype, itemData);
 
-  if (options.showAllFields !== false) {
+  if (options.showAllFields === true) {
     tooltipData = prepareAllFieldsData(itemData, options);
   }
   else {
@@ -482,7 +486,7 @@ function getTooltipData(item: SceneGraph, options: Option) {
 * Prepare custom fields data for tooltip. This function formats
 * field titles and values and returns an array of formatted fields.
 *
-* @param {d3.map} itemData - a map of item.datum
+* @param {time.map} itemData - a map of item.datum
 * @param {Object} options - user-provided options
 * @return An array of formatted fields specified by options [{ title: ..., value: ...}]
 */
@@ -510,14 +514,14 @@ function prepareCustomFieldsData(itemData: Map<string>, options: Option) {
 
 /**
 * Get a field value from a data map.
-* @param {d3.map} itemData - a map of item.datum
+* @param {time.map} itemData - a map of item.datum
 * @param {string} field - the name of the field. It can contain "." to specify
 * that the field is not a direct child of item.datum
 * @return the field value on success, undefined otherwise
 */
 // TODO(zening): Mute "Cannot find field" warnings for composite vis (issue #39)
 function getValue(itemData: Map<string>, field: string) {
-  var value: string;
+  var value: string | number | Date;
 
   var accessors: string[] = field.split('.');
 
@@ -550,7 +554,7 @@ function getValue(itemData: Map<string>, field: string) {
 * Prepare data for all fields in itemData for tooltip. This function
 * formats field titles and values and returns an array of formatted fields.
 *
-* @param {d3.map} itemData - a map of item.datum
+* @param {time.map} itemData - a map of item.datum
 * @param {Object} options - user-provided options
 * @return All fields in itemData, formatted, in the form of an array: [{ title: ..., value: ...}]
 *
@@ -562,7 +566,7 @@ function prepareAllFieldsData(itemData: Map<string>, options: Option) {
   var tooltipData: ToolTipData[] = [];
 
   // here, fieldOptions still provides format
-  var fieldOptions = d3map(options.fields, function (d) { return d.field; });
+  var fieldOptions = timemap(options.fields, function (d) { return d.field; });
 
   itemData.each(function (value: string, field: string) {
     // prepare title
@@ -593,7 +597,7 @@ function prepareAllFieldsData(itemData: Map<string>, options: Option) {
 *
 * Certain meta data fields (e.g. "_id", "_prev") should be hidden in the tooltip
 * by default. This function can be used to remove these fields from tooltip data.
-* @param {d3.map} dataMap - the data map that contains tooltip data.
+* @param {time.map} dataMap - the data map that contains tooltip data.
 * @param {string[]} removeKeys - the fields that should be removed from dataMap.
 */
 function removeFields(dataMap: Map<string>, removeKeys: string[]) {
@@ -621,7 +625,7 @@ function removeDuplicateTimeFields(itemData: Map<string>, optFields: supplemente
 * Combine multiple binned fields in itemData into one field. The value of the field
 * is a string that describes the bin range.
 *
-* @param {d3.map} itemData - a map of item.datum
+* @param {time.map} itemData - a map of item.datum
 * @param {Object[]} fieldOptions - a list of field options (i.e. options.fields[])
 * @return itemData with combined bin fields
 */
@@ -671,7 +675,7 @@ function dropFieldsForLineArea(marktype: string, itemData: Map<string>) {
   if (marktype === "line" || marktype === "area") {
     var quanKeys: string[] = [];
     itemData.each(function (field, value) {
-      switch (dl.type(value)) {
+      switch (getType(value)) { 
         case "number":
         case "date":
           quanKeys.push(field);
@@ -688,21 +692,21 @@ function dropFieldsForLineArea(marktype: string, itemData: Map<string>) {
 * Format value using formatType and format
 * @param value - a field value to be formatted
 * @param formatType - the foramtType can be: "time", "number", or "string"
-* @param format - a d3 time format specifier, or a d3 number format specifier, or undefined
+* @param format - a time time format specifier, or a time number format specifier, or undefined
 * @return the formatted value, or undefined if value or formatType is missing
 */
-function customFormat(value: string, formatType: string, format: string) {
-  if (value === undefined || value === null) return;
-  if (!formatType) return;
+function customFormat(value: number | string | Date, formatType: string, format: string) {
+  if (value === undefined || value === null) return undefined;
+  if (!formatType) return undefined;
 
   switch (formatType) {
     case "time":
-      return format ? dl.format.time(format)(value) : dl.format.auto.time()(value);
+      return format ? d3TimeFormat.timeFormat(format)(value as Date) : autoTimeFormat(value as Date);
     case "number":
-      return format ? dl.format.number(format)(value) : dl.format.auto.number()(value);
+      return format ? d3NumberFormat(format)(value as number) : autoNumberFormat(value as number);
     case "string":
     default:
-      return value;
+      return value as string;
   }
 }
 
@@ -710,17 +714,37 @@ function customFormat(value: string, formatType: string, format: string) {
 * Automatically format a time, number or string value
 * @return the formatted time, number or string value
 */
-function autoFormat(value: string) {
-  switch (dl.type(value)) {
-    case "date":
-      return dl.format.auto.time()(value);
-    case "number":
-      return dl.format.auto.number()(value);
-    case "boolean":
-    case "string":
-    default:
-      return value;
+function autoFormat(value: string | number | Date) {
+  if (typeof value === 'number') {
+    return autoNumberFormat(value);
+  } else if (value instanceof Date) {
+    return autoTimeFormat(value);
+  } else {
+    return value;
   }
+}
+
+function autoNumberFormat(value: number) {
+  return d3NumberFormat(",.2r")(value);
+}
+
+function autoTimeFormat(date: Date) {
+  var formatMillisecond = d3TimeFormat.timeFormat(".%L"),
+    formatSecond = d3TimeFormat.timeFormat(":%S"),
+    formatMinute = d3TimeFormat.timeFormat("%I:%M"),
+    formatHour = d3TimeFormat.timeFormat("%I %p"),
+    formatDay = d3TimeFormat.timeFormat("%a %d"),
+    formatWeek = d3TimeFormat.timeFormat("%b %d"),
+    formatMonth = d3TimeFormat.timeFormat("%B"),
+    formatYear = d3TimeFormat.timeFormat("%Y");
+
+  return (d3Time.timeSecond(date) < date ? formatMillisecond
+      : d3Time.timeMinute(date) < date ? formatSecond
+      : d3Time.timeHour(date) < date ? formatMinute
+      : d3Time.timeDay(date) < date ? formatHour
+      : d3Time.timeMonth(date) < date ? (d3Time.timeWeek(date) < date ? formatDay : formatWeek)
+      : d3Time.timeYear(date) < date ? formatMonth
+      : formatYear)(date);
 }
 
 
@@ -784,7 +808,7 @@ function updatePosition(event: MouseEvent, options: Option) {
     offsetY = options.offset.y;
   }
 
-  //TODO: use the correct d3 type
+  //TODO: use the correct time type
   select("#vis-tooltip")
     .style("top", function (this: HTMLElement) {
       // by default: put tooltip 10px below cursor
@@ -835,4 +859,15 @@ function updateColorTheme(options: Option) {
 /* Clear color themes */
 function clearColorTheme() {
   select("#vis-tooltip").classed("dark-theme light-theme", false);
+}
+
+function getType(value) {
+  var type = typeof value;
+  if (type === 'number' || type === 'boolean' || type === 'string') {
+    return type;
+  } else if (value instanceof Date) {
+    return "date";
+  } else {
+    return null;
+  }
 }
