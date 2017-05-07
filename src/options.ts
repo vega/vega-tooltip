@@ -1,6 +1,7 @@
 import {FormatSpecifier} from 'd3-format';
 import {AggregateOp} from 'vega-lite/src/aggregate';
 import {FieldDef} from 'vega-lite/src/fielddef';
+import {Field} from 'vega-lite/build/src/fielddef';
 
 export interface Option {
   showAllFields?: boolean,
@@ -16,7 +17,11 @@ export interface Option {
   colorTheme?: 'light' | 'dark'
 }
 
-export interface FieldOption extends FieldDef {
-    formatType?: 'number' | 'time' | 'string'
-    format?: string
+export interface FieldOption {
+  field? : string,
+  title? : string,
+  formatType?: 'number' | 'time' | 'string',
+  format?: string,
+  aggregate?: string,
+  bin?: boolean
 }
