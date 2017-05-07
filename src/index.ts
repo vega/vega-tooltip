@@ -8,8 +8,8 @@ import {TEMPORAL} from 'vega-lite/build/src/type';
 import * as vl from 'vega-lite/build/src/vl';
 import {Field} from 'vega-lite/build/src/fielddef';
 import {format as d3NumberFormat} from 'd3-format';
-import * as d3TimeFormat from 'd3-time-format';
-import * as d3Time from 'd3-time';
+import {timeFormat} from 'd3-time-format';
+import {timeSecond, timeMinute, timeHour, timeDay, timeWeek, timeMonth, timeYear} from 'd3-time';
 
 // by default, delay showing tooltip for 100 ms
 var DELAY = 100;
@@ -19,11 +19,11 @@ var tooltipActive = false;
 export type VgView = any;
 type SceneGraph = {
   datum: {
-    _facetID: any,
-    _id: any
+    _facetID: number,
+    _id: number
   },
   mark: { 
-    marktype: string 
+    marktype: string
   }
 };
 type ToolTipData = {title: string, value: string | number };
@@ -91,7 +91,7 @@ export function vegaLite(vgView: VgView, vlSpec: TopLevelExtendedSpec, options: 
 
   // TODO: update this to use new vega-view api (addEventListener)
   // initialize tooltip with item data and options on mouse over
-  vgView.addEventListener("mouseover", function (event: MouseEvent, item: SceneGraph) {
+  vgView.addEventListener("mouseover.tooltipInit", function (event: MouseEvent, item: SceneGraph) {
     if (shouldShowTooltip(item)) {
       // clear existing promise because mouse can only point at one thing at a time
       cancelPromise();
@@ -105,14 +105,14 @@ export function vegaLite(vgView: VgView, vlSpec: TopLevelExtendedSpec, options: 
 
   // update tooltip position on mouse move
   // (important for large marks e.g. bars)
-  vgView.addEventListener("mousemove", function (event: MouseEvent, item: SceneGraph) {
+  vgView.addEventListener("mousemove.tooltipUpdate", function (event: MouseEvent, item: SceneGraph) {
     if (shouldShowTooltip(item) && tooltipActive) {
       update(event, item, options);
     }
   });
 
   // clear tooltip on mouse out
-  vgView.addEventListener("mouseout", function (event: MouseEvent, item: SceneGraph) {
+  vgView.addEventListener("mouseout.tooltipRemove", function (event: MouseEvent, item: SceneGraph) {
     if (shouldShowTooltip(item)) {
       cancelPromise();
 
@@ -452,7 +452,7 @@ function getTooltipData(item: SceneGraph, options: Option) {
   var tooltipData: ToolTipData[];
   console.log(item.datum)
   console.log(item.mark)
-  var itemData: Map<string> = timemap(item.datum);
+  var itemData: Map<any> = timemap(item.datum);
 
   // TODO(zening): find more keys which we should remove from data (#35)
   var removeKeys = [
@@ -490,7 +490,7 @@ function getTooltipData(item: SceneGraph, options: Option) {
 * @param {Object} options - user-provided options
 * @return An array of formatted fields specified by options [{ title: ..., value: ...}]
 */
-function prepareCustomFieldsData(itemData: Map<string>, options: Option) {
+function prepareCustomFieldsData(itemData: Map<any>, options: Option) {
   var tooltipData: ToolTipData[] = [];
 
   options.fields.forEach(function (fieldOption) {
@@ -520,7 +520,7 @@ function prepareCustomFieldsData(itemData: Map<string>, options: Option) {
 * @return the field value on success, undefined otherwise
 */
 // TODO(zening): Mute "Cannot find field" warnings for composite vis (issue #39)
-function getValue(itemData: Map<string>, field: string) {
+function getValue(itemData: Map<any>, field: string) {
   var value: string | number | Date;
 
   var accessors: string[] = field.split('.');
@@ -562,7 +562,7 @@ function getValue(itemData: Map<string>, field: string) {
 * It will not try to parse value if it is an object. If value is an object, please
 * use prepareCustomFieldsData() instead.
 */
-function prepareAllFieldsData(itemData: Map<string>, options: Option) {
+function prepareAllFieldsData(itemData: Map<any>, options: Option) {
   var tooltipData: ToolTipData[] = [];
 
   // here, fieldOptions still provides format
@@ -600,7 +600,7 @@ function prepareAllFieldsData(itemData: Map<string>, options: Option) {
 * @param {time.map} dataMap - the data map that contains tooltip data.
 * @param {string[]} removeKeys - the fields that should be removed from dataMap.
 */
-function removeFields(dataMap: Map<string>, removeKeys: string[]) {
+function removeFields(dataMap: Map<any>, removeKeys: string[]) {
   removeKeys.forEach(function (key) {
     dataMap.remove(key);
   })
@@ -611,7 +611,7 @@ function removeFields(dataMap: Map<string>, removeKeys: string[]) {
  * (e.g., Year and YEAR(Year)). In tooltip want to display the field WITH the
  * timeUnit and remove the field that doesn't have timeUnit.
  */
-function removeDuplicateTimeFields(itemData: Map<string>, optFields: supplementedFieldOption[]) {
+function removeDuplicateTimeFields(itemData: Map<any>, optFields: supplementedFieldOption[]) {
   if (!optFields) return;
 
   optFields.forEach(function (optField) {
@@ -629,7 +629,7 @@ function removeDuplicateTimeFields(itemData: Map<string>, optFields: supplemente
 * @param {Object[]} fieldOptions - a list of field options (i.e. options.fields[])
 * @return itemData with combined bin fields
 */
-function combineBinFields(itemData: Map<string>, fieldOptions: FieldOption[]) {
+function combineBinFields(itemData: Map<any>, fieldOptions: FieldOption[]) {
   if (!fieldOptions) return undefined;
 
   fieldOptions.forEach(function (fieldOption) {
@@ -671,18 +671,14 @@ function combineBinFields(itemData: Map<string>, fieldOptions: FieldOption[]) {
 * = APPL, AMZN, GOOG, IBM, MSFT) because these fields don't tend to change along
 * the line / area border.
 */
-function dropFieldsForLineArea(marktype: string, itemData: Map<string>) {
+function dropFieldsForLineArea(marktype: string, itemData: Map<any>) {
   if (marktype === "line" || marktype === "area") {
     var quanKeys: string[] = [];
-    itemData.each(function (field, value) {
-      switch (getType(value)) { 
-        case "number":
-        case "date":
+    itemData.each(function (value, field) {
+        if (value instanceof Date) {
           quanKeys.push(field);
-          break;
-        case "boolean":
-        case "string":
-      }
+        }
+          
     });
     removeFields(itemData, quanKeys);
   }
@@ -701,7 +697,7 @@ function customFormat(value: number | string | Date, formatType: string, format:
 
   switch (formatType) {
     case "time":
-      return format ? d3TimeFormat.timeFormat(format)(value as Date) : autoTimeFormat(value as Date);
+      return format ? timeFormat(format)(value as Date) : autoTimeFormat(value as Date);
     case "number":
       return format ? d3NumberFormat(format)(value as number) : autoNumberFormat(value as number);
     case "string":
@@ -729,21 +725,21 @@ function autoNumberFormat(value: number) {
 }
 
 function autoTimeFormat(date: Date) {
-  var formatMillisecond = d3TimeFormat.timeFormat(".%L"),
-    formatSecond = d3TimeFormat.timeFormat(":%S"),
-    formatMinute = d3TimeFormat.timeFormat("%I:%M"),
-    formatHour = d3TimeFormat.timeFormat("%I %p"),
-    formatDay = d3TimeFormat.timeFormat("%a %d"),
-    formatWeek = d3TimeFormat.timeFormat("%b %d"),
-    formatMonth = d3TimeFormat.timeFormat("%B"),
-    formatYear = d3TimeFormat.timeFormat("%Y");
+  var formatMillisecond = timeFormat(".%L"),
+    formatSecond = timeFormat(":%S"),
+    formatMinute = timeFormat("%I:%M"),
+    formatHour = timeFormat("%I %p"),
+    formatDay = timeFormat("%a %d"),
+    formatWeek = timeFormat("%b %d"),
+    formatMonth = timeFormat("%B"),
+    formatYear = timeFormat("%Y");
 
-  return (d3Time.timeSecond(date) < date ? formatMillisecond
-      : d3Time.timeMinute(date) < date ? formatSecond
-      : d3Time.timeHour(date) < date ? formatMinute
-      : d3Time.timeDay(date) < date ? formatHour
-      : d3Time.timeMonth(date) < date ? (d3Time.timeWeek(date) < date ? formatDay : formatWeek)
-      : d3Time.timeYear(date) < date ? formatMonth
+  return (timeSecond(date) < date ? formatMillisecond
+      : timeMinute(date) < date ? formatSecond
+      : timeHour(date) < date ? formatMinute
+      : timeDay(date) < date ? formatHour
+      : timeMonth(date) < date ? (timeWeek(date) < date ? formatDay : formatWeek)
+      : timeYear(date) < date ? formatMonth
       : formatYear)(date);
 }
 
@@ -859,15 +855,4 @@ function updateColorTheme(options: Option) {
 /* Clear color themes */
 function clearColorTheme() {
   select("#vis-tooltip").classed("dark-theme light-theme", false);
-}
-
-function getType(value) {
-  var type = typeof value;
-  if (type === 'number' || type === 'boolean' || type === 'string') {
-    return type;
-  } else if (value instanceof Date) {
-    return "date";
-  } else {
-    return null;
-  }
 }
