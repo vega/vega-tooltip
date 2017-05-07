@@ -22,7 +22,7 @@
     "url": "https://github.com/vega/vega-tooltip/issues"
   },
   "homepage": "https://github.com/vega/vega-tooltip#readme",
-    "scripts": {
+  "scripts": {
     "prebuild": "npm run data && mkdir -p build",
     "build": "browserify src/index.ts -t browserify-shim -p tsify -d -s vegaTooltip -o build/vega-tooltip.js",
     "postbuild": "uglifyjs build/vega-tooltip.js -cm > build/vega-tooltip.min.js && cp src/vega-tooltip.css build/vega-tooltip.css",
@@ -43,9 +43,12 @@
     "vega-datasets": "vega/vega-datasets#gh-pages",
     "vega-embed": "^3.0.0-beta.0",
     "watchify": "^3.9.0",
-    "@types/d3": "^4.5.0"
+    "@types/d3": "^4.5.0",
+    "@types/node": "^7.0.18"
   },
   "dependencies": {
+    "d3-format": "^1.2.0",
+    "d3-time-format": "^2.0.5",
     "vega": "^3.0.0-beta.28",
     "vega-lite": "^2.0.0-alpha.8"
   },
