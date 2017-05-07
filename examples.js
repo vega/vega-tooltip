@@ -110,27 +110,17 @@
   // Colored Line Chart
   addVlExample("exampleSpecs/line_color.json", "#vis-color-line");
 
-  // Overlay Line Chart
-  var overlayLineOpts = {
-    showAllFields: false,
-    fields: [
-      {
-        field: "date",
-        formatType: "time",
-        format: "%Y-%m-%d"
-      }
-    ]
-  }
-  addVlExample("exampleSpecs/overlay_line_short.json", "#vis-overlay-line", overlayLineOpts);
-
   // Overlay Area Chart
   var overlayAreaOpts = {
     showAllFields: false,
     fields: [
       {
         field: "date",
-        formatType: "time",
-        format: "%Y-%m-%d"
+        title: "date"
+      }, 
+      {
+        field: "series",
+        title: "category"
       }
     ]
   }

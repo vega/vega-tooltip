@@ -1,11 +1,18 @@
 {
-  "description": "Google's stock price over time.",
-  "data": {"url": "data/stocks.csv", "formatType": "csv"},
-  "transform": [{"filter": "datum.symbol == 'GOOG'"}],
+  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+  "description": "Area chart showing weight of cars over time.",
+  "width": 300, "height": 200,
+  "data": {"url": "data/unemployment-across-industries.json"},
   "mark": "area",
   "encoding": {
-    "x": {"field": "date", "type": "temporal"},
-    "y": {"field": "price", "type": "quantitative"}
-  },
-  "config": {"overlay": {"area": "linepoint"}}
+    "x": {
+      "timeUnit": "yearmonth", "field": "date", "type": "temporal",
+      "scale": {"nice": "month"},
+      "axis": {"format": "%Y", "labelAngle": 0}
+    },
+    "y": {
+      "aggregate": "sum", "field": "count","type": "quantitative"
+    },
+    "color": {"field":"series", "type":"nominal", "scale":{"scheme": "category20b"}}
+  }
 }
