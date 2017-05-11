@@ -1,4 +1,4 @@
-import {Map, map as timemap} from 'd3-collection';
+import {Map, map as d3map} from 'd3-collection';
 import {format as d3NumberFormat} from 'd3-format';
 import {EnterElement, select, Selection} from 'd3-selection';
 import {timeDay, timeHour, timeMinute, timeMonth, timeSecond, timeWeek, timeYear} from 'd3-time';
@@ -11,7 +11,7 @@ import {FieldOption, Option} from './options';
 import {SupplementedFieldOption} from './supplementedFieldOption';
 
 // by default, delay showing tooltip for 100 ms
-let DELAY = 100;
+const DELAY = 100;
 let tooltipPromise: number = undefined;
 let tooltipActive = false;
 
@@ -142,8 +142,8 @@ function cancelPromise() {
   tooltipPromise = undefined;
 }
 
-/* timemapping from fieldDef.type to formatType */
-let formatTypeMap: {[type: string]: 'number' | 'time'} = {
+/* mapping from fieldDef.type to formatType */
+const formatTypeMap: {[type: string]: 'number' | 'time'} = {
   'quantitative': 'number',
   'temporal': 'time',
   'ordinal': undefined,
@@ -164,16 +164,16 @@ let formatTypeMap: {[type: string]: 'number' | 'time'} = {
 */
 function supplementOptions(options: Option, vlSpec: TopLevelExtendedSpec) {
   // fields to be supplemented by vlSpec
-  let supplementedFields: FieldOption[] = [];
+  const supplementedFields: FieldOption[] = [];
 
   // if showAllFields is true or undefined, supplement all fields in vlSpec
   if (options.showAllFields !== false) {
     vl.spec.fieldDefs(vlSpec).forEach(function (fieldDef: FieldDef<string>) {
       // get a fieldOption in options that matches the fieldDef
-      let fieldOption = getFieldOption(options.fields, fieldDef);
+      const fieldOption = getFieldOption(options.fields, fieldDef);
 
       // supplement the fieldOption with fieldDef and config
-      let supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec);
+      const supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec);
 
       supplementedFields.push(supplementedFieldOption);
     });
@@ -181,10 +181,10 @@ function supplementOptions(options: Option, vlSpec: TopLevelExtendedSpec) {
     if (options.fields) {
       options.fields.forEach(function (fieldOption: FieldOption) {
         // get the fieldDef in vlSpec that matches the fieldOption
-        let fieldDef = getFieldDef(vl.spec.fieldDefs(vlSpec) as FieldDef<string>[], fieldOption);
+        const fieldDef = getFieldDef(vl.spec.fieldDefs(vlSpec) as FieldDef<string>[], fieldOption);
 
         // supplement the fieldOption with fieldDef and config
-        let supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec);
+        const supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec);
 
         supplementedFields.push(supplementedFieldOption);
       });
@@ -283,7 +283,7 @@ function getFieldDef(fieldDefs: FieldDef<string>[], fieldOption: FieldOption): F
 */
 function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldDef<string>, vlSpec: TopLevelExtendedSpec) {
   // many specs don't have config
-  let config = vl.util.extend({}, vlSpec.config);
+  const config = vl.util.extend({}, vlSpec.config);
 
   // at least one of fieldOption and fieldDef should exist
   if (!fieldOption && !fieldDef) {
@@ -300,7 +300,7 @@ function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldDef<stri
   }
 
   // the supplemented field option
-  let supplementedFieldOption: SupplementedFieldOption = {};
+  const supplementedFieldOption: SupplementedFieldOption = {};
 
   // supplement a user-provided field name with underscore prefixes and suffixes to
   // match the field names in item.datum
@@ -319,11 +319,11 @@ function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldDef<stri
   // Note: user should never have to provide this boolean in options
   if (fieldDef.type === TEMPORAL && fieldDef.timeUnit) {
     // in most cases, if it's a (TIMEUNIT)T, we remove original T
-    let originalTemporalField = fieldDef.field;
+    const originalTemporalField = fieldDef.field;
     supplementedFieldOption.removeOriginalTemporalField = originalTemporalField;
 
     // handle corner case: if T is present in vlSpec, then we keep both T and (TIMEUNIT)T
-    let fieldDefs = vl.spec.fieldDefs(vlSpec);
+    const fieldDefs = vl.spec.fieldDefs(vlSpec);
     for (let items of fieldDefs) {
       if (items.field === originalTemporalField && !items.timeUnit) {
         supplementedFieldOption.removeOriginalTemporalField = undefined;
@@ -376,10 +376,10 @@ function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldDef<stri
 /* Initialize tooltip with data */
 function init(event: MouseEvent, item: SceneGraph, options: Option) {
   // get tooltip HTML placeholder
-  let tooltipPlaceholder = getTooltipPlaceholder();
+  const tooltipPlaceholder = getTooltipPlaceholder();
 
   // prepare data for tooltip
-  let tooltipData = getTooltipData(item, options);
+  const tooltipData = getTooltipData(item, options);
   if (!tooltipData || tooltipData.length === 0) {
     return undefined;
   }
@@ -451,10 +451,10 @@ function shouldShowTooltip(item: SceneGraph) {
 function getTooltipData(item: SceneGraph, options: Option) {
   // this array will be bind to the tooltip element
   let tooltipData: ToolTipData[];
-  let itemData: Map<any> = timemap(item.datum);
+  const itemData: Map<any> = d3map(item.datum);
 
   // TODO(zening): find more keys which we should remove from data (#35)
-  let removeKeys = [
+  const removeKeys = [
     '_id', '_prev', 'width', 'height',
     'count_start', 'count_end',
     'layout_start', 'layout_mid', 'layout_end', 'layout_path', 'layout_x', 'layout_y'
@@ -489,20 +489,20 @@ function getTooltipData(item: SceneGraph, options: Option) {
 * @return An array of formatted fields specified by options [{ title: ..., value: ...}]
 */
 function prepareCustomFieldsData(itemData: Map<any>, options: Option) {
-  let tooltipData: ToolTipData[] = [];
+  const tooltipData: ToolTipData[] = [];
 
   options.fields.forEach(function (fieldOption) {
     // prepare field title
-    let title = fieldOption.title ? fieldOption.title : fieldOption.field;
+    const title = fieldOption.title ? fieldOption.title : fieldOption.field;
 
     // get (raw) field value
-    let value = getValue(itemData, fieldOption.field);
+    const value = getValue(itemData, fieldOption.field);
     if (value === undefined) {
       return undefined;
     }
 
     // format value
-    let formattedValue = customFormat(value, fieldOption.formatType, fieldOption.format) || autoFormat(value);
+    const formattedValue = customFormat(value, fieldOption.formatType, fieldOption.format) || autoFormat(value);
 
     // add formatted data to tooltipData
     tooltipData.push({title: title, value: formattedValue});
@@ -523,10 +523,10 @@ function prepareCustomFieldsData(itemData: Map<any>, options: Option) {
 function getValue(itemData: Map<any>, field: string) {
   let value: string | number | Date;
 
-  let accessors: string[] = field.split('.');
+  const accessors: string[] = field.split('.');
 
   // get the first accessor and remove it from the array
-  let firstAccessor: string = accessors[0];
+  const firstAccessor: string = accessors[0];
   accessors.shift();
 
   if (itemData.has(firstAccessor)) {
@@ -562,10 +562,10 @@ function getValue(itemData: Map<any>, field: string) {
 * use prepareCustomFieldsData() instead.
 */
 function prepareAllFieldsData(itemData: Map<any>, options: Option) {
-  let tooltipData: ToolTipData[] = [];
+  const tooltipData: ToolTipData[] = [];
 
   // here, fieldOptions still provides format
-  let fieldOptions = timemap(options.fields, function (d) { return d.field; });
+  const fieldOptions = d3map(options.fields, function (d) { return d.field; });
 
   itemData.each(function (value: string, field: string) {
     // prepare title
@@ -583,7 +583,7 @@ function prepareAllFieldsData(itemData: Map<any>, options: Option) {
       formatType = fieldOptions.get(field).formatType;
       format = fieldOptions.get(field).format;
     }
-    let formattedValue = customFormat(value, formatType, format) || autoFormat(value);
+    const formattedValue = customFormat(value, formatType, format) || autoFormat(value);
 
     // add formatted data to tooltipData
     tooltipData.push({title: title, value: formattedValue});
@@ -640,22 +640,22 @@ function combineBinFields(itemData: Map<any>, fieldOptions: FieldOption[]) {
     if (fieldOption.bin === true) {
 
       // get binned field names
-      let binFieldRange = fieldOption.field;
-      let binFieldStart = binFieldRange.replace('_range', '_start');
-      let binFieldMid = binFieldRange.replace('_range', '_mid');
-      let binFieldEnd = binFieldRange.replace('_range', '_end');
+      const binFieldRange = fieldOption.field;
+      const binFieldStart = binFieldRange.replace('_range', '_start');
+      const binFieldMid = binFieldRange.replace('_range', '_mid');
+      const binFieldEnd = binFieldRange.replace('_range', '_end');
 
       // use start value and end value to compute range
       // save the computed range in binFieldStart
-      let startValue = itemData.get(binFieldStart);
-      let endValue = itemData.get(binFieldEnd);
+      const startValue = itemData.get(binFieldStart);
+      const endValue = itemData.get(binFieldEnd);
       if ((startValue !== undefined) && (endValue !== undefined)) {
-        let range = startValue + '-' + endValue;
+        const range = startValue + '-' + endValue;
         itemData.set(binFieldRange, range);
       }
 
       // remove binFieldMid, binFieldEnd, and binFieldRange from itemData
-      let binRemoveKeys = [];
+      const binRemoveKeys = [];
       binRemoveKeys.push(binFieldStart, binFieldMid, binFieldEnd);
       removeFields(itemData, binRemoveKeys);
     }
@@ -677,7 +677,7 @@ function combineBinFields(itemData: Map<any>, fieldOptions: FieldOption[]) {
 */
 function dropFieldsForLineArea(marktype: string, itemData: Map<any>) {
   if (marktype === 'line' || marktype === 'area') {
-    let quanKeys: string[] = [];
+    const quanKeys: string[] = [];
     itemData.each(function (value, field) {
         if (value instanceof Date) {
           quanKeys.push(field);
@@ -695,7 +695,7 @@ function dropFieldsForLineArea(marktype: string, itemData: Map<any>) {
 * @param format - a time time format specifier, or a time number format specifier, or undefined
 * @return the formatted value, or undefined if value or formatType is missing
 */
-function customFormat(value: number | string | Date, formatType: string, format: string) {
+function customFormat(value: number | string | Date, formatType: string, format: string): string {
   if (value === undefined || value === null)  {
     return undefined;
   }
@@ -718,7 +718,7 @@ function customFormat(value: number | string | Date, formatType: string, format:
 * Automatically format a time, number or string value
 * @return the formatted time, number or string value
 */
-function autoFormat(value: string | number | Date) {
+function autoFormat(value: string | number | Date): string {
   console.log(value);
   if (typeof value === 'number') {
     return autoNumberFormat(value);
@@ -729,13 +729,24 @@ function autoFormat(value: string | number | Date) {
   }
 }
 
+/**
+ * Automatically format a number based on its decimal.
+ * @param value number to be formatted
+ * @return If it's a decimal number, return a fixed two points precision. 
+ * If it's a whole number, return the original value without any format.
+ */
 function autoNumberFormat(value: number) {
   return value % 1 === 0 ? d3NumberFormat(',')(value) : d3NumberFormat(',.2f')(value);
-  // return d3NumberFormat(',.2f')(value);
 }
 
+/**
+ * Automatically format a time based on its date.
+ * @param date object to be formatted
+ * @return a formatted time string depending on the time. For example,
+ * the start of February is formatted as "February", while February second is formatted as "Feb 2".
+ */
 function autoTimeFormat(date: Date) {
-  let formatMillisecond = timeFormat('.%L'),
+  const formatMillisecond = timeFormat('.%L'),
     formatSecond = timeFormat(':%S'),
     formatMinute = timeFormat('%I:%M'),
     formatHour = timeFormat('%I %p'),
@@ -752,7 +763,6 @@ function autoTimeFormat(date: Date) {
       : timeYear(date) < date ? formatMonth
       : formatYear)(date);
 }
-
 
 /**
 * Get the tooltip HTML placeholder by id selector "#vis-tooltip"
@@ -778,12 +788,12 @@ function getTooltipPlaceholder() {
 */
 function bindData(tooltipPlaceholder: Selection<Element | EnterElement | Document | Window, {}, HTMLElement, any>, tooltipData: ToolTipData[]) {
   tooltipPlaceholder.selectAll('table').remove();
-  let tooltipRows = tooltipPlaceholder.append('table').selectAll('.tooltip-row')
+  const tooltipRows = tooltipPlaceholder.append('table').selectAll('.tooltip-row')
     .data(tooltipData);
 
   tooltipRows.exit().remove();
 
-  let row = tooltipRows.enter().append('tr')
+  const row = tooltipRows.enter().append('tr')
     .attr('class', 'tooltip-row');
   row.append('td').attr('class', 'key').text(function (d: ToolTipData) { return d.title + ':'; });
   row.append('td').attr('class', 'value').text(function (d: ToolTipData) { return d.value; });
@@ -818,7 +828,7 @@ function updatePosition(event: MouseEvent, options: Option) {
     .style('top', function (this: HTMLElement) {
       // by default: put tooltip 10px below cursor
       // if tooltip is close to the bottom of the window, put tooltip 10px above cursor
-      let tooltipHeight = this.getBoundingClientRect().height;
+      const tooltipHeight = this.getBoundingClientRect().height;
       if (event.clientY + tooltipHeight + offsetY < window.innerHeight) {
         return '' + (event.clientY + offsetY) + 'px';
       } else {
@@ -828,7 +838,7 @@ function updatePosition(event: MouseEvent, options: Option) {
     .style('left', function (this: HTMLElement) {
       // by default: put tooltip 10px to the right of cursor
       // if tooltip is close to the right edge of the window, put tooltip 10 px to the left of cursor
-      let tooltipWidth = this.getBoundingClientRect().width;
+      const tooltipWidth = this.getBoundingClientRect().width;
       if (event.clientX + tooltipWidth + offsetX < window.innerWidth) {
         return '' + (event.clientX + offsetX) + 'px';
       } else {

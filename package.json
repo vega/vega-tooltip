@@ -37,7 +37,6 @@
     "d3": "^4.0.0",
     "d3-collection": "^1.0.2",
     "d3-selection": "^1.0.4",
-    "datalib": "^1.7.3",
     "tslint": "~4.5.1",
     "tslint-eslint-rules": "^3.5.1",
     "tsify": "^3.0.1",
