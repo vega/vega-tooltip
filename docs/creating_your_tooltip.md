@@ -51,11 +51,10 @@ For [Vega-Lite](https://vega.github.io/vega-lite/):
 You can create your visualization using [`vega.embed`](https://github.com/vega/vega/wiki/Embed-Vega-Web-Components). Note that the following JavaScript code refers to the visualization placeholder by id selector (`#vis-scatter`).
 
 ```js
-var embedSpec = {
+var opt = {
   mode: "vega-lite",
-  spec: vlSpec
 };
-vega.embed("#vis-scatter", embedSpec, function(error, result) {
+vega.embed("#vis-scatter", vlSpec, opt, function(error, result) {
   ...
 });
 ```
@@ -106,10 +105,10 @@ For [Vega](http://vega.github.io/vega/):
 You can create your tooltip using [`vegaTooltip.vega`](APIs.md#vgtooltip). This function only requires the [`Vega View`](https://vega.github.io/vega/docs/api/view/) as input. For example:
 
 ```js
-var embedSpec = {
-  spec: vgSpec
+var opt = {
+  mode: "vega"
 }
-vega.embed(id, embedSpec, function(error, result) {
+vega.embed(id, vgSpec, opt, function(error, result) {
   // result.view is the Vega View
   vegaTooltip.vega(result.view, options);
 });
