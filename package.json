@@ -52,7 +52,7 @@
     "d3-format": "^1.2.0",
     "d3-time-format": "^2.0.5",
     "vega": "^3.0.0-beta.28",
-    "vega-lite": "^2.0.0-alpha.8"
+    "vega-lite": "^2.0.0-alpha.10"
   },
   "browserify-shim": {
     "vega": "global:vega",
