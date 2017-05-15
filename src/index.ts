@@ -22,7 +22,9 @@ type SceneGraph = {
     _id: number
   },
   mark: {
-    marktype: string
+    marktype: string,
+    items: object,
+    name: string
   }
 };
 type ToolTipData = {title: string, value: string | number };
@@ -449,11 +451,15 @@ function shouldShowTooltip(item: SceneGraph) {
 */
 // TODO: add marktype
 function getTooltipData(item: SceneGraph, options: Option) {
+  // ignore the data for group type that represents white space
+  if (item.mark.marktype === 'group' && item.mark.name === 'nested_main_group') {
+    return undefined;
+  }
+
   // this array will be bind to the tooltip element
   let tooltipData: ToolTipData[];
   const itemData: Map<any> = d3map(item.datum);
 
-  // TODO(zening): find more keys which we should remove from data (#35)
   const removeKeys = [
     '_id', '_prev', 'width', 'height',
     'count_start', 'count_end',
@@ -478,7 +484,6 @@ function getTooltipData(item: SceneGraph, options: Option) {
 
   return tooltipData;
 }
-
 
 /**
 * Prepare custom fields data for tooltip. This function formats
@@ -528,7 +533,6 @@ function getValue(itemData: Map<any>, field: string) {
   // get the first accessor and remove it from the array
   const firstAccessor: string = accessors[0];
   accessors.shift();
-
   if (itemData.has(firstAccessor)) {
     value = itemData.get(firstAccessor);
 
@@ -638,12 +642,11 @@ function combineBinFields(itemData: Map<any>, fieldOptions: FieldOption[]) {
 
   fieldOptions.forEach(function (fieldOption) {
     if (fieldOption.bin === true) {
-
       // get binned field names
       const binFieldRange = fieldOption.field;
-      const binFieldStart = binFieldRange.replace('_range', '_start');
-      const binFieldMid = binFieldRange.replace('_range', '_mid');
-      const binFieldEnd = binFieldRange.replace('_range', '_end');
+      const binFieldStart = binFieldRange.concat('_start');
+      const binFieldMid = binFieldRange.concat('_mid');
+      const binFieldEnd = binFieldRange.concat('_end');
 
       // use start value and end value to compute range
       // save the computed range in binFieldStart
@@ -682,7 +685,6 @@ function dropFieldsForLineArea(marktype: string, itemData: Map<any>) {
         if (value instanceof Date) {
           quanKeys.push(field);
         }
-
     });
     removeFields(itemData, quanKeys);
   }
@@ -719,7 +721,6 @@ function customFormat(value: number | string | Date, formatType: string, format:
 * @return the formatted time, number or string value
 */
 function autoFormat(value: string | number | Date): string {
-  console.log(value);
   if (typeof value === 'number') {
     return autoNumberFormat(value);
   } else if (value instanceof Date) {
@@ -732,7 +733,7 @@ function autoFormat(value: string | number | Date): string {
 /**
  * Automatically format a number based on its decimal.
  * @param value number to be formatted
- * @return If it's a decimal number, return a fixed two points precision. 
+ * @return If it's a decimal number, return a fixed two points precision.
  * If it's a whole number, return the original value without any format.
  */
 function autoNumberFormat(value: number) {
