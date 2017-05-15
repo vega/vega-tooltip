@@ -2965,8 +2965,8 @@ tslint@~4.5.1:
     update-notifier "^2.0.0"
 
 tsutils@^1.1.0:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/tsutils/-/tsutils-1.8.0.tgz#bf8118ed8e80cd5c9fc7d75728c7963d44ed2f52"
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/tsutils/-/tsutils-1.9.1.tgz#b9f9ab44e55af9681831d5f28d0aeeaf5c750cb0"
 
 tty-browserify@~0.0.0:
   version "0.0.0"
@@ -3156,7 +3156,7 @@ vega-hierarchy@>=1.0.0-beta:
     vega-dataflow ">=2.0.0-beta.4"
     vega-util "1"
 
-vega-lite@^2.0.0-alpha.10, vega-lite@^2.0.0-beta.1:
+vega-lite@^2.0.0-beta.1, vega-lite@^2.0.0-beta.2:
   version "2.0.0-beta.2"
   resolved "https://registry.yarnpkg.com/vega-lite/-/vega-lite-2.0.0-beta.2.tgz#3536bbe7ea831241fb680a52f85415bf16057f64"
   dependencies:
