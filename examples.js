@@ -93,7 +93,6 @@
     fields: [
       {field: "Rotten_Tomatoes_Rating"},
       {field: "IMDB_Rating"},
-      {field: "*"}
     ]
   };
   addVlExample("exampleSpecs/scatter_binned.json", "#vis-scatter-binned", binMovieOpts);
