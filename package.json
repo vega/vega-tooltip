@@ -36,8 +36,6 @@
     "browserify": "^14.1.0",
     "browserify-shim": "^3.8.14",
     "d3": "^4.0.0",
-    "d3-collection": "^1.0.2",
-    "d3-selection": "^1.0.4",
     "tslint": "~4.5.1",
     "tslint-eslint-rules": "^3.5.1",
     "tsify": "^3.0.1",
@@ -53,6 +51,7 @@
   "dependencies": {
     "d3-format": "^1.2.0",
     "d3-time-format": "^2.0.5",
+    "d3-selection": "^1.0.4",
     "vega": "^3.0.0-beta.30",
     "vega-lite": "^2.0.0-beta.2"
   },

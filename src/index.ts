@@ -6,7 +6,6 @@ import {supplementOptions} from './supplementField';
 import {bindData, clearColorTheme, clearData, clearPosition, getTooltipPlaceholder, updateColorTheme, updatePosition} from './tooltipDisplay';
 
 let tooltipPromise: number = undefined;
-
 let tooltipActive = false;
 
 /**
@@ -58,7 +57,7 @@ export function vega(vgView: VgView, options: Option = {showAllFields: true}) {
   };
 };
 
-export function vegaLite(vgView: VgView, vlSpec: TopLevelExtendedSpec, options: Option = {}) {
+export function vegaLite(vgView: VgView, vlSpec: TopLevelExtendedSpec, options: Option = {showAllFields: true}) {
   options = supplementOptions(options, vlSpec);
 
   // TODO: update this to use new vega-view api (addEventListener)

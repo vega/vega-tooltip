@@ -1,4 +1,3 @@
-import {Map, map as d3map} from 'd3-collection';
 import {autoFormat, customFormat} from './formatFieldValue';
 import {FieldOption, Option, Scenegraph, SupplementedFieldOption, TooltipData} from './options';
 
@@ -15,7 +14,10 @@ export function getTooltipData(item: Scenegraph, options: Option) {
 
   // this array will be bind to the tooltip element
   let tooltipData: TooltipData[];
-  const itemData: Map<any> = d3map(item.datum);
+  const itemData = {};
+  for (let field of Object.keys(item.datum)) {
+    itemData[field] = item.datum[field];
+  }
 
   const removeKeys = [
     '_id', '_prev', 'width', 'height',
@@ -32,13 +34,11 @@ export function getTooltipData(item: Scenegraph, options: Option) {
 
   // TODO(zening): use Vega-Lite layering to support tooltip on line and area charts (#1)
   dropFieldsForLineArea(item.mark.marktype, itemData);
-
   if (options.showAllFields === true) {
     tooltipData = prepareAllFieldsData(itemData, options);
   } else {
     tooltipData = prepareCustomFieldsData(itemData, options);
   }
-
   return tooltipData;
 }
 
@@ -50,7 +50,7 @@ export function getTooltipData(item: Scenegraph, options: Option) {
  * @param {Object} options - user-provided options
  * @return An array of formatted fields specified by options [{ title: ..., value: ...}]
  */
-export function prepareCustomFieldsData(itemData: Map<any>, options: Option) {
+export function prepareCustomFieldsData(itemData: object, options: Option) {
   const tooltipData: TooltipData[] = [];
 
   options.fields.forEach(function (fieldOption) {
@@ -68,7 +68,6 @@ export function prepareCustomFieldsData(itemData: Map<any>, options: Option) {
 
     // add formatted data to tooltipData
     tooltipData.push({title: title, value: formattedValue});
-
   });
 
   return tooltipData;
@@ -82,7 +81,7 @@ export function prepareCustomFieldsData(itemData: Map<any>, options: Option) {
  * @return the field value on success, undefined otherwise
  */
 // TODO(zening): Mute "Cannot find field" warnings for composite vis (issue #39)
-export function getValue(itemData: Map<any>, field: string) {
+export function getValue(itemData: object, field: string) {
   let value: string | number | Date;
 
   const accessors: string[] = field.split('.');
@@ -90,8 +89,8 @@ export function getValue(itemData: Map<any>, field: string) {
   // get the first accessor and remove it from the array
   const firstAccessor: string = accessors[0];
   accessors.shift();
-  if (itemData.has(firstAccessor)) {
-    value = itemData.get(firstAccessor);
+  if (itemData[firstAccessor]) {
+    value = itemData[firstAccessor];
 
     // if we still have accessors, use them to get the value
     accessors.forEach(function (a) {
@@ -122,17 +121,22 @@ export function getValue(itemData: Map<any>, field: string) {
  * It will not try to parse value if it is an object. If value is an object, please
  * use prepareCustomFieldsData() instead.
  */
-export function prepareAllFieldsData(itemData: Map<any>, options: Option) {
+export function prepareAllFieldsData(itemData: object, options: Option) {
   const tooltipData: TooltipData[] = [];
 
   // here, fieldOptions still provides format
-  const fieldOptions = d3map(options.fields, function (d) { return d.field; });
+  const fieldOptions = {};
+  if (options && options.fields) {
+    for (let optionField of options.fields) {
+      fieldOptions[optionField.field] = optionField;
+    }
+  }
 
-  itemData.each(function (value: string, field: string) {
-    // prepare title
+  for (let field of Object.keys(itemData)) {
+    let value = itemData[field];
     let title;
-    if (fieldOptions.has(field) && fieldOptions.get(field).title) {
-      title = fieldOptions.get(field).title;
+    if (fieldOptions[field] && fieldOptions[field].title) {
+      title = fieldOptions[field].title;
     } else {
       title = field;
     }
@@ -140,16 +144,15 @@ export function prepareAllFieldsData(itemData: Map<any>, options: Option) {
     let formatType;
     let format;
     // format value
-    if (fieldOptions.has(field)) {
-      formatType = fieldOptions.get(field).formatType;
-      format = fieldOptions.get(field).format;
+    if (fieldOptions[field]) {
+      formatType = fieldOptions[field].formatType;
+      format = fieldOptions[field].format;
     }
     const formattedValue = customFormat(value, formatType, format) || autoFormat(value);
 
     // add formatted data to tooltipData
     tooltipData.push({title: title, value: formattedValue});
-  });
-
+  }
   return tooltipData;
 }
 
@@ -161,9 +164,9 @@ export function prepareAllFieldsData(itemData: Map<any>, options: Option) {
  * @param {time.map} dataMap - the data map that contains tooltip data.
  * @param {string[]} removeKeys - the fields that should be removed from dataMap.
  */
-export function removeFields(dataMap: Map<any>, removeKeys: string[]) {
+export function removeFields(dataMap: object, removeKeys: string[]) {
   removeKeys.forEach(function (key) {
-    dataMap.remove(key);
+    delete dataMap[key];
   });
 }
 
@@ -172,7 +175,7 @@ export function removeFields(dataMap: Map<any>, removeKeys: string[]) {
  * (e.g., Year and YEAR(Year)). In tooltip want to display the field WITH the
  * timeUnit and remove the field that doesn't have timeUnit.
  */
-export function removeDuplicateTimeFields(itemData: Map<any>, optFields: SupplementedFieldOption[]) {
+export function removeDuplicateTimeFields(itemData: object, optFields: SupplementedFieldOption[]) {
   if (!optFields) {
     return undefined;
   }
@@ -188,11 +191,11 @@ export function removeDuplicateTimeFields(itemData: Map<any>, optFields: Supplem
  * Combine multiple binned fields in itemData into one field. The value of the field
  * is a string that describes the bin range.
  *
- * @param {time.map} itemData - a map of item.datum
+ * @param {Object} itemData - an object of item.datum
  * @param {Object[]} fieldOptions - a list of field options (i.e. options.fields[])
  * @return itemData with combined bin fields
  */
-export function combineBinFields(itemData: Map<any>, fieldOptions: FieldOption[]) {
+export function combineBinFields(itemData: object, fieldOptions: FieldOption[]) {
   if (!fieldOptions) {
     return undefined;
   }
@@ -207,11 +210,11 @@ export function combineBinFields(itemData: Map<any>, fieldOptions: FieldOption[]
 
       // use start value and end value to compute range
       // save the computed range in binFieldStart
-      const startValue = itemData.get(binFieldStart);
-      const endValue = itemData.get(binFieldEnd);
+      const startValue = itemData[binFieldStart];
+      const endValue = itemData[binFieldEnd];
       if ((startValue !== undefined) && (endValue !== undefined)) {
         const range = startValue + '-' + endValue;
-        itemData.set(binFieldRange, range);
+        itemData[binFieldRange] = range;
       }
 
       // remove binFieldMid, binFieldEnd, and binFieldRange from itemData
@@ -235,14 +238,15 @@ export function combineBinFields(itemData: Map<any>, fieldOptions: FieldOption[]
  * = APPL, AMZN, GOOG, IBM, MSFT) because these fields don't tend to change along
  * the line / area border.
  */
-export function dropFieldsForLineArea(marktype: string, itemData: Map<any>) {
+export function dropFieldsForLineArea(marktype: string, itemData: object) {
   if (marktype === 'line' || marktype === 'area') {
     const quanKeys: string[] = [];
-    itemData.each(function (value, field) {
+    for (let key of Object.keys(itemData)) {
+      let value = itemData[key];
       if (value instanceof Date) {
-        quanKeys.push(field);
+        quanKeys.push(key);
       }
-    });
+    }
     removeFields(itemData, quanKeys);
   }
 }

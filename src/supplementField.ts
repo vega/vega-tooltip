@@ -2,8 +2,7 @@ import * as vl from 'vega-lite';
 import {FieldDef} from 'vega-lite/build/src/fielddef';
 import {TopLevelExtendedSpec} from 'vega-lite/build/src/spec';
 import {TEMPORAL} from 'vega-lite/build/src/type';
-import {FieldOption, Option} from './options';
-import {SupplementedFieldOption} from './options';
+import {FieldOption, Option, SupplementedFieldOption} from './options';
 
 /* mapping from fieldDef.type to formatType */
 const formatTypeMap: { [type: string]: 'number' | 'time' } = {
@@ -214,7 +213,7 @@ export function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldD
       case 'time':
         supplementedFieldOption.format = fieldDef.timeUnit ?
           // TODO(zening): use template for all time fields, to be consistent with Vega-Lite
-          vl.timeUnit.formatExpression(fieldDef.timeUnit, '', false).split("'")[1]
+          vl.timeUnit.formatExpression(fieldDef.timeUnit, '', false, false).split("'")[1]
           : config.timeFormat || vl.config.defaultConfig.timeFormat;
         break;
       case 'number':
