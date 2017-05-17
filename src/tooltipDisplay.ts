@@ -1,5 +1,5 @@
-import { EnterElement, select, Selection } from 'd3-selection';
-import { Option, TooltipData } from './options';
+import {EnterElement, select, Selection} from 'd3-selection';
+import {Option, TooltipData} from './options';
 
 /**
  * Get the tooltip HTML placeholder by id selector "#vis-tooltip"
