@@ -7,7 +7,8 @@ A tooltip plugin for [Vega](http://vega.github.io/vega/) and [Vega-Lite](https:/
 
 
 ## Author
-The development of Vega Tooltip is led by Zening Qu, with significant help from [Kanit "Ham" Wongsuphasawat](https://twitter.com/kanitw) and [Dominik Moritz](https://twitter.com/domoritz).
+
+Vega Tooltip was built by Zening Qu and Sira Horradarn, with significant help from [Dominik Moritz](https://twitter.com/domoritz) and [Kanit "Ham" Wongsuphasawat](https://twitter.com/kanitw).
 
 
 ## Demo
