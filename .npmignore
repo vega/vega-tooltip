@@ -5,9 +5,10 @@ node_modules
 docs
 data
 exampleSpecs
+scripts
 *.html
-*.js
-*.css
+*examples.js
+examples.css
 demo.png
 yarn.lock
 tsconfig.json
