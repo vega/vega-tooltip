@@ -1,36 +1,22 @@
 "use strict";
 
-(function() {
+(function () {
 
   function addVlExample(path, id, options) {
-    d3.json(path, function(error, vlSpec) {
+    d3.json(path, function (error, vlSpec) {
       if (error) {
         return console.warn(error);
       }
       var opt = {
         mode: "vega-lite"
       };
-      vega.embed(id, vlSpec, opt, function(error, result) {
+      vega.embed(id, vlSpec, opt, function (error, result) {
         if (error) {
           return console.error(error);
         }
         vegaTooltip.vegaLite(result.view, vlSpec, options);
       });
     });
-  }
-
-  function addVgExample(path, id, options) {
-    d3.json(path, function(error, vgSpec) {
-      if (error) {
-        return console.error(error);
-      }
-      vega.embed(id, vgSpec, undefined, function(error, result) {
-        if (error) {
-          return console.error(error);
-        }
-        vegaTooltip.vega(result.view, options);
-      });
-    })
   }
 
   /* Vega-Lite Examples */
@@ -91,9 +77,8 @@
   var binMovieOpts = {
     showAllFields: false,
     fields: [
-      {field: "Rotten_Tomatoes_Rating"},
-      {field: "IMDB_Rating"},
-      {field: "*"}
+      { field: "Rotten_Tomatoes_Rating" },
+      { field: "IMDB_Rating" },
     ]
   };
   addVlExample("exampleSpecs/scatter_binned.json", "#vis-scatter-binned", binMovieOpts);
@@ -117,7 +102,7 @@
       {
         field: "date",
         title: "date"
-      }, 
+      },
       {
         field: "series",
         title: "category"
@@ -125,54 +110,4 @@
     ]
   }
   addVlExample("exampleSpecs/overlay_area_short.json", "#vis-overlay-area", overlayAreaOpts);
-  
-  // Vega Examples 
-  // Arc
-  addVgExample("exampleSpecs/arc.json", "#vis-arc");
-
-  // Choropleth
-  var choroplethOpts = {
-    showAllFields: false,
-    fields: [
-      {
-        field: "unemp.id",
-        title: "County ID",
-        formatType: "string"
-      },
-      {
-        field: "unemp.rate",
-        title: "Unemployment Rate",
-        formatType: "number",
-        format: ".1%"
-      }
-    ]
-  }
-  addVgExample("exampleSpecs/choropleth.json", "#vis-choropleth", choroplethOpts);
-
-  // Force
-  var forceOpts = {
-    showAllFields: false,
-    fields: [
-      { field: "name" }
-    ]
-  }
-  addVgExample("exampleSpecs/force.json", "#vis-force", forceOpts);
-
-  // Heatmap
-  var heatmapOpts = {
-    showAllFields: false,
-    fields: [
-      {
-        field: "temp",
-        title: "temp(F)"
-      },
-      {
-        field: "date",
-        formatType: "time",
-        format: "%B %e"
-      },
-      { field: "hour" }
-    ]
-  }
-  addVgExample("exampleSpecs/heatmap.json", "#vis-heatmap", heatmapOpts);
 }());
