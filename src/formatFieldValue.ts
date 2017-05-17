@@ -3,14 +3,14 @@ import {timeDay, timeHour, timeMinute, timeMonth, timeSecond, timeWeek, timeYear
 import {timeFormat} from 'd3-time-format';
 
 /**
-* Format value using formatType and format
-* @param value - a field value to be formatted
-* @param formatType - the formatType can be: "time", "number", or "string"
-* @param format - a time time format specifier, or a time number format specifier, or undefined
-* @return the formatted value, or undefined if value or formatType is missing
-*/
+ * Format value using formatType and format
+ * @param value - a field value to be formatted
+ * @param formatType - the formatType can be: "time", "number", or "string"
+ * @param format - a time time format specifier, or a time number format specifier, or undefined
+ * @return the formatted value, or undefined if value or formatType is missing
+ */
 export function customFormat(value: number | string | Date, formatType: string, format: string): string {
-  if (value === undefined || value === null)  {
+  if (value === undefined || value === null) {
     return undefined;
   }
   if (!formatType) {
@@ -29,9 +29,9 @@ export function customFormat(value: number | string | Date, formatType: string, 
 }
 
 /**
-* Automatically format a time, number or string value
-* @return the formatted time, number or string value
-*/
+ * Automatically format a time, number or string value
+ * @return the formatted time, number or string value
+ */
 export function autoFormat(value: string | number | Date): string {
   if (typeof value === 'number') {
     return autoNumberFormat(value);
@@ -69,10 +69,10 @@ export function autoTimeFormat(date: Date) {
     formatYear = timeFormat('%Y');
 
   return (timeSecond(date) < date ? formatMillisecond
-      : timeMinute(date) < date ? formatSecond
+    : timeMinute(date) < date ? formatSecond
       : timeHour(date) < date ? formatMinute
-      : timeDay(date) < date ? formatHour
-      : timeMonth(date) < date ? (timeWeek(date) < date ? formatDay : formatWeek)
-      : timeYear(date) < date ? formatMonth
-      : formatYear)(date);
+        : timeDay(date) < date ? formatHour
+          : timeMonth(date) < date ? (timeWeek(date) < date ? formatDay : formatWeek)
+            : timeYear(date) < date ? formatMonth
+              : formatYear)(date);
 }

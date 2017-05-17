@@ -1,8 +1,8 @@
 "use strict";
 
-(function() {
+(function () {
   function addVgExample(path, id, options) {
-    d3.json(path, function(error, vgSpec) {
+    d3.json(path, function (error, vgSpec) {
       if (error) {
         return console.error(error);
       }
@@ -14,7 +14,7 @@
       vegaTooltip.vega(view, options);
     })
   }
-  
+
   // Vega Examples 
   // Arc
   addVgExample("exampleSpecs/arc.json", "#vis-arc");

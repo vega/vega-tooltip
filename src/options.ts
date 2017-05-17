@@ -26,7 +26,7 @@ export interface SupplementedFieldOption extends FieldOption {
   bin?: boolean;
 }
 
-export type TooltipData = {title: string, value: string | number };
+export type TooltipData = {title: string, value: string | number};
 
 export type Scenegraph = {
   datum: {

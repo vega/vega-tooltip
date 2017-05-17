@@ -1,16 +1,16 @@
 "use strict";
 
-(function() {
+(function () {
 
   function addVlExample(path, id, options) {
-    d3.json(path, function(error, vlSpec) {
+    d3.json(path, function (error, vlSpec) {
       if (error) {
         return console.warn(error);
       }
       var opt = {
         mode: "vega-lite"
       };
-      vega.embed(id, vlSpec, opt, function(error, result) {
+      vega.embed(id, vlSpec, opt, function (error, result) {
         if (error) {
           return console.error(error);
         }
@@ -77,8 +77,8 @@
   var binMovieOpts = {
     showAllFields: false,
     fields: [
-      {field: "Rotten_Tomatoes_Rating"},
-      {field: "IMDB_Rating"},
+      { field: "Rotten_Tomatoes_Rating" },
+      { field: "IMDB_Rating" },
     ]
   };
   addVlExample("exampleSpecs/scatter_binned.json", "#vis-scatter-binned", binMovieOpts);
@@ -102,7 +102,7 @@
       {
         field: "date",
         title: "date"
-      }, 
+      },
       {
         field: "series",
         title: "category"

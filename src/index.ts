@@ -5,23 +5,21 @@ import {getTooltipData} from './parseOption';
 import {supplementOptions} from './supplementField';
 import {bindData, clearColorTheme, clearData, clearPosition, getTooltipPlaceholder, updateColorTheme, updatePosition} from './tooltipDisplay';
 
-let tooltipPromise: number;
-tooltipPromise = undefined;
+let tooltipPromise: number = undefined;
 
-let tooltipActive: boolean;
-tooltipActive = false;
+let tooltipActive = false;
 
 /**
-* Export API for Vega visualizations: vg.tooltip(vgView, options)
-* options can specify whether to show all fields or to show only custom fields
-* It can also provide custom title and format for fields
-*/
+ * Export API for Vega visualizations: vg.tooltip(vgView, options)
+ * options can specify whether to show all fields or to show only custom fields
+ * It can also provide custom title and format for fields
+ */
 export function vega(vgView: VgView, options: Option = {showAllFields: true}) {
   // initialize tooltip with item data and options on mouse over
   vgView.addEventListener('mouseover.tooltipInit', function (event: MouseEvent, item: Scenegraph) {
     if (shouldShowTooltip(item)) {
       // clear existing promise because mouse can only point at one thing at a time
-      cancelPromise(tooltipPromise);
+      cancelPromise();
 
       tooltipPromise = window.setTimeout(function () {
         init(event, item, options);
@@ -40,7 +38,7 @@ export function vega(vgView: VgView, options: Option = {showAllFields: true}) {
   // clear tooltip on mouse out
   vgView.addEventListener('mouseout.tooltipRemove', function (event: MouseEvent, item: Scenegraph) {
     if (shouldShowTooltip(item)) {
-      cancelPromise(tooltipPromise);
+      cancelPromise();
 
       if (tooltipActive) {
         clear(event, item, options);
@@ -55,7 +53,7 @@ export function vega(vgView: VgView, options: Option = {showAllFields: true}) {
       vgView.removeEventListener('mousemove.tooltipUpdate');
       vgView.removeEventListener('mouseout.tooltipRemove');
 
-      cancelPromise(tooltipPromise); // clear tooltip promise
+      cancelPromise(); // clear tooltip promise
     }
   };
 };
@@ -68,7 +66,7 @@ export function vegaLite(vgView: VgView, vlSpec: TopLevelExtendedSpec, options: 
   vgView.addEventListener('mouseover.tooltipInit', function (event: MouseEvent, item: Scenegraph) {
     if (shouldShowTooltip(item)) {
       // clear existing promise because mouse can only point at one thing at a time
-      cancelPromise(tooltipPromise);
+      cancelPromise();
 
       // make a new promise with time delay for tooltip
       tooltipPromise = window.setTimeout(function () {
@@ -88,7 +86,7 @@ export function vegaLite(vgView: VgView, vlSpec: TopLevelExtendedSpec, options: 
   // clear tooltip on mouse out
   vgView.addEventListener('mouseout.tooltipRemove', function (event: MouseEvent, item: Scenegraph) {
     if (shouldShowTooltip(item)) {
-      cancelPromise(tooltipPromise);
+      cancelPromise();
 
       if (tooltipActive) {
         clear(event, item, options);
@@ -103,13 +101,13 @@ export function vegaLite(vgView: VgView, vlSpec: TopLevelExtendedSpec, options: 
       vgView.removeEventListener('mousemove.tooltipUpdate');
       vgView.removeEventListener('mouseout.tooltipRemove');
 
-      cancelPromise(tooltipPromise); // clear tooltip promise
+      cancelPromise(); // clear tooltip promise
     }
   };
 };
 
 /* Cancel tooltip promise */
-function cancelPromise(tooltipPromise) {
+function cancelPromise() {
   /* We don't check if tooltipPromise is valid because passing
    an invalid ID to clearTimeout does not have any effect
    (and doesn't throw an exception). */
@@ -174,7 +172,7 @@ function clear(event: MouseEvent, item: Scenegraph, options: Option) {
 /* Decide if a Scenegraph item deserves tooltip */
 function shouldShowTooltip(item: Scenegraph) {
   // no data, no show
-  if (!item || !item.datum)  {
+  if (!item || !item.datum) {
     return false;
   }
   // (small multiples) avoid showing tooltip for a facet's background

@@ -1,11 +1,11 @@
-import {EnterElement, select, Selection} from 'd3-selection';
-import {Option, TooltipData} from './options';
+import { EnterElement, select, Selection } from 'd3-selection';
+import { Option, TooltipData } from './options';
 
 /**
-* Get the tooltip HTML placeholder by id selector "#vis-tooltip"
-* If none exists, create a placeholder.
-* @returns the HTML placeholder for tooltip
-*/
+ * Get the tooltip HTML placeholder by id selector "#vis-tooltip"
+ * If none exists, create a placeholder.
+ * @returns the HTML placeholder for tooltip
+ */
 export function getTooltipPlaceholder() {
   let tooltipPlaceholder;
 
@@ -21,8 +21,8 @@ export function getTooltipPlaceholder() {
 }
 
 /**
-* Bind tooltipData to the tooltip placeholder
-*/
+ * Bind tooltipData to the tooltip placeholder
+ */
 export function bindData(tooltipPlaceholder: Selection<Element | EnterElement | Document | Window, {}, HTMLElement, any>, tooltipData: TooltipData[]) {
   tooltipPlaceholder.selectAll('table').remove();
   const tooltipRows = tooltipPlaceholder.append('table').selectAll('.tooltip-row')
@@ -37,18 +37,18 @@ export function bindData(tooltipPlaceholder: Selection<Element | EnterElement | 
 }
 
 /**
-* Clear tooltip data
-*/
+ * Clear tooltip data
+ */
 export function clearData() {
   select('#vis-tooltip').selectAll('.tooltip-row').data([])
     .exit().remove();
 }
 
 /**
-* Update tooltip position
-* Default position is 10px right of and 10px below the cursor. This can be
-* overwritten by options.offset
-*/
+ * Update tooltip position
+ * Default position is 10px right of and 10px below the cursor. This can be
+ * overwritten by options.offset
+ */
 export function updatePosition(event: MouseEvent, options: Option) {
   // determine x and y offsets, defaults are 10px
   let offsetX = 10;
@@ -92,11 +92,11 @@ export function clearPosition() {
 }
 
 /**
-* Update tooltip color theme according to options.colorTheme
-*
-* If colorTheme === "dark", apply dark theme to tooltip.
-* Otherwise apply light color theme.
-*/
+ * Update tooltip color theme according to options.colorTheme
+ *
+ * If colorTheme === "dark", apply dark theme to tooltip.
+ * Otherwise apply light color theme.
+ */
 export function updateColorTheme(options: Option) {
   clearColorTheme();
 
