@@ -14,36 +14,7 @@ let tooltipActive = false;
  * It can also provide custom title and format for fields
  */
 export function vega(vgView: VgView, options: Option = {showAllFields: true}) {
-  // initialize tooltip with item data and options on mouse over
-  vgView.addEventListener('mouseover.tooltipInit', function (event: MouseEvent, item: Scenegraph) {
-    if (shouldShowTooltip(item)) {
-      // clear existing promise because mouse can only point at one thing at a time
-      cancelPromise();
-
-      tooltipPromise = window.setTimeout(function () {
-        init(event, item, options);
-      }, options.delay || DELAY);
-    }
-  });
-
-  // update tooltip position on mouse move
-  // (important for large marks e.g. bars)
-  vgView.addEventListener('mousemove.tooltipUpdate', function (event: MouseEvent, item: Scenegraph) {
-    if (shouldShowTooltip(item) && tooltipActive) {
-      update(event, item, options);
-    }
-  });
-
-  // clear tooltip on mouse out
-  vgView.addEventListener('mouseout.tooltipRemove', function (event: MouseEvent, item: Scenegraph) {
-    if (shouldShowTooltip(item)) {
-      cancelPromise();
-
-      if (tooltipActive) {
-        clear(event, item, options);
-      }
-    }
-  });
+  start(vgView, copyOptions(options));
 
   return {
     destroy: function () {
@@ -58,9 +29,22 @@ export function vega(vgView: VgView, options: Option = {showAllFields: true}) {
 };
 
 export function vegaLite(vgView: VgView, vlSpec: TopLevelExtendedSpec, options: Option = {showAllFields: true}) {
-  options = supplementOptions(options, vlSpec);
+  options = supplementOptions(copyOptions(options), vlSpec);
+  start(vgView, options);
 
-  // TODO: update this to use new vega-view api (addEventListener)
+  return {
+    destroy: function () {
+      // remove event listeners
+      vgView.removeEventListener('mouseover.tooltipInit');
+      vgView.removeEventListener('mousemove.tooltipUpdate');
+      vgView.removeEventListener('mouseout.tooltipRemove');
+
+      cancelPromise(); // clear tooltip promise
+    }
+  };
+};
+
+function start(vgView: VgView, options: Option) {
   // initialize tooltip with item data and options on mouse over
   vgView.addEventListener('mouseover.tooltipInit', function (event: MouseEvent, item: Scenegraph) {
     if (shouldShowTooltip(item)) {
@@ -92,28 +76,15 @@ export function vegaLite(vgView: VgView, vlSpec: TopLevelExtendedSpec, options: 
       }
     }
   });
-
-  return {
-    destroy: function () {
-      // remove event listeners
-      vgView.removeEventListener('mouseover.tooltipInit');
-      vgView.removeEventListener('mousemove.tooltipUpdate');
-      vgView.removeEventListener('mouseout.tooltipRemove');
-
-      cancelPromise(); // clear tooltip promise
-    }
-  };
-};
+}
 
 /* Cancel tooltip promise */
 function cancelPromise() {
   /* We don't check if tooltipPromise is valid because passing
    an invalid ID to clearTimeout does not have any effect
    (and doesn't throw an exception). */
-  if (tooltipPromise) {
-    window.clearTimeout(tooltipPromise);
-    tooltipPromise = undefined;
-  }
+  window.clearTimeout(tooltipPromise);
+  tooltipPromise = undefined;
 }
 
 /* Initialize tooltip with data */
@@ -143,6 +114,9 @@ function init(event: MouseEvent, item: Scenegraph, options: Option) {
 
 /* Update tooltip position on mousemove */
 function update(event: MouseEvent, item: Scenegraph, options: Option) {
+  if (!shouldShowTooltip(item)) {
+    return undefined;
+  }
   updatePosition(event, options);
 
   // invoke user-provided callback
@@ -153,6 +127,9 @@ function update(event: MouseEvent, item: Scenegraph, options: Option) {
 
 /* Clear tooltip */
 function clear(event: MouseEvent, item: Scenegraph, options: Option) {
+  if (!shouldShowTooltip(item)) {
+    return undefined;
+  }
   // visibility hidden instead of display none
   // because we need computed tooltip width and height to best position it
   select('#vis-tooltip').style('visibility', 'hidden');
@@ -178,9 +155,17 @@ function shouldShowTooltip(item: Scenegraph) {
   if (item.datum._facetID) {
     return false;
   }
-  // avoid showing tooltip for axis title and labels
-  if (!item.datum._id) {
-    return false;
-  }
+
   return true;
+}
+
+/**
+ * Copy options into new objects to prevent causing side-effect to original object
+ */
+function copyOptions(options: Option) {
+  const newOptions: Option = {};
+  for (let field of Object.keys(options)) {
+    newOptions[field] = options[field];
+  }
+  return newOptions;
 }
