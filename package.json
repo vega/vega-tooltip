@@ -29,7 +29,8 @@
     "watch": "watchify src/index.ts -v -p tsify -d -s vegaTooltip -o build/vega-tooltip.js",
     "data": "rsync -r node_modules/vega-datasets/data/* data",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "start": "npm run build && python -m SimpleHTTPServer"
+    "start": "npm run build && python -m SimpleHTTPServer",
+    "deploy": "scripts/deploy.sh"
   },
   "devDependencies": {
     "browserify": "^14.1.0",
