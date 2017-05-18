@@ -164,8 +164,10 @@ function shouldShowTooltip(item: Scenegraph) {
  */
 function copyOptions(options: Option) {
   const newOptions: Option = {};
-  for (let field of Object.keys(options)) {
-    newOptions[field] = options[field];
+  for (const field in options) {
+    if (options.hasOwnProperty(field)) {
+      newOptions[field] = options[field];
+    }
   }
   return newOptions;
 }

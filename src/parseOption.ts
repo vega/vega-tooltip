@@ -15,8 +15,10 @@ export function getTooltipData(item: Scenegraph, options: Option) {
   // this array will be bind to the tooltip element
   let tooltipData: TooltipData[];
   const itemData = {};
-  for (let field of Object.keys(item.datum)) {
-    itemData[field] = item.datum[field];
+  for (const field in item.datum) {
+    if (item.datum.hasOwnProperty(field)) {
+      itemData[field] = item.datum[field];
+    }
   }
 
   const removeKeys = [
@@ -132,26 +134,28 @@ export function prepareAllFieldsData(itemData: object, options: Option) {
     }
   }
 
-  for (let field of Object.keys(itemData)) {
-    let value = itemData[field];
-    let title;
-    if (fieldOptions[field] && fieldOptions[field].title) {
-      title = fieldOptions[field].title;
-    } else {
-      title = field;
-    }
+  for (const field in itemData) {
+    if (itemData.hasOwnProperty(field)) {
+      let value = itemData[field];
+      let title;
+      if (fieldOptions[field] && fieldOptions[field].title) {
+        title = fieldOptions[field].title;
+      } else {
+        title = field;
+      }
 
-    let formatType;
-    let format;
-    // format value
-    if (fieldOptions[field]) {
-      formatType = fieldOptions[field].formatType;
-      format = fieldOptions[field].format;
-    }
-    const formattedValue = customFormat(value, formatType, format) || autoFormat(value);
+      let formatType;
+      let format;
+      // format value
+      if (fieldOptions[field]) {
+        formatType = fieldOptions[field].formatType;
+        format = fieldOptions[field].format;
+      }
+      const formattedValue = customFormat(value, formatType, format) || autoFormat(value);
 
-    // add formatted data to tooltipData
-    tooltipData.push({title: title, value: formattedValue});
+      // add formatted data to tooltipData
+      tooltipData.push({title: title, value: formattedValue});
+    }
   }
   return tooltipData;
 }
@@ -241,10 +245,12 @@ export function combineBinFields(itemData: object, fieldOptions: FieldOption[]) 
 export function dropFieldsForLineArea(marktype: string, itemData: object) {
   if (marktype === 'line' || marktype === 'area') {
     const quanKeys: string[] = [];
-    for (let key of Object.keys(itemData)) {
-      let value = itemData[key];
-      if (value instanceof Date) {
-        quanKeys.push(key);
+    for (const key in itemData) {
+      if (itemData.hasOwnProperty(key)) {
+        let value = itemData[key];
+        if (value instanceof Date) {
+          quanKeys.push(key);
+        }
       }
     }
     removeFields(itemData, quanKeys);
