@@ -24,8 +24,8 @@
   "homepage": "https://github.com/vega/vega-tooltip#readme",
   "scripts": {
     "prebuild": "npm run data && mkdir -p build",
-    "build": "browserify src/index.ts -t browserify-shim -p tsify -d -s vegaTooltip -o build/vega-tooltip.js",
-    "postbuild": "uglifyjs build/vega-tooltip.js -cm > build/vega-tooltip.min.js && uglifycss src/vega-tooltip.css > build/vega-tooltip.min.css && cp src/vega-tooltip.css build/vega-tooltip.css",
+    "build": "browserify src/index.ts -t browserify-shim -p tsify -d -s vegaTooltip | exorcist build/vega-tooltip.js.map > build/vega-tooltip.js",
+    "postbuild": "uglifyjs build/vega-tooltip.js -cm -o build/vega-tooltip.min.js --source-map build/vega-tooltip.min.js.map && uglifycss src/vega-tooltip.css > build/vega-tooltip.min.css && cp src/vega-tooltip.css build/vega-tooltip.css",
     "watch": "watchify src/index.ts -v -p tsify -d -s vegaTooltip -o build/vega-tooltip.js",
     "data": "rsync -r node_modules/vega-datasets/data/* data",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
@@ -36,6 +36,7 @@
     "browserify": "^14.1.0",
     "browserify-shim": "^3.8.14",
     "d3": "^4.0.0",
+    "exorcist": "^0.4.0",
     "tslint": "~4.5.1",
     "tslint-eslint-rules": "^3.5.1",
     "tsify": "^3.0.1",
