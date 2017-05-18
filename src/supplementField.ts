@@ -77,14 +77,14 @@ export function getFieldOption(fieldOptions: FieldOption[], fieldDef: FieldDef<s
   // if aggregate, match field name and aggregate operation
   if (fieldDef.aggregate) {
     // try find the perfect match: field name equals, aggregate operation equals
-    for (let item of fieldOptions) {
+    for (const item of fieldOptions) {
       if (item.field === fieldDef.field && item.aggregate === fieldDef.aggregate) {
         return item;
       }
     }
 
     // try find the second-best match: field name equals, field.aggregate is not specified
-    for (let item of fieldOptions) {
+    for (const item of fieldOptions) {
       if (item.field === fieldDef.field && !item.aggregate) {
         return item;
       }
@@ -93,7 +93,7 @@ export function getFieldOption(fieldOptions: FieldOption[], fieldDef: FieldDef<s
     // return undefined if no match was found
     return undefined;
   } else { // if not aggregate, just match field name
-    for (let item of fieldOptions) {
+    for (const item of fieldOptions) {
       if (item.field === fieldDef.field) {
         return item;
       }
@@ -120,7 +120,7 @@ export function getFieldDef(fieldDefs: FieldDef<string>[], fieldOption: FieldOpt
   }
 
   // field name should match, aggregation should not disagree
-  for (let item of fieldDefs) {
+  for (const item of fieldDefs) {
     if (item.field === fieldOption.field) {
       if (item.aggregate) {
         if (item.aggregate === fieldOption.aggregate || !fieldOption.aggregate) {
@@ -186,7 +186,7 @@ export function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldD
 
     // handle corner case: if T is present in vlSpec, then we keep both T and (TIMEUNIT)T
     const fieldDefs = vl.spec.fieldDefs(vlSpec);
-    for (let items of fieldDefs) {
+    for (const items of fieldDefs) {
       if (items.field === originalTemporalField && !items.timeUnit) {
         supplementedFieldOption.removeOriginalTemporalField = undefined;
         break;

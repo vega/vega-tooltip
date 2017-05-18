@@ -129,14 +129,14 @@ export function prepareAllFieldsData(itemData: object, options: Option) {
   // here, fieldOptions still provides format
   const fieldOptions = {};
   if (options && options.fields) {
-    for (let optionField of options.fields) {
+    for (const optionField of options.fields) {
       fieldOptions[optionField.field] = optionField;
     }
   }
 
   for (const field in itemData) {
     if (itemData.hasOwnProperty(field)) {
-      let value = itemData[field];
+      const value = itemData[field];
       let title;
       if (fieldOptions[field] && fieldOptions[field].title) {
         title = fieldOptions[field].title;
@@ -247,7 +247,7 @@ export function dropFieldsForLineArea(marktype: string, itemData: object) {
     const quanKeys: string[] = [];
     for (const key in itemData) {
       if (itemData.hasOwnProperty(key)) {
-        let value = itemData[key];
+        const value = itemData[key];
         if (value instanceof Date) {
           quanKeys.push(key);
         }
