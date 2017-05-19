@@ -100,10 +100,6 @@
     showAllFields: false,
     fields: [
       {
-        field: "date",
-        title: "date"
-      },
-      {
         field: "series",
         title: "category"
       }
