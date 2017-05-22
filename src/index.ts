@@ -26,7 +26,7 @@ export function vega(vgView: VgView, options: Option = {showAllFields: true}) {
       cancelPromise(); // clear tooltip promise
     }
   };
-};
+}
 
 export function vegaLite(vgView: VgView, vlSpec: TopLevelExtendedSpec, options: Option = {showAllFields: true}) {
   options = supplementOptions(copyOptions(options), vlSpec);
@@ -42,7 +42,7 @@ export function vegaLite(vgView: VgView, vlSpec: TopLevelExtendedSpec, options: 
       cancelPromise(); // clear tooltip promise
     }
   };
-};
+}
 
 function start(vgView: VgView, options: Option) {
   // initialize tooltip with item data and options on mouse over
