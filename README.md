@@ -16,6 +16,20 @@ Vega Tooltip was built by Zening Qu and Sira Horradarn, with significant help fr
 ## Demo
 http://vega.github.io/vega-tooltip/
 
+## Installing
+If you use NPM, run command `npm install vega-tooltip`. For vanilla: 
+```html
+<!-- Dependencies for Vega visualization-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vega/2.6.5/vega.min.js"></script>
+
+<!-- Dependencies for Vega-lite visualization-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vega-lite/1.3.1/vega-lite.min.js"></script>
+
+<!-- Vega Tooltip -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vega-tooltip/0.3.3/vega-tooltip.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vega-tooltip/0.3.3/vega-tooltip.min.css">
+```
+
 ## APIs
 For Vega-Lite: [`vegaTooltip.vegaLite(vgView, vlSpec[, options])`](docs/APIs.md#vltooltip)
 
@@ -24,6 +38,7 @@ For Vega: [`vegaTooltip.vega(vgView[, options])`](docs/APIs.md#vgtooltip)
 ## Tutorials
 1. [Creating Your Tooltip](docs/creating_your_tooltip.md)
 2. [Customizing Your Tooltip](docs/customizing_your_tooltip.md)
+3. [Examples and Code on `bl.ocks.org`](https://bl.ocks.org/sirahd)
 
 ## Run Instructions
 1. In the project folder `vega-tooltip`, type command `npm install` to install dependencies.
