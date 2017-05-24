@@ -2,13 +2,13 @@
 
 ## Step 1. Add The Library
 
-We recommend installing vega-tooltip and its dependencies via [`npm`](https://www.npmjs.com/):
+If you use [`npm`](https://www.npmjs.com/), you can install the library via:
 
 ```bash
 npm install vega-tooltip
 ```
 
-The tooltip library contains a `js` file and a `css` file:
+The tooltip library contains a `js` file and a `css` file in `build` directory:
 
 ```
 vega-tooltip/build/vega-tooltip.js
@@ -20,26 +20,29 @@ Alternatively, you can get vega-tooltip via [`bower`](https://bower.io/):
 bower install vega-tooltip
 ```
 
-If you want to manually include the tooltip library and its dependencies, you can add the following lines to your HTML `<head>`. Vega Tooltip depends on [`d3`](https://d3js.org/), [`vega`](https://vega.github.io/vega/), [`vega-lite`](https://vega.github.io/vega-lite/), [`vega-embed`](https://github.com/vega/vega-embed) and [`datalib`](http://vega.github.io/datalib/).
-
+If you want to manually include the vanilla tooltip library and its dependencies, you can add the following lines to your HTML `<head>`. Vega Tooltip depends on either [`vega`](https://vega.github.io/vega/) and [`vega-lite`](https://vega.github.io/vega-lite/) depending on which one you want to include tooltip.
+<br><br>
 ```html
-<!-- Dependencies -->
-<script src="https://d3js.org/d3.v3.min.js"></script>
-<script src="https://vega.github.io/vega/vega.min.js"></script>
-<script src="https://vega.github.io/vega-lite/vega-lite.min.js"></script>
-<script src="https://vega.github.io/vega-editor/vendor/vega-embed.min.js"></script>
-<script src="https://vega.github.io/datalib/datalib.min.js"></script>
+<!-- Dependencies for Vega visualization-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vega/2.6.5/vega.min.js"></script>
+
+<!-- Dependencies for Vega-lite visualization-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vega-lite/1.3.1/vega-lite.min.js"></script>
 
 <!-- Vega Tooltip -->
-<script src="https://vega.github.io/vega-tooltip/vega-tooltip.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://vega.github.io/vega-tooltip/vega-tooltip.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vega-tooltip/0.3.3/vega-tooltip.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vega-tooltip/0.3.3/vega-tooltip.min.css">
 ```
+>Note that if you use [`vega-embed`](https://github.com/vega/vega-embed/) to deploy your visualization, you need to include [`vega-embed`](https://github.com/vega/vega-embed/) dependency in `<head>` tag for `vega-embed` to work
 <br>
-
+```html
+<!-- vega-embed -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vega-embed/3.0.0-beta.14/vega-embed.min.js"></script>
+```
 
 ## Step 2. Create A Visualization
 
-In your HTML `<body>`, create a placeholder for your visualization. Give the placeholder a unique `id`, which you can later refer to in your JavaScript. For example:
+In your HTML `<body>`, create a placeholder for your visualization. Give the placeholder a unique `id`, to which you can later refer in your JavaScript. For example:
 
 ```html
 <!-- Placeholder for my scatter plot -->
@@ -48,7 +51,7 @@ In your HTML `<body>`, create a placeholder for your visualization. Give the pla
 
 For [Vega-Lite](https://vega.github.io/vega-lite/):
 
-You can create your visualization using [`vega.embed`](https://github.com/vega/vega/wiki/Embed-Vega-Web-Components). Note that the following JavaScript code refers to the visualization placeholder by id selector (`#vis-scatter`).
+You can create your visualization using [`vega.embed`](https://github.com/vega/vega/wiki/Embed-Vega-Web-Components). The following JavaScript code refers to the visualization placeholder by id selector (`#vis-scatter`). 
 
 ```js
 var opt = {
@@ -75,7 +78,7 @@ var view = new vega.View(runtime)
 
 ## Step 3. Create A Tooltip
 
-In your HTML `<body>`, create a placeholder for the tooltip. Give the placeholder an `id` named `vis-tooltip` so that it can be recognized by our plugin. Assign `class` `vega-tooltip` to the tooltip placeholder so that it can pick up the default CSS style our library provides.
+In your HTML `<body>`, create a placeholder for the tooltip. Give the placeholder an `id` named `vis-tooltip` so that it can be recognized by our plugin. Assign `class` `vg-tooltip` to the tooltip placeholder so that it can pick up the default CSS style our library provides.
 
 ```html
 <!-- Placeholder for the tooltip -->
@@ -102,7 +105,7 @@ vega.embed("#vis-scatter", vlSpec, opt, function(error, result) {
 
 For [Vega](http://vega.github.io/vega/):
 
-You can create your tooltip using [`vegaTooltip.vega`](APIs.md#vgtooltip). This function only requires the [`Vega View`](https://vega.github.io/vega/docs/api/view/) as input. For example:
+You can create your tooltip using [`vegaTooltip.vega`](APIs.md#vgtooltip). This function only requires the [`Vega View`](https://vega.github.io/vega/docs/api/view/) as input. For example, with [`vega.embed`](https://github.com/vega/vega/wiki/Embed-Vega-Web-Components):
 
 ```js
 var opt = {
