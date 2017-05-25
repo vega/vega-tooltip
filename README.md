@@ -17,17 +17,22 @@ Vega Tooltip was built by Zening Qu and Sira Horradarn, with significant help fr
 http://vega.github.io/vega-tooltip/
 
 ## Installing
+
+### NPM
 If you use NPM, run command `npm install vega-tooltip`. For vanilla: 
+
+### Using vega-tooltip with a CDN
+You can import `vega-tooltip` directly from [`CDNJS`](https://cdnjs.com/libraries/vega-tooltip) to your script tag. Please replace `[VERSION]` with the desired [vega](http://vega.github.io/vega/), [vega-lite](https://vega.github.io/vega-lite/) and [vega-tooltip](https://github.com/vega/vega-tooltip) versions.
 ```html
 <!-- Dependencies for Vega visualization-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vega/2.6.5/vega.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vega/[VERSION]/vega.min.js"></script>
 
 <!-- Dependencies for Vega-lite visualization-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vega-lite/1.3.1/vega-lite.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vega-lite/[VERSION]/vega-lite.min.js"></script>
 
 <!-- Vega Tooltip -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vega-tooltip/0.3.3/vega-tooltip.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vega-tooltip/0.3.3/vega-tooltip.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vega-tooltip/[VERSION]/vega-tooltip.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vega-tooltip/[VERSION]/vega-tooltip.min.css">
 ```
 
 ## APIs

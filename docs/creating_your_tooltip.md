@@ -20,7 +20,7 @@ Alternatively, you can get vega-tooltip via [`bower`](https://bower.io/):
 bower install vega-tooltip
 ```
 
-If you want to manually include the vanilla tooltip library and its dependencies, you can add the following lines to your HTML `<head>`. Vega Tooltip depends on either [`vega`](https://vega.github.io/vega/) and [`vega-lite`](https://vega.github.io/vega-lite/) depending on which one you want to include tooltip.
+If you want to manually include the library and its dependencies, you can add the following lines to your HTML script tag. Vega Tooltip depends on either [`vega`](https://vega.github.io/vega/) and [`vega-lite`](https://vega.github.io/vega-lite/) depending on which one you want to include tooltip.
 <br><br>
 ```html
 <!-- Dependencies for Vega visualization-->
