@@ -21,8 +21,8 @@ http://vega.github.io/vega-tooltip/
 ### NPM
 If you use NPM, run command `npm install vega-tooltip`. For vanilla: 
 
-### Using vega-tooltip with a CDN
-You can import `vega-tooltip` directly from [`CDNJS`](https://cdnjs.com/libraries/vega-tooltip) to your script tag. Please replace `[VERSION]` with the desired [vega](http://vega.github.io/vega/), [vega-lite](https://vega.github.io/vega-lite/) and [vega-tooltip](https://github.com/vega/vega-tooltip) versions.
+### Using Vega-tooltip with a CDN
+You can import `vega-tooltip` directly from [`CDNJS`](https://cdnjs.com/libraries/vega-tooltip) to your script tag. Please replace `[VERSION]` with the desired [Vega](http://vega.github.io/vega/), [Vega-lite](https://vega.github.io/vega-lite/) and [Vega-tooltip](https://github.com/vega/vega-tooltip) versions.
 ```html
 <!-- Dependencies for Vega visualization-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vega/[VERSION]/vega.min.js"></script>
