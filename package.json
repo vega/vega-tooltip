@@ -1,6 +1,6 @@
 {
   "name": "vega-tooltip",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "A tooltip plugin for vega-lite and vega visualizations.",
   "main": "build/src/index.js",
   "repository": {
