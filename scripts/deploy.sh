@@ -30,7 +30,7 @@ version=$(npm list vega-tooltip | head -n 1 | sed 's/.*@//' | awk '{print $1}')
 git checkout head
 
 # add the compiled files, commit and tag!
-git add build/vega-tooltip* -f
+git add build/* -f
 git commit -m "Release $version $gitsha."
 git tag -am "Release v$version." "v$version"
 
