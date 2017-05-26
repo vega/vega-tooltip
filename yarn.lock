@@ -183,8 +183,8 @@
   resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-1.0.2.tgz#b02d10ab028e2928ac592a051aaa4981a1941d03"
 
 "@types/node@^7.0.21":
-  version "7.0.21"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.21.tgz#22a890f19b26cff9b6699b493dea1bcee4410da1"
+  version "7.0.22"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.22.tgz#4593f4d828bdd612929478ea40c67b4f403ca255"
 
 JSONStream@^1.0.3:
   version "1.3.1"
@@ -210,8 +210,8 @@ acorn@^1.0.3:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-1.2.2.tgz#c8ce27de0acc76d896d2b1fad3df588d9e82f014"
 
 acorn@^4.0.3:
-  version "4.0.11"
-  resolved "https://registry.yarnpkg.com/acorn/-/acorn-4.0.11.tgz#edcda3bd937e7556410d42ed5860f67399c794c0"
+  version "4.0.13"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-4.0.13.tgz#105495ae5361d697bd195c825192e1ad7f253787"
 
 ajv@^4.9.1:
   version "4.11.8"
@@ -2851,8 +2851,8 @@ tslib@^1.0.0, tslib@^1.6.0, tslib@^1.7.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.7.1.tgz#bc8004164691923a79fe8378bbeb3da2017538ec"
 
 tslint-eslint-rules@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/tslint-eslint-rules/-/tslint-eslint-rules-4.1.0.tgz#8fee295c42f4c8078139deb16ee7b4510fd516b7"
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/tslint-eslint-rules/-/tslint-eslint-rules-4.1.1.tgz#7c30e7882f26bc276bff91d2384975c69daf88ba"
   dependencies:
     doctrine "^0.7.2"
     tslib "^1.0.0"
@@ -2896,12 +2896,12 @@ typedarray@^0.0.6, typedarray@~0.0.5:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
 typescript@^2.3.2:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.3.2.tgz#f0f045e196f69a72f06b25fd3bd39d01c3ce9984"
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.3.3.tgz#9639f3c3b40148e8ca97fe08a51dd1891bb6be22"
 
 uglify-js@^3.0.10:
-  version "3.0.10"
-  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.0.10.tgz#e220e7dbc05ce1f9bb08268b221aa0cf152fb4e2"
+  version "3.0.11"
+  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.0.11.tgz#81f594b9a24dad76e39da92f8f06e5b3bc8c2e11"
   dependencies:
     commander "~2.9.0"
     source-map "~0.5.1"
@@ -2976,7 +2976,7 @@ vega-dataflow@>=2.0.0-beta, vega-dataflow@>=2.0.0-beta.4:
 
 vega-datasets@vega/vega-datasets#gh-pages:
   version "1.8.0"
-  resolved "https://codeload.github.com/vega/vega-datasets/tar.gz/34d749afe9a1c733004e6253ee6b6f367e5b856b"
+  resolved "https://codeload.github.com/vega/vega-datasets/tar.gz/dff920b3ee6d507ee32373c230e424fb5c2ea141"
 
 vega-embed@^3.0.0-beta.14:
   version "3.0.0-beta.14"
@@ -3111,8 +3111,8 @@ vega-util@1, vega-util@^1.1, vega-util@^1.2, vega-util@^1.2.0:
   resolved "https://registry.yarnpkg.com/vega-util/-/vega-util-1.2.0.tgz#797a3bb460754edacc81a4d7cdf5657d9437b6b8"
 
 vega-view@>=1.0.0-beta:
-  version "1.0.0-beta.32"
-  resolved "https://registry.yarnpkg.com/vega-view/-/vega-view-1.0.0-beta.32.tgz#4c7b88943ba7bda520588e3a0c93d69365ab667c"
+  version "1.0.0-beta.33"
+  resolved "https://registry.yarnpkg.com/vega-view/-/vega-view-1.0.0-beta.33.tgz#6c70da8bb161b862a94db99529d67a550dbe2138"
   dependencies:
     d3-array "1"
     vega-dataflow ">=2.0.0-beta"
@@ -3141,8 +3141,8 @@ vega-wordcloud@>=1.0.0-beta:
     canvas "^1.6.0"
 
 vega@^3.0.0-beta.30, vega@^3.0.0-beta.31:
-  version "3.0.0-beta.31"
-  resolved "https://registry.yarnpkg.com/vega/-/vega-3.0.0-beta.31.tgz#e92e4fe9d8caf9bf6d4647ecc9f7ae9b0c31395a"
+  version "3.0.0-beta.32"
+  resolved "https://registry.yarnpkg.com/vega/-/vega-3.0.0-beta.32.tgz#4c94fac2ddb6238073bacfb4e6ae4dd40fd09a8a"
   dependencies:
     vega-crossfilter ">=1.0.0-beta"
     vega-dataflow ">=2.0.0-beta"
