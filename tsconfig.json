@@ -9,15 +9,12 @@
     "noEmitOnError": true,
     "noImplicitThis": true,
     "noImplicitReturns": true,
-    "outDir": "./build/",
+    "outDir": "./build/src",
     "inlineSourceMap": true,
     "typeRoots" : ["./typings", "node_modules/@types"]
   },
   "include": [
-    "src/**/*.ts",
-    "typings/*.d.ts",
-    "node_modules/@types/**/*.d.ts",
-    "node_modules/vega-lite/build/**/*.d.ts"
+    "src/**/*.ts"
   ],
   "exclude": [
     "node_modules",
