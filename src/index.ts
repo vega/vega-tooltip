@@ -88,7 +88,7 @@ function cancelPromise() {
 }
 
 /* Initialize tooltip with data */
-function init(event: MouseEvent, item: Scenegraph, options: Option) {
+function init(event: MouseEvent, item: Scenegraph, options: Option): void {
   // get tooltip HTML placeholder
   const tooltipPlaceholder = getTooltipPlaceholder();
 
@@ -113,7 +113,7 @@ function init(event: MouseEvent, item: Scenegraph, options: Option) {
 }
 
 /* Update tooltip position on mousemove */
-function update(event: MouseEvent, item: Scenegraph, options: Option) {
+function update(event: MouseEvent, item: Scenegraph, options: Option): void {
   if (!shouldShowTooltip(item)) {
     return undefined;
   }
@@ -126,7 +126,7 @@ function update(event: MouseEvent, item: Scenegraph, options: Option) {
 }
 
 /* Clear tooltip */
-function clear(event: MouseEvent, item: Scenegraph, options: Option) {
+function clear(event: MouseEvent, item: Scenegraph, options: Option): void {
   if (!shouldShowTooltip(item)) {
     return undefined;
   }
