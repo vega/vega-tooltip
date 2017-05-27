@@ -27,3 +27,9 @@ body {
 .center a {
   display: block;
 }
+
+#github-link {
+  position: fixed;
+  top: 1em;
+  right: 1em;
+}
