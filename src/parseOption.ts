@@ -1,5 +1,5 @@
 import {autoFormat, customFormat} from './formatFieldValue';
-import {FieldOption, Option, Scenegraph, SupplementedFieldOption, TooltipData} from './options';
+import { FieldOption, Option, Scenegraph, ScenegraphData, SupplementedFieldOption, TemporaryFieldOption, TooltipData } from './options';
 
 /**
  * Prepare data for the tooltip
@@ -14,7 +14,7 @@ export function getTooltipData(item: Scenegraph, options: Option) {
 
   // this array will be bind to the tooltip element
   let tooltipData: TooltipData[];
-  const itemData = {};
+  const itemData: ScenegraphData = {};
   for (const field in item.datum) {
     if (item.datum.hasOwnProperty(field)) {
       itemData[field] = item.datum[field];
@@ -52,7 +52,7 @@ export function getTooltipData(item: Scenegraph, options: Option) {
  * @param {Object} options - user-provided options
  * @return An array of formatted fields specified by options [{ title: ..., value: ...}]
  */
-export function prepareCustomFieldsData(itemData: object, options: Option) {
+export function prepareCustomFieldsData(itemData: ScenegraphData, options: Option) {
   const tooltipData: TooltipData[] = [];
 
   options.fields.forEach(function (fieldOption) {
@@ -83,8 +83,8 @@ export function prepareCustomFieldsData(itemData: object, options: Option) {
  * @return the field value on success, undefined otherwise
  */
 // TODO(zening): Mute "Cannot find field" warnings for composite vis (issue #39)
-export function getValue(itemData: object, field: string) {
-  let value: string | number | Date;
+export function getValue(itemData: ScenegraphData, field: string) {
+  let value: string | number | Date | ScenegraphData;
 
   const accessors: string[] = field.split('.');
 
@@ -96,6 +96,7 @@ export function getValue(itemData: object, field: string) {
 
     // if we still have accessors, use them to get the value
     accessors.forEach(function (a) {
+      value = value as ScenegraphData;
       if (value[a]) {
         value = value[a];
       }
@@ -106,7 +107,7 @@ export function getValue(itemData: object, field: string) {
     console.warn('[Tooltip] Cannot find field ' + field + ' in data.');
     return undefined;
   } else {
-    return value;
+    return value as string | number | Date;
   }
 }
 
@@ -123,11 +124,11 @@ export function getValue(itemData: object, field: string) {
  * It will not try to parse value if it is an object. If value is an object, please
  * use prepareCustomFieldsData() instead.
  */
-export function prepareAllFieldsData(itemData: object, options: Option) {
+export function prepareAllFieldsData(itemData: ScenegraphData, options: Option) {
   const tooltipData: TooltipData[] = [];
 
   // here, fieldOptions still provides format
-  const fieldOptions = {};
+  const fieldOptions: TemporaryFieldOption = {};
   if (options && options.fields) {
     for (const optionField of options.fields) {
       fieldOptions[optionField.field] = optionField;
@@ -136,7 +137,7 @@ export function prepareAllFieldsData(itemData: object, options: Option) {
 
   for (const field in itemData) {
     if (itemData.hasOwnProperty(field)) {
-      const value = itemData[field];
+      const value = itemData[field] as number | string | Date;
       let title;
       if (fieldOptions[field] && fieldOptions[field].title) {
         title = fieldOptions[field].title;
@@ -168,7 +169,7 @@ export function prepareAllFieldsData(itemData: object, options: Option) {
  * @param {time.map} dataMap - the data map that contains tooltip data.
  * @param {string[]} removeKeys - the fields that should be removed from dataMap.
  */
-export function removeFields(dataMap: object, removeKeys: string[]) {
+export function removeFields(dataMap: ScenegraphData, removeKeys: string[]) {
   removeKeys.forEach(function (key) {
     delete dataMap[key];
   });
@@ -179,7 +180,7 @@ export function removeFields(dataMap: object, removeKeys: string[]) {
  * (e.g., Year and YEAR(Year)). In tooltip want to display the field WITH the
  * timeUnit and remove the field that doesn't have timeUnit.
  */
-export function removeDuplicateTimeFields(itemData: object, optFields: SupplementedFieldOption[]) {
+export function removeDuplicateTimeFields(itemData: ScenegraphData, optFields: SupplementedFieldOption[]): void {
   if (!optFields) {
     return undefined;
   }
@@ -199,7 +200,7 @@ export function removeDuplicateTimeFields(itemData: object, optFields: Supplemen
  * @param {Object[]} fieldOptions - a list of field options (i.e. options.fields[])
  * @return itemData with combined bin fields
  */
-export function combineBinFields(itemData: object, fieldOptions: FieldOption[]) {
+export function combineBinFields(itemData: ScenegraphData, fieldOptions: FieldOption[]) {
   if (!fieldOptions) {
     return undefined;
   }
@@ -242,7 +243,7 @@ export function combineBinFields(itemData: object, fieldOptions: FieldOption[]) 
  * = APPL, AMZN, GOOG, IBM, MSFT) because these fields don't tend to change along
  * the line / area border.
  */
-export function dropFieldsForLineArea(marktype: string, itemData: object) {
+export function dropFieldsForLineArea(marktype: string, itemData: ScenegraphData) {
   if (marktype === 'line' || marktype === 'area') {
     const quanKeys: string[] = [];
     for (const key in itemData) {
