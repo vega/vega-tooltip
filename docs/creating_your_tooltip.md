@@ -21,7 +21,7 @@ bower install vega-tooltip
 ```
 
 If you want to manually include the library and its dependencies, you can add the following lines to your HTML script tag. Vega Tooltip depends on either [`vega`](https://vega.github.io/vega/) and [`vega-lite`](https://vega.github.io/vega-lite/) depending on which one you want to include tooltip.
-<br><br>
+<br>
 ```html
 <!-- Dependencies for Vega visualization-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vega/2.6.5/vega.min.js"></script>
@@ -33,8 +33,8 @@ If you want to manually include the library and its dependencies, you can add th
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vega-tooltip/0.3.3/vega-tooltip.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vega-tooltip/0.3.3/vega-tooltip.min.css">
 ```
->Note that if you use [`vega-embed`](https://github.com/vega/vega-embed/) to deploy your visualization, you need to include [`vega-embed`](https://github.com/vega/vega-embed/) dependency in `<head>` tag for `vega-embed` to work
-<br>
+>Note that if you use [`vega-embed`](https://github.com/vega/vega-embed/) to deploy your visualization, you need to include [`vega-embed`](https://github.com/vega/vega-embed/) dependency in script for `vega-embed` to work
+
 ```html
 <!-- vega-embed -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vega-embed/3.0.0-beta.14/vega-embed.min.js"></script>
