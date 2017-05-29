@@ -1,5 +1,5 @@
 import {autoFormat, customFormat} from './formatFieldValue';
-import { FieldOption, Option, Scenegraph, ScenegraphData, SupplementedFieldOption, TemporaryFieldOption, TooltipData } from './options';
+import {FieldOption, Option, Scenegraph, ScenegraphData, SupplementedFieldOption, TemporaryFieldOption, TooltipData} from './options';
 
 /**
  * Prepare data for the tooltip

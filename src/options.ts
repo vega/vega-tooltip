@@ -1,4 +1,4 @@
-import { ScenegraphData } from './options';
+import {ScenegraphData} from './options';
 export interface Option {
   showAllFields?: boolean;
   fields?: FieldOption[];
