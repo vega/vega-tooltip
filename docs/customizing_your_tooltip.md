@@ -47,6 +47,10 @@ var options =
     },
     ...
   }],
+  delay: 250,
+  onAppear: function(event, item) { /* callback */ },
+  onMove: function(event, item) { /* callback */ },
+  onDisappear: function(event, item) { /* callback */ },
   colorTheme: "light" | "dark"
 };
 ```
@@ -55,7 +59,11 @@ var options =
 | :-------------- |:--------------:| :-------------- |
 | `showAllFields` | Boolean        | If `true`, show all data fields of a visualization in the tooltip. If `false`, only show fields specified in the `fields` array in the tooltip. <br>__Default value:__ `true`|
 | `fields`        | Array          | An array of fields to be displayed in the tooltip when `showAllFields` is `false`. |
-| `colorTheme`    | String         | A color theme picker. <br>__Supported values:__ `"light"` and `"dark"`. <br>__Default value:__ `"light"` <br>To further customize, overwrite the `.vg-tooltip` class in your CSS. |
+| `delay`         | Number         | Number of milliseconds tooltip display should be delayed. <br>__Default value:__ 100 milliseconds.|
+| `onAppear`      | function(event, item) | Callback when tooltip first appears (when mouse moves over a new item in visualization). |
+| `onMove`        | function(event, item) | Callback when tooltip moves (e.g., when mouse moves within a bar). |
+| `onDisappear`   | function(event, item) | Callback when tooltip disappears (when mouse moves out an item). |
+| `colorTheme`    | String         | A color theme picker. <br>__Supported values:__ `"light"` and `"dark"`. <br>__Default value:__ `"light"` <br>To further customize, overwrite the `.vl-tooltip` class in your CSS. |
 
 > Tip: You can customize the order of the fields in your tooltip by setting `showAllFields` to `false` and providing a `fields` array. Your tooltip will display fields in the order they appear in the `fields` array.
 
