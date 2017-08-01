@@ -7,7 +7,7 @@ import {FieldOption, Option, Scenegraph, ScenegraphData, SupplementedFieldOption
  */
 // TODO: add marktype
 export function getTooltipData(item: Scenegraph, options: Option) {
-  // ignore the data for group type that represents white space
+  // ignore data from group marks
   if (item.mark.marktype === 'group') {
     return undefined;
   }
