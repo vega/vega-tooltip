@@ -105,7 +105,7 @@ vega.embed("#vis-scatter", vlSpec, opt, function(error, result) {
 
 For [Vega](http://vega.github.io/vega/):
 
-You can create your tooltip using [`vegaTooltip.vega`](APIs.md#vgtooltip). This function only requires the [`Vega View`](https://vega.github.io/vega/docs/api/view/) as input. For example, with [`vega.embed`](https://github.com/vega/vega/wiki/Embed-Vega-Web-Components):
+You can create your tooltip using [`vegaTooltip.vega`](APIs.md#vgtooltip). This function only requires the [`Vega View`](https://vega.github.io/vega/docs/api/view/) as input. The [`options`](https://github.com/vega/vega-tooltip/blob/master/docs/customizing_your_tooltip.md) argument is optional. For example, with [`vega.embed`](https://github.com/vega/vega/wiki/Embed-Vega-Web-Components):
 
 ```js
 var opt = {
