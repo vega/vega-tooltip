@@ -128,6 +128,8 @@ var view = new vega.View(runtime)
 
 vegaTooltip.vega(view);
 ```
+
+The tooltip will not appear for marks whose [`interactive`](https://vega.github.io/vega/docs/marks/) property is `false`.
 <br>
 
 
