@@ -113,7 +113,7 @@ var opt = {
 }
 vega.embed(id, vgSpec, opt, function(error, result) {
   // result.view is the Vega View
-  vegaTooltip.vega(result.view, options);
+  vegaTooltip.vega(result.view);
 });
 ```
 
@@ -126,7 +126,7 @@ var view = new vega.View(runtime)
   .hover()
   .run();
 
-vegaTooltip.vega(view, options);
+vegaTooltip.vega(view);
 ```
 <br>
 
