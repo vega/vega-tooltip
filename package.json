@@ -1,6 +1,6 @@
 {
   "name": "vega-tooltip",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "A tooltip plugin for vega-lite and vega visualizations.",
   "main": "build/src/index.js",
   "typings": "build/src/index",
@@ -54,8 +54,8 @@
     "d3-format": "^1.2.0",
     "d3-time-format": "^2.0.5",
     "d3-selection": "^1.1.0",
-    "vega": "^3.0.0-beta.31",
-    "vega-lite": "^2.0.0-beta.3"
+    "vega": "^3.0.0",
+    "vega-lite": "^2.0.0-beta.14"
   },
   "browserify-shim": {
     "vega": "global:vega",
