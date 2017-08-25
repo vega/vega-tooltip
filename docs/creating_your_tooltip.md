@@ -51,7 +51,7 @@ In your HTML `<body>`, create a placeholder for your visualization. Give the pla
 
 For [Vega-Lite](https://vega.github.io/vega-lite/):
 
-You can create your visualization using [`vega.embed`](https://github.com/vega/vega/wiki/Embed-Vega-Web-Components). The following JavaScript code refers to the visualization placeholder by id selector (`#vis-scatter`). 
+You can create your visualization using [`vega.embed`](https://github.com/vega/vega/wiki/Embed-Vega-Web-Components). The following JavaScript code refers to the visualization placeholder by id selector (`#vis-scatter`).
 
 ```js
 var opt = {
@@ -77,17 +77,6 @@ var view = new vega.View(runtime)
 
 
 ## Step 3. Create A Tooltip
-
-In your HTML `<body>`, create a placeholder for the tooltip. Give the placeholder an `id` named `vis-tooltip` so that it can be recognized by our plugin. Assign `class` `vg-tooltip` to the tooltip placeholder so that it can pick up the default CSS style our library provides.
-
-```html
-<!-- Placeholder for the tooltip -->
-<div id="vis-tooltip" class="vg-tooltip"></div>
-```
-
-> Tip: Generally, you will only need one tooltip placeholder per page because the mouse typically only points to one thing at a time. If you have more than one visualizations in a page, the visualizations will share one tooltip placeholder.
-
-
 
 For [Vega-Lite](https://vega.github.io/vega-lite/):
 
@@ -131,6 +120,7 @@ vegaTooltip.vega(view);
 
 The tooltip will not appear for marks whose [`interactive`](https://vega.github.io/vega/docs/marks/) property is `false`.
 <br>
+> [`vega-tooltip`](https://github.com/vega/vega-tooltip/) will automatically generate a placeholder for tooltip with `vis-tooltip` as an `id` and `vg-tooltip` as a `class` name.
 
 
 ## Congratulations!
