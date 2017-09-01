@@ -145,7 +145,7 @@ export function getFieldDef(fieldDefs: FieldDef<string>[], fieldOption: FieldOpt
  */
 export function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldDef<string>, vlSpec: TopLevelExtendedSpec) {
   // many specs don't have config
-  const config = vl.util.extend({}, vlSpec.config);
+  const config = {...vlSpec.config};
 
   // at least one of fieldOption and fieldDef should exist
   if (!fieldOption && !fieldDef) {
