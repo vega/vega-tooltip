@@ -6,12 +6,9 @@
       if (error) {
         return console.error(error);
       }
-      var runtime = vega.parse(vgSpec);
-      var view = new vega.View(runtime)
-        .initialize(document.querySelector(id))
-        .hover()
-        .run();
-      vegaTooltip.vega(view, options);
+      vega.embed(id, vgSpec).then(function (result) {
+        vegaTooltip.vega(result.view, options);
+      }).catch(console.error);
     })
   }
 

@@ -10,12 +10,9 @@
       var opt = {
         mode: "vega-lite"
       };
-      vega.embed(id, vlSpec, opt, function (error, result) {
-        if (error) {
-          return console.error(error);
-        }
+      vega.embed(id, vlSpec, opt).then(function (result) {
         vegaTooltip.vegaLite(result.view, vlSpec, options);
-      });
+      }).catch(console.error);
     });
   }
 
