@@ -57,9 +57,11 @@ You can create your visualization using [`vega.embed`](https://github.com/vega/v
 var opt = {
   mode: "vega-lite",
 };
-vega.embed("#vis-scatter", vlSpec, opt, function(error, result) {
-  ...
-});
+vega.embed("#vis-scatter", vlSpec, opt)
+  .then(function(result) {
+    ...
+  })
+  .catch(console.error);
 ```
 
 For [Vega](http://vega.github.io/vega/):
@@ -86,10 +88,12 @@ You can create your tooltip using [`vegaTooltip.vegaLite`](APIs.md#vltooltip). T
 var opt = {
   mode: "vega-lite",
 };
-vega.embed("#vis-scatter", vlSpec, opt, function(error, result) {
-  // result.view is the Vega View, vlSpec is the original Vega-Lite specification
-  vegaTooltip.vegaLite(result.view, vlSpec);
-});
+vega.embed("#vis-scatter", vlSpec, opt)
+  .then(function(result) {
+    // result.view is the Vega View, vlSpec is the original Vega-Lite specification
+    vegaTooltip.vegaLite(result.view, vlSpec);
+  })
+  .catch(console.error);
 ```
 
 For [Vega](http://vega.github.io/vega/):
@@ -100,10 +104,12 @@ You can create your tooltip using [`vegaTooltip.vega`](APIs.md#vgtooltip). This 
 var opt = {
   mode: "vega"
 }
-vega.embed(id, vgSpec, opt, function(error, result) {
-  // result.view is the Vega View
-  vegaTooltip.vega(result.view);
-});
+vega.embed(id, vgSpec, opt)
+  .then(function(result) {
+    // result.view is the Vega View
+    vegaTooltip.vega(result.view);
+  })
+  .catch(console.error);
 ```
 
 Another example using existing [`Vega View`](https://vega.github.io/vega/docs/api/view/) object:
