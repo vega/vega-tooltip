@@ -10,10 +10,12 @@ For [Vega-Lite](https://vega.github.io/vega-lite/):
 var opt = {
   mode: "vega-lite",
 };
-vega.embed("#vis-scatter", vlSpec, opt, function (error, result) {
-  // result.view is the Vega View, vlSpec is the original Vega-Lite specification
-  vegaTooltip.vegaLite(result.view, vlSpec, options); // pass in options
-});
+vega.embed("#vis-scatter", vlSpec, opt)
+  .then((result) => {
+    // result.view is the Vega View, vlSpec is the original Vega-Lite specification
+    vegaTooltip.vegaLite(result.view, vlSpec, options); // pass in options
+  })
+  .catch(console.error);
 ```
 
 For [Vega](http://vega.github.io/vega/):
