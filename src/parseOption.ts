@@ -52,7 +52,7 @@ export function getTooltipData(item: Scenegraph, options: Option) {
  * @param {Object} options - user-provided options
  * @return An array of formatted fields specified by options [{ title: ..., value: ...}]
  */
-export function prepareCustomFieldsData(itemData: ScenegraphData, options: Option) {
+export function prepareCustomFieldsData(itemData: ScenegraphData, options: Option = {}) {
   const tooltipData: TooltipData[] = [];
 
   options.fields.forEach(function (fieldOption) {
@@ -124,7 +124,7 @@ export function getValue(itemData: ScenegraphData, field: string) {
  * It will not try to parse value if it is an object. If value is an object, please
  * use prepareCustomFieldsData() instead.
  */
-export function prepareAllFieldsData(itemData: ScenegraphData, options: Option) {
+export function prepareAllFieldsData(itemData: ScenegraphData, options: Option = {}) {
   const tooltipData: TooltipData[] = [];
 
   // here, fieldOptions still provides format
