@@ -10,7 +10,7 @@
       var opt = {
         mode: "vega-lite"
       };
-      vega.embed(id, vlSpec, opt).then(function (result) {
+      vegaEmbed(id, vlSpec, opt).then(function (result) {
         vegaTooltip.vegaLite(result.view, vlSpec, options);
       }).catch(console.error);
     });

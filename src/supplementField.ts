@@ -158,7 +158,7 @@ export function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldD
     fieldOption = {};
   }
   if (fieldOption && !fieldDef) {
-    fieldDef = {};
+    fieldDef = {} as any;  // type will be added later, TODO: refactor this
   }
 
   // the supplemented field option

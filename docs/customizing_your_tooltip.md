@@ -10,7 +10,7 @@ For [Vega-Lite](https://vega.github.io/vega-lite/):
 var opt = {
   mode: "vega-lite",
 };
-vega.embed("#vis-scatter", vlSpec, opt)
+vegaEmbed("#vis-scatter", vlSpec, opt)
   .then(function (result) {
     // result.view is the Vega View, vlSpec is the original Vega-Lite specification
     vegaTooltip.vegaLite(result.view, vlSpec, options); // pass in options

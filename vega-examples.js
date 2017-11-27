@@ -6,7 +6,7 @@
       if (error) {
         return console.error(error);
       }
-      vega.embed(id, vgSpec).then(function (result) {
+      vegaEmbed(id, vgSpec).then(function (result) {
         vegaTooltip.vega(result.view, options);
       }).catch(console.error);
     })
