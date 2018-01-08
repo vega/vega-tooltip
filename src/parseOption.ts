@@ -22,8 +22,7 @@ export function getTooltipData(item: Scenegraph, options: Option) {
   }
 
   const removeKeys = [
-    '_id', '_prev', 'width', 'height',
-    'count_start', 'count_end',
+    'width', 'height', 'count_start', 'count_end',
     'layout_start', 'layout_mid', 'layout_end', 'layout_path', 'layout_x', 'layout_y'
   ];
   removeFields(itemData, removeKeys);
