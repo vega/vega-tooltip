@@ -90,7 +90,7 @@ export function getValue(itemData: ScenegraphData, field: string) {
   // get the first accessor and remove it from the array
   const firstAccessor: string = accessors[0];
   accessors.shift();
-  if (itemData[firstAccessor]) {
+  if (itemData[firstAccessor] !== undefined) {
     value = itemData[firstAccessor];
 
     // if we still have accessors, use them to get the value
@@ -207,24 +207,36 @@ export function combineBinFields(itemData: ScenegraphData, fieldOptions: FieldOp
   fieldOptions.forEach(function (fieldOption) {
     if (fieldOption.bin === true) {
       // get binned field names
+      // bin_maxbins_10_IMDB_Rating (in fieldOptions)
+      // bin_IMDB_Rating (in itemData)
+
+      const binPrefix = 'bin_';
       const binFieldRange = fieldOption.field;
-      const binFieldStart = binFieldRange.concat('_start');
-      const binFieldMid = binFieldRange.concat('_mid');
-      const binFieldEnd = binFieldRange.concat('_end');
+      const fieldName = binFieldRange.substr(binPrefix.length);
+      const binFieldStartRegex = new RegExp(`^bin_maxbins_[0-9]+_${fieldName}$`);
+      const binFieldEndRegex = new RegExp(`^bin_maxbins_[0-9]+_${fieldName}_end$`);
+      // const binFieldStart = binFieldRange;
+      // const binFieldMid = binFieldRange.concat('_mid');
+      // const binFieldEnd = binFieldRange.concat('_end');
 
       // use start value and end value to compute range
       // save the computed range in binFieldStart
-      const startValue = itemData[binFieldStart];
-      const endValue = itemData[binFieldEnd];
-      if ((startValue !== undefined) && (endValue !== undefined)) {
-        const range = startValue + '-' + endValue;
+      // const startValue = itemData[binFieldStart];
+      // const endValue = itemData[binFieldEnd];
+      // if ((startValue !== undefined) && (endValue !== undefined)) {
+      //   const range = startValue + '-' + endValue;
+      //   itemData[binFieldRange] = range;
+      // }
+
+      const binFieldStartKey = Object.keys(itemData).filter(d => binFieldStartRegex.test(d));
+      const binFieldEndKey = Object.keys(itemData).filter(d => binFieldEndRegex.test(d));
+
+      if (binFieldStartKey.length === 1 && binFieldEndKey.length === 1) {
+        const range = itemData[binFieldStartKey[0]] + '-' + itemData[binFieldEndKey[0]];
         itemData[binFieldRange] = range;
       }
-
       // remove binFieldMid, binFieldEnd, and binFieldRange from itemData
-      const binRemoveKeys = [];
-      binRemoveKeys.push(binFieldStart, binFieldMid, binFieldEnd);
-      removeFields(itemData, binRemoveKeys);
+      removeFields(itemData, binFieldStartKey.concat(binFieldEndKey));
     }
   });
 
