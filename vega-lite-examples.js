@@ -16,6 +16,11 @@
     });
   }
 
+  var histogramOpts = {
+    showAllFields: true
+  }
+  addVlExample("exampleSpecs/histogram.json", "#vis-histogram", histogramOpts);
+
   /* Vega-Lite Examples */
   // Scatter Plot
   var scatterOpts = {
@@ -98,6 +103,6 @@
         title: "category"
       }
     ]
-  }
+  };
   addVlExample("exampleSpecs/overlay_area_short.json", "#vis-overlay-area", overlayAreaOpts);
 }());
