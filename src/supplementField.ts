@@ -198,12 +198,14 @@ export function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldD
   if (!config.countTitle) {
     config.countTitle = vl.config.defaultConfig.countTitle; // use vl default countTitle
   }
-  supplementedFieldOption.title = fieldOption.title ?
-    fieldOption.title : vl.fieldDef.title(fieldDef, config);
+  let defaultTitle: string = vl.fieldDef.title(fieldDef, config);
+  if ((fieldDef as any).axis && (fieldDef as any).axis.title) {
+    defaultTitle = (fieldDef as any).axis.title;
+  }
+  supplementedFieldOption.title = fieldOption.title || defaultTitle;
 
   // supplement formatType
-  supplementedFieldOption.formatType = fieldOption.formatType ?
-    fieldOption.formatType : formatTypeMap[fieldDef.type];
+  supplementedFieldOption.formatType = fieldOption.formatType || formatTypeMap[fieldDef.type];
 
   // supplement format
   if (fieldOption.format) {
