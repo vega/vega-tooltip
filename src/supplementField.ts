@@ -169,8 +169,11 @@ export function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldD
   // for aggregation, this will add prefix "mean_" etc.
   // for timeUnit, this will add prefix "yearmonth_" etc.
   // for bin, this will add prefix "bin_" and suffix "_start". Later we will replace "_start" with "_range".
-  supplementedFieldOption.field = fieldDef.field ?
-    vl.fieldDef.vgField(fieldDef) : fieldOption.field;
+
+  if (fieldDef.bin) {
+    fieldDef.bin = vl.fieldDef.normalizeBin(fieldDef.bin, undefined);
+  }
+  supplementedFieldOption.field = vl.fieldDef.vgField(fieldDef) || fieldOption.field;
 
   // If a fieldDef is a (TIMEUNIT)T, we check if the original T is present in the vlSpec.
   // If only (TIMEUNIT)T is present in vlSpec, we set `removeOriginalTemporalField` to T,
