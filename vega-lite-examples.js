@@ -23,10 +23,7 @@
     fields: [
       { field: "Name" },
       { field: "Horsepower" },
-      {
-        field: "Miles_per_Gallon",
-        title: "Miles per Gallon"
-      }
+      { field: "Miles_per_Gallon" }
     ]
   };
   addVlExample("exampleSpecs/scatter.json", "#vis-scatter", scatterOpts);
