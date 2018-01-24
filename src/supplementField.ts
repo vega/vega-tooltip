@@ -1,5 +1,5 @@
 import * as vl from 'vega-lite';
-import {FieldDef} from 'vega-lite/build/src/fielddef';
+import {FieldDef, MarkPropFieldDef, PositionFieldDef} from 'vega-lite/build/src/fielddef';
 import {TopLevelExtendedSpec} from 'vega-lite/build/src/spec';
 import {TEMPORAL} from 'vega-lite/build/src/type';
 import {FieldOption, Option, SupplementedFieldOption} from './options';
@@ -30,7 +30,7 @@ export function supplementOptions(options: Option, vlSpec: TopLevelExtendedSpec)
 
   // if showAllFields is true or undefined, supplement all fields in vlSpec
   if (options.showAllFields !== false) {
-    vl.spec.fieldDefs(vlSpec).forEach(function (fieldDef: FieldDef<string>) {
+    vl.spec.fieldDefs(vlSpec).forEach(function (fieldDef: FieldDef<any>) {
       // get a fieldOption in options that matches the fieldDef
       const fieldOption = getFieldOption(options.fields, fieldDef);
 
@@ -43,7 +43,7 @@ export function supplementOptions(options: Option, vlSpec: TopLevelExtendedSpec)
     if (options.fields) {
       options.fields.forEach(function (fieldOption: FieldOption) {
         // get the fieldDef in vlSpec that matches the fieldOption
-        const fieldDef = getFieldDef(vl.spec.fieldDefs(vlSpec) as FieldDef<string>[], fieldOption);
+        const fieldDef = getFieldDef(vl.spec.fieldDefs(vlSpec), fieldOption);
 
         // supplement the fieldOption with fieldDef and config
         const supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec);
@@ -69,7 +69,7 @@ export function supplementOptions(options: Option, vlSpec: TopLevelExtendedSpec)
  * the aggregation of the fieldDef.
  * If the fieldDef is not aggregated, find a fieldOption that matches the field name.
  */
-export function getFieldOption(fieldOptions: FieldOption[], fieldDef: FieldDef<string>) {
+export function getFieldOption(fieldOptions: FieldOption[], fieldDef: FieldDef<any>) {
   if (!fieldDef || !fieldOptions || fieldOptions.length <= 0) {
     return undefined;
   }
@@ -114,7 +114,7 @@ export function getFieldOption(fieldOptions: FieldOption[], fieldDef: FieldDef<s
  * If the matching fieldDef is aggregated, the aggregation should not contradict
  * with that of the fieldOption.
  */
-export function getFieldDef(fieldDefs: FieldDef<string>[], fieldOption: FieldOption): FieldDef<string> {
+export function getFieldDef(fieldDefs: FieldDef<any>[], fieldOption: FieldOption): FieldDef<any> {
   if (!fieldOption || !fieldOption.field || !fieldDefs) {
     return undefined;
   }
@@ -143,7 +143,7 @@ export function getFieldDef(fieldDefs: FieldDef<string>[], fieldOption: FieldOpt
  * config (and its members timeFormat, numberFormat and countTitle) can be undefined.
  * @return the supplemented fieldOption, or undefined on error
  */
-export function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldDef<string>, vlSpec: TopLevelExtendedSpec) {
+export function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldDef<any>, vlSpec: TopLevelExtendedSpec) {
   // many specs don't have config
   const config = {...vlSpec.config};
 
@@ -170,7 +170,7 @@ export function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldD
   // for timeUnit, this will add prefix "yearmonth_" etc.
   // for bin, this will add prefix "bin_" and suffix "_start". Later we will replace "_start" with "_range".
   supplementedFieldOption.field = fieldDef.field ?
-    vl.fieldDef.field(fieldDef) : fieldOption.field;
+    vl.fieldDef.vgField(fieldDef) : fieldOption.field;
 
   // If a fieldDef is a (TIMEUNIT)T, we check if the original T is present in the vlSpec.
   // If only (TIMEUNIT)T is present in vlSpec, we set `removeOriginalTemporalField` to T,
@@ -198,10 +198,18 @@ export function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldD
   if (!config.countTitle) {
     config.countTitle = vl.config.defaultConfig.countTitle; // use vl default countTitle
   }
-  let defaultTitle: string = vl.fieldDef.title(fieldDef, config);
-  if ((fieldDef as any).axis && (fieldDef as any).axis.title) {
-    defaultTitle = (fieldDef as any).axis.title;
+  let defaultTitle = vl.fieldDef.title(fieldDef, config);
+  if (isPositionFieldDef(fieldDef)) {
+    if (fieldDef.axis && fieldDef.axis.title) {
+      defaultTitle = fieldDef.axis.title;
+    }
   }
+  if (isMarkPropFieldDef(fieldDef)) {
+    if (fieldDef.legend && fieldDef.legend.title) {
+      defaultTitle = fieldDef.legend.title;
+    }
+  }
+
   supplementedFieldOption.title = fieldOption.title || defaultTitle;
 
   // supplement formatType
@@ -234,4 +242,20 @@ export function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldD
   }
 
   return supplementedFieldOption;
+}
+
+/**
+ * Typeguard function for PositionFieldDef interface
+ */
+function isPositionFieldDef(fd: FieldDef<any>): fd is PositionFieldDef<any> {
+  // the fieldDef may still be a PositionFieldDef even if it doesn't have a legend
+  return 'axis' in fd;
+}
+
+/**
+ * Typeguard function for MarkPropFieldDef interface
+ */
+function isMarkPropFieldDef(fd: FieldDef<any>): fd is MarkPropFieldDef<any> {
+  // the fieldDef may still be a MarkPropFieldDef even if it doesn't have a legend
+  return 'legend' in fd;
 }
