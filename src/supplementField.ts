@@ -248,7 +248,7 @@ export function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldD
  * Typeguard function for PositionFieldDef interface
  */
 function isPositionFieldDef(fd: FieldDef<any>): fd is PositionFieldDef<any> {
-  // the fieldDef may still be a PositionFieldDef even if it doesn't have a legend
+  // the fieldDef may still be a PositionFieldDef even if it doesn't have an axis
   return 'axis' in fd;
 }
 
