@@ -222,8 +222,7 @@ export function combineBinFields(itemData: ScenegraphData, fieldOptions: FieldOp
       }
 
       // remove binFieldMid, binFieldEnd, and binFieldRange from itemData
-      const binRemoveKeys = [];
-      binRemoveKeys.push(binFieldMid, binFieldEnd);
+      const binRemoveKeys = [binFieldMid, binFieldEnd];
       removeFields(itemData, binRemoveKeys);
     }
   });
