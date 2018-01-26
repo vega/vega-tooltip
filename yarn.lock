@@ -2945,15 +2945,15 @@ vega-datasets@vega/vega-datasets#gh-pages:
   version "1.11.0"
   resolved "https://codeload.github.com/vega/vega-datasets/tar.gz/99e07ba6873195f28b4edf6cdd13fa9fc788cc1f"
 
-vega-embed@^3.0.0-rc7:
-  version "3.0.0-rc7"
-  resolved "https://registry.yarnpkg.com/vega-embed/-/vega-embed-3.0.0-rc7.tgz#0bf58649def3d772db0392c63e61071c5b7f9361"
+vega-embed@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/vega-embed/-/vega-embed-3.0.0.tgz#d4e59f48f7d2141961b21afe824c058199c44a79"
   dependencies:
     compare-versions "^3.1.0"
-    d3-selection "^1.1.0"
+    d3-selection "^1.2.0"
     vega "^3.0.0"
     vega-lite "^2.0.0"
-    vega-schema-url-parser "^1.0.0-beta.3"
+    vega-schema-url-parser "^1.0.0"
 
 vega-encode@2:
   version "2.0.6"
@@ -3075,7 +3075,7 @@ vega-scenegraph@2, vega-scenegraph@^2.2:
     vega-loader "2"
     vega-util "^1.1"
 
-vega-schema-url-parser@^1.0.0-beta.3:
+vega-schema-url-parser@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/vega-schema-url-parser/-/vega-schema-url-parser-1.0.0.tgz#fc17631e354280d663ed39e3fa8eddb62145402e"
 
@@ -3135,7 +3135,7 @@ vega-wordcloud@^2.1:
     vega-statistics "^1.2"
     vega-util "1"
 
-vega@^3.0.0:
+vega@^3.0.0, vega@^3.0.10:
   version "3.0.10"
   resolved "https://registry.yarnpkg.com/vega/-/vega-3.0.10.tgz#35af3a6224e1c7d67d49ffce5c5282461370f36a"
   dependencies:
