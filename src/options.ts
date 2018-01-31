@@ -1,5 +1,5 @@
 import {ScenegraphData} from './options';
-export interface Option {
+export interface Option extends Partial<Record<string, string | object | boolean | number>> {
   showAllFields?: boolean;
   fields?: FieldOption[];
   delay?: number;
@@ -11,11 +11,9 @@ export interface Option {
   onMove?(event: Event, item: object): void;
   onDisappear?(event: Event, item: object): void;
   colorTheme?: 'light' | 'dark';
-  [key: string]: string | object | boolean | number;
 }
 
-export interface FieldOption {
-  [key: string]: string | boolean;
+export interface FieldOption extends Partial<Record<string, string | boolean>> {
   field?: string;
   title?: string;
   formatType?: 'number' | 'time' | 'string';
