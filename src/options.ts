@@ -11,11 +11,9 @@ export interface Option {
   onMove?(event: Event, item: object): void;
   onDisappear?(event: Event, item: object): void;
   colorTheme?: 'light' | 'dark';
-  [key: string]: string | object | boolean | number;
 }
 
 export interface FieldOption {
-  [key: string]: string | boolean;
   field?: string;
   title?: string;
   formatType?: 'number' | 'time' | 'string';
