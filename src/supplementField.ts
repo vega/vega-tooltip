@@ -1,6 +1,6 @@
 import * as vl from 'vega-lite';
 import {FieldDef, MarkPropFieldDef, PositionFieldDef} from 'vega-lite/build/src/fielddef';
-import {TopLevelExtendedSpec} from 'vega-lite/build/src/spec';
+import {isConcatSpec, isFacetSpec, isLayerSpec, isRepeatSpec, normalize, TopLevelExtendedSpec} from 'vega-lite/build/src/spec';
 import {TEMPORAL} from 'vega-lite/build/src/type';
 import {FieldOption, Option, SupplementedFieldOption} from './options';
 
@@ -27,6 +27,7 @@ const formatTypeMap: { [type: string]: 'number' | 'time' } = {
 export function supplementOptions(options: Option, vlSpec: TopLevelExtendedSpec) {
   // fields to be supplemented by vlSpec
   const supplementedFields: FieldOption[] = [];
+  vlSpec = normalize(vlSpec, {});
 
   // if showAllFields is true or undefined, supplement all fields in vlSpec
   if (options.showAllFields !== false) {
@@ -51,6 +52,10 @@ export function supplementOptions(options: Option, vlSpec: TopLevelExtendedSpec)
         supplementedFields.push(supplementedFieldOption);
       });
     }
+  }
+
+  if (isComposition(vlSpec)) {
+    options.isComposition = true;
   }
 
   options.fields = supplementedFields;
@@ -261,4 +266,12 @@ function isPositionFieldDef(fd: FieldDef<any>): fd is PositionFieldDef<any> {
 function isMarkPropFieldDef(fd: FieldDef<any>): fd is MarkPropFieldDef<any> {
   // the fieldDef may still be a MarkPropFieldDef even if it doesn't have a legend
   return 'legend' in fd;
+}
+
+/**
+ * Returns true if the spec is composition (one of concat, facet, layer or repeat), false otherwise
+ * @param vlSpec Vega-lite spec
+ */
+function isComposition(vlSpec: TopLevelExtendedSpec) {
+  return isConcatSpec(vlSpec) || isFacetSpec(vlSpec) || isLayerSpec(vlSpec) || isRepeatSpec(vlSpec);
 }

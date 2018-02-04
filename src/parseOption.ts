@@ -59,7 +59,7 @@ export function prepareCustomFieldsData(itemData: ScenegraphData, options: Optio
     const title = fieldOption.title ? fieldOption.title : fieldOption.field;
 
     // get (raw) field value
-    const value = getValue(itemData, fieldOption.field);
+    const value = getValue(itemData, fieldOption.field, options.isComposition);
     if (value === undefined) {
       return undefined;
     }
@@ -82,7 +82,7 @@ export function prepareCustomFieldsData(itemData: ScenegraphData, options: Optio
  * @return the field value on success, undefined otherwise
  */
 // TODO(zening): Mute "Cannot find field" warnings for composite vis (issue #39)
-export function getValue(itemData: ScenegraphData, field: string) {
+export function getValue(itemData: ScenegraphData, field: string, isComposition: boolean) {
   let value: string | number | Date | ScenegraphData;
 
   const accessors: string[] = field.split('.');
@@ -103,7 +103,9 @@ export function getValue(itemData: ScenegraphData, field: string) {
   }
 
   if (value === undefined) {
-    console.warn('[Tooltip] Cannot find field ' + field + ' in data.');
+    if (!isComposition) {
+      console.warn('[Tooltip] Cannot find field ' + field + ' in data.');
+    }
     return undefined;
   } else {
     return value as string | number | Date;
