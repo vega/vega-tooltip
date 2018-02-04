@@ -11,6 +11,7 @@ export interface Option {
   onMove?(event: Event, item: object): void;
   onDisappear?(event: Event, item: object): void;
   colorTheme?: 'light' | 'dark';
+  isComposition?: boolean;
 }
 
 export interface FieldOption {

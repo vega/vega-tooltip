@@ -77,4 +77,4 @@ Each member in the `fields` array can customize the format of a field. These cus
 
 | Method          | Parameter(s)   | Description     |
 | :-------------- |:--------------:| :-------------- |
-| .destroy        | none           | unregister tooltip event listners on `vgView` |
+| .destroy        | none           | unregister tooltip event listeners on `vgView` |

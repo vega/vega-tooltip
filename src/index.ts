@@ -13,7 +13,7 @@ let tooltipActive = false;
  * options can specify whether to show all fields or to show only custom fields
  * It can also provide custom title and format for fields
  */
-export function vega(vgView: VgView, options: Option = {showAllFields: true}) {
+export function vega(vgView: VgView, options: Option = {showAllFields: true, isComposition: false}) {
   start(vgView, copyOptions(options));
 
   return {
@@ -28,9 +28,9 @@ export function vega(vgView: VgView, options: Option = {showAllFields: true}) {
   };
 }
 
-export function vegaLite(vgView: VgView, vlSpec: TopLevelExtendedSpec, options: Option = {showAllFields: true}) {
+export function vegaLite(vgView: VgView, vlSpec: TopLevelExtendedSpec, options: Option = {showAllFields: true, isComposition: false}) {
   options = supplementOptions(copyOptions(options), vlSpec);
-  start(vgView, options);
+  start(vgView, copyOptions(options));
 
   return {
     destroy: function () {
