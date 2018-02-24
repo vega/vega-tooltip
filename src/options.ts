@@ -1,4 +1,6 @@
 import {ScenegraphData} from './options';
+
+export type SortCallback = (datum: TooltipData) => number;
 export interface Option {
   showAllFields?: boolean;
   fields?: FieldOption[];
@@ -12,6 +14,7 @@ export interface Option {
   onDisappear?(event: Event, item: object): void;
   colorTheme?: 'light' | 'dark';
   isComposition?: boolean;
+  sort?: 'title' | 'value' | SortCallback;
 }
 
 export interface FieldOption {

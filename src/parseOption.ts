@@ -40,6 +40,15 @@ export function getTooltipData(item: Scenegraph, options: Option) {
   } else {
     tooltipData = prepareCustomFieldsData(itemData, options);
   }
+
+  if (options.sort) {
+    const sortStr = (options.sort === 'title' || options.sort === 'value') ? options.sort : null;
+    const sortFn = sortStr ? defaultSort(sortStr) : typeof options.sort === 'function' && options.sort;
+    if (sortFn) {
+      tooltipData = tooltipData.sort(sortFn);
+    }
+  }
+
   return tooltipData;
 }
 
@@ -256,4 +265,29 @@ export function dropFieldsForLineArea(marktype: string, itemData: ScenegraphData
     }
     removeFields(itemData, quanKeys);
   }
+}
+
+function defaultSort(field: string) {
+  return (a, b) => {
+    if (!isNaN(a[field]) && !isNaN(b[field])) {
+      if (a[field] instanceof Date && b[field] instanceof Date) {
+        // date comparison; ascending
+        return a[field] - b[field];
+      }
+      // numeric comparison: descending
+      return b[field] - a[field];
+    } else if (isNaN(a[field]) && isNaN(b[field])) {
+      // string comparison: ascending
+      return a[field].localeCompare(b[field]);
+    }
+
+    // dates first
+    if (a[field] instanceof Date) { return -1; }
+    if (b[field] instanceof Date) { return 1; }
+    // numbers second
+    if (isNaN(a[field])) { return -1; }
+    if (isNaN(b[field])) { return 1; }
+    // strings last
+    return 1;
+  };
 }
