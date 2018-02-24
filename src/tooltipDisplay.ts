@@ -31,9 +31,18 @@ export function bindData(tooltipPlaceholder: Selection<Element | EnterElement | 
   tooltipRows.exit().remove();
 
   const row = tooltipRows.enter().append('tr')
-    .attr('class', 'tooltip-row');
-  row.append('td').attr('class', 'key').text(function (d: TooltipData) { return d.title + ':'; });
-  row.append('td').attr('class', 'value').text(function (d: TooltipData) { return d.value; });
+    .attr('class', 'tooltip-row')
+    .each(function(d) {
+      const sel = select(this);
+      if (d.render) {
+        sel.append('td')
+          .attr('colspan', '2')
+          .append(() => d.render(d.title, d.value));
+      } else {
+        sel.append('td').attr('class', 'key').text(function (d: TooltipData) { return d.title + ':'; });
+        sel.append('td').attr('class', 'value').text(function (d: TooltipData) { return d.value; });
+      }
+    });
 }
 
 /**
