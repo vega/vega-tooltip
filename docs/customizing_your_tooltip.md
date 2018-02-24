@@ -66,9 +66,9 @@ var options =
 | `onMove`        | function(event, item) | Callback when tooltip moves (e.g., when mouse moves within a bar). |
 | `onDisappear`   | function(event, item) | Callback when tooltip disappears (when mouse moves out an item). |
 | `colorTheme`    | String         | A color theme picker. <br>__Supported values:__ `"light"` and `"dark"`. <br>__Default value:__ `"light"` <br>To further customize, overwrite the `.vg-tooltip` class in your CSS. |
-| `sort`          | String | function | Sort fields on 'title', 'value', or pass a custom sort(a, b) function. |
+| `sort`          | String | function | Sort fields on `'title'`, `'value'` of the field, or pass a custom sort(a, b) function. |
 
-> Tip: You can customize the order of the fields in your tooltip by setting `showAllFields` to `false` and providing a `fields` array. Your tooltip will display fields in the order they appear in the `fields` array.
+> Tip: You can customize the order of the fields in your tooltip by setting `showAllFields` to `false` and providing a `fields` array. Your tooltip will display fields in the order they appear in the `fields` array. Use the `sort` property to dynamically determine sorting for each mark.
 
 <br>
 
