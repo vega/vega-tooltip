@@ -89,7 +89,12 @@ export function prepareCustomFieldsData(itemData: ScenegraphData, options: Optio
     const formattedValue = customFormat(value, fieldOption.formatType, fieldOption.format) || autoFormat(value);
 
     // add formatted data to tooltipData
-    tooltipData.push({title: title, value: formattedValue, rawValue: value});
+    tooltipData.push({
+      title: title,
+      value: formattedValue,
+      rawValue: value,
+      render: fieldOption.render
+    });
   });
 
   return tooltipData;
