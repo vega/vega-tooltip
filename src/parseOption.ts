@@ -55,11 +55,21 @@ export function prepareCustomFieldsData(itemData: ScenegraphData, options: Optio
   const tooltipData: TooltipData[] = [];
 
   options.fields.forEach(function (fieldOption) {
+    const fieldStr = typeof fieldOption.field !== 'function' ? fieldOption.field : undefined;
+    const fieldFn =  typeof fieldOption.field === 'function' ? fieldOption.field : undefined;
+    const titleStr = typeof fieldOption.title !== 'function' ? fieldOption.title : undefined;
+    const titleFn =  typeof fieldOption.title === 'function' ? fieldOption.title : undefined;
+
     // prepare field title
-    const title = fieldOption.title ? fieldOption.title : fieldOption.field;
+    const title =
+      (titleFn && titleFn(itemData)) ||
+      titleStr ||
+      fieldStr;
 
     // get (raw) field value
-    const value = getValue(itemData, fieldOption.field, options.isComposition);
+    const value =
+      (fieldFn && fieldFn(itemData)) ||
+      getValue(itemData, fieldStr, options.isComposition);
     if (value === undefined) {
       return undefined;
     }
@@ -132,7 +142,7 @@ export function prepareAllFieldsData(itemData: ScenegraphData, options: Option =
   const fieldOptions: TemporaryFieldOption = {};
   if (options && options.fields) {
     for (const optionField of options.fields) {
-      fieldOptions[optionField.field] = optionField;
+      fieldOptions[optionField.field as string] = optionField;
     }
   }
 
@@ -209,6 +219,9 @@ export function combineBinFields(itemData: ScenegraphData, fieldOptions: FieldOp
   fieldOptions.forEach(function (fieldOption) {
     if (fieldOption.bin === true) {
       // get binned field names
+      if (typeof fieldOption.field === 'function') {
+        return console.warn('`field` must be a string when used with `aggregate`.');
+      }
       const binFieldRange = fieldOption.field;
       const binFieldStart = binFieldRange;
       const binFieldMid = binFieldRange.concat('_mid');

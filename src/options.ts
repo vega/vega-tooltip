@@ -14,11 +14,13 @@ export interface Option {
   isComposition?: boolean;
 }
 
+export type FieldCallback = (item: ScenegraphData) => string;
+export type FormatCallback = (value: ScenegraphPrimitive) => string;
 export interface FieldOption {
-  field?: string;
-  title?: string;
-  formatType?: 'number' | 'time' | 'string';
-  format?: string;
+  field?: string | FieldCallback;
+  title?: string | FieldCallback;
+  formatType?: 'number' | 'time' | 'string' | 'custom';
+  format?: string | FormatCallback;
   aggregate?: string;
   bin?: boolean;
 }
@@ -28,8 +30,9 @@ export interface SupplementedFieldOption extends FieldOption {
   bin?: boolean;
 }
 
+export type ScenegraphPrimitive = string | number | Date;
 export interface ScenegraphData {
-  [key: string]: string | number | Date | ScenegraphData;
+  [key: string]: ScenegraphPrimitive | ScenegraphData;
 }
 
 export type TooltipData = {title: string, value: string | number};
