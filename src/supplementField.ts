@@ -243,7 +243,7 @@ export function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldD
   }
 
   // supplement bin from fieldDef, user should never have to provide bin in options
-  if (fieldDef.bin) {
+  if (fieldDef.bin && typeof supplementedFieldOption.field !== 'function') {
     supplementedFieldOption.field = supplementedFieldOption.field.replace('_start', '_range'); // replace suffix
     supplementedFieldOption.bin = true;
     supplementedFieldOption.formatType = 'string'; // we show bin range as string (e.g. "5-10")

@@ -1,6 +1,7 @@
 import {format as d3NumberFormat} from 'd3-format';
 import {timeDay, timeHour, timeMinute, timeMonth, timeSecond, timeWeek, timeYear} from 'd3-time';
 import {timeFormat} from 'd3-time-format';
+import {FormatCallback, ScenegraphPrimitive} from './options';
 
 /**
  * Format value using formatType and format
@@ -9,7 +10,7 @@ import {timeFormat} from 'd3-time-format';
  * @param format - a time time format specifier, or a time number format specifier, or undefined
  * @return the formatted value, or undefined if value or formatType is missing
  */
-export function customFormat(value: number | string | Date, formatType: string, format: string): string {
+export function customFormat(value: ScenegraphPrimitive, formatType: string, format: string | FormatCallback): string | undefined {
   if (value === undefined || value === null) {
     return undefined;
   }
@@ -17,22 +18,33 @@ export function customFormat(value: number | string | Date, formatType: string, 
     return undefined;
   }
 
-  switch (formatType) {
-    case 'time':
-      return format ? timeFormat(format)(value as Date) : autoTimeFormat(value as Date);
-    case 'number':
-      return format ? d3NumberFormat(format)(value as number) : autoNumberFormat(value as number);
-    case 'string':
-    default:
-      return value as string;
+  if (typeof format === 'string') {
+    switch (formatType) {
+      case 'time':
+        return format ? timeFormat(format)(value as Date) : autoTimeFormat(value as Date);
+      case 'number':
+        return format ? d3NumberFormat(format)(value as number) : autoNumberFormat(value as number);
+      case 'string':
+      default:
+        return value as string;
+    }
   }
+
+  if (formatType === 'custom') {
+    if (typeof format === 'function') {
+      return format(value);
+    }
+    console.warn('When `formatType` is \'custom\', a function must be passed for `format`.');
+  }
+
+  return undefined;
 }
 
 /**
  * Automatically format a time, number or string value
  * @return the formatted time, number or string value
  */
-export function autoFormat(value: string | number | Date): string {
+export function autoFormat(value: ScenegraphPrimitive): string {
   if (typeof value === 'number') {
     return autoNumberFormat(value);
   } else if (value instanceof Date) {
