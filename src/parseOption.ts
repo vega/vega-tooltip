@@ -1,3 +1,4 @@
+import {isDate, isFunction} from 'vega-util';
 import {autoFormat, customFormat} from './formatFieldValue';
 import {FieldOption, Option, Scenegraph, ScenegraphData, SupplementedFieldOption, TemporaryFieldOption, TooltipData} from './options';
 
@@ -55,10 +56,10 @@ export function prepareCustomFieldsData(itemData: ScenegraphData, options: Optio
   const tooltipData: TooltipData[] = [];
 
   options.fields.forEach(function (fieldOption) {
-    const fieldStr = typeof fieldOption.field !== 'function' ? fieldOption.field : undefined;
-    const fieldFn =  typeof fieldOption.field === 'function' ? fieldOption.field : undefined;
-    const titleStr = typeof fieldOption.title !== 'function' ? fieldOption.title : undefined;
-    const titleFn =  typeof fieldOption.title === 'function' ? fieldOption.title : undefined;
+    const fieldStr = !isFunction(fieldOption.field) ? fieldOption.field : undefined;
+    const fieldFn =  isFunction(fieldOption.field)  ? fieldOption.field : undefined;
+    const titleStr = !isFunction(fieldOption.title) ? fieldOption.title : undefined;
+    const titleFn =  isFunction(fieldOption.title)  ? fieldOption.title : undefined;
 
     // prepare field title
     const title =
@@ -142,7 +143,9 @@ export function prepareAllFieldsData(itemData: ScenegraphData, options: Option =
   const fieldOptions: TemporaryFieldOption = {};
   if (options && options.fields) {
     for (const optionField of options.fields) {
-      fieldOptions[optionField.field as string] = optionField;
+      const fieldStr = isFunction(optionField.field) ?
+        optionField.field(itemData) : optionField.field;
+      fieldOptions[fieldStr] = optionField;
     }
   }
 
@@ -219,7 +222,7 @@ export function combineBinFields(itemData: ScenegraphData, fieldOptions: FieldOp
   fieldOptions.forEach(function (fieldOption) {
     if (fieldOption.bin === true) {
       // get binned field names
-      if (typeof fieldOption.field === 'function') {
+      if (isFunction(fieldOption.field)) {
         return console.warn('`field` must be a string when used with `aggregate`.');
       }
       const binFieldRange = fieldOption.field;
@@ -262,7 +265,7 @@ export function dropFieldsForLineArea(marktype: string, itemData: ScenegraphData
     for (const key in itemData) {
       if (itemData.hasOwnProperty(key)) {
         const value = itemData[key];
-        if (value instanceof Date) {
+        if (isDate(value)) {
           quanKeys.push(key);
         }
       }

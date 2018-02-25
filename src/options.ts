@@ -19,7 +19,7 @@ export type FormatCallback = (value: ScenegraphPrimitive) => string;
 export interface FieldOption {
   field?: string | FieldCallback;
   title?: string | FieldCallback;
-  formatType?: 'number' | 'time' | 'string' | 'custom';
+  formatType?: 'number' | 'time' | 'string';
   format?: string | FormatCallback;
   aggregate?: string;
   bin?: boolean;

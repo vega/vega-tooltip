@@ -1,3 +1,4 @@
+import {isDate, isFunction, isNumber, isString} from 'vega-util';
 import {format as d3NumberFormat} from 'd3-format';
 import {timeDay, timeHour, timeMinute, timeMonth, timeSecond, timeWeek, timeYear} from 'd3-time';
 import {timeFormat} from 'd3-time-format';
@@ -18,7 +19,7 @@ export function customFormat(value: ScenegraphPrimitive, formatType: string, for
     return undefined;
   }
 
-  if (typeof format === 'string') {
+  if (isString(format)) {
     switch (formatType) {
       case 'time':
         return format ? timeFormat(format)(value as Date) : autoTimeFormat(value as Date);
@@ -30,11 +31,8 @@ export function customFormat(value: ScenegraphPrimitive, formatType: string, for
     }
   }
 
-  if (formatType === 'custom') {
-    if (typeof format === 'function') {
-      return format(value);
-    }
-    console.warn('When `formatType` is \'custom\', a function must be passed for `format`.');
+  if (isFunction(format)) {
+    return format(value);
   }
 
   return undefined;
@@ -45,9 +43,9 @@ export function customFormat(value: ScenegraphPrimitive, formatType: string, for
  * @return the formatted time, number or string value
  */
 export function autoFormat(value: ScenegraphPrimitive): string {
-  if (typeof value === 'number') {
+  if (isNumber(value)) {
     return autoNumberFormat(value);
-  } else if (value instanceof Date) {
+  } else if (isDate(value)) {
     return autoTimeFormat(value);
   } else {
     return value;
