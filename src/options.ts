@@ -35,7 +35,11 @@ export interface ScenegraphData {
   [key: string]: string | number | Date | ScenegraphData;
 }
 
-export type TooltipData = {title: string, value: string | number};
+export type TooltipData = {
+  title: string,
+  value: string | number,
+  rawValue: string | number | Date
+};
 
 export type Scenegraph = {
   datum: ScenegraphData,

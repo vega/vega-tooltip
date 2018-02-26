@@ -42,7 +42,10 @@ export function getTooltipData(item: Scenegraph, options: Option) {
   }
 
   if (options.sort) {
-    const sortStr = (options.sort === 'title' || options.sort === 'value') ? options.sort : null;
+    const sortStr =
+      options.sort === 'title' ? 'title' :
+      options.sort === 'value' ? 'rawValue' :
+      null;
     const sortFn = sortStr ? defaultSort(sortStr) : typeof options.sort === 'function' && options.sort;
     if (sortFn) {
       tooltipData = tooltipData.sort(sortFn);
@@ -77,7 +80,7 @@ export function prepareCustomFieldsData(itemData: ScenegraphData, options: Optio
     const formattedValue = customFormat(value, fieldOption.formatType, fieldOption.format) || autoFormat(value);
 
     // add formatted data to tooltipData
-    tooltipData.push({title: title, value: formattedValue});
+    tooltipData.push({title: title, value: formattedValue, rawValue: value});
   });
 
   return tooltipData;
@@ -165,7 +168,7 @@ export function prepareAllFieldsData(itemData: ScenegraphData, options: Option =
       const formattedValue = customFormat(value, formatType, format) || autoFormat(value);
 
       // add formatted data to tooltipData
-      tooltipData.push({title: title, value: formattedValue});
+      tooltipData.push({title: title, value: formattedValue, rawValue: value});
     }
   }
   return tooltipData;
