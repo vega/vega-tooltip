@@ -1,4 +1,4 @@
-import {isDate, isFunction} from 'vega-util';
+import {isDate, isFunction, isString} from 'vega-util';
 import {autoFormat, customFormat} from './formatFieldValue';
 import {FieldOption, Option, Scenegraph, ScenegraphData, SupplementedFieldOption, TemporaryFieldOption, TooltipData} from './options';
 
@@ -56,21 +56,19 @@ export function prepareCustomFieldsData(itemData: ScenegraphData, options: Optio
   const tooltipData: TooltipData[] = [];
 
   options.fields.forEach(function (fieldOption) {
-    const fieldStr = !isFunction(fieldOption.field) ? fieldOption.field : undefined;
-    const fieldFn =  isFunction(fieldOption.field)  ? fieldOption.field : undefined;
-    const titleStr = !isFunction(fieldOption.title) ? fieldOption.title : undefined;
+    const titleStr = isString(fieldOption.title) ? fieldOption.title : undefined;
     const titleFn =  isFunction(fieldOption.title)  ? fieldOption.title : undefined;
 
     // prepare field title
     const title =
       (titleFn && titleFn(itemData)) ||
       titleStr ||
-      fieldStr;
+      fieldOption.field;
 
     // get (raw) field value
     const value =
-      (fieldFn && fieldFn(itemData)) ||
-      getValue(itemData, fieldStr, options.isComposition);
+      (fieldOption.valueAccessor && fieldOption.valueAccessor(itemData)) ||
+      getValue(itemData, fieldOption.field, options.isComposition);
     if (value === undefined) {
       return undefined;
     }
@@ -143,9 +141,7 @@ export function prepareAllFieldsData(itemData: ScenegraphData, options: Option =
   const fieldOptions: TemporaryFieldOption = {};
   if (options && options.fields) {
     for (const optionField of options.fields) {
-      const fieldStr = isFunction(optionField.field) ?
-        optionField.field(itemData) : optionField.field;
-      fieldOptions[fieldStr] = optionField;
+      fieldOptions[optionField.field] = optionField;
     }
   }
 
@@ -222,9 +218,6 @@ export function combineBinFields(itemData: ScenegraphData, fieldOptions: FieldOp
   fieldOptions.forEach(function (fieldOption) {
     if (fieldOption.bin === true) {
       // get binned field names
-      if (isFunction(fieldOption.field)) {
-        return console.warn('`field` must be a string when used with `aggregate`.');
-      }
       const binFieldRange = fieldOption.field;
       const binFieldStart = binFieldRange;
       const binFieldMid = binFieldRange.concat('_mid');

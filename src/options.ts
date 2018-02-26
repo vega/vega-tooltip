@@ -14,13 +14,15 @@ export interface Option {
   isComposition?: boolean;
 }
 
-export type FieldCallback = (item: ScenegraphData) => string;
+export type TitleAccessor = (item: ScenegraphData) => string;
 export type FormatCallback = (value: ScenegraphPrimitive) => string;
+export type ValueAccessor = (item: ScenegraphData) => ScenegraphPrimitive;
 export interface FieldOption {
-  field?: string | FieldCallback;
-  title?: string | FieldCallback;
+  field?: string;
+  title?: string | TitleAccessor;
   formatType?: 'number' | 'time' | 'string';
   format?: string | FormatCallback;
+  valueAccessor?: ValueAccessor;
   aggregate?: string;
   bin?: boolean;
 }
