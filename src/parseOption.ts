@@ -1,3 +1,4 @@
+import {isDate, isFunction, isString} from 'vega-util';
 import {autoFormat, customFormat} from './formatFieldValue';
 import {FieldOption, Option, Scenegraph, ScenegraphData, SupplementedFieldOption, TemporaryFieldOption, TooltipData} from './options';
 
@@ -67,11 +68,19 @@ export function prepareCustomFieldsData(itemData: ScenegraphData, options: Optio
   const tooltipData: TooltipData[] = [];
 
   options.fields.forEach(function (fieldOption) {
+    const titleStr = isString(fieldOption.title) ? fieldOption.title : undefined;
+    const titleFn =  isFunction(fieldOption.title)  ? fieldOption.title : undefined;
+
     // prepare field title
-    const title = fieldOption.title ? fieldOption.title : fieldOption.field;
+    const title =
+      (titleFn && titleFn(itemData)) ||
+      titleStr ||
+      fieldOption.field;
 
     // get (raw) field value
-    const value = getValue(itemData, fieldOption.field, options.isComposition);
+    const value =
+      (fieldOption.valueAccessor && fieldOption.valueAccessor(itemData)) ||
+      getValue(itemData, fieldOption.field, options.isComposition);
     if (value === undefined) {
       return undefined;
     }
@@ -261,7 +270,7 @@ export function dropFieldsForLineArea(marktype: string, itemData: ScenegraphData
     for (const key in itemData) {
       if (itemData.hasOwnProperty(key)) {
         const value = itemData[key];
-        if (value instanceof Date) {
+        if (isDate(value)) {
           quanKeys.push(key);
         }
       }

@@ -17,11 +17,15 @@ export interface Option {
   sort?: 'title' | 'value' | SortCallback;
 }
 
+export type TitleAccessor = (item: ScenegraphData) => string;
+export type FormatCallback = (value: ScenegraphPrimitive) => string;
+export type ValueAccessor = (item: ScenegraphData) => ScenegraphPrimitive;
 export interface FieldOption {
   field?: string;
-  title?: string;
+  title?: string | TitleAccessor;
   formatType?: 'number' | 'time' | 'string';
-  format?: string;
+  format?: string | FormatCallback;
+  valueAccessor?: ValueAccessor;
   aggregate?: string;
   bin?: boolean;
 }
@@ -31,8 +35,9 @@ export interface SupplementedFieldOption extends FieldOption {
   bin?: boolean;
 }
 
+export type ScenegraphPrimitive = string | number | Date;
 export interface ScenegraphData {
-  [key: string]: string | number | Date | ScenegraphData;
+  [key: string]: ScenegraphPrimitive | ScenegraphData;
 }
 
 export type TooltipData = {
