@@ -15,7 +15,7 @@ export function customFormat(value: ScenegraphPrimitive, formatType: string, for
   if (value === undefined || value === null) {
     return undefined;
   }
-  if (!formatType) {
+  if (!formatType && !format) {
     return undefined;
   }
 
