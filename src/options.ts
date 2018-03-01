@@ -20,7 +20,7 @@ export interface Option {
 export type TitleAccessor = (item: ScenegraphData) => string;
 export type FormatCallback = (value: ScenegraphPrimitive) => string;
 export type ValueAccessor = (item: ScenegraphData) => ScenegraphPrimitive;
-export type FieldRenderer = (title: string, value: string | number) => Element;
+export type RowRenderer = (title: string, value: string | number) => Element;
 export interface FieldOption {
   field?: string;
   title?: string | TitleAccessor;
@@ -29,7 +29,7 @@ export interface FieldOption {
   valueAccessor?: ValueAccessor;
   aggregate?: string;
   bin?: boolean;
-  render?: FieldRenderer;
+  render?: RowRenderer;
 }
 
 export interface SupplementedFieldOption extends FieldOption {
@@ -46,7 +46,7 @@ export type TooltipData = {
   title: string,
   value: string | number,
   rawValue: string | number | Date,
-  render?: FieldRenderer
+  render?: RowRenderer
 };
 
 export type Scenegraph = {
