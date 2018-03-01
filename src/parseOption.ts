@@ -1,4 +1,4 @@
-import {isDate, isFunction, isString} from 'vega-util';
+import {isDate, isFunction, isNumber, isString} from 'vega-util';
 import {autoFormat, customFormat} from './formatFieldValue';
 import {FieldOption, Option, Scenegraph, ScenegraphData, SupplementedFieldOption, TemporaryFieldOption, TooltipData} from './options';
 
@@ -47,7 +47,7 @@ export function getTooltipData(item: Scenegraph, options: Option) {
       options.sort === 'title' ? 'title' :
       options.sort === 'value' ? 'rawValue' :
       null;
-    const sortFn = sortStr ? defaultSort(sortStr) : typeof options.sort === 'function' && options.sort;
+    const sortFn = sortStr ? defaultSort(sortStr) : isFunction(options.sort) && options.sort;
     if (sortFn) {
       tooltipData = tooltipData.sort(sortFn);
     }
@@ -281,24 +281,24 @@ export function dropFieldsForLineArea(marktype: string, itemData: ScenegraphData
 
 function defaultSort(field: string) {
   return (a, b) => {
-    if (!isNaN(a[field]) && !isNaN(b[field])) {
-      if (a[field] instanceof Date && b[field] instanceof Date) {
+    if (isNumber(a[field]) && isNumber(b[field])) {
+      // numeric comparison: descending
+      return b[field] - a[field];
+    } else if (isString(a[field]) && isString(b[field])) {
+      // string comparison: ascending
+      return a[field].localeCompare(b[field]);
+    } else if (isDate(a[field]) && isDate(b[field])) {
         // date comparison; ascending
         return a[field] - b[field];
       }
-      // numeric comparison: descending
-      return b[field] - a[field];
-    } else if (isNaN(a[field]) && isNaN(b[field])) {
-      // string comparison: ascending
-      return a[field].localeCompare(b[field]);
     }
 
     // dates first
-    if (a[field] instanceof Date) { return -1; }
-    if (b[field] instanceof Date) { return 1; }
+    if (isDate(a[field])) { return -1; }
+    if (isDate(b[field])) { return 1; }
     // numbers second
-    if (isNaN(a[field])) { return -1; }
-    if (isNaN(b[field])) { return 1; }
+    if (isNumber(a[field])) { return -1; }
+    if (isNumber(b[field])) { return 1; }
     // strings last
     return 1;
   };
