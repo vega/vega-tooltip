@@ -296,7 +296,6 @@ function defaultSort(field: string) {
         // date comparison; ascending
         return a[field] - b[field];
       }
-    }
 
     // dates first
     if (isDate(a[field])) { return -1; }
