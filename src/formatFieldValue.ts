@@ -1,7 +1,7 @@
-import {isDate, isFunction, isNumber, isString} from 'vega-util';
 import {format as d3NumberFormat} from 'd3-format';
 import {timeDay, timeHour, timeMinute, timeMonth, timeSecond, timeWeek, timeYear} from 'd3-time';
 import {timeFormat} from 'd3-time-format';
+import {isDate, isFunction, isNumber, isString} from 'vega-util';
 import {FormatCallback, ScenegraphPrimitive} from './options';
 
 /**
