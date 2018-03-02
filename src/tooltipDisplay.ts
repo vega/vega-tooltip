@@ -30,7 +30,7 @@ export function bindData(tooltipPlaceholder: Selection<Element | EnterElement | 
 
   tooltipRows.exit().remove();
 
-  const row = tooltipRows.enter().append('tr')
+  tooltipRows.enter().append('tr')
     .attr('class', 'tooltip-row')
     .each(function(d) {
       const sel = select(this);
@@ -39,8 +39,8 @@ export function bindData(tooltipPlaceholder: Selection<Element | EnterElement | 
           .attr('colspan', '2')
           .append(() => d.render(d.title, d.value));
       } else {
-        sel.append('td').attr('class', 'key').text(function (d: TooltipData) { return d.title + ':'; });
-        sel.append('td').attr('class', 'value').text(function (d: TooltipData) { return d.value; });
+        sel.append('td').attr('class', 'key').text(function (data: TooltipData) { return data.title + ':'; });
+        sel.append('td').attr('class', 'value').text(function (data: TooltipData) { return data.value; });
       }
     });
 }
