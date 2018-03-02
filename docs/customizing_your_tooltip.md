@@ -66,7 +66,7 @@ var options =
 | `onMove`        | function(event, item) | Callback when tooltip moves (e.g., when mouse moves within a bar). |
 | `onDisappear`   | function(event, item) | Callback when tooltip disappears (when mouse moves out an item). |
 | `colorTheme`    | String         | A color theme picker. <br>__Supported values:__ `"light"` and `"dark"`. <br>__Default value:__ `"light"` <br>To further customize, overwrite the `.vg-tooltip` class in your CSS. |
-| `sort`          | String | function | Sort fields on `'title'`, `'value'` of the field, or pass a custom sort(a, b) function. The sort order for `'title'` and `'value'` is as follows: <ul><li>Dates and strings are sorted ascending, numbers descending.</li><li>Dates appear first, then numbers, then strings.</li></ul> |
+| `sort`          | String or function | Sort fields on `'title'`, `'value'` of the field, or pass a custom sort(a, b) function. The sort order for `'title'` and `'value'` is as follows: <ul><li>Dates and strings are sorted ascending, numbers descending.</li><li>Dates appear first, then numbers, then strings.</li></ul> |
 
 > Tip: You can customize the order of the fields in your tooltip by setting `showAllFields` to `false` and providing a `fields` array. Your tooltip will display fields in the order they appear in the `fields` array. Alternatively, use the `sort` property to dynamically determine sorting for each mark.
 
