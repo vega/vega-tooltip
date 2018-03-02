@@ -33,7 +33,7 @@
     "postbuild": "uglifyjs build/vega-tooltip.js -cm -o build/vega-tooltip.min.js --source-map content=build/vega-tooltip.js.map,filename=build/vega-tooltip.min.js.map && uglifycss src/vega-tooltip.css > build/vega-tooltip.min.css && cp src/vega-tooltip.css build/vega-tooltip.css",
     "watch": "watchify src/index.ts -v -p tsify -d -s vegaTooltip -o build/vega-tooltip.js",
     "data": "rsync -r node_modules/vega-datasets/data/* data",
-    "lint": "tslint --project tsconfig.json -c tslint.json --type-check",
+    "lint": "tslint -p .",
     "start": "npm run build && python -m SimpleHTTPServer",
     "deploy": "scripts/deploy.sh"
   },
