@@ -1,6 +1,7 @@
 import * as vl from 'vega-lite';
+import {Config} from 'vega-lite/build/src/config';
 import {FieldDef, MarkPropFieldDef, PositionFieldDef} from 'vega-lite/build/src/fielddef';
-import {isConcatSpec, isFacetSpec, isLayerSpec, isRepeatSpec, normalize, TopLevelExtendedSpec} from 'vega-lite/build/src/spec';
+import {isConcatSpec, isFacetSpec, isLayerSpec, isRepeatSpec, normalize, NormalizedSpec, TopLevelSpec} from 'vega-lite/build/src/spec';
 import {TEMPORAL} from 'vega-lite/build/src/type';
 import {FieldOption, Option, SupplementedFieldOption} from './options';
 
@@ -24,10 +25,10 @@ const formatTypeMap: { [type: string]: 'number' | 'time' } = {
  * if options.showAllFields is false, vlSpec will only supplement existing fields
  * in options.fields
  */
-export function supplementOptions(options: Option, vlSpec: TopLevelExtendedSpec) {
+export function supplementOptions(options: Option, vlSpec: TopLevelSpec) {
   // fields to be supplemented by vlSpec
   const supplementedFields: FieldOption[] = [];
-  vlSpec = normalize(vlSpec, {});
+  const normalizedVlSpec = normalize(vlSpec, {});
 
   // if showAllFields is true or undefined, supplement all fields in vlSpec
   if (options.showAllFields !== false) {
@@ -36,7 +37,7 @@ export function supplementOptions(options: Option, vlSpec: TopLevelExtendedSpec)
       const fieldOption = getFieldOption(options.fields, fieldDef);
 
       // supplement the fieldOption with fieldDef and config
-      const supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec);
+      const supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec.config, normalizedVlSpec);
 
       supplementedFields.push(supplementedFieldOption);
     });
@@ -47,7 +48,7 @@ export function supplementOptions(options: Option, vlSpec: TopLevelExtendedSpec)
         const fieldDef = getFieldDef(vl.spec.fieldDefs(vlSpec), fieldOption);
 
         // supplement the fieldOption with fieldDef and config
-        const supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec);
+        const supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec.config, normalizedVlSpec);
 
         supplementedFields.push(supplementedFieldOption);
       });
@@ -148,10 +149,7 @@ export function getFieldDef(fieldDefs: FieldDef<any>[], fieldOption: FieldOption
  * config (and its members timeFormat, numberFormat and countTitle) can be undefined.
  * @return the supplemented fieldOption, or undefined on error
  */
-export function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldDef<any>, vlSpec: TopLevelExtendedSpec) {
-  // many specs don't have config
-  const config = {...vlSpec.config};
-
+export function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldDef<any>, config: Config = {}, vlSpec: NormalizedSpec) {
   // at least one of fieldOption and fieldDef should exist
   if (!fieldOption && !fieldDef) {
     console.error('[Tooltip] Cannot supplement a field when field and fieldDef are both empty.');
@@ -272,6 +270,6 @@ function isMarkPropFieldDef(fd: FieldDef<any>): fd is MarkPropFieldDef<any> {
  * Returns true if the spec is composition (one of concat, facet, layer or repeat), false otherwise
  * @param vlSpec Vega-lite spec
  */
-function isComposition(vlSpec: TopLevelExtendedSpec) {
+function isComposition(vlSpec: TopLevelSpec) {
   return isConcatSpec(vlSpec) || isFacetSpec(vlSpec) || isLayerSpec(vlSpec) || isRepeatSpec(vlSpec);
 }
