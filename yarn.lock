@@ -2986,7 +2986,7 @@ vega-lib@^3.2.1:
     vega-voronoi "2"
     vega-wordcloud "^2.1"
 
-vega-lite@^2.1.0, vega-lite@^2.3.1:
+vega-lite@^2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/vega-lite/-/vega-lite-2.3.1.tgz#a7abd16ef7d06b3f8ed8c873bca4be5c4a577369"
   dependencies:
