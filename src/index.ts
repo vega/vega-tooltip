@@ -1,5 +1,5 @@
 import {select} from 'd3-selection';
-import {TopLevelExtendedSpec} from 'vega-lite/build/src/spec';
+import {TopLevelSpec} from 'vega-lite/build/src/spec';
 import {DELAY, Option, Scenegraph, VgView} from './options';
 import {getTooltipData} from './parseOption';
 import {supplementOptions} from './supplementField';
@@ -28,7 +28,7 @@ export function vega(vgView: VgView, options: Option = {showAllFields: true, isC
   };
 }
 
-export function vegaLite(vgView: VgView, vlSpec: TopLevelExtendedSpec, options: Option = {showAllFields: true, isComposition: false}) {
+export function vegaLite(vgView: VgView, vlSpec: TopLevelSpec, options: Option = {showAllFields: true, isComposition: false}) {
   options = supplementOptions(copyOptions(options), vlSpec);
   start(vgView, copyOptions(options));
 
