@@ -40,7 +40,7 @@ var options =
       aggregate: operation,
     },
     ...
-  }],
+  ],
   delay: 250,
   onAppear: function(event, item) { /* callback */ },
   onMove: function(event, item) { /* callback */ },
