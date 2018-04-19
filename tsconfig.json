@@ -10,10 +10,10 @@
     "noImplicitThis": true,
     "noImplicitReturns": true,
     "outDir": "./build/src",
-    "inlineSourceMap": true,
-    "typeRoots" : ["./typings", "node_modules/@types"]
+    "inlineSourceMap": true
   },
   "include": [
+    "typings/*.d.ts",
     "src/**/*.ts"
   ],
   "exclude": [

@@ -1,5 +1,5 @@
 import {select} from 'd3-selection';
-import {TopLevelSpec} from 'vega-lite/build/src/spec';
+import {TopLevelSpec} from 'vega-lite';
 import {DELAY, Option, Scenegraph, VgView} from './options';
 import {getTooltipData} from './parseOption';
 import {supplementOptions} from './supplementField';
