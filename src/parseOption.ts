@@ -123,13 +123,13 @@ export function getValue(itemData: ScenegraphData, field: string, isComposition:
   // get the first accessor and remove it from the array
   const firstAccessor: string = accessors[0];
   accessors.shift();
-  if (itemData[firstAccessor]) {
+  if (itemData[firstAccessor] !== undefined) {
     value = itemData[firstAccessor];
 
     // if we still have accessors, use them to get the value
     accessors.forEach(function (a) {
       value = value as ScenegraphData;
-      if (value[a]) {
+      if (value[a] !== undefined) {
         value = value[a];
       }
     });
