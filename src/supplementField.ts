@@ -16,6 +16,7 @@ const formatTypeMap: { [type: string]: 'number' | 'time' } = {
 /**
  * (Vega-Lite only) Supplement options with vlSpec
  *
+ * @param {function} warn
  * @param options - user-provided options
  * @param vlSpec - vega-lite spec
  * @return the vlSpec-supplemented options object
@@ -25,7 +26,7 @@ const formatTypeMap: { [type: string]: 'number' | 'time' } = {
  * if options.showAllFields is false, vlSpec will only supplement existing fields
  * in options.fields
  */
-export function supplementOptions(options: Option, vlSpec: TopLevelSpec) {
+export function supplementOptions(warn, options: Option, vlSpec: TopLevelSpec) {
   // fields to be supplemented by vlSpec
   const supplementedFields: FieldOption[] = [];
   const normalizedVlSpec = normalize(vlSpec, {});
@@ -37,7 +38,7 @@ export function supplementOptions(options: Option, vlSpec: TopLevelSpec) {
       const fieldOption = getFieldOption(options.fields, fieldDef);
 
       // supplement the fieldOption with fieldDef and config
-      const supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec.config, normalizedVlSpec);
+      const supplementedFieldOption = supplementFieldOption(warn, fieldOption, fieldDef, vlSpec.config, normalizedVlSpec);
 
       supplementedFields.push(supplementedFieldOption);
     });
@@ -48,7 +49,7 @@ export function supplementOptions(options: Option, vlSpec: TopLevelSpec) {
         const fieldDef = getFieldDef(vl.spec.fieldDefs(vlSpec), fieldOption);
 
         // supplement the fieldOption with fieldDef and config
-        const supplementedFieldOption = supplementFieldOption(fieldOption, fieldDef, vlSpec.config, normalizedVlSpec);
+        const supplementedFieldOption = supplementFieldOption(warn, fieldOption, fieldDef, vlSpec.config, normalizedVlSpec);
 
         supplementedFields.push(supplementedFieldOption);
       });
@@ -149,10 +150,10 @@ export function getFieldDef(fieldDefs: FieldDef<any>[], fieldOption: FieldOption
  * config (and its members timeFormat, numberFormat and countTitle) can be undefined.
  * @return the supplemented fieldOption, or undefined on error
  */
-export function supplementFieldOption(fieldOption: FieldOption, fieldDef: FieldDef<any>, config: Config = {}, vlSpec: NormalizedSpec) {
+export function supplementFieldOption(warn, fieldOption: FieldOption, fieldDef: FieldDef<any>, config: Config = {}, vlSpec: NormalizedSpec) {
   // at least one of fieldOption and fieldDef should exist
   if (!fieldOption && !fieldDef) {
-    console.error('[Tooltip] Cannot supplement a field when field and fieldDef are both empty.');
+    warn('[Tooltip] Cannot supplement a field when field and fieldDef are both empty.');
     return undefined;
   }
 

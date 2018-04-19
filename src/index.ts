@@ -29,7 +29,7 @@ export function vega(vgView: VgView, options: Option = {showAllFields: true, isC
 }
 
 export function vegaLite(vgView: VgView, vlSpec: TopLevelSpec, options: Option = {showAllFields: true, isComposition: false}) {
-  options = supplementOptions(copyOptions(options), vlSpec);
+  options = supplementOptions(vgView.warn.bind(vgView), copyOptions(options), vlSpec);
   start(vgView, copyOptions(options));
 
   return {
@@ -45,6 +45,9 @@ export function vegaLite(vgView: VgView, vlSpec: TopLevelSpec, options: Option =
 }
 
 function start(vgView: VgView, options: Option) {
+  // TODO: ideally many of the existing functions should be moved to a proper class with this var as a member field
+  const warn = vgView.warn.bind(vgView);
+
   // initialize tooltip with item data and options on mouse over
   vgView.addEventListener('mouseover.tooltipInit', function (event: MouseEvent, item: Scenegraph) {
     if (shouldShowTooltip(item)) {
@@ -53,7 +56,11 @@ function start(vgView: VgView, options: Option) {
 
       // make a new promise with time delay for tooltip
       tooltipPromise = window.setTimeout(function () {
-        init(event, item, options);
+        try {
+          init(warn, event, item, options);
+        } catch (err) {
+          vgView.error(err);
+        }
       }, options.delay || DELAY);
     }
   });
@@ -88,12 +95,12 @@ function cancelPromise() {
 }
 
 /* Initialize tooltip with data */
-function init(event: MouseEvent, item: Scenegraph, options: Option): void {
+function init(warn, event: MouseEvent, item: Scenegraph, options: Option): void {
   // get tooltip HTML placeholder
   const tooltipPlaceholder = getTooltipPlaceholder();
 
   // prepare data for tooltip
-  const tooltipData = getTooltipData(item, options);
+  const tooltipData = getTooltipData(warn, item, options);
   if (!tooltipData || tooltipData.length === 0) {
     return undefined;
   }
