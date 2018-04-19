@@ -7,14 +7,12 @@ import {Option, TooltipData} from './options';
  * @returns the HTML placeholder for tooltip
  */
 export function getTooltipPlaceholder() {
-  let tooltipPlaceholder;
+  let tooltipPlaceholder = select('#vis-tooltip');
 
-  if (select('#vis-tooltip').empty()) {
+  if (tooltipPlaceholder.empty()) {
     tooltipPlaceholder = select('body').append('div')
       .attr('id', 'vis-tooltip')
       .attr('class', 'vg-tooltip');
-  } else {
-    tooltipPlaceholder = select('#vis-tooltip');
   }
 
   return tooltipPlaceholder;
