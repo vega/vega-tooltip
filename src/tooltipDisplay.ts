@@ -6,12 +6,12 @@ import {Option, TooltipData} from './options';
  * If none exists, create a placeholder.
  * @returns the HTML placeholder for tooltip
  */
-export function getTooltipPlaceholder() {
-  let tooltipPlaceholder = select('#vis-tooltip');
+export function getTooltipPlaceholder(tooltipId: string) {
+  let tooltipPlaceholder = select('#' + tooltipId);
 
   if (tooltipPlaceholder.empty()) {
     tooltipPlaceholder = select('body').append('div')
-      .attr('id', 'vis-tooltip')
+      .attr('id', tooltipId)
       .attr('class', 'vg-tooltip');
   }
 
@@ -46,8 +46,8 @@ export function bindData(tooltipPlaceholder: Selection<Element | EnterElement | 
 /**
  * Clear tooltip data
  */
-export function clearData() {
-  select('#vis-tooltip').selectAll('.tooltip-row').data([])
+export function clearData(tooltipId: string) {
+  select('#' + tooltipId).selectAll('.tooltip-row').data([])
     .exit().remove();
 }
 
@@ -56,7 +56,7 @@ export function clearData() {
  * Default position is 10px right of and 10px below the cursor. This can be
  * overwritten by options.offset
  */
-export function updatePosition(event: MouseEvent, options: Option) {
+export function updatePosition(event: MouseEvent, options: Option, tooltipId: string) {
   // determine x and y offsets, defaults are 10px
   let offsetX = 10;
   let offsetY = 10;
@@ -68,7 +68,7 @@ export function updatePosition(event: MouseEvent, options: Option) {
   }
 
   // TODO: use the correct time type
-  select('#vis-tooltip')
+  select('#' + tooltipId)
     .style('top', function (this: HTMLElement) {
       // by default: put tooltip 10px below cursor
       // if tooltip is close to the bottom of the window, put tooltip 10px above cursor
@@ -92,8 +92,8 @@ export function updatePosition(event: MouseEvent, options: Option) {
 }
 
 /* Clear tooltip position */
-export function clearPosition() {
-  select('#vis-tooltip')
+export function clearPosition(tooltipId: string) {
+  select('#' + tooltipId)
     .style('top', '-9999px')
     .style('left', '-9999px');
 }
@@ -104,17 +104,17 @@ export function clearPosition() {
  * If colorTheme === "dark", apply dark theme to tooltip.
  * Otherwise apply light color theme.
  */
-export function updateColorTheme(options: Option) {
-  clearColorTheme();
+export function updateColorTheme(options: Option, tooltipId: string) {
+  clearColorTheme(tooltipId);
 
   if (options && options.colorTheme === 'dark') {
-    select('#vis-tooltip').classed('dark-theme', true);
+    select('#' + tooltipId).classed('dark-theme', true);
   } else {
-    select('#vis-tooltip').classed('light-theme', true);
+    select('#' + tooltipId).classed('light-theme', true);
   }
 }
 
 /* Clear color themes */
-export function clearColorTheme() {
-  select('#vis-tooltip').classed('dark-theme light-theme', false);
+export function clearColorTheme(tooltipId: string) {
+  select('#' + tooltipId).classed('dark-theme light-theme', false);
 }

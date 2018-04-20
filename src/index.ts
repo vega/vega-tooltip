@@ -14,37 +14,19 @@ let tooltipActive = false;
  * It can also provide custom title and format for fields
  */
 export function vega(vgView: VgView, options: Option = {showAllFields: true, isComposition: false}) {
-  start(vgView, copyOptions(options));
-
-  return {
-    destroy: function () {
-      // remove event listeners
-      vgView.removeEventListener('mouseover.tooltipInit');
-      vgView.removeEventListener('mousemove.tooltipUpdate');
-      vgView.removeEventListener('mouseout.tooltipRemove');
-
-      cancelPromise(); // clear tooltip promise
-    }
-  };
+  return start(vgView, copyOptions(options));
 }
 
 export function vegaLite(vgView: VgView, vlSpec: TopLevelSpec, options: Option = {showAllFields: true, isComposition: false}) {
-  options = supplementOptions(copyOptions(options), vlSpec);
-  start(vgView, copyOptions(options));
-
-  return {
-    destroy: function () {
-      // remove event listeners
-      vgView.removeEventListener('mouseover.tooltipInit');
-      vgView.removeEventListener('mousemove.tooltipUpdate');
-      vgView.removeEventListener('mouseout.tooltipRemove');
-
-      cancelPromise(); // clear tooltip promise
-    }
-  };
+  options = supplementOptions(vgView.warn.bind(vgView), copyOptions(options), vlSpec);
+  return start(vgView, options);
 }
 
 function start(vgView: VgView, options: Option) {
+  // TODO: ideally many of the existing functions should be moved to a proper class with this var as a member field
+  const warn = vgView.warn.bind(vgView);
+  const tooltipId = options && options.tooltipElemId || 'vis-tooltip';
+
   // initialize tooltip with item data and options on mouse over
   vgView.addEventListener('mouseover.tooltipInit', function (event: MouseEvent, item: Scenegraph) {
     if (shouldShowTooltip(item)) {
@@ -53,7 +35,11 @@ function start(vgView: VgView, options: Option) {
 
       // make a new promise with time delay for tooltip
       tooltipPromise = window.setTimeout(function () {
-        init(event, item, options);
+        try {
+          init(warn, tooltipId, event, item, options);
+        } catch (err) {
+          vgView.error(err);
+        }
       }, options.delay || DELAY);
     }
   });
@@ -62,7 +48,7 @@ function start(vgView: VgView, options: Option) {
   // (important for large marks e.g. bars)
   vgView.addEventListener('mousemove.tooltipUpdate', function (event: MouseEvent, item: Scenegraph) {
     if (shouldShowTooltip(item) && tooltipActive) {
-      update(event, item, options);
+      update(event, item, options, tooltipId);
     }
   });
 
@@ -72,10 +58,22 @@ function start(vgView: VgView, options: Option) {
       cancelPromise();
 
       if (tooltipActive) {
-        clear(event, item, options);
+        clear(event, item, options, tooltipId);
       }
     }
   });
+
+  return {
+    destroy: function () {
+      // remove event listeners
+      vgView.removeEventListener('mouseover.tooltipInit');
+      vgView.removeEventListener('mousemove.tooltipUpdate');
+      vgView.removeEventListener('mouseout.tooltipRemove');
+
+      cancelPromise(); // clear tooltip promise
+    }
+  };
+
 }
 
 /* Cancel tooltip promise */
@@ -88,12 +86,12 @@ function cancelPromise() {
 }
 
 /* Initialize tooltip with data */
-function init(event: MouseEvent, item: Scenegraph, options: Option): void {
+function init(warn, tooltipId: string, event: MouseEvent, item: Scenegraph, options: Option): void {
   // get tooltip HTML placeholder
-  const tooltipPlaceholder = getTooltipPlaceholder();
+  const tooltipPlaceholder = getTooltipPlaceholder(tooltipId);
 
   // prepare data for tooltip
-  const tooltipData = getTooltipData(item, options);
+  const tooltipData = getTooltipData(warn, item, options);
   if (!tooltipData || tooltipData.length === 0) {
     return undefined;
   }
@@ -101,9 +99,9 @@ function init(event: MouseEvent, item: Scenegraph, options: Option): void {
   // bind data to tooltip HTML placeholder
   bindData(tooltipPlaceholder, tooltipData);
 
-  updatePosition(event, options);
-  updateColorTheme(options);
-  select('#vis-tooltip').style('visibility', 'visible');
+  updatePosition(event, options, tooltipId);
+  updateColorTheme(options, tooltipId);
+  select('#' + tooltipId).style('visibility', 'visible');
   tooltipActive = true;
 
   // invoke user-provided callback
@@ -113,11 +111,11 @@ function init(event: MouseEvent, item: Scenegraph, options: Option): void {
 }
 
 /* Update tooltip position on mousemove */
-function update(event: MouseEvent, item: Scenegraph, options: Option): void {
+function update(event: MouseEvent, item: Scenegraph, options: Option, tooltipId): void {
   if (!shouldShowTooltip(item)) {
     return undefined;
   }
-  updatePosition(event, options);
+  updatePosition(event, options, tooltipId);
 
   // invoke user-provided callback
   if (options.onMove) {
@@ -126,18 +124,18 @@ function update(event: MouseEvent, item: Scenegraph, options: Option): void {
 }
 
 /* Clear tooltip */
-function clear(event: MouseEvent, item: Scenegraph, options: Option): void {
+function clear(event: MouseEvent, item: Scenegraph, options: Option, tooltipId: string): void {
   if (!shouldShowTooltip(item)) {
     return undefined;
   }
   // visibility hidden instead of display none
   // because we need computed tooltip width and height to best position it
-  select('#vis-tooltip').style('visibility', 'hidden');
+  select('#' + tooltipId).style('visibility', 'hidden');
 
   tooltipActive = false;
-  clearData();
-  clearColorTheme();
-  clearPosition();
+  clearData(tooltipId);
+  clearColorTheme(tooltipId);
+  clearPosition(tooltipId);
 
   // invoke user-provided callback
   if (options.onDisappear) {

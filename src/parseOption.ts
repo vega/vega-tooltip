@@ -7,7 +7,7 @@ import {FieldOption, Option, Scenegraph, ScenegraphData, SupplementedFieldOption
  * @return An array of tooltip data [{ title: ..., value: ...}]
  */
 // TODO: add marktype
-export function getTooltipData(item: Scenegraph, options: Option) {
+export function getTooltipData(warn, item: Scenegraph, options: Option) {
   // ignore data from group marks
   if (item.mark.marktype === 'group') {
     return undefined;
@@ -37,9 +37,9 @@ export function getTooltipData(item: Scenegraph, options: Option) {
   // TODO(zening): use Vega-Lite layering to support tooltip on line and area charts (#1)
   dropFieldsForLineArea(item.mark.marktype, itemData);
   if (options.showAllFields === true) {
-    tooltipData = prepareAllFieldsData(itemData, options);
+    tooltipData = prepareAllFieldsData(warn, itemData, options);
   } else {
-    tooltipData = prepareCustomFieldsData(itemData, options);
+    tooltipData = prepareCustomFieldsData(warn, itemData, options);
   }
 
   if (options.sort) {
@@ -60,12 +60,17 @@ export function getTooltipData(item: Scenegraph, options: Option) {
  * Prepare custom fields data for tooltip. This function formats
  * field titles and values and returns an array of formatted fields.
  *
+ * @param {function} warn
  * @param {time.map} itemData - a map of item.datum
  * @param {Object} options - user-provided options
  * @return An array of formatted fields specified by options [{ title: ..., value: ...}]
  */
-export function prepareCustomFieldsData(itemData: ScenegraphData, options: Option = {}) {
+export function prepareCustomFieldsData(warn, itemData: ScenegraphData, options: Option = {}) {
   const tooltipData: TooltipData[] = [];
+
+  if (!options.fields || !options.fields.forEach) {
+    return tooltipData;
+  }
 
   options.fields.forEach(function (fieldOption) {
     const titleStr = isString(fieldOption.title) ? fieldOption.title : undefined;
@@ -80,7 +85,7 @@ export function prepareCustomFieldsData(itemData: ScenegraphData, options: Optio
     // get (raw) field value
     const value =
       (fieldOption.valueAccessor && fieldOption.valueAccessor(itemData)) ||
-      getValue(itemData, fieldOption.field, options.isComposition);
+      getValue(itemData, fieldOption.field, options.isComposition, warn);
     if (value === undefined) {
       return undefined;
     }
@@ -105,10 +110,12 @@ export function prepareCustomFieldsData(itemData: ScenegraphData, options: Optio
  * @param {time.map} itemData - a map of item.datum
  * @param {string} field - the name of the field. It can contain "." to specify
  * that the field is not a direct child of item.datum
+ * @param isComposition
+ * @param {function} warn
  * @return the field value on success, undefined otherwise
  */
 // TODO(zening): Mute "Cannot find field" warnings for composite vis (issue #39)
-export function getValue(itemData: ScenegraphData, field: string, isComposition: boolean) {
+export function getValue(itemData: ScenegraphData, field: string, isComposition: boolean, warn) {
   let value: string | number | Date | ScenegraphData;
 
   const accessors: string[] = field.split('.');
@@ -116,13 +123,13 @@ export function getValue(itemData: ScenegraphData, field: string, isComposition:
   // get the first accessor and remove it from the array
   const firstAccessor: string = accessors[0];
   accessors.shift();
-  if (itemData[firstAccessor]) {
+  if (itemData[firstAccessor] !== undefined) {
     value = itemData[firstAccessor];
 
     // if we still have accessors, use them to get the value
     accessors.forEach(function (a) {
       value = value as ScenegraphData;
-      if (value[a]) {
+      if (value[a] !== undefined) {
         value = value[a];
       }
     });
@@ -130,7 +137,7 @@ export function getValue(itemData: ScenegraphData, field: string, isComposition:
 
   if (value === undefined) {
     if (!isComposition) {
-      console.warn('[Tooltip] Cannot find field ' + field + ' in data.');
+      warn('[Tooltip] Cannot find field ' + field + ' in data.');
     }
     return undefined;
   } else {
@@ -143,6 +150,7 @@ export function getValue(itemData: ScenegraphData, field: string, isComposition:
  * Prepare data for all fields in itemData for tooltip. This function
  * formats field titles and values and returns an array of formatted fields.
  *
+ * @param {function} warn
  * @param {time.map} itemData - a map of item.datum
  * @param {Object} options - user-provided options
  * @return All fields in itemData, formatted, in the form of an array: [{ title: ..., value: ...}]
@@ -151,7 +159,7 @@ export function getValue(itemData: ScenegraphData, field: string, isComposition:
  * It will not try to parse value if it is an object. If value is an object, please
  * use prepareCustomFieldsData() instead.
  */
-export function prepareAllFieldsData(itemData: ScenegraphData, options: Option = {}) {
+export function prepareAllFieldsData(warn, itemData: ScenegraphData, options: Option = {}) {
   const tooltipData: TooltipData[] = [];
 
   // here, fieldOptions still provides format

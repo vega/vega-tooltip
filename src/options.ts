@@ -15,6 +15,7 @@ export interface Option {
   colorTheme?: 'light' | 'dark';
   isComposition?: boolean;
   sort?: 'title' | 'value' | SortCallback;
+  tooltipElemId?: 'vis-tooltip';
 }
 
 export type TitleAccessor = (item: ScenegraphData) => string;
