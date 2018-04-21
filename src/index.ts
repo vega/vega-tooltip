@@ -1,173 +1,231 @@
-import {select} from 'd3-selection';
-import {TopLevelSpec} from 'vega-lite';
-import {DELAY, Option, Scenegraph, VgView} from './options';
-import {getTooltipData} from './parseOption';
-import {supplementOptions} from './supplementField';
-import {bindData, clearColorTheme, clearData, clearPosition, getTooltipPlaceholder, updateColorTheme, updatePosition} from './tooltipDisplay';
+import * as stringify_ from 'json-stringify-pretty-compact';
+import { Item, ScenegraphEvent, View } from 'vega-typings';
+import { isArray, isObject, isString } from 'vega-util';
 
-let tooltipPromise: number = undefined;
-let tooltipActive = false;
+const stringify = (stringify_ as any).default || stringify_;
+
+export const DEFAULT_OPTIONS = {
+  /**
+   * X offset.
+   */
+  offsetX: 10,
+
+  /**
+   * Y offset.
+   */
+  offsetY: 10,
+
+  /**
+   * If of the tooltip element.
+   */
+  id: 'vg-tooltip-element',
+
+  /**
+   * The name of the theme. You can use the CSS class called [THEME]-theme to style the tooltips.
+   *
+   * There are two predefined themes: "light" (default) and "dark".
+   */
+  theme: 'light',
+};
+
+export type Options = typeof DEFAULT_OPTIONS;
+
+const STYLE = `
+.vg-tooltip {
+  visibility: hidden;
+  padding: 8px;
+  position: fixed;
+  z-index: 1000;
+  font-family: sans-serif;
+  font-size: 11px;
+  border-radius: 3px;
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+
+  /* The default theme is the light theme. */
+  background-color: rgba(255, 255, 255, 0.95);
+  border: 1px solid #d9d9d9;
+  color: black;
+}
+.vg-tooltip.visible {
+  visibility: visible;
+}
+.vg-tooltip h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+.vg-tooltip table {
+  border-spacing: 0;
+}
+.vg-tooltip td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+.vg-tooltip td.key {
+  color: #808080;
+  max-width: 150px;
+  text-align: right;
+  padding-right: 4px;
+}
+.vg-tooltip td.value {
+  max-width: 200px;
+  text-align: left;
+}
+
+/* Dark and light color themes */
+.vg-tooltip.dark-theme {
+  background-color: rgba(32, 32, 32, 0.9);
+  border: 1px solid #f5f5f5;
+  color: white;
+}
+.vg-tooltip.dark-theme td.key {
+  color: #bfbfbf;
+}
+
+.vg-tooltip.light-theme {
+  background-color: rgba(255, 255, 255, 0.95);
+  border: 1px solid #d9d9d9;
+  color: black;
+}
+.vg-tooltip.light-theme td.key {
+  color: #808080;
+}
+`;
 
 /**
- * Export API for Vega visualizations: vg.tooltip(vgView, options)
- * options can specify whether to show all fields or to show only custom fields
- * It can also provide custom title and format for fields
+ * The tooltip html element.
  */
-export function vega(vgView: VgView, options: Option = {showAllFields: true, isComposition: false}) {
-  start(vgView, copyOptions(options));
+let tooltipElement: HTMLElement;
 
-  return {
-    destroy: function () {
-      // remove event listeners
-      vgView.removeEventListener('mouseover.tooltipInit');
-      vgView.removeEventListener('mousemove.tooltipUpdate');
-      vgView.removeEventListener('mouseout.tooltipRemove');
+/**
+ * Initialize the tooltip element and style.
+ *
+ * @param options Tooltip options.
+ */
+function init(options: Options) {
+  if (tooltipElement) {
+    // no need to initialize multiple times
+    return;
+  }
 
-      cancelPromise(); // clear tooltip promise
-    }
-  };
+  const style = document.createElement('style');
+  style.innerHTML = STYLE;
+  document.querySelector('head')!.appendChild(style);
+
+  tooltipElement = document.createElement('div');
+  tooltipElement.setAttribute('id', options.id);
+  tooltipElement.classList.add('vg-tooltip');
+
+  document.querySelector('body')!.appendChild(tooltipElement);
 }
 
-export function vegaLite(vgView: VgView, vlSpec: TopLevelSpec, options: Option = {showAllFields: true, isComposition: false}) {
-  options = supplementOptions(copyOptions(options), vlSpec);
-  start(vgView, copyOptions(options));
+/**
+ * Format the value to be shown in the toolip.
+ *
+ * @param value The value to show in the tooltip.
+ */
+function formatValue(value: any): string {
+  if (isArray(value)) {
+    return `[${value.map(v => (isString(v) ? v : stringify(v))).join(', ')}]`;
+  }
 
-  return {
-    destroy: function () {
-      // remove event listeners
-      vgView.removeEventListener('mouseover.tooltipInit');
-      vgView.removeEventListener('mousemove.tooltipUpdate');
-      vgView.removeEventListener('mouseout.tooltipRemove');
+  if (isString(value)) {
+    return value;
+  }
 
-      cancelPromise(); // clear tooltip promise
+  if (isObject(value)) {
+    let content = '';
+
+    const { title, ...rest } = value as any;
+
+    if (title) {
+      content += `<h2>${title}</h2>`;
     }
-  };
-}
 
-function start(vgView: VgView, options: Option) {
-  // initialize tooltip with item data and options on mouse over
-  vgView.addEventListener('mouseover.tooltipInit', function (event: MouseEvent, item: Scenegraph) {
-    if (shouldShowTooltip(item)) {
-      // clear existing promise because mouse can only point at one thing at a time
-      cancelPromise();
-
-      // make a new promise with time delay for tooltip
-      tooltipPromise = window.setTimeout(function () {
-        init(event, item, options);
-      }, options.delay || DELAY);
-    }
-  });
-
-  // update tooltip position on mouse move
-  // (important for large marks e.g. bars)
-  vgView.addEventListener('mousemove.tooltipUpdate', function (event: MouseEvent, item: Scenegraph) {
-    if (shouldShowTooltip(item) && tooltipActive) {
-      update(event, item, options);
-    }
-  });
-
-  // clear tooltip on mouse out
-  vgView.addEventListener('mouseout.tooltipRemove', function (event: MouseEvent, item: Scenegraph) {
-    if (shouldShowTooltip(item)) {
-      cancelPromise();
-
-      if (tooltipActive) {
-        clear(event, item, options);
+    content += '<table>';
+    for (const key of Object.keys(rest)) {
+      let val = (rest as any)[key];
+      if (isObject(val)) {
+        val = stringify(val);
       }
+
+      content += `<tr><td class="key">${key}:</td><td class="value">${val}</td></tr>`;
     }
-  });
-}
+    content += `</table>`;
 
-/* Cancel tooltip promise */
-function cancelPromise() {
-  /* We don't check if tooltipPromise is valid because passing
-   an invalid ID to clearTimeout does not have any effect
-   (and doesn't throw an exception). */
-  window.clearTimeout(tooltipPromise);
-  tooltipPromise = undefined;
-}
-
-/* Initialize tooltip with data */
-function init(event: MouseEvent, item: Scenegraph, options: Option): void {
-  // get tooltip HTML placeholder
-  const tooltipPlaceholder = getTooltipPlaceholder();
-
-  // prepare data for tooltip
-  const tooltipData = getTooltipData(item, options);
-  if (!tooltipData || tooltipData.length === 0) {
-    return undefined;
+    return content;
   }
 
-  // bind data to tooltip HTML placeholder
-  bindData(tooltipPlaceholder, tooltipData);
-
-  updatePosition(event, options);
-  updateColorTheme(options);
-  select('#vis-tooltip').style('visibility', 'visible');
-  tooltipActive = true;
-
-  // invoke user-provided callback
-  if (options.onAppear) {
-    options.onAppear(event, item);
-  }
-}
-
-/* Update tooltip position on mousemove */
-function update(event: MouseEvent, item: Scenegraph, options: Option): void {
-  if (!shouldShowTooltip(item)) {
-    return undefined;
-  }
-  updatePosition(event, options);
-
-  // invoke user-provided callback
-  if (options.onMove) {
-    options.onMove(event, item);
-  }
-}
-
-/* Clear tooltip */
-function clear(event: MouseEvent, item: Scenegraph, options: Option): void {
-  if (!shouldShowTooltip(item)) {
-    return undefined;
-  }
-  // visibility hidden instead of display none
-  // because we need computed tooltip width and height to best position it
-  select('#vis-tooltip').style('visibility', 'hidden');
-
-  tooltipActive = false;
-  clearData();
-  clearColorTheme();
-  clearPosition();
-
-  // invoke user-provided callback
-  if (options.onDisappear) {
-    options.onDisappear(event, item);
-  }
-}
-
-/* Decide if a Scenegraph item deserves tooltip */
-function shouldShowTooltip(item: Scenegraph) {
-  // no data, no show
-  if (!item || !item.datum) {
-    return false;
-  }
-  // (small multiples) avoid showing tooltip for a facet's background
-  if (item.datum._facetID) {
-    return false;
-  }
-
-  return true;
+  return `${value}`;
 }
 
 /**
- * Copy options into new objects to prevent causing side-effect to original object
+ * Attach a tooltip handler to the view.
  */
-function copyOptions(options: Option) {
-  const newOptions: Option = {};
-  for (const field in options) {
-    if (options.hasOwnProperty(field)) {
-      newOptions[field] = options[field];
-    }
+export default function(view: View, opt?: Options) {
+  let visible = false;
+
+  const options = { ...DEFAULT_OPTIONS, ...opt };
+
+  init(options);
+
+  function hideTooltip() {
+    tooltipElement.classList.remove('visible', `${options.theme}-theme`);
+    visible = false;
   }
-  return newOptions;
+
+  function tooltipHandler(this: View, handler: any, event: MouseEvent, item: any, value: any) {
+    // console.log(this, handler, event, item, value);
+
+    if ((event as any).vegaType === undefined) {
+      hideTooltip();
+      return;
+    }
+
+    tooltipElement.innerHTML = formatValue(value);
+
+    tooltipElement.classList.add('visible', `${options.theme}-theme`);
+    visible = true;
+  }
+
+  function handleMouseMove(event: ScenegraphEvent, item?: Item) {
+    if (!visible) {
+      return;
+    }
+
+    if (!isMouseMoveEvent(event)) {
+      return;
+    }
+
+    const tooltipWidth = tooltipElement.getBoundingClientRect().width;
+    let x = event.clientX + options.offsetX;
+    if (x + tooltipWidth > window.innerWidth) {
+      x = event.clientX - options.offsetX - tooltipWidth;
+    }
+
+    const tooltipHeight = tooltipElement.getBoundingClientRect().height;
+    let y = event.clientY + options.offsetY;
+    if (y + tooltipHeight > window.innerHeight) {
+      y = +event.clientY - options.offsetY - tooltipHeight;
+    }
+
+    tooltipElement.setAttribute('style', `top: ${y}px; left: ${x}px`);
+  }
+
+  view.addEventListener('mousemove', handleMouseMove);
+
+  // Set tooltip handler;
+  view.tooltip(tooltipHandler);
+
+  return {
+    destroy: () => {
+      view.removeEventListener('mousemove', handleMouseMove);
+    },
+  };
+}
+
+function isMouseMoveEvent(event: ScenegraphEvent): event is MouseEvent {
+  return event.type === 'mousemove';
 }

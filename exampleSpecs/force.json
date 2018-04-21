@@ -96,7 +96,8 @@
       "encode": {
         "enter": {
           "fill": {"scale": "color", "field": "group"},
-          "stroke": {"value": "white"}
+          "stroke": {"value": "white"},
+          "tooltip": {"signal": "datum.name"}
         },
         "update": {
           "size": {"signal": "2 * nodeRadius * nodeRadius"},

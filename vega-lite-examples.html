@@ -6,18 +6,15 @@
   <meta charset="utf-8">
 
   <!-- Tooltip Library -->
-  <script src="https://cdn.jsdelivr.net/npm/d3@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega@3"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@3" charset="utf-8"></script>
 
   <script src="build/vega-tooltip.js"></script>
-  <link rel="stylesheet" type="text/css" href="build/vega-tooltip.css">
 
   <!-- Example Page -->
-  <script type="text/javascript" src="vega-lite-examples.js"></script>
   <link rel="stylesheet" type="text/css" href="examples.css">
-
 </head>
 
 <body>
@@ -59,6 +56,29 @@
 
   <a href="index.html" class="large">Back to overview</a>
   <a id="github-link" href="https://github.com/vega/vega-tooltip/">Back to Github</a>
+
+  <script type="text/javascript">
+    function addVlExample(path, id, options) {
+      d3.json(path).then(function (vlSpec) {
+        vegaEmbed(id, vlSpec)
+          .then(function (result) {
+            vegaTooltip.default(result.view, options);
+          })
+          .catch(console.error);
+      }).catch(console.error);
+    }
+
+    addVlExample("exampleSpecs/histogram.json", "#vis-histogram");
+    addVlExample("exampleSpecs/scatter.json", "#vis-scatter");
+    addVlExample("exampleSpecs/bubble_multiple_aggregation.json", "#vis-bubble-multi-aggr");
+    addVlExample("exampleSpecs/trellis_barley.json", "#vis-trellis-barley");
+    addVlExample("exampleSpecs/scatter_binned.json", "#vis-scatter-binned");
+    addVlExample("exampleSpecs/bar.json", "#vis-bar");
+    addVlExample("exampleSpecs/stacked_bar_weather.json", "#vis-stacked-bar");
+    addVlExample("exampleSpecs/bar_layered_transparent.json", "#vis-layered-bar");
+    addVlExample("exampleSpecs/line_color.json", "#vis-color-line");
+    addVlExample("exampleSpecs/overlay_area_short.json", "#vis-overlay-area");
+  </script>
 </body>
 
 </html>

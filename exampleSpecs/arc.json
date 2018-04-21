@@ -33,7 +33,8 @@
           "endAngle": {"field": "endAngle"},
           "innerRadius": {"value": 20},
           "outerRadius": {"scale": "r", "field": "data"},
-          "stroke": {"value": "#fff"}
+          "stroke": {"value": "#fff"},
+          "tooltip": {"signal": "datum.data"}
         },
         "update": {
           "fill": {"value": "#ccc"}
