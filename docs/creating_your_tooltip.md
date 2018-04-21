@@ -8,6 +8,12 @@ If you use [`yarn`](https://yarnpkg.com/), you can install the library via:
 yarn add vega-tooltip
 ```
 
+With npm, you can install it as
+
+```bash
+npm install vega-tooltip
+```
+
 The tooltip library has the compiled tooltip library in the `build` directory:
 
 ```
@@ -60,7 +66,7 @@ Alternatively, you can create a runtime dataflow of the visualization using [`ve
 ```js
 var runtime = vega.parse(spec);
 var view = new vega.View(runtime)
-  .initialize(document.querySelector("#vis"))
+  .initialize(document.getElementById("vis"))
   .hover()
   .run();
 
@@ -91,7 +97,7 @@ Another example using existing [`Vega View`](https://vega.github.io/vega/docs/ap
 ```js
 var runtime = vega.parse(spec);
 var view = new vega.View(runtime)
-  .initialize(document.querySelector("#vis"))
+  .initialize(document.getElementById("vis"))
   .hover()
   .run();
 

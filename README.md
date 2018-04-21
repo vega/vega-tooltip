@@ -11,9 +11,9 @@ http://vega.github.io/vega-tooltip/
 
 ## Installing
 
-### Yarn
+### NPM or Yarn
 
-If you use Yarn, run command `yarn add vega-tooltip`.
+Use `npm install vega-tooltip` or `yarn add vega-tooltip`.
 
 ### Using Vega-tooltip with a CDN
 
