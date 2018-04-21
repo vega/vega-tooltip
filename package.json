@@ -1,7 +1,7 @@
 {
   "name": "vega-tooltip",
-  "version": "0.8.0",
-  "description": "A tooltip plugin for vega-lite and vega visualizations.",
+  "version": "0.9.0",
+  "description": "A tooltip plugin for Vega-Lite and Vega visualizations.",
   "main": "build/src/index.js",
   "unpkg": "build/vega-tooltip.min.js",
   "jsdelivr": "build/vega-tooltip.min.js",
@@ -17,10 +17,7 @@
   ],
   "author": "Interactive Data Lab",
   "collaborators": [
-    "Zening Qu",
-    "Sira Horradarn",
-    "Dominik Moritz",
-    "Kanit Wongsuphasawat"
+    "Dominik Moritz"
   ],
   "license": "BSD-3-Clause",
   "bugs": {
@@ -29,39 +26,27 @@
   "homepage": "https://github.com/vega/vega-tooltip#readme",
   "scripts": {
     "prebuild": "npm run data && rm -rf build && mkdir build && tsc",
-    "build": "browserify src/index.ts -t browserify-shim -p tsify -d -s vegaTooltip | exorcist build/vega-tooltip.js.map > build/vega-tooltip.js",
-    "postbuild": "uglifyjs build/vega-tooltip.js -cm -o build/vega-tooltip.min.js --source-map content=build/vega-tooltip.js.map,filename=build/vega-tooltip.min.js.map && uglifycss src/vega-tooltip.css > build/vega-tooltip.min.css && cp src/vega-tooltip.css build/vega-tooltip.css",
-    "watch": "watchify src/index.ts -v -p tsify -d -s vegaTooltip -o build/vega-tooltip.js",
+    "build": "rollup -c",
+    "postbuild": "uglifyjs build/vega-tooltip.js -c -m -o build/vega-tooltip.min.js",
     "data": "rsync -r node_modules/vega-datasets/data/* data",
-    "lint": "tslint -p .",
     "start": "npm run build && python -m http.server",
-    "deploy": "scripts/deploy.sh"
+    "format": "prettier --write './**/*.{ts,css}'",
+    "lint": "tslint -p ."
   },
   "devDependencies": {
-    "@types/d3": "^5.0.0",
-    "@types/node": "^9.6.5",
-    "browserify": "^16.2.0",
-    "browserify-shim": "^3.8.14",
-    "d3": "^4.13.0",
-    "exorcist": "^1.0.1",
-    "tsify": "^4.0.0",
-    "tslint": "~5.9.1",
-    "tslint-eslint-rules": "^5.1.0",
-    "typescript": "^2.8.1",
-    "uglify-js": "^3.3.21",
-    "uglifycss": "^0.0.29",
-    "vega-datasets": "vega/vega-datasets#gh-pages",
-    "watchify": "^3.11.0"
+    "prettier": "^1.12.1",
+    "rollup": "^0.58.1",
+    "rollup-plugin-commonjs": "^9.1.0",
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "tslint": "^5.9.1",
+    "tslint-config-prettier": "^1.12.0",
+    "typescript": "^2.8.3",
+    "uglify-js": "^3.3.22",
+    "vega-datasets": "^1.18.0",
+    "vega-typings": "^0.2.13"
   },
   "dependencies": {
-    "d3-format": "^1.2.2",
-    "d3-selection": "^1.3.0",
-    "d3-time-format": "^2.1.1",
-    "vega-lite": "^2.3.1",
+    "json-stringify-pretty-compact": "^1.1.0",
     "vega-util": "^1.7.0"
-  },
-  "browserify-shim": {
-    "vega": "global:vega",
-    "vega-lite": "global:vl"
   }
 }

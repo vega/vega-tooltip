@@ -3,6 +3,6 @@ node_js:
   - "8"
 
 script:
-  - yarn run lint
+  - yarn lint
 
 cache: yarn

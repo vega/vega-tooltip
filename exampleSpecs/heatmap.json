@@ -115,7 +115,8 @@
           "x": {"scale": "x", "field": "date"},
           "width": {"value": 5},
           "y": {"scale": "y", "field": "hour"},
-          "height": {"scale": "y", "band": 1}
+          "height": {"scale": "y", "band": 1},
+          "tooltip": {"signal": "{title: timeFormat(datum.date, '%b %d') + ', ' + datum.hour + ':00', 'Average temperature': datum.temp + ' °F'}"}
         },
         "update": {
           "fill": {"scale": "color", "field": "temp"}

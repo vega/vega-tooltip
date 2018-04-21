@@ -60,7 +60,7 @@
       "type": "shape",
       "from": {"data": "counties"},
       "encode": {
-        "enter": { "tooltip": {"signal": "format(datum.unemp.rate, '0.1%')"}},
+        "enter": { "tooltip": {"signal": "{'Unemployment Rate': format(datum.unemp.rate, '0.1%')}"}},
         "update": { "fill": {"scale": "color", "field": "unemp.rate"} },
         "hover": { "fill": {"value": "red"} }
       },

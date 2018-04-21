@@ -1,24 +1,19 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "commonjs",
+    "module": "esnext",
     "moduleResolution": "node",
-    "isolatedModules": false,
     "declaration": true,
-    "noImplicitAny": false,
-    "noEmitOnError": true,
-    "noImplicitThis": true,
-    "noImplicitReturns": true,
-    "outDir": "./build/src",
+    "strict": true,
+    "outDir": "./build",
     "inlineSourceMap": true
   },
   "include": [
-    "typings/*.d.ts",
-    "src/**/*.ts"
+    "src/*.ts",
+    "typings/*.d.ts"
   ],
   "exclude": [
     "node_modules",
-    "bower_components",
     "data"
   ]
 }
