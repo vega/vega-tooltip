@@ -67,6 +67,10 @@ export function getTooltipData(item: Scenegraph, options: Option) {
 export function prepareCustomFieldsData(itemData: ScenegraphData, options: Option = {}) {
   const tooltipData: TooltipData[] = [];
 
+  if (!options.fields || !options.fields.forEach) {
+    return tooltipData;
+  }
+
   options.fields.forEach(function (fieldOption) {
     const titleStr = isString(fieldOption.title) ? fieldOption.title : undefined;
     const titleFn =  isFunction(fieldOption.title)  ? fieldOption.title : undefined;
