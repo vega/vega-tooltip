@@ -26,6 +26,11 @@ export const DEFAULT_OPTIONS = {
    * There are two predefined themes: "light" (default) and "dark".
    */
   theme: 'light',
+
+  /**
+   * Do not use the default styles provided by Vega Tooltip. If you enable this option, you need to use your own styles. It is not necessary to disable the default style when using a custom theme.
+   */
+  disableDefaultStyle: false,
 };
 
 export type Options = typeof DEFAULT_OPTIONS;
@@ -94,10 +99,19 @@ const STYLE = `
 }
 `;
 
+const STYLE_ID = 'vega-tooltip-style';
+
 /**
  * The tooltip html element.
  */
 let tooltipElement: HTMLElement;
+
+function escapeValue(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
 
 /**
  * Initialize the tooltip element and style.
@@ -105,14 +119,18 @@ let tooltipElement: HTMLElement;
  * @param options Tooltip options.
  */
 function init(options: Options) {
-  if (tooltipElement) {
+  if (document.getElementById(options.id)) {
     // no need to initialize multiple times
     return;
   }
 
-  const style = document.createElement('style');
-  style.innerHTML = STYLE;
-  document.querySelector('head')!.appendChild(style);
+  // append a default stylesheet for tooltips to the head
+  if (!options.disableDefaultStyle && !document.getElementById(STYLE_ID)) {
+    const style = document.createElement('style');
+    style.setAttribute('id', STYLE_ID);
+    style.innerHTML = STYLE;
+    document.querySelector('head')!.appendChild(style);
+  }
 
   tooltipElement = document.createElement('div');
   tooltipElement.setAttribute('id', options.id);
@@ -151,7 +169,7 @@ function formatValue(value: any): string {
         val = stringify(val);
       }
 
-      content += `<tr><td class="key">${key}:</td><td class="value">${val}</td></tr>`;
+      content += `<tr><td class="key">${escapeValue(key)}:</td><td class="value">${escapeValue(val)}</td></tr>`;
     }
     content += `</table>`;
 

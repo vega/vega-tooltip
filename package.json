@@ -17,7 +17,12 @@
   ],
   "author": "Interactive Data Lab",
   "collaborators": [
-    "Dominik Moritz"
+    "Dominik Moritz",
+    "Sira Horradarn",
+    "Zening Qu",
+    "Kanit Wongsuphasawat",
+    "Yuri Astrakhan",
+    "Jeffrey Heer"
   ],
   "license": "BSD-3-Clause",
   "bugs": {
