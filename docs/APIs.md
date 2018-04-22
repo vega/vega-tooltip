@@ -77,7 +77,7 @@ var DEFAULT_OPTIONS =
   styleId: 'vega-tooltip-style',
   theme: 'light',
   disableDefaultStyle: false,
-  sanitize: (value) => value.replace(/&/g, '&amp;').replace(/</g, '&lt;')
+  sanitize: (value) => String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;')
 };
 ```
 
