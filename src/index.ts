@@ -1,4 +1,4 @@
-import * as stringify_ from 'json-stringify-pretty-compact';
+import * as stringify_ from 'json-stringify-safe';
 import { TooltipHandler, View } from 'vega-typings';
 import { isArray, isObject, isString } from 'vega-util';
 
