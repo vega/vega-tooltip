@@ -11,6 +11,7 @@ git merge master --no-edit
 
 # build
 npm run build
+git add data/* -f
 git add build/* -f
 
 # commit if things changed
