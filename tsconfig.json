@@ -6,7 +6,8 @@
     "declaration": true,
     "strict": true,
     "outDir": "./build",
-    "inlineSourceMap": true
+    "inlineSourceMap": true,
+    "importHelpers": true
   },
   "include": [
     "src/*.ts",
