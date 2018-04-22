@@ -114,10 +114,10 @@ const STYLE = `
 /**
  * Escape special HTML characters.
  *
- * @param value A string value to escape.
+ * @param value A value to convert to string and HTML-escape.
  */
-export function escapeHTML(value: string): string {
-  return value.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+export function escapeHTML(value: any): string {
+  return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;');
 }
 
 /**
