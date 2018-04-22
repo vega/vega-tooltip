@@ -177,7 +177,7 @@ export class Handler {
   private handler(handler: any, event: MouseEvent, item: any, value: any) {
     // console.log(handler, event, item, value);
 
-    if ((event as any).vegaType === undefined) {
+    if (value === null) {
       this.el.classList.remove('visible', `${this.options.theme}-theme`);
       return;
     }
