@@ -112,7 +112,7 @@ You have to define the tooltip property in Vega or Vega-Lite. Note that if you d
 
 ### In Vega
 
-In a Vega spec, you need to set the `tooltip` property on the mark for which you want to set a tooltip. 
+In a Vega spec, you need to set the `tooltip` property on the mark for which you want to set a tooltip.  If the value is on object, Vega Tooltip renders a table with one row for each key. The value with key `title` will not be shown as a row but instead is rendered as a heading in the tooltip.
 
 For example, in your spec you might define a tooltip like this:
 
