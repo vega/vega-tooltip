@@ -41,9 +41,11 @@
     "prebuild": "npm run data && npm run clean && tsc",
     "prepublishOnly": "npm run build",
     "preversion": "npm run lint",
-    "start": "npm run build && python -m http.server"
+    "start": "concurrently --kill-others -n Server,Typescript,Rollup 'browser-sync start -s -f build *.html' 'tsc -w' 'rollup -c -w'"
   },
   "devDependencies": {
+    "browser-sync": "^2.23.7",
+    "concurrently": "^3.5.1",
     "prettier": "^1.12.1",
     "rollup": "^0.58.1",
     "rollup-plugin-commonjs": "^9.1.0",
