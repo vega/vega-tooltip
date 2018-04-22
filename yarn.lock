@@ -529,9 +529,9 @@ vega-datasets@^1.18.0:
   version "1.18.0"
   resolved "https://registry.yarnpkg.com/vega-datasets/-/vega-datasets-1.18.0.tgz#3fc697a5de9bf539dd8eb823f10df848084ee25a"
 
-vega-typings@^0.2.13:
-  version "0.2.14"
-  resolved "https://registry.yarnpkg.com/vega-typings/-/vega-typings-0.2.14.tgz#a7e3a29a3945e8875984ce5275409db3eeeaf294"
+vega-typings@^0.2.15:
+  version "0.2.15"
+  resolved "https://registry.yarnpkg.com/vega-typings/-/vega-typings-0.2.15.tgz#7c973f7f342efe82fb9c4ad96833431c11cd5911"
 
 vega-util@^1.7.0:
   version "1.7.0"

@@ -7,7 +7,7 @@
   "jsdelivr": "build/vega-tooltip.min.js",
   "typings": "build/index.d.ts",
   "repository": {
-    "type": "git",
+    "type": "git",  
     "url": "https://github.com/vega/vega-tooltip.git"
   },
   "keywords": [
@@ -52,7 +52,7 @@
     "typescript": "^2.8.3",
     "uglify-js": "^3.3.22",
     "vega-datasets": "^1.18.0",
-    "vega-typings": "^0.2.13"
+    "vega-typings": "^0.2.15"
   },
   "dependencies": {
     "json-stringify-pretty-compact": "^1.1.0",
