@@ -98,7 +98,7 @@ Another example using existing [`Vega View`](https://vega.github.io/vega/docs/ap
 var runtime = vega.parse(spec);
 var view = new vega.View(runtime)
   .initialize(document.getElementById("vis"))
-  .hover()
+  .hover()  // you need to enable hover processing for tooltips to work
   .run();
 
 vegaTooltip(view);
