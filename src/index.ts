@@ -121,43 +121,6 @@ export function escapeHTML(value: string): string {
 }
 
 /**
- * Format the value to be shown in the toolip.
- *
- * @param value The value to show in the tooltip.
- * @param sanitize A sanitization function that removes dangerous HTML.
- */
-function formatValue(value: any, sanitize: (value: string) => string): string {
-  if (isArray(value)) {
-    return `[${value.map(v => sanitize(isString(v) ? v : stringify(v))).join(', ')}]`;
-  }
-
-  if (isObject(value)) {
-    let content = '';
-
-    const { title, ...rest } = value as any;
-
-    if (title) {
-      content += `<h2>${title}</h2>`;
-    }
-
-    content += '<table>';
-    for (const key of Object.keys(rest)) {
-      let val = (rest as any)[key];
-      if (isObject(val)) {
-        val = stringify(val);
-      }
-
-      content += `<tr><td class="key">${sanitize(key)}:</td><td class="value">${sanitize(val)}</td></tr>`;
-    }
-    content += `</table>`;
-
-    return content;
-  }
-
-  return sanitize(String(value));
-}
-
-/**
  * The tooltip handler class.
  */
 export class Handler {
@@ -179,7 +142,7 @@ export class Handler {
   /**
    * Create the tooltip handler and initialize the element and style.
    *
-   * @param opt Tooltip Options
+   * @param options Tooltip Options
    */
   constructor(options?: Partial<Options>) {
     this.options = { ...DEFAULT_OPTIONS, ...options };
@@ -220,7 +183,7 @@ export class Handler {
     }
 
     // set the tooltip content
-    this.el.innerHTML = formatValue(value, this.options.sanitize);
+    this.el.innerHTML = this.formatValue(value);
 
     // make the tooltip visible
     this.el.classList.add('visible', `${this.options.theme}-theme`);
@@ -240,6 +203,45 @@ export class Handler {
 
     this.el.setAttribute('style', `top: ${y}px; left: ${x}px`);
   }
+
+  /**
+   * Format the value to be shown in the toolip.
+   *
+   * @param value The value to show in the tooltip.
+   */
+  private formatValue(value: any): string {
+    const sanitize = this.options.sanitize;
+
+    if (isArray(value)) {
+      return `[${value.map(v => sanitize(isString(v) ? v : stringify(v))).join(', ')}]`;
+    }
+
+    if (isObject(value)) {
+      let content = '';
+
+      const { title, ...rest } = value as any;
+
+      if (title) {
+        content += `<h2>${title}</h2>`;
+      }
+
+      content += '<table>';
+      for (const key of Object.keys(rest)) {
+        let val = (rest as any)[key];
+        if (isObject(val)) {
+          val = stringify(val);
+        }
+
+        content += `<tr><td class="key">${sanitize(key)}:</td><td class="value">${sanitize(val)}</td></tr>`;
+      }
+      content += `</table>`;
+
+      return content;
+    }
+
+    return sanitize(String(value));
+  }
+
 }
 
 /**
