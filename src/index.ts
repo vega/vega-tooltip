@@ -253,7 +253,7 @@ export class Handler {
 export default function(view: View, opt?: Partial<Options>) {
   const handler = new Handler(opt);
 
-  view.tooltip(handler.call);
+  view.tooltip(handler.call).run();
 
   return handler;
 }
