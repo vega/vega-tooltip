@@ -29,11 +29,7 @@ You can import `vega-tooltip` directly from [`jsDelivr`](https://www.jsdelivr.co
 <script src="https://cdn.jsdelivr.net/npm/vega-tooltip@[VERSION]"></script>
 ```
 
-## APIs
-
-See the [API documentation](docs/APIs.md).
-
-## Usage and Tutorials
+## Usage and APIs
 
 The simplest example is to use [Vega-Embed](https://github.com/vega/vega-embed). 
 
@@ -45,7 +41,9 @@ vegaEmbed("#vis", spec)
   .catch(console.error);
 ```
 
-Learn more in these two tutorials.
+See the [API documentation](docs/APIs.md) for details.
+
+## Tutorials
 
 1. [Creating Your Tooltip](docs/creating_your_tooltip.md)
 2. [Customizing Your Tooltip](docs/customizing_your_tooltip.md)
