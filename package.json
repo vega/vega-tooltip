@@ -3,9 +3,9 @@
   "version": "0.9.6",
   "description": "A tooltip plugin for Vega-Lite and Vega visualizations.",
   "main": "build/vega-tooltip.js",
+  "module": "build/index.js",
   "unpkg": "build/vega-tooltip.min.js",
   "jsdelivr": "build/vega-tooltip.min.js",
-  "module": "build/index.js",
   "typings": "build/index.d.ts",
   "repository": {
     "type": "git",
