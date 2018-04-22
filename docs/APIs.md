@@ -63,7 +63,7 @@ var view = new vega.View(runtime)
 | `styleId`       | String         | The ID of the stylesheet. The default name is `vega-tooltip-style`. |
 | `theme`         | String         | A color theme. <br>__Supported values:__ `"light"`, `"dark"`, or a custom name. <br>__Default value:__ `"light"` <br>To customize your own theme, create CSS for the `[THEME]-theme` class. |
 | `disableDefaultStyle` | Boolean  | Disable the default style completely. |
-| `sanitize` | Function | Function to sanitize the HTML. |
+| `sanitize` | Function | Function to convert value to string, and sanitize the HTML. |
 
 
 The default values are:
@@ -89,7 +89,8 @@ If you want to allow custom formatting, you may provide a custom sanitization fu
 
 ```js
 function markdown(md) {
-  var parsed = SimpleMarkdown.defaultBlockParse(md);
+  var text  String(md);
+  var parsed = SimpleMarkdown.defaultBlockParse(text);
   var html = SimpleMarkdown.defaultHtmlOutput(parsed);
   return vegaTooltip.escapeHTML(html);
 }
