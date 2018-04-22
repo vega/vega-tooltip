@@ -56,7 +56,7 @@
     "vega-typings": "^0.2.15"
   },
   "dependencies": {
-    "json-stringify-pretty-compact": "^1.1.0",
+    "json-stringify-safe": "^5.0.1",
     "vega-util": "^1.7.0"
   }
 }
