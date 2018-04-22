@@ -1,5 +1,5 @@
 import * as stringify_ from 'json-stringify-pretty-compact';
-import { Item, ScenegraphEvent, View } from 'vega-typings';
+import { Item, ScenegraphEvent, View, TooltipHandler } from 'vega-typings';
 import { isArray, isObject, isString } from 'vega-util';
 
 const stringify = (stringify_ as any).default || stringify_;
@@ -16,9 +16,14 @@ export const DEFAULT_OPTIONS = {
   offsetY: 10,
 
   /**
-   * If of the tooltip element.
+   * ID of the tooltip element.
    */
   id: 'vg-tooltip-element',
+
+  /**
+   * ID of the tooltip CSS style.
+   */
+  styleId: 'vega-tooltip-style',
 
   /**
    * The name of the theme. You can use the CSS class called [THEME]-theme to style the tooltips.
@@ -99,44 +104,16 @@ const STYLE = `
 }
 `;
 
-const STYLE_ID = 'vega-tooltip-style';
-
 /**
- * The tooltip html element.
+ * Escape special HTML characters.
+ *
+ * @param value A string value to escape.
  */
-let tooltipElement: HTMLElement;
-
 function escapeValue(value: string): string {
   return value
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
-}
-
-/**
- * Initialize the tooltip element and style.
- *
- * @param options Tooltip options.
- */
-function init(options: Options) {
-  if (document.getElementById(options.id)) {
-    // no need to initialize multiple times
-    return;
-  }
-
-  // append a default stylesheet for tooltips to the head
-  if (!options.disableDefaultStyle && !document.getElementById(STYLE_ID)) {
-    const style = document.createElement('style');
-    style.setAttribute('id', STYLE_ID);
-    style.innerHTML = STYLE;
-    document.querySelector('head')!.appendChild(style);
-  }
-
-  tooltipElement = document.createElement('div');
-  tooltipElement.setAttribute('id', options.id);
-  tooltipElement.classList.add('vg-tooltip');
-
-  document.querySelector('body')!.appendChild(tooltipElement);
 }
 
 /**
@@ -176,74 +153,104 @@ function formatValue(value: any): string {
     return content;
   }
 
-  return `${value}`;
+  return String(value);
 }
 
 /**
- * Attach a tooltip handler to the view.
+ * The tooltip handler class.
  */
-export default function(view: View, opt?: Options) {
-  let visible = false;
+export class Handler {
+  /**
+   * Complete tooltip options.
+   */
+  private options: Options;
 
-  const options = { ...DEFAULT_OPTIONS, ...opt };
+  /**
+   * The tooltip html element.
+   */
+  private el: HTMLElement;
 
-  init(options);
+  /**
+   * The handler function. We bind this to this function in the constructor.
+   */
+  public call: TooltipHandler;
 
-  function hideTooltip() {
-    tooltipElement.classList.remove('visible', `${options.theme}-theme`);
-    visible = false;
+  /**
+   * Create the tooltip handler and initialize the element and style.
+   *
+   * @param opt Tooltip Options
+   */
+  constructor(options?: Partial<Options>) {
+    this.options = { ...DEFAULT_OPTIONS, ...options };
+
+    this.call = this.handler.bind(this);
+
+    // append a default stylesheet for tooltips to the head
+    if (!this.options.disableDefaultStyle && !document.getElementById(this.options.styleId)) {
+      const style = document.createElement('style');
+      style.setAttribute('id', this.options.styleId);
+      style.innerHTML = STYLE;
+
+      document.querySelector('head')!.appendChild(style);
+    }
+
+    // append a div element that we use as a tooltip unless it already exists
+    const el = document.getElementById(this.options.id);
+    if (el) {
+      this.el = el;
+    } else {
+      this.el = document.createElement('div');
+      this.el.setAttribute('id', this.options.id);
+      this.el.classList.add('vg-tooltip');
+
+      document.querySelector('body')!.appendChild(this.el);
+    }
   }
 
-  function tooltipHandler(this: View, handler: any, event: MouseEvent, item: any, value: any) {
-    // console.log(this, handler, event, item, value);
+  /**
+   * The handler function.
+   */
+  private handler(handler: any, event: MouseEvent, item: any, value: any) {
+    // console.log(handler, event, item, value);
 
     if ((event as any).vegaType === undefined) {
-      hideTooltip();
+      this.el.classList.remove('visible', `${this.options.theme}-theme`);
       return;
     }
 
-    tooltipElement.innerHTML = formatValue(value);
+    // set the tooltip content
+    this.el.innerHTML = formatValue(value);
 
-    tooltipElement.classList.add('visible', `${options.theme}-theme`);
-    visible = true;
-  }
+    // make the tooltip visible
+    this.el.classList.add('visible', `${this.options.theme}-theme`);
 
-  function handleMouseMove(event: ScenegraphEvent, item?: Item) {
-    if (!visible) {
-      return;
-    }
-
-    if (!isMouseMoveEvent(event)) {
-      return;
-    }
-
-    const tooltipWidth = tooltipElement.getBoundingClientRect().width;
-    let x = event.clientX + options.offsetX;
+    // position the tooltip
+    const tooltipWidth = this.el.getBoundingClientRect().width;
+    let x = event.clientX + this.options.offsetX;
     if (x + tooltipWidth > window.innerWidth) {
-      x = event.clientX - options.offsetX - tooltipWidth;
+      x = event.clientX - this.options.offsetX - tooltipWidth;
     }
 
-    const tooltipHeight = tooltipElement.getBoundingClientRect().height;
-    let y = event.clientY + options.offsetY;
+    const tooltipHeight = this.el.getBoundingClientRect().height;
+    let y = event.clientY + this.options.offsetY;
     if (y + tooltipHeight > window.innerHeight) {
-      y = +event.clientY - options.offsetY - tooltipHeight;
+      y = +event.clientY - this.options.offsetY - tooltipHeight;
     }
 
-    tooltipElement.setAttribute('style', `top: ${y}px; left: ${x}px`);
+    this.el.setAttribute('style', `top: ${y}px; left: ${x}px`);
   }
-
-  view.addEventListener('mousemove', handleMouseMove);
-
-  // Set tooltip handler;
-  view.tooltip(tooltipHandler);
-
-  return {
-    destroy: () => {
-      view.removeEventListener('mousemove', handleMouseMove);
-    },
-  };
 }
 
-function isMouseMoveEvent(event: ScenegraphEvent): event is MouseEvent {
-  return event.type === 'mousemove';
+/**
+ * Create a tooltip handler and register it with the provided view.
+ *
+ * @param view The Vega view.
+ * @param opt Tooltip options.
+ */
+export default function(view: View, opt?: Partial<Options>) {
+  const handler = new Handler(opt);
+
+  view.tooltip(handler.call);
+
+  return handler;
 }
