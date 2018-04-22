@@ -1,5 +1,5 @@
 import * as stringify_ from 'json-stringify-pretty-compact';
-import { Item, ScenegraphEvent, View, TooltipHandler } from 'vega-typings';
+import { TooltipHandler, View } from 'vega-typings';
 import { isArray, isObject, isString } from 'vega-util';
 
 const stringify = (stringify_ as any).default || stringify_;
@@ -36,6 +36,13 @@ export const DEFAULT_OPTIONS = {
    * Do not use the default styles provided by Vega Tooltip. If you enable this option, you need to use your own styles. It is not necessary to disable the default style when using a custom theme.
    */
   disableDefaultStyle: false,
+
+  /**
+   * HTML sanitizer function that removes dangerous HTML to prevent XSS.
+   *
+   * This should be a function from string to string. You may replace it with a formatter such as a markdown formatter.
+   */
+  sanitize: escapeHTML,
 };
 
 export type Options = typeof DEFAULT_OPTIONS;
@@ -109,25 +116,19 @@ const STYLE = `
  *
  * @param value A string value to escape.
  */
-function escapeValue(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+export function escapeHTML(value: string): string {
+  return value.replace(/&/g, '&amp;').replace(/</g, '&lt;');
 }
 
 /**
  * Format the value to be shown in the toolip.
  *
  * @param value The value to show in the tooltip.
+ * @param sanitize A sanitization function that removes dangerous HTML.
  */
-function formatValue(value: any): string {
+function formatValue(value: any, sanitize: (value: string) => string): string {
   if (isArray(value)) {
-    return `[${value.map(v => (isString(v) ? v : stringify(v))).join(', ')}]`;
-  }
-
-  if (isString(value)) {
-    return value;
+    return `[${value.map(v => sanitize(isString(v) ? v : stringify(v))).join(', ')}]`;
   }
 
   if (isObject(value)) {
@@ -146,20 +147,25 @@ function formatValue(value: any): string {
         val = stringify(val);
       }
 
-      content += `<tr><td class="key">${escapeValue(key)}:</td><td class="value">${escapeValue(val)}</td></tr>`;
+      content += `<tr><td class="key">${sanitize(key)}:</td><td class="value">${sanitize(val)}</td></tr>`;
     }
     content += `</table>`;
 
     return content;
   }
 
-  return String(value);
+  return sanitize(String(value));
 }
 
 /**
  * The tooltip handler class.
  */
 export class Handler {
+  /**
+   * The handler function. We bind this to this function in the constructor.
+   */
+  public call: TooltipHandler;
+
   /**
    * Complete tooltip options.
    */
@@ -169,11 +175,6 @@ export class Handler {
    * The tooltip html element.
    */
   private el: HTMLElement;
-
-  /**
-   * The handler function. We bind this to this function in the constructor.
-   */
-  public call: TooltipHandler;
 
   /**
    * Create the tooltip handler and initialize the element and style.
@@ -219,7 +220,7 @@ export class Handler {
     }
 
     // set the tooltip content
-    this.el.innerHTML = formatValue(value);
+    this.el.innerHTML = formatValue(value, this.options.sanitize);
 
     // make the tooltip visible
     this.el.classList.add('visible', `${this.options.theme}-theme`);

@@ -5,6 +5,7 @@ The `vegaTooltip` module exports the following properties:
 * [`default`](#tooltip)
 * [`Handler`](#handler)
 * [`DEFAULT_OPTIONS`](#options)
+* [`escapeHTML`](#sanitize)
 
 ## [vegaTooltip](#tooltip)
 
@@ -62,6 +63,8 @@ var view = new vega.View(runtime)
 | `styleId`       | String         | The ID of the stylesheet. The default name is `vega-tooltip-style`. |
 | `theme`         | String         | A color theme. <br>__Supported values:__ `"light"`, `"dark"`, or a custom name. <br>__Default value:__ `"light"` <br>To customize your own theme, create CSS for the `[THEME]-theme` class. |
 | `disableDefaultStyle` | Boolean  | Disable the default style completely. |
+| `sanitize` | Function | Function to sanitize the HTML. |
+
 
 The default values are:
 
@@ -73,6 +76,25 @@ var DEFAULT_OPTIONS =
   id: 'vg-tooltip-element',
   styleId: 'vega-tooltip-style',
   theme: 'light',
-  disableDefaultStyle: false
+  disableDefaultStyle: false,
+  sanitize: (value) => value.replace(/&/g, '&amp;').replace(/</g, '&lt;')
 };
+```
+
+## [Sanitize](#sanitize)
+
+Vega Tooltip escapes HTML content from the Vega spec before displaying it in the tooltip. This prevents problems with users executing unknown code in their browser. 
+
+If you want to allow custom formatting, you may provide a custom sanitization function. For example, if you want to support Markdown, you could use [simple-markdown](https://github.com/Khan/simple-markdown).
+
+```js
+function markdown(md) {
+  var parsed = SimpleMarkdown.defaultBlockParse(md);
+  var html = SimpleMarkdown.defaultHtmlOutput(parsed);
+  return vegaTooltip.escapeHTML(html);
+}
+
+var tooltip = new vegaTooltip.Handler({
+  sanitize: markdown
+});
 ```
