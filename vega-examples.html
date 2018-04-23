@@ -8,7 +8,7 @@
   <!-- Tooltip Library -->
   <script src="https://cdn.jsdelivr.net/npm/d3@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega@3/build/vega.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vega-embed@3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@latest"></script>
 
   <script src="build/vega-tooltip.js"></script>
 
@@ -41,10 +41,9 @@
   <script type="text/javascript">
     function addVgExample(path, id, options) {
       d3.json(path).then(function (vgSpec) {
-        vegaEmbed(id, vgSpec)
-          .then(function (result) {
-            vegaTooltip.default(result.view, options);
-          })
+        var handler = new vegaTooltip.Handler(options);
+        vegaEmbed(id, vgSpec, {tooltip: handler.call})
+          .then(function (result) {})
           .catch(console.error);
       }).catch(console.error);
     }

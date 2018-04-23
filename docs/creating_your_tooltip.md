@@ -29,12 +29,7 @@ If you want to manually include the library and its dependencies, you can add th
 <!-- Vega Tooltip -->
 <script src="https://cdn.jsdelivr.net/npm/vega-tooltip"></script>
 ```
->Note that if you use [Vega-Embed](https://github.com/vega/vega-embed/) to deploy your visualization, you need to include it as a dependency
-
-```html
-<!-- vega-embed -->
-<script src="https://cdn.jsdelivr.net/npm/vega-embed@3"></script>
-```
+> **Note that if you use [Vega-Embed](https://github.com/vega/vega-embed/) to deploy your visualization, you already have Vega Tooltip and don't need to do anything.**
 
 Instead of including Vega Tooltip as a script, you can import it in your bundle. 
 
@@ -51,54 +46,43 @@ In your HTML `<body>`, create a placeholder for your visualization. Give the pla
 <div id="vis"></div>
 ```
 
-You can create your visualization using [`vegaEmbed`](https://github.com/vega/vega-embed). The following JavaScript code refers to the visualization placeholder by id selector (`#vis`). The spec can be a Vega or Vega-Lite specification.
-
-```js
-vegaEmbed("#vis", spec)
-  .then(function(result) {
-    ... // Add tooltip here as shown below
-  })
-  .catch(console.error);
-```
-
 Alternatively, you can create a runtime dataflow of the visualization using [`vega.parse`](https://vega.github.io/vega/docs/api/parser/), then pass this runtime dataflow to create a [`View`](https://vega.github.io/vega/docs/api/view/). Note that the following JavaScript code refers to the visualization placeholder by id selector (`#vis`).
 
 ```js
 var runtime = vega.parse(spec);
 var view = new vega.View(runtime)
   .initialize(document.getElementById("vis"))
-  .hover()
   .run();
-
-// Add tooltip here as shown below
 ```
 <br>
 
 
 ## Step 3. Set up the tooltip library
 
-For [Vega-Lite](https://vega.github.io/vega-lite/) and [Vega](http://vega.github.io/vega/):
-
-You can create your tooltip using [`vegaTooltip`](APIs.md#tooltip). This function requires the [`Vega View`](https://vega.github.io/vega/docs/api/view/) as input.
+For [Vega-Lite](https://vega.github.io/vega-lite/) and [Vega](http://vega.github.io/vega/). First, create the [tooltip handler](https://vega.github.io/vega/docs/api/view/#view_tooltip).
 
 ```js
-vegaEmbed("#vis", spec, opt)
-  .then(function(result) {
-    // result.view is the Vega View
-    vegaTooltip(result.view);
-  })
-  .catch(console.error);
+var handler = new vegaTooltip.Handler();
 ```
 
-If you get an error `vegaTooltip is not a function`, try to replace `vegaTooltip` with `vegaTooltip.default`. This is not necessary when you bundle your code with webpack, browserify, or rollup.
+Then register it when you initialize the view.
 
-Another example using existing [`Vega View`](https://vega.github.io/vega/docs/api/view/) object without Vega Embed:
+```js
+var runtime = vega.parse(spec);
+var view = new vega.View(runtime)
+  .tooltip(handler.call)  // note that you have to use `handler.call`!
+  .initialize(document.getElementById("vis"))
+  .run();
+```
+
+You can create your tooltip using [`vegaTooltip`](APIs.md#tooltip) if you don't have access to the initialization. This function requires the [`Vega View`](https://vega.github.io/vega/docs/api/view/) as input.
+
+If you get an error `vegaTooltip is not a function`, try to replace `vegaTooltip` with `vegaTooltip.default`. This is not necessary when you bundle your code with webpack, browserify, or rollup.
 
 ```js
 var runtime = vega.parse(spec);
 var view = new vega.View(runtime)
   .initialize(document.getElementById("vis"))
-  .hover()  // you need to enable hover processing for tooltips to work
   .run();
 
 vegaTooltip(view);

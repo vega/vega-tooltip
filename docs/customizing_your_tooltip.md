@@ -9,15 +9,29 @@ You can customize the tooltip by passing in an optional `options` parameter. The
 For example:
 
 ```js
-var options = {
+var tooltipOptions = {
   theme: 'dark'
 };
+```
 
-vegaEmbed("#vis", spec)
-  .then(function (result) {
-    vegaTooltip(result.view, options); // pass in options
+If you use Vega-Embed, you can pass your tooltip customizations  as an option.
+
+```js
+vegaEmbed("#vis", spec, {tooltip: tooltipOptions})
+  .then(function(result) {
+    // result.view contains the Vega view
   })
   .catch(console.error);
+```
+
+```js
+var handler = new vegaTooltip.Handler(tooltipOptions);
+
+var runtime = vega.parse(spec);
+var view = new vega.View(runtime)
+  .tooltip(handler.call)  // note that you have to use `handler.call`!
+  .initialize(document.getElementById("vis"))
+  .run();
 ```
 
 ## Customizing the theme
@@ -27,13 +41,13 @@ Vega tooltip has two predefined themes `light` and `dark`. You can create your o
 To use a custom theme, pass the `theme` option to Vega tooltip.
 
 ```js
-var options = {
+var tooltipOptions = {
   theme: 'custom'
 };
 
-vegaEmbed("#vis", spec)
-  .then(function (result) {
-    vegaTooltip(result.view, options); // pass in options
+vegaEmbed("#vis", spec, {tooltip: tooltipOptions})
+  .then(function(result) {
+    // result.view contains the Vega view
   })
   .catch(console.error);
 ```

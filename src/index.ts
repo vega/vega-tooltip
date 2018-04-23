@@ -147,15 +147,20 @@ export class Handler {
   constructor(options?: Partial<Options>) {
     this.options = { ...DEFAULT_OPTIONS, ...options };
 
-    this.call = this.handler.bind(this);
+    // bind this to call
+    this.call = this.tooltip_handler.bind(this);
 
-    // append a default stylesheet for tooltips to the head
+    // prepend a default stylesheet for tooltips to the head
     if (!this.options.disableDefaultStyle && !document.getElementById(this.options.styleId)) {
       const style = document.createElement('style');
       style.setAttribute('id', this.options.styleId);
       style.innerHTML = STYLE;
 
-      document.querySelector('head')!.appendChild(style);
+      if (document.head.childNodes.length > 0) {
+        document.head.insertBefore(style, document.head.childNodes[0]);
+      } else {
+        document.head.appendChild(style);
+      }
     }
 
     // append a div element that we use as a tooltip unless it already exists
@@ -167,14 +172,14 @@ export class Handler {
       this.el.setAttribute('id', this.options.id);
       this.el.classList.add('vg-tooltip');
 
-      document.querySelector('body')!.appendChild(this.el);
+      document.body.appendChild(this.el);
     }
   }
 
   /**
-   * The handler function.
+   * The tooltip handler function.
    */
-  private handler(handler: any, event: MouseEvent, item: any, value: any) {
+  private tooltip_handler(handler: any, event: MouseEvent, item: any, value: any) {
     // console.log(handler, event, item, value);
 
     // hide tooltip for null, undefined, or empty string values

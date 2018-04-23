@@ -9,7 +9,7 @@
   <script src="https://cdn.jsdelivr.net/npm/d3@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega@3"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vega-embed@3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@latest"></script>
 
   <script src="build/vega-tooltip.js"></script>
 
@@ -60,10 +60,9 @@
   <script type="text/javascript">
     function addVlExample(path, id, options) {
       d3.json(path).then(function (vlSpec) {
-        vegaEmbed(id, vlSpec, { mode: 'vega-lite' })
-          .then(function (result) {
-            vegaTooltip.default(result.view, options);
-          })
+        var handler = new vegaTooltip.Handler(options);
+        vegaEmbed(id, vgSpec, {tooltip: handler.call})
+          .then(function (result) {})
           .catch(console.error);
       }).catch(console.error);
     }
