@@ -47,7 +47,6 @@ var runtime = vega.parse(spec);
 var view = new vega.View(runtime)
   .initialize(document.getElementById("vis"))
   .tooltip(tooltip.call)
-  .hover()
   .run();
 ```
 
