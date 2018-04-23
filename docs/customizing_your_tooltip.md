@@ -15,7 +15,7 @@ var options = {
 
 vegaEmbed("#vis", spec)
   .then(function (result) {
-    vegaTooltip(result.view, options); // pass in options
+    vegaTooltip.default(result.view, options); // pass in options
   })
   .catch(console.error);
 ```
@@ -33,7 +33,7 @@ var options = {
 
 vegaEmbed("#vis", spec)
   .then(function (result) {
-    vegaTooltip(result.view, options); // pass in options
+    vegaTooltip.default(result.view, options); // pass in options
   })
   .catch(console.error);
 ```
