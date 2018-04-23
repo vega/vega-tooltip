@@ -65,8 +65,11 @@ Alternatively, you can create a runtime dataflow of the visualization using [`ve
 
 ```js
 var runtime = vega.parse(spec);
+var tooltip = new vegaTooltip.Handler(options);
+
 var view = new vega.View(runtime)
   .initialize(document.getElementById("vis"))
+  .tooltip(tooltip.call)
   .hover()
   .run();
 
@@ -85,7 +88,7 @@ You can create your tooltip using [`vegaTooltip`](APIs.md#tooltip). This functio
 vegaEmbed("#vis", spec, opt)
   .then(function(result) {
     // result.view is the Vega View
-    vegaTooltip(result.view);
+    vegaTooltip.default(result.view);
   })
   .catch(console.error);
 ```
