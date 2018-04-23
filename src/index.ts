@@ -177,8 +177,8 @@ export class Handler {
   private handler(handler: any, event: MouseEvent, item: any, value: any) {
     // console.log(handler, event, item, value);
 
-    // hide tooltip for any of these. Undefined included for backward compatibility
-    if (value === null || value === '' || value === undefined) {
+    // hide tooltip for null, undefined, or empty string values
+    if (value == null || value === '') {
       this.el.classList.remove('visible', `${this.options.theme}-theme`);
       return;
     }
