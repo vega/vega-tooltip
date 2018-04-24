@@ -12,16 +12,14 @@ export function calculatePosition(
   offsetX: number,
   offsetY: number
 ) {
-  const tooltipWidth = tooltipBox.width;
   let x = event.clientX + offsetX;
-  if (x + tooltipWidth > window.innerWidth) {
-    x = +event.clientX - offsetX - tooltipWidth;
+  if (x + tooltipBox.width > window.innerWidth) {
+    x = +event.clientX - offsetX - tooltipBox.width;
   }
 
-  const tooltipHeight = tooltipBox.height;
   let y = event.clientY + offsetY;
-  if (y + tooltipHeight > window.innerHeight) {
-    y = +event.clientY - offsetY - tooltipHeight;
+  if (y + tooltipBox.height > window.innerHeight) {
+    y = +event.clientY - offsetY - tooltipBox.height;
   }
 
   return {x, y};
