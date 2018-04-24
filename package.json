@@ -35,7 +35,7 @@
     "clean": "rm -rf build && mkdir build",
     "data": "rsync -r node_modules/vega-datasets/data/* data",
     "deploy:gh": "scripts/deploy-gh.sh",
-    "format": "prettier --write './**/*.ts'",
+    "format": "tslint -p . --fix && prettier --write './**/*.ts'",
     "lint": "tslint -p . && prettier --list-different './**/*.ts'",
     "postbuild": "uglifyjs build/vega-tooltip.js -c -m -o build/vega-tooltip.min.js",
     "prebuild": "npm run data && npm run clean && tsc",
