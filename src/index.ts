@@ -117,7 +117,9 @@ const STYLE = `
  * @param value A value to convert to string and HTML-escape.
  */
 export function escapeHTML(value: any): string {
-  return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;');
 }
 
 /**
@@ -247,7 +249,6 @@ export class Handler {
 
     return sanitize(String(value));
   }
-
 }
 
 /**
