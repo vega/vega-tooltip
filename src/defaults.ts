@@ -47,7 +47,9 @@ export type Options = typeof DEFAULT_OPTIONS;
  * @param value A value to convert to string and HTML-escape.
  */
 export function escapeHTML(value: any): string {
-  return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;');
 }
 
 export function createDefaultStyle(id: string): string {

@@ -1,9 +1,8 @@
-import {TooltipHandler} from 'vega-typings';
+import { TooltipHandler } from 'vega-typings';
 
-import {DEFAULT_OPTIONS, Options, createDefaultStyle, escapeHTML} from './defaults';
-import {formatValue} from './formatValue';
-import {calculatePosition} from './position';
-
+import { createDefaultStyle, DEFAULT_OPTIONS, escapeHTML, Options } from './defaults';
+import { formatValue } from './formatValue';
+import { calculatePosition } from './position';
 
 /**
  * The tooltip handler class.
@@ -30,7 +29,7 @@ export class Handler {
    * @param options Tooltip Options
    */
   constructor(options?: Partial<Options>) {
-    this.options = {...DEFAULT_OPTIONS, ...options};
+    this.options = { ...DEFAULT_OPTIONS, ...options };
     const elementId = this.options.id;
 
     // bind this to call
@@ -78,7 +77,12 @@ export class Handler {
     // make the tooltip visible
     this.el.classList.add('visible', `${this.options.theme}-theme`);
 
-    const {x, y} = calculatePosition(event, this.el.getBoundingClientRect(), this.options.offsetX, this.options.offsetY);
+    const { x, y } = calculatePosition(
+      event,
+      this.el.getBoundingClientRect(),
+      this.options.offsetX,
+      this.options.offsetY
+    );
 
     this.el.setAttribute('style', `top: ${y}px; left: ${x}px`);
   }

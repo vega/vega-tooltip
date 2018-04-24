@@ -14,7 +14,7 @@ export * from './Handler';
  * @param view The Vega view.
  * @param opt Tooltip options.
  */
-export default function (view: View, opt?: Partial<Options>) {
+export default function(view: View, opt?: Partial<Options>) {
   const handler = new Handler(opt);
 
   view.tooltip(handler.call).run();
