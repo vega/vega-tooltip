@@ -1,9 +1,8 @@
-import {isArray, isObject, isString} from 'vega-util';
+import { isArray, isObject, isString } from 'vega-util';
 
 import * as stringify_ from 'json-stringify-safe';
 
 const stringify = (stringify_ as any).default || stringify_;
-
 
 /**
  * Format the value to be shown in the toolip.
@@ -19,7 +18,7 @@ export function formatValue(value: any, valueToHtml: (value: any) => string): st
   if (isObject(value)) {
     let content = '';
 
-    const {title, ...rest} = value as any;
+    const { title, ...rest } = value as any;
 
     if (title) {
       content += `<h2>${title}</h2>`;
