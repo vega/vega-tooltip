@@ -35,7 +35,7 @@
     "clean": "rm -rf build && mkdir build && rm -rf examples/build",
     "copy:data": "rsync -r node_modules/vega-datasets/data/* examples/data",
     "copy:build": "rsync -r build/* examples/build",
-    "deploy:gh": "gh-pages-deploy",
+    "deploy:gh": "npm run build && npm run copy:buid && gh-pages && npm run clean",
     "format": "tslint -p . --fix && prettier --write '{src,test}/**/*.ts'",
     "lint": "tslint -p . && prettier --list-different '{src,test}/**/*.ts'",
     "postbuild": "uglifyjs build/vega-tooltip.js -c -m -o build/vega-tooltip.min.js",
@@ -49,8 +49,9 @@
     "@types/jest": "^22.2.3",
     "browser-sync": "^2.23.7",
     "concurrently": "^3.5.1",
-    "gh-pages-deploy": "0.4.2",
+    "gh-pages": "^1.1.0",
     "jest": "^22.4.3",
+    "path": "^0.12.7",
     "prettier": "^1.12.1",
     "rollup": "^0.58.1",
     "rollup-plugin-commonjs": "^9.1.0",
@@ -85,17 +86,5 @@
       "<rootDir>/build",
       "src"
     ]
-  },
-  "gh-pages-deploy": {
-    "staticpath": "examples",
-    "prep": [
-      "copy:data",
-      "build",
-      "copy:build"
-    ],
-    "post": [
-      "clean"
-    ],
-    "noprompt": true
   }
 }
