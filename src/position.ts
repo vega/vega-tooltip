@@ -1,10 +1,10 @@
 /**
  * Position the tooltip
- * @param {MouseEvent} event
+ *
+ * @param event The mouse event.
  * @param tooltipBox
- * @param offsetX
- * @param offsetY
- * @returns {{x: number; y: number}}
+ * @param offsetX Horizontal offset.
+ * @param offsetY Vertical offset.
  */
 export function calculatePosition(
   event: MouseEvent,

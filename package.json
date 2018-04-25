@@ -35,21 +35,25 @@
     "clean": "rm -rf build && mkdir build",
     "data": "rsync -r node_modules/vega-datasets/data/* data",
     "deploy:gh": "scripts/deploy-gh.sh",
-    "format": "tslint -p . --fix && prettier --write 'src/**/*.ts'",
-    "lint": "tslint -p . && prettier --list-different 'src/**/*.ts'",
+    "format": "tslint -p . --fix && prettier --write '{src,test}/**/*.ts'",
+    "lint": "tslint -p . && prettier --list-different '{src,test}/**/*.ts'",
     "postbuild": "uglifyjs build/vega-tooltip.js -c -m -o build/vega-tooltip.min.js",
     "prebuild": "npm run data && npm run clean && tsc",
     "prepublishOnly": "npm run build",
     "preversion": "npm run lint",
-    "start": "concurrently --kill-others -n Server,Typescript,Rollup 'browser-sync start -s -f build *.html' 'tsc -w' 'rollup -c -w'"
+    "start": "concurrently --kill-others -n Server,Typescript,Rollup 'browser-sync start -s -f build *.html' 'tsc -w' 'rollup -c -w'",
+    "test": "jest"
   },
   "devDependencies": {
+    "@types/jest": "^22.2.3",
     "browser-sync": "^2.23.7",
     "concurrently": "^3.5.1",
+    "jest": "^22.4.3",
     "prettier": "^1.12.1",
     "rollup": "^0.58.1",
     "rollup-plugin-commonjs": "^9.1.0",
     "rollup-plugin-node-resolve": "^3.3.0",
+    "ts-jest": "^22.4.4",
     "tslint": "^5.9.1",
     "tslint-config-prettier": "^1.12.0",
     "typescript": "^2.8.3",
@@ -60,5 +64,24 @@
   "dependencies": {
     "json-stringify-safe": "^5.0.1",
     "vega-util": "^1.7.0"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "testPathIgnorePatterns": [
+      "node_modules",
+      "<rootDir>/build",
+      "src"
+    ]
   }
 }
