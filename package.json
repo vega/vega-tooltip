@@ -35,7 +35,7 @@
     "clean": "rm -rf build && mkdir build && rm -rf examples/build",
     "copy:data": "rsync -r node_modules/vega-datasets/data/* examples/data",
     "copy:build": "rsync -r build/* examples/build",
-    "deploy:gh": "npm run build && npm run copy:buid && gh-pages && npm run clean",
+    "deploy:gh": "npm run build && npm run copy:buid && gh-pages -d examples && npm run clean",
     "format": "tslint -p . --fix && prettier --write '{src,test}/**/*.ts'",
     "lint": "tslint -p . && prettier --list-different '{src,test}/**/*.ts'",
     "postbuild": "uglifyjs build/vega-tooltip.js -c -m -o build/vega-tooltip.min.js",
