@@ -29,8 +29,8 @@ describe('formatValue', () => {
         '<tr><td class="key">bar:</td><td class="value">false</td></tr>' +
         '<tr><td class="key">nostr:</td><td class="value"></td></tr>' +
         '<tr><td class="key">null:</td><td class="value">null</td></tr>' +
-        '<tr><td class=\"key\">html:</td><td class=\"value\">&amp;&lt;script></td></tr>' +
-      '</table>'
+        '<tr><td class="key">html:</td><td class="value">&amp;&lt;script></td></tr>' +
+        '</table>'
     );
 
     expect(fv({ a: { b: [1, 2] } })).toBe(
@@ -73,7 +73,7 @@ describe('formatValue', () => {
 
     expect(fv(['a', 'b'])).toBe('[a, b]');
     expect(fv(['&<script>'])).toBe('[&amp;&lt;script>]');
-    expect(fv([{foo: '&<script>'}])).toBe('[{"foo":"&amp;&lt;script>"}]');
+    expect(fv([{ foo: '&<script>' }])).toBe('[{"foo":"&amp;&lt;script>"}]');
 
     expect(fv([{}, 'b'])).toBe('[{}, b]');
     expect(fv([{ foo: 42 }, 'b'])).toBe('[{"foo":42}, b]');
