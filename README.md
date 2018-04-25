@@ -5,6 +5,8 @@
 
 A tooltip plugin for [Vega](http://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/) visualizations. This plugin implements a [custom tooltip handler](https://vega.github.io/vega/docs/api/view/#view_tooltip) for Vega that uses custom HTML tooltips instead of the HTML [`title` attribute](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/title). Vega Tooltip is installed in the [Vega Editor](https://vega.github.io/editor/).
 
+**Vega Tooltip 0.9 and above use a new API as described below. Learn what has changed at https://github.com/vega/vega-tooltip/wiki/Changes-in-Vega-Tooltip-0.9.**
+
 ![demo image](demo.png "a tooltip for a Vega-Lite scatterplot")
 
 ## Demo
