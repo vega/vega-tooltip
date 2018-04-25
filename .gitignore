@@ -1,5 +1,3 @@
-data
-bower_components
 node_modules
-settings.json
 build
+examples/data

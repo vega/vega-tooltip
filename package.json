@@ -32,22 +32,24 @@
   "homepage": "https://github.com/vega/vega-tooltip#readme",
   "scripts": {
     "build": "rollup -c",
-    "clean": "rm -rf build && mkdir build",
-    "data": "rsync -r node_modules/vega-datasets/data/* data",
-    "deploy:gh": "scripts/deploy-gh.sh",
+    "clean": "rm -rf build && mkdir build && rm -rf examples/build",
+    "copy:data": "rsync -r node_modules/vega-datasets/data/* examples/data",
+    "copy:build": "rsync -r build/* examples/build",
+    "deploy:gh": "gh-pages-deploy",
     "format": "tslint -p . --fix && prettier --write '{src,test}/**/*.ts'",
     "lint": "tslint -p . && prettier --list-different '{src,test}/**/*.ts'",
     "postbuild": "uglifyjs build/vega-tooltip.js -c -m -o build/vega-tooltip.min.js",
-    "prebuild": "npm run data && npm run clean && tsc",
+    "prebuild": "npm run copy:data && npm run clean && tsc",
     "prepublishOnly": "npm run build",
     "preversion": "npm run lint",
-    "start": "concurrently --kill-others -n Server,Typescript,Rollup 'browser-sync start -s -f build *.html' 'tsc -w' 'rollup -c -w'",
+    "start": "concurrently --kill-others -n Server,Typescript,Rollup 'browser-sync start -s -f build examples --serveStatic examples' 'tsc -w' 'rollup -c -w'",
     "test": "jest"
   },
   "devDependencies": {
     "@types/jest": "^22.2.3",
     "browser-sync": "^2.23.7",
     "concurrently": "^3.5.1",
+    "gh-pages-deploy": "0.4.2",
     "jest": "^22.4.3",
     "prettier": "^1.12.1",
     "rollup": "^0.58.1",
@@ -83,5 +85,17 @@
       "<rootDir>/build",
       "src"
     ]
+  },
+  "gh-pages-deploy": {
+    "staticpath": "examples",
+    "prep": [
+      "copy:data",
+      "build",
+      "copy:build"
+    ],
+    "post": [
+      "clean"
+    ],
+    "noprompt": true
   }
 }
