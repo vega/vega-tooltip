@@ -33,7 +33,7 @@ You can import `vega-tooltip` directly from [`jsDelivr`](https://www.jsdelivr.co
 
 ## Usage and APIs
 
-[Vega-Embed](https://github.com/vega/vega-embed) already comes with Vega Tooltip. You can pass tooltip customizations.
+If you use [Vega-Embed](https://github.com/vega/vega-embed), you **don't need to install Vega Tooltip**! Vega Embed already comes with Vega Tooltip. You can however pass tooltip customizations.
 
 ```js
 vegaEmbed("#vis", spec, {tooltip: {theme: 'dark'}})
@@ -43,7 +43,7 @@ vegaEmbed("#vis", spec, {tooltip: {theme: 'dark'}})
   .catch(console.error);
 ```
 
-If you want to ue a different version of the tooltip handler, you can override the default handler.
+If you want to ue a different version of the tooltip handler, you can override the default handler with the handler from Vega Tooltip (and you need to install it separately).
 
 ```js
 var handler = new vegaTooltip.Handler();
