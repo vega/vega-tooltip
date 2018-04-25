@@ -24,18 +24,21 @@ export function formatValue(value: any, valueToHtml: (value: any) => string): st
       content += `<h2>${valueToHtml(title)}</h2>`;
     }
 
-    content += '<table>';
-    for (const key of Object.keys(rest)) {
-      let val = (rest as any)[key];
-      if (isObject(val)) {
-        val = stringify(val);
+    const keys = Object.keys(rest);
+    if (keys.length > 0) {
+      content += '<table>';
+      for (const key of keys) {
+        let val = (rest as any)[key];
+        if (isObject(val)) {
+          val = stringify(val);
+        }
+
+        content += `<tr><td class="key">${valueToHtml(key)}:</td><td class="value">${valueToHtml(val)}</td></tr>`;
       }
-
-      content += `<tr><td class="key">${valueToHtml(key)}:</td><td class="value">${valueToHtml(val)}</td></tr>`;
+      content += `</table>`;
     }
-    content += `</table>`;
 
-    return content;
+    return content || '{}'; // show empty object if there are no properties
   }
 
   return valueToHtml(value);
