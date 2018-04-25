@@ -21,7 +21,7 @@ export function formatValue(value: any, valueToHtml: (value: any) => string): st
     const { title, ...rest } = value as any;
 
     if (title) {
-      content += `<h2>${title}</h2>`;
+      content += `<h2>${valueToHtml(title)}</h2>`;
     }
 
     content += '<table>';
@@ -38,5 +38,5 @@ export function formatValue(value: any, valueToHtml: (value: any) => string): st
     return content;
   }
 
-  return valueToHtml(String(value));
+  return valueToHtml(value);
 }
