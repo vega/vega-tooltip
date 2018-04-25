@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Tooltip Examples</title>
+  <meta charset="utf-8">
+
+  <!-- Tooltip Library -->
+  <script src="https://cdn.jsdelivr.net/npm/d3@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega@3/build/vega.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@latest"></script>
+
+  <script src="build/vega-tooltip.js"></script>
+
+  <!-- Example Page -->
+  <link rel="stylesheet" type="text/css" href="examples.css">
+</head>
+
+<body>
+  <h1>Vega Tooltip Examples</h1>
+  <a href="index.html" class="large">Back to overview</a>
+
+  <!-- Arc -->
+  <div id="vis-arc" class="tooltip-example"></div>
+
+  <!-- Choropleth -->
+  <div id="vis-choropleth" class="tooltip-example"></div>
+
+  <!-- Force -->
+  <div id="vis-force" class="tooltip-example"></div>
+
+  <!-- Heatmap -->
+  <div id="vis-heatmap" class="tooltip-example"></div>
+
+  <!-- Placeholder for Tooltip -->
+  <div id="vis-tooltip" class="vg-tooltip"></div>
+
+  <a href="index.html" class="large">Back to overview</a>
+  <a id="github-link" href="https://github.com/vega/vega-tooltip/">Back to Github</a>
+
+  <script type="text/javascript">
+    function addVgExample(path, id, options) {
+      d3.json(path).then(function (vgSpec) {
+        var handler = new vegaTooltip.Handler(options);
+        vegaEmbed(id, vgSpec, {tooltip: handler.call})
+          .catch(console.error);
+      }).catch(console.error);
+    }
+
+    addVgExample("specs/arc.json", "#vis-arc");
+    addVgExample("specs/choropleth.json", "#vis-choropleth");
+    addVgExample("specs/force.json", "#vis-force", {"theme": "dark"});
+    addVgExample("specs/heatmap.json", "#vis-heatmap");
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,35 @@
+body {
+  font-family: sans-serif;
+}
+
+/* Hide Vega action links */
+.vega-actions {
+  display: none;
+}
+
+/* Align tooltip examples to the center of the page */
+.tooltip-example {
+  margin: 40px 0px;
+}
+.tooltip-example canvas {
+  display: block;
+  margin: auto;
+}
+
+.large {
+  margin: 50px 0px 25px;
+  font-size: 1.5em;
+}
+
+.center {
+  text-align: center;
+}
+.center a {
+  display: block;
+}
+
+#github-link {
+  position: fixed;
+  top: 1em;
+  right: 1em;
+}

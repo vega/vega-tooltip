@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Tooltip Examples</title>
+  <meta charset="utf-8">
+
+  <!-- Tooltip Library -->
+  <script src="https://cdn.jsdelivr.net/npm/d3@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega@3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@latest"></script>
+
+  <script src="build/vega-tooltip.js"></script>
+
+  <!-- Example Page -->
+  <link rel="stylesheet" type="text/css" href="examples.css">
+</head>
+
+<body>
+  <h1>Vega-Lite Tooltip Examples</h1>
+  <a href="index.html" class="large">Back to overview</a>
+
+  <!-- Histogram Plot -->
+  <div id="vis-histogram" class="tooltip-example"></div>
+
+  <!-- Scatter Plot -->
+  <div id="vis-scatter" class="tooltip-example"></div>
+
+  <!-- Bubble Plot -->
+  <div id="vis-bubble-multi-aggr" class="tooltip-example"></div>
+
+  <!-- Trellis Barley -->
+  <div id="vis-trellis-barley" class="tooltip-example"></div>
+
+  <!-- Scatter Binned -->
+  <div id="vis-scatter-binned" class="tooltip-example"></div>
+
+  <!-- Simple Bar Chart -->
+  <div id="vis-bar" class="tooltip-example"></div>
+
+  <!-- Stacked Bar Chart -->
+  <div id="vis-stacked-bar" class="tooltip-example"></div>
+
+  <!-- Layered Bar Chart -->
+  <div id="vis-layered-bar" class="tooltip-example"></div>
+
+  <!-- Color Line Chart -->
+  <div id="vis-color-line" class="tooltip-example"></div>
+
+  <!-- Overlay Line Chart -->
+  <div id="vis-overlay-line" class="tooltip-example"></div>
+
+  <!-- Overlay Area Chart -->
+  <div id="vis-overlay-area" class="tooltip-example"></div>
+
+  <a href="index.html" class="large">Back to overview</a>
+  <a id="github-link" href="https://github.com/vega/vega-tooltip/">Back to Github</a>
+
+  <script type="text/javascript">
+    function addVlExample(path, id, options) {
+      d3.json(path).then(function (vlSpec) {
+        var handler = new vegaTooltip.Handler(options);
+        vegaEmbed(id, vlSpec, {tooltip: handler.call, mode: 'vega-lite'})
+          .catch(console.error);
+      }).catch(console.error);
+    }
+
+    // addVlExample("specs/histogram.json", "#vis-histogram");
+    // addVlExample("specs/scatter.json", "#vis-scatter");
+    // addVlExample("specs/bubble_multiple_aggregation.json", "#vis-bubble-multi-aggr");
+    // addVlExample("specs/trellis_barley.json", "#vis-trellis-barley");
+    // addVlExample("specs/scatter_binned.json", "#vis-scatter-binned");
+    addVlExample("specs/bar.json", "#vis-bar");
+    // addVlExample("specs/stacked_bar_weather.json", "#vis-stacked-bar");
+    // addVlExample("specs/bar_layered_transparent.json", "#vis-layered-bar");
+    // addVlExample("specs/line_color.json", "#vis-color-line");
+    // addVlExample("specs/overlay_area_short.json", "#vis-overlay-area");
+  </script>
+</body>
+
+</html>
