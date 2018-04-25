@@ -23,13 +23,14 @@ describe('formatValue', () => {
 
     expect(fv({ a: {} })).toBe('<table><tr><td class="key">a:</td><td class="value">{}</td></tr></table>');
 
-    expect(fv({ foo: 0, bar: false, nostr: '', null: null })).toBe(
+    expect(fv({ foo: 0, bar: false, nostr: '', null: null, html: '&<script>' })).toBe(
       '<table>' +
         '<tr><td class="key">foo:</td><td class="value">0</td></tr>' +
         '<tr><td class="key">bar:</td><td class="value">false</td></tr>' +
         '<tr><td class="key">nostr:</td><td class="value"></td></tr>' +
         '<tr><td class="key">null:</td><td class="value">null</td></tr>' +
-        '</table>'
+        '<tr><td class=\"key\">html:</td><td class=\"value\">&amp;&lt;script></td></tr>' +
+      '</table>'
     );
 
     expect(fv({ a: { b: [1, 2] } })).toBe(
@@ -38,6 +39,7 @@ describe('formatValue', () => {
 
     // title should not output table
     expect(fv({ title: 'eh' })).toBe('<h2>eh</h2>');
+    expect(fv({ title: '&<script>' })).toBe('<h2>&amp;&lt;script></h2>');
 
     // title should not output table
     expect(fv({ title: 'eh', foo: 42 })).toBe(
@@ -70,6 +72,8 @@ describe('formatValue', () => {
     expect(fv(['', ''])).toBe('[, ]'); // <--- FIXME: IS THIS WHAT WE WANT?
 
     expect(fv(['a', 'b'])).toBe('[a, b]');
+    expect(fv(['&<script>'])).toBe('[&amp;&lt;script>]');
+    expect(fv([{foo: '&<script>'}])).toBe('[{"foo":"&amp;&lt;script>"}]');
 
     expect(fv([{}, 'b'])).toBe('[{}, b]');
     expect(fv([{ foo: 42 }, 'b'])).toBe('[{"foo":42}, b]');

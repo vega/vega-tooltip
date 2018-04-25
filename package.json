@@ -43,7 +43,8 @@
     "prepublishOnly": "npm run build",
     "preversion": "npm run lint",
     "start": "concurrently --kill-others -n Server,Typescript,Rollup 'browser-sync start -s -f build examples --serveStatic examples' 'tsc -w' 'rollup -c -w'",
-    "test": "jest"
+    "test": "jest",
+    "watch:test": "jest --watch"
   },
   "devDependencies": {
     "@types/jest": "^22.2.3",
