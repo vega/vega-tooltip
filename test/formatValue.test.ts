@@ -1,6 +1,7 @@
 import { escapeHTML, formatValue } from '../src';
+import { replacer } from '../src/formatValue';
 
-const fv = (value: any) => formatValue(value, escapeHTML);
+const fv = (value: any) => formatValue(value, escapeHTML, 2);
 
 describe('formatValue', () => {
   it('should handle simple cases', () => {
@@ -49,7 +50,7 @@ describe('formatValue', () => {
     const recursive: any = {};
     recursive.foo = recursive;
     expect(fv(recursive)).toBe(
-      '<table><tr>' + '<td class="key">foo:</td>' + '<td class="value">{"foo":"[Circular ~]"}</td>' + '</tr></table>'
+      '<table><tr>' + '<td class="key">foo:</td>' + '<td class="value">{"foo":"[Circular]"}</td>' + '</tr></table>'
     );
 
     const recursive2: any = {};
@@ -57,7 +58,7 @@ describe('formatValue', () => {
     expect(fv(recursive2)).toBe(
       '<table><tr>' +
         '<td class="key">foo:</td>' +
-        '<td class="value">{"bar":{"foo":"[Circular ~.bar]"},"a":42}</td>' +
+        '<td class="value">{"bar":{"foo":"[Circular]"},"a":42}</td>' +
         '</tr></table>'
     );
   });
@@ -79,3 +80,15 @@ describe('formatValue', () => {
     expect(fv([{ foo: 42 }, 'b'])).toBe('[{"foo":42}, b]');
   });
 });
+
+describe('replacer', () => {
+  it('should work for stringify', () => {
+    expect(JSON.stringify({a: 42}, replacer(2))).toBe('{"a":42}');
+  });
+
+  it('should support circular', () => {
+    const x = {x: null, a: {b: {c: {d: {e: {f: 42}}}}}};
+    x.x = x;
+    expect(JSON.stringify(x, replacer(2))).toBe('{"x":"[Circular]","a":{"b":{"c":"[Object]"}}}');
+  });
+})

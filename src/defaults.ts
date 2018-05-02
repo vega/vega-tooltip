@@ -37,6 +37,11 @@ export const DEFAULT_OPTIONS = {
    * This should be a function from string to string. You may replace it with a formatter such as a markdown formatter.
    */
   sanitize: escapeHTML,
+
+  /**
+   * The maximum recursion depth when printing objects in the tooltip.
+   */
+  maxDepth: 2,
 };
 
 export type Options = typeof DEFAULT_OPTIONS;
@@ -98,7 +103,9 @@ export function createDefaultStyle(id: string): string {
   padding-right: 4px;
 }
 #${id} td.value {
-  max-width: 200px;
+  display: block;
+  max-width: 300px;
+  max-height: 7em;
   text-align: left;
 }
 

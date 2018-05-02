@@ -62,7 +62,8 @@ var view = new vega.View(runtime)
 | `styleId`       | String         | The ID of the stylesheet. The default name is `vega-tooltip-style`. |
 | `theme`         | String         | A color theme. <br>__Supported values:__ `"light"`, `"dark"`, or a custom name. <br>__Default value:__ `"light"` <br>To customize your own theme, create CSS for the `[THEME]-theme` class. |
 | `disableDefaultStyle` | Boolean  | Disable the default style completely. |
-| `sanitize` | Function | Function to convert value to string, and sanitize the HTML. |
+| `sanitize`      | Function       | Function to convert value to string, and sanitize the HTML. |
+| `maxDepth`      | Number         | The maximum recursion depth when printing objects in the tooltip. |
 
 
 The default values are:

@@ -1,18 +1,14 @@
 import { isArray, isObject, isString } from 'vega-util';
 
-import * as stringify_ from 'json-stringify-safe';
-
-const stringify = (stringify_ as any).default || stringify_;
-
 /**
  * Format the value to be shown in the toolip.
  *
  * @param value The value to show in the tooltip.
  * @param valueToHtml Function to convert a single cell value to an HTML string
  */
-export function formatValue(value: any, valueToHtml: (value: any) => string): string {
+export function formatValue(value: any, valueToHtml: (value: any) => string, maxDepth: number): string {
   if (isArray(value)) {
-    return `[${value.map(v => valueToHtml(isString(v) ? v : stringify(v))).join(', ')}]`;
+    return `[${value.map(v => valueToHtml(isString(v) ? v : stringify(v, maxDepth))).join(', ')}]`;
   }
 
   if (isObject(value)) {
@@ -30,7 +26,7 @@ export function formatValue(value: any, valueToHtml: (value: any) => string): st
       for (const key of keys) {
         let val = (rest as any)[key];
         if (isObject(val)) {
-          val = stringify(val);
+          val = stringify(val, maxDepth);
         }
 
         content += `<tr><td class="key">${valueToHtml(key)}:</td><td class="value">${valueToHtml(val)}</td></tr>`;
@@ -42,4 +38,31 @@ export function formatValue(value: any, valueToHtml: (value: any) => string): st
   }
 
   return valueToHtml(value);
+}
+
+export function replacer(maxDepth: number) {
+    const stack: any[] = [];
+
+    return function(this: any, key: string, value: any) {
+        if (typeof value !== 'object' || value === null) {
+            return value;
+        }
+        const pos = stack.indexOf(this) + 1;
+        stack.length = pos;
+        if (stack.length > maxDepth) {
+            return '[Object]';
+        }
+        if (stack.indexOf(value) >= 0) {
+            return '[Circular]';
+        }
+        stack.push(value);
+        return value;
+    };
+}
+
+/**
+ * Stringify any JS object to valid JSON
+ */
+export function stringify(obj: any, maxDepth: number) {
+    return JSON.stringify(obj, replacer(maxDepth));
 }

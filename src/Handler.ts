@@ -72,7 +72,7 @@ export class Handler {
     }
 
     // set the tooltip content
-    this.el.innerHTML = formatValue(value, escapeHTML);
+    this.el.innerHTML = formatValue(value, escapeHTML, this.options.maxDepth);
 
     // make the tooltip visible
     this.el.classList.add('visible', `${this.options.theme}-theme`);
