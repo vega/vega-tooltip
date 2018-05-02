@@ -41,28 +41,28 @@ export function formatValue(value: any, valueToHtml: (value: any) => string, max
 }
 
 export function replacer(maxDepth: number) {
-    const stack: any[] = [];
+  const stack: any[] = [];
 
-    return function(this: any, key: string, value: any) {
-        if (typeof value !== 'object' || value === null) {
-            return value;
-        }
-        const pos = stack.indexOf(this) + 1;
-        stack.length = pos;
-        if (stack.length > maxDepth) {
-            return '[Object]';
-        }
-        if (stack.indexOf(value) >= 0) {
-            return '[Circular]';
-        }
-        stack.push(value);
-        return value;
-    };
+  return function(this: any, key: string, value: any) {
+    if (typeof value !== 'object' || value === null) {
+      return value;
+    }
+    const pos = stack.indexOf(this) + 1;
+    stack.length = pos;
+    if (stack.length > maxDepth) {
+      return '[Object]';
+    }
+    if (stack.indexOf(value) >= 0) {
+      return '[Circular]';
+    }
+    stack.push(value);
+    return value;
+  };
 }
 
 /**
  * Stringify any JS object to valid JSON
  */
 export function stringify(obj: any, maxDepth: number) {
-    return JSON.stringify(obj, replacer(maxDepth));
+  return JSON.stringify(obj, replacer(maxDepth));
 }
