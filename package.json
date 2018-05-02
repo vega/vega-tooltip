@@ -42,7 +42,7 @@
     "prebuild": "npm run copy:data && npm run clean && tsc",
     "prepublishOnly": "npm run build",
     "preversion": "npm run lint",
-    "start": "concurrently --kill-others -n Server,Typescript,Rollup 'browser-sync start -s -f build examples --serveStatic examples' 'tsc -w' 'rollup -c -w'",
+    "start": "npm run build && concurrently --kill-others -n Server,Typescript,Rollup 'browser-sync start -s -f build examples --serveStatic examples' 'tsc -w' 'rollup -c -w'",
     "test": "jest",
     "watch:test": "jest --watch"
   },
@@ -66,7 +66,6 @@
     "vega-typings": "^0.2.15"
   },
   "dependencies": {
-    "json-stringify-safe": "^5.0.1",
     "vega-util": "^1.7.0"
   },
   "jest": {
