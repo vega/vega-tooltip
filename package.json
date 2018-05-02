@@ -48,22 +48,22 @@
   },
   "devDependencies": {
     "@types/jest": "^22.2.3",
-    "browser-sync": "^2.23.7",
+    "browser-sync": "^2.24.1",
     "concurrently": "^3.5.1",
     "gh-pages": "^1.1.0",
     "jest": "^22.4.3",
     "path": "^0.12.7",
     "prettier": "^1.12.1",
     "rollup": "^0.58.2",
-    "rollup-plugin-commonjs": "^9.1.0",
+    "rollup-plugin-commonjs": "^9.1.3",
     "rollup-plugin-node-resolve": "^3.3.0",
     "ts-jest": "^22.4.4",
     "tslint": "^5.9.1",
     "tslint-config-prettier": "^1.12.0",
     "typescript": "^2.8.3",
-    "uglify-js": "^3.3.22",
+    "uglify-js": "^3.3.23",
     "vega-datasets": "^1.18.0",
-    "vega-typings": "^0.2.15"
+    "vega-typings": "^0.2.16"
   },
   "dependencies": {
     "vega-util": "^1.7.0"
