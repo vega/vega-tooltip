@@ -83,12 +83,12 @@ describe('formatValue', () => {
 
 describe('replacer', () => {
   it('should work for stringify', () => {
-    expect(JSON.stringify({a: 42}, replacer(2))).toBe('{"a":42}');
+    expect(JSON.stringify({ a: 42 }, replacer(2))).toBe('{"a":42}');
   });
 
   it('should support circular', () => {
-    const x = {x: null, a: {b: {c: {d: {e: {f: 42}}}}}};
+    const x = { x: null, a: { b: { c: { d: { e: { f: 42 } } } } } };
     x.x = x;
     expect(JSON.stringify(x, replacer(2))).toBe('{"x":"[Circular]","a":{"b":{"c":"[Object]"}}}');
   });
-})
+});
