@@ -6,6 +6,7 @@ export declare const DEFAULT_OPTIONS: {
     theme: string;
     disableDefaultStyle: boolean;
     sanitize: typeof escapeHTML;
+    maxDepth: number;
 };
 export declare type Options = typeof DEFAULT_OPTIONS;
 /**

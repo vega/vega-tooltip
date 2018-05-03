@@ -1,0 +1,193 @@
+{
+    "$schema": "https://vega.github.io/schema/vega/v3.json",
+    "axes": [
+      {
+        "grid": true,
+        "orient": "bottom",
+        "scale": "xscale",
+        "title": "no. games"
+      },
+      {
+        "grid": true,
+        "orient": "left",
+        "scale": "yscale",
+        "title": "points"
+      }
+    ],
+    "signals": [
+      {
+        "name": "hover",
+        "value": null,
+        "on": [
+          {"events": "@points_voronoi:mouseover", "update": "datum"},
+          {"events": "@points_voronoi:mouseout", "update": "null"}
+        ]
+      },
+      {
+        "name": "signal_highligtedpoint",
+        "value": "test",
+        "update": "data('highlightedPoint')[0]"
+      }
+    ],
+    "data": [
+      {
+        "name": "table",
+        "values": [
+          {"ELO": 1000, "c": 1, "match": 0},
+          {"ELO": 984, "c": 1, "match": 1},
+          {"ELO": 968, "c": 1, "match": 2},
+          {"ELO": 984, "c": 1, "match": 3},
+          {"ELO": 999, "c": 1, "match": 4},
+          {"ELO": 985, "c": 1, "match": 5},
+          {"ELO": 972, "c": 1, "match": 6},
+          {"ELO": 961, "c": 1, "match": 7},
+          {"ELO": 948, "c": 1, "match": 8},
+          {"ELO": 933, "c": 1, "match": 9},
+          {"ELO": 919, "c": 1, "match": 10},
+          {"ELO": 935, "c": 1, "match": 11},
+          {"ELO": 920, "c": 1, "match": 12},
+          {"ELO": 934, "c": 1, "match": 13},
+          {"ELO": 946, "c": 1, "match": 14},
+          {"ELO": 932, "c": 1, "match": 15},
+          {"ELO": 951, "c": 1, "match": 16},
+          {"ELO": 939, "c": 1, "match": 17},
+          {"ELO": 922, "c": 1, "match": 18},
+          {"ELO": 910, "c": 1, "match": 19},
+          {"ELO": 898, "c": 1, "match": 20},
+          {"ELO": 919, "c": 1, "match": 21},
+          {"ELO": 910, "c": 1, "match": 22},
+          {"ELO": 922, "c": 1, "match": 23},
+          {"ELO": 901, "c": 1, "match": 24},
+          {"ELO": 892, "c": 1, "match": 25},
+          {"ELO": 879, "c": 1, "match": 26},
+          {"ELO": 897, "c": 1, "match": 27},
+          {"ELO": 913, "c": 1, "match": 28},
+          {"ELO": 928, "c": 1, "match": 29},
+          {"ELO": 950, "c": 1, "match": 30},
+          {"ELO": 963, "c": 1, "match": 31},
+          {"ELO": 975, "c": 1, "match": 32},
+          {"ELO": 992, "c": 1, "match": 33},
+          {"ELO": 975, "c": 1, "match": 34},
+          {"ELO": 956, "c": 1, "match": 35},
+          {"ELO": 971, "c": 1, "match": 36},
+          {"ELO": 953, "c": 1, "match": 37},
+          {"ELO": 961, "c": 1, "match": 38},
+          {"ELO": 980, "c": 1, "match": 39},
+          {"ELO": 987, "c": 1, "match": 40},
+          {"ELO": 993, "c": 1, "match": 41},
+          {"ELO": 1012, "c": 1, "match": 42}
+        ]
+      },
+      {
+        "name": "highlightedPoint",
+        "source": "table",
+        "transform": [
+          {
+            "type": "filter",
+            "expr": "hover && hover.datum.match === datum.match && hover.datum.ELO === datum.ELO"
+          }
+        ]
+      }
+    ],
+    "height": 175,
+    "marks": [
+      {
+        "from": {"facet": {"data": "table", "groupby": "c", "name": "series"}},
+        "marks": [
+          {
+            "encode": {
+              "update": {
+                "stroke": {"field": "c", "scale": "color"},
+                "strokeWidth": {"value": 2},
+                "x": {"field": "match", "scale": "xscale"},
+                "y": {"field": "ELO", "scale": "yscale"},
+                "fillOpacity": {"value": 1},
+                "interpolate": {"value": "step"}
+              }
+            },
+            "from": {"data": "series"},
+            "type": "line"
+          },
+          {
+            "name": "points_on_line",
+            "from": {"data": "series"},
+            "type": "symbol",
+            "encode": {
+              "update": {
+                "fill": {"value": "transparent"},
+                "size": {"value": 10},
+                "stroke": {"value": "transparent"},
+                "strokeWidth": {"value": 0.5},
+                "x": {"field": "match", "scale": "xscale"},
+                "y": {"field": "ELO", "scale": "yscale"}
+              }
+            }
+          },
+          {
+            "name": "points_voronoi",
+            "type": "path",
+            "from": {"data": "points_on_line"},
+            "encode": {
+              "update": {
+                "fill": {"value": "transparent"},
+                "strokeWidth": {"value": 0.35},
+                "stroke": {"value": "red"},
+                "strokeOpacity": {"value": 0.2},
+                "isVoronoi": {"value": true},
+                "tooltip": {"signal": "datum"}
+              }
+            },
+            "transform": [
+              {
+                "type": "voronoi",
+                "x": "datum.x",
+                "y": "datum.y",
+                "size": [{"signal": "width"}, {"signal": "height"}]
+              }
+            ]
+          },
+          {
+            "from": {"data": "highlightedPoint"},
+            "type": "symbol",
+            "interactive": false,
+            "encode": {
+              "update": {
+                "x": {"scale": "xscale", "field": "match"},
+                "y": {"scale": "yscale", "field": "ELO"},
+                "stroke": {"value": "green"},
+                "strokeWidth": {"value": 4},
+                "fill": {"value": "white"},
+                "size": {"value": 150},
+                "strokeOpacity": {"value": 0.3}
+              }
+            }
+          }
+        ],
+        "type": "group"
+      }
+    ],
+    "padding": 5,
+    "scales": [
+      {
+        "domain": {"data": "table", "field": "match"},
+        "name": "xscale",
+        "range": "width",
+        "type": "linear"
+      },
+      {
+        "domain": {"data": "table", "field": "ELO"},
+        "name": "yscale",
+        "nice": true,
+        "range": "height",
+        "type": "linear",
+        "zero": false
+      },
+      {
+        "domain": {"data": "table", "field": "c"},
+        "name": "color",
+        "range": "category",
+        "type": "ordinal"
+      }
+    ],
+    "width": 250
+  }

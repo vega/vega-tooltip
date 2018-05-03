@@ -70,6 +70,10 @@
          * This should be a function from string to string. You may replace it with a formatter such as a markdown formatter.
          */
         sanitize: escapeHTML,
+        /**
+         * The maximum recursion depth when printing objects in the tooltip.
+         */
+        maxDepth: 2,
     };
     /**
      * Escape special HTML characters.
@@ -86,7 +90,7 @@
         if (!/^[A-Za-z]+[-:.\w]*$/.test(id)) {
             throw new Error('Invalid HTML ID');
         }
-        return "\n#" + id + " {\n  visibility: hidden;\n  padding: 8px;\n  position: fixed;\n  z-index: 1000;\n  font-family: sans-serif;\n  font-size: 11px;\n  border-radius: 3px;\n  box-shadow: 2px 2px 4px rgba(0,0,0,0.1);\n\n  /* The default theme is the light theme. */\n  background-color: rgba(255, 255, 255, 0.95);\n  border: 1px solid #d9d9d9;\n  color: black;\n}\n#" + id + ".visible {\n  visibility: visible;\n}\n#" + id + " h2 {\n  margin-top: 0;\n  margin-bottom: 10px;\n  font-size: 13px;\n}\n#" + id + " table {\n  border-spacing: 0;\n}\n#" + id + " td {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  padding-top: 2px;\n  padding-bottom: 2px;\n}\n#" + id + " td.key {\n  color: #808080;\n  max-width: 150px;\n  text-align: right;\n  padding-right: 4px;\n}\n#" + id + " td.value {\n  max-width: 200px;\n  text-align: left;\n}\n\n/* Dark and light color themes */\n#" + id + ".dark-theme {\n  background-color: rgba(32, 32, 32, 0.9);\n  border: 1px solid #f5f5f5;\n  color: white;\n}\n#" + id + ".dark-theme td.key {\n  color: #bfbfbf;\n}\n\n#" + id + ".light-theme {\n  background-color: rgba(255, 255, 255, 0.95);\n  border: 1px solid #d9d9d9;\n  color: black;\n}\n#" + id + ".light-theme td.key {\n  color: #808080;\n}\n";
+        return "\n#" + id + " {\n  visibility: hidden;\n  padding: 8px;\n  position: fixed;\n  z-index: 1000;\n  font-family: sans-serif;\n  font-size: 11px;\n  border-radius: 3px;\n  box-shadow: 2px 2px 4px rgba(0,0,0,0.1);\n\n  /* The default theme is the light theme. */\n  background-color: rgba(255, 255, 255, 0.95);\n  border: 1px solid #d9d9d9;\n  color: black;\n}\n#" + id + ".visible {\n  visibility: visible;\n}\n#" + id + " h2 {\n  margin-top: 0;\n  margin-bottom: 10px;\n  font-size: 13px;\n}\n#" + id + " table {\n  border-spacing: 0;\n}\n#" + id + " td {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  padding-top: 2px;\n  padding-bottom: 2px;\n}\n#" + id + " td.key {\n  color: #808080;\n  max-width: 150px;\n  text-align: right;\n  padding-right: 4px;\n}\n#" + id + " td.value {\n  display: block;\n  max-width: 300px;\n  max-height: 7em;\n  text-align: left;\n}\n\n/* Dark and light color themes */\n#" + id + ".dark-theme {\n  background-color: rgba(32, 32, 32, 0.9);\n  border: 1px solid #f5f5f5;\n  color: white;\n}\n#" + id + ".dark-theme td.key {\n  color: #bfbfbf;\n}\n\n#" + id + ".light-theme {\n  background-color: rgba(255, 255, 255, 0.95);\n  border: 1px solid #d9d9d9;\n  color: black;\n}\n#" + id + ".light-theme td.key {\n  color: #808080;\n}\n";
     }
 
     function accessor(fn, fields, name) {
@@ -204,57 +208,15 @@
 
     var falsy = accessor(function() { return false; }, empty, 'false');
 
-    function createCommonjsModule(fn, module) {
-    	return module = { exports: {} }, fn(module, module.exports), module.exports;
-    }
-
-    var stringify_1 = createCommonjsModule(function (module, exports) {
-    exports = module.exports = stringify;
-    exports.getSerialize = serializer;
-
-    function stringify(obj, replacer, spaces, cycleReplacer) {
-      return JSON.stringify(obj, serializer(replacer, cycleReplacer), spaces)
-    }
-
-    function serializer(replacer, cycleReplacer) {
-      var stack = [], keys = [];
-
-      if (cycleReplacer == null) cycleReplacer = function(key, value) {
-        if (stack[0] === value) return "[Circular ~]"
-        return "[Circular ~." + keys.slice(0, stack.indexOf(value)).join(".") + "]"
-      };
-
-      return function(key, value) {
-        if (stack.length > 0) {
-          var thisPos = stack.indexOf(this);
-          ~thisPos ? stack.splice(thisPos + 1) : stack.push(this);
-          ~thisPos ? keys.splice(thisPos, Infinity, key) : keys.push(key);
-          if (~stack.indexOf(value)) value = cycleReplacer.call(this, key, value);
-        }
-        else stack.push(value);
-
-        return replacer == null ? value : replacer.call(this, key, value)
-      }
-    }
-    });
-    var stringify_2 = stringify_1.getSerialize;
-
-    var stringify_ = /*#__PURE__*/Object.freeze({
-        default: stringify_1,
-        __moduleExports: stringify_1,
-        getSerialize: stringify_2
-    });
-
-    var stringify = stringify_1 || stringify_;
     /**
      * Format the value to be shown in the toolip.
      *
      * @param value The value to show in the tooltip.
      * @param valueToHtml Function to convert a single cell value to an HTML string
      */
-    function formatValue(value, valueToHtml) {
+    function formatValue(value, valueToHtml, maxDepth) {
         if (isArray(value)) {
-            return "[" + value.map(function (v) { return valueToHtml(isString(v) ? v : stringify(v)); }).join(', ') + "]";
+            return "[" + value.map(function (v) { return valueToHtml(isString(v) ? v : stringify(v, maxDepth)); }).join(', ') + "]";
         }
         if (isObject(value)) {
             var content = '';
@@ -262,19 +224,46 @@
             if (title) {
                 content += "<h2>" + valueToHtml(title) + "</h2>";
             }
-            content += '<table>';
-            for (var _i = 0, _b = Object.keys(rest); _i < _b.length; _i++) {
-                var key$$1 = _b[_i];
-                var val = rest[key$$1];
-                if (isObject(val)) {
-                    val = stringify(val);
+            var keys = Object.keys(rest);
+            if (keys.length > 0) {
+                content += '<table>';
+                for (var _i = 0, keys_1 = keys; _i < keys_1.length; _i++) {
+                    var key$$1 = keys_1[_i];
+                    var val = rest[key$$1];
+                    if (isObject(val)) {
+                        val = stringify(val, maxDepth);
+                    }
+                    content += "<tr><td class=\"key\">" + valueToHtml(key$$1) + ":</td><td class=\"value\">" + valueToHtml(val) + "</td></tr>";
                 }
-                content += "<tr><td class=\"key\">" + valueToHtml(key$$1) + ":</td><td class=\"value\">" + valueToHtml(val) + "</td></tr>";
+                content += "</table>";
             }
-            content += "</table>";
-            return content;
+            return content || '{}'; // show empty object if there are no properties
         }
         return valueToHtml(value);
+    }
+    function replacer(maxDepth) {
+        var stack = [];
+        return function (key$$1, value) {
+            if (typeof value !== 'object' || value === null) {
+                return value;
+            }
+            var pos = stack.indexOf(this) + 1;
+            stack.length = pos;
+            if (stack.length > maxDepth) {
+                return '[Object]';
+            }
+            if (stack.indexOf(value) >= 0) {
+                return '[Circular]';
+            }
+            stack.push(value);
+            return value;
+        };
+    }
+    /**
+     * Stringify any JS object to valid JSON
+     */
+    function stringify(obj, maxDepth) {
+        return JSON.stringify(obj, replacer(maxDepth));
     }
 
     /**
@@ -343,7 +332,7 @@
                 return;
             }
             // set the tooltip content
-            this.el.innerHTML = formatValue(value, escapeHTML);
+            this.el.innerHTML = formatValue(value, escapeHTML, this.options.maxDepth);
             // make the tooltip visible
             this.el.classList.add('visible', this.options.theme + "-theme");
             var _a = calculatePosition(event, this.el.getBoundingClientRect(), this.options.offsetX, this.options.offsetY), x = _a.x, y = _a.y;
@@ -369,6 +358,8 @@
     exports.escapeHTML = escapeHTML;
     exports.createDefaultStyle = createDefaultStyle;
     exports.formatValue = formatValue;
+    exports.replacer = replacer;
+    exports.stringify = stringify;
     exports.calculatePosition = calculatePosition;
     exports.Handler = Handler;
 
