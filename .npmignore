@@ -1,11 +1,11 @@
 .DS_Store
 .gitignore
-bower_components
 node_modules
 docs
 data
 exampleSpecs
 scripts
+test
 *.html
 *examples.js
 examples.css
