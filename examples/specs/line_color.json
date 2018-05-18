@@ -6,6 +6,11 @@
   "encoding": {
     "x": {"field": "date", "type": "temporal", "axis": {"format": "%Y"}},
     "y": {"field": "price", "type": "quantitative"},
-    "color": {"field": "symbol", "type": "nominal"}
+    "color": {"field": "symbol", "type": "nominal"},
+    "tooltip": [
+      {"field": "date", "type": "temporal"},
+      {"field": "symbol", "type": "nominal"},
+      {"field": "price", "type": "quantitative"}
+    ]
   }
 }
