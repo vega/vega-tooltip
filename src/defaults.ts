@@ -67,5 +67,5 @@ export function createDefaultStyle(id: string): string {
     throw new Error('Invalid HTML ID');
   }
 
-  return defaultStyle.replace(EL_ID, id);
+  return defaultStyle.toString().replace(EL_ID, id);
 }
