@@ -1,10 +1,19 @@
 language: node_js
 node_js:
-  - "8"
-
+- '6'
+- '10'
 script:
-  - yarn lint
-  - yarn build
-  - yarn jest
-
+- yarn lint
+- yarn test
+- yarn build
 cache: yarn
+deploy:
+  provider: npm
+  skip_cleanup: true
+  email: domoritz@gmail.com
+  on:
+    tags: true
+    repo: vega/vega-tooltip
+    node: '10'
+  api_key:
+    secure: cAPcJMENkJaIP855RYIegmVu50P7Y7PYHiQwX2iZDa8aLW9ra69zWDk6W2TM8YxmRfOT9STY7lDMTU6S/GT2fbj0sI48rO85lnoEOgJ3srWQedg34SAAaZpHdgrQaOwuUD2FSiod9v3kK5zfT1QWvOaR98pCF7WjgBO7AoSwEbpIorDd8u4867RI9XQhPgltzXuRV/P96qR30Q2cU0bCwzlRvagCL/i83wq6qhhgg9LUuz2G1lxdR2BTKRPSufNRfO36mC8wN4nVac5/3YYweMvdzj4r7TjYQYg6YI/VPTJhETobU1YvZzD0sPXjY49gyd1VmJoDTJHMgyAnEOd8WaZypaAtxXB/uXfCAjo8Tv0lbRMQcF3BPITEsce1htGan829eVG/Jbo1Zkq2Vn61llKVSxT+5E4z5p+r2UwihRn4lfsnPolBFwJIg05CZc8KiRp7RuGGLac6XRv0xH2w9w7EkZ9K+cakA2sHorpd8BX/ufc61wn5FZ0Oq3j9RxLK3nx7FHo53Bw4wajK/Du4Yf1+jcjMHHGtVTnwTzMnuAB4Hx3n00GjpP1gqM3PdcfDQaGJV8a3u7zjO2HBs1LXN4FXrRCY+P/CX6k5jKIVdwiwoOZXxv7lOUrLcvXWSvR/CwwQ+/UCXuRAJycZpAaO0jZFU8buCblIjvil8EtrrOk=
