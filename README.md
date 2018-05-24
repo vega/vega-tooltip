@@ -68,3 +68,7 @@ See the [API documentation](docs/APIs.md) for details.
 1. In the project folder `vega-tooltip`, type command `yarn` to install dependencies.
 2. Then, type `yarn start`. This will build the library and start a web server.
 3. In your browser, navigate to `http://localhost:8000/`, where you can see various Vega-Lite and Vega visualizations with tooltip interaction.
+
+## Release Process
+
+To release a new version, make sure that everything works. Then run `yarn version` and bump the version number. Lastly, push to GitHub (with the release tag). [Travis](https://travis-ci.org/vega/vega-tooltip/builds) will build a bundle and make the [npm release](https://www.npmjs.com/package/vega-tooltip) automatically.
