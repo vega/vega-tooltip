@@ -106,7 +106,7 @@ For example, in your spec you might define a tooltip like this:
 ...
 ```
 
-See [exampleSpecs/choropleth.json](https://github.com/vega/vega-tooltip/blob/master/exampleSpecs/choropleth.json) for an example.
+See [examples/specs/choropleth.json](https://github.com/vega/vega-tooltip/blob/master/examples/specs/choropleth.json) for an example.
 
 ### In Vega-Lite
 
