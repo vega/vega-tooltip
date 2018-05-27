@@ -22,11 +22,6 @@
           {"events": "@points_voronoi:mouseover", "update": "datum"},
           {"events": "@points_voronoi:mouseout", "update": "null"}
         ]
-      },
-      {
-        "name": "signal_highligtedpoint",
-        "value": "test",
-        "update": "data('highlightedPoint')[0]"
       }
     ],
     "data": [
