@@ -1,4 +1,4 @@
-import defaultStyle from '../vega-tooltip.css';
+import defaultStyle from './style';
 
 const EL_ID = 'vg-tooltip-element';
 
