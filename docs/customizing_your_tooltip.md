@@ -4,7 +4,7 @@ __Previous Tutorial:__ [Creating Your Tooltip](creating_your_tooltip.md).
 
 ## Passing options
 
-You can customize the tooltip by passing in an optional `options` parameter. These options are defined in [the API](API.md#options).
+You can customize the tooltip by passing in an optional `options` parameter. These options are defined in [the API](APIs.md#options).
 
 For example:
 
