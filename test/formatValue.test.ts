@@ -12,6 +12,7 @@ describe('formatValue', () => {
     expect(fv(true)).toBe('true');
     expect(fv('<html> & </html>')).toBe('&lt;html> &amp; &lt;/html>');
     expect(fv('1234567890')).toBe('1234567890');
+    // @ts-ignore
     expect(fv('1234567890'.repeat(100))).toBe('1234567890'.repeat(100));
   });
 
@@ -87,7 +88,7 @@ describe('replacer', () => {
   });
 
   it('should support circular', () => {
-    const x = { x: null, a: { b: { c: { d: { e: { f: 42 } } } } } };
+    const x: any = { x: null, a: { b: { c: { d: { e: { f: 42 } } } } } };
     x.x = x;
     expect(JSON.stringify(x, replacer(2))).toBe('{"x":"[Circular]","a":{"b":{"c":"[Object]"}}}');
   });

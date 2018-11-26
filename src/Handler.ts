@@ -40,11 +40,12 @@ export class Handler {
       const style = document.createElement('style');
       style.setAttribute('id', this.options.styleId);
       style.innerHTML = createDefaultStyle(elementId);
+      const head = document.head!;  // yes, we expect the document to have a head
 
-      if (document.head.childNodes.length > 0) {
-        document.head.insertBefore(style, document.head.childNodes[0]);
+      if (head.childNodes.length > 0) {
+        head.insertBefore(style, head.childNodes[0]);
       } else {
-        document.head.appendChild(style);
+        head.appendChild(style);
       }
     }
 
