@@ -45,7 +45,7 @@ export const DEFAULT_OPTIONS = {
   /**
    * The maximum recursion depth when printing objects in the tooltip.
    */
-  maxDepth: 2,
+  maxDepth: 2
 };
 
 export type Options = typeof DEFAULT_OPTIONS;

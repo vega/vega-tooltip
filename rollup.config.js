@@ -10,8 +10,5 @@ export default {
     name: 'vegaTooltip',
     exports: 'named'
   },
-  plugins: [
-    resolve(),
-    commonjs()
-  ]
+  plugins: [resolve(), commonjs()]
 };
