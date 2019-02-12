@@ -49,7 +49,7 @@
   },
   "devDependencies": {
     "@types/jest": "^24.0.0",
-    "@types/node": "^10.12.18",
+    "@types/node": "^11.9.0",
     "browser-sync": "^2.26.3",
     "concurrently": "^4.1.0",
     "gh-pages": "^2.0.1",
