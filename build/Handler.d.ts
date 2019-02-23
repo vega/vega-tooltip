@@ -25,5 +25,5 @@ export declare class Handler {
     /**
      * The tooltip handler function.
      */
-    private tooltip_handler(handler, event, item, value);
+    private tooltip_handler;
 }

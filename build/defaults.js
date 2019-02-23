@@ -1,4 +1,6 @@
-export var DEFAULT_OPTIONS = {
+import defaultStyle from './style';
+const EL_ID = 'vg-tooltip-element';
+export const DEFAULT_OPTIONS = {
     /**
      * X offset.
      */
@@ -10,7 +12,7 @@ export var DEFAULT_OPTIONS = {
     /**
      * ID of the tooltip element.
      */
-    id: 'vg-tooltip-element',
+    id: EL_ID,
     /**
      * ID of the tooltip CSS style.
      */
@@ -34,7 +36,7 @@ export var DEFAULT_OPTIONS = {
     /**
      * The maximum recursion depth when printing objects in the tooltip.
      */
-    maxDepth: 2,
+    maxDepth: 2
 };
 /**
  * Escape special HTML characters.
@@ -51,6 +53,6 @@ export function createDefaultStyle(id) {
     if (!/^[A-Za-z]+[-:.\w]*$/.test(id)) {
         throw new Error('Invalid HTML ID');
     }
-    return "\n#" + id + " {\n  visibility: hidden;\n  padding: 8px;\n  position: fixed;\n  z-index: 1000;\n  font-family: sans-serif;\n  font-size: 11px;\n  border-radius: 3px;\n  box-shadow: 2px 2px 4px rgba(0,0,0,0.1);\n\n  /* The default theme is the light theme. */\n  background-color: rgba(255, 255, 255, 0.95);\n  border: 1px solid #d9d9d9;\n  color: black;\n}\n#" + id + ".visible {\n  visibility: visible;\n}\n#" + id + " h2 {\n  margin-top: 0;\n  margin-bottom: 10px;\n  font-size: 13px;\n}\n#" + id + " table {\n  border-spacing: 0;\n}\n#" + id + " td {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  padding-top: 2px;\n  padding-bottom: 2px;\n}\n#" + id + " td.key {\n  color: #808080;\n  max-width: 150px;\n  text-align: right;\n  padding-right: 4px;\n}\n#" + id + " td.value {\n  display: block;\n  max-width: 300px;\n  max-height: 7em;\n  text-align: left;\n}\n\n/* Dark and light color themes */\n#" + id + ".dark-theme {\n  background-color: rgba(32, 32, 32, 0.9);\n  border: 1px solid #f5f5f5;\n  color: white;\n}\n#" + id + ".dark-theme td.key {\n  color: #bfbfbf;\n}\n\n#" + id + ".light-theme {\n  background-color: rgba(255, 255, 255, 0.95);\n  border: 1px solid #d9d9d9;\n  color: black;\n}\n#" + id + ".light-theme td.key {\n  color: #808080;\n}\n";
+    return defaultStyle.toString().replace(EL_ID, id);
 }
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZGVmYXVsdHMuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi9zcmMvZGVmYXVsdHMudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsTUFBTSxDQUFDLElBQU0sZUFBZSxHQUFHO0lBQzdCOztPQUVHO0lBQ0gsT0FBTyxFQUFFLEVBQUU7SUFFWDs7T0FFRztJQUNILE9BQU8sRUFBRSxFQUFFO0lBRVg7O09BRUc7SUFDSCxFQUFFLEVBQUUsb0JBQW9CO0lBRXhCOztPQUVHO0lBQ0gsT0FBTyxFQUFFLG9CQUFvQjtJQUU3Qjs7OztPQUlHO0lBQ0gsS0FBSyxFQUFFLE9BQU87SUFFZDs7T0FFRztJQUNILG1CQUFtQixFQUFFLEtBQUs7SUFFMUI7Ozs7T0FJRztJQUNILFFBQVEsRUFBRSxVQUFVO0lBRXBCOztPQUVHO0lBQ0gsUUFBUSxFQUFFLENBQUM7Q0FDWixDQUFDO0FBSUY7Ozs7R0FJRztBQUNILE1BQU0scUJBQXFCLEtBQVU7SUFDbkMsT0FBTyxNQUFNLENBQUMsS0FBSyxDQUFDO1NBQ2pCLE9BQU8sQ0FBQyxJQUFJLEVBQUUsT0FBTyxDQUFDO1NBQ3RCLE9BQU8sQ0FBQyxJQUFJLEVBQUUsTUFBTSxDQUFDLENBQUM7QUFDM0IsQ0FBQztBQUVELE1BQU0sNkJBQTZCLEVBQVU7SUFDM0MsNkVBQTZFO0lBQzdFLElBQUksQ0FBQyxxQkFBcUIsQ0FBQyxJQUFJLENBQUMsRUFBRSxDQUFDLEVBQUU7UUFDbkMsTUFBTSxJQUFJLEtBQUssQ0FBQyxpQkFBaUIsQ0FBQyxDQUFDO0tBQ3BDO0lBRUQsT0FBTyxRQUNOLEVBQUUsaVdBZUYsRUFBRSxnREFHRixFQUFFLGlGQUtGLEVBQUUsNENBR0YsRUFBRSxpSEFNRixFQUFFLDRHQU1GLEVBQUUsK0lBUUYsRUFBRSxzSEFLRixFQUFFLHVEQUlGLEVBQUUsMkhBS0YsRUFBRSxrREFHSixDQUFDO0FBQ0YsQ0FBQyJ9
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZGVmYXVsdHMuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi9zcmMvZGVmYXVsdHMudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsT0FBTyxZQUFZLE1BQU0sU0FBUyxDQUFDO0FBRW5DLE1BQU0sS0FBSyxHQUFHLG9CQUFvQixDQUFDO0FBRW5DLE1BQU0sQ0FBQyxNQUFNLGVBQWUsR0FBRztJQUM3Qjs7T0FFRztJQUNILE9BQU8sRUFBRSxFQUFFO0lBRVg7O09BRUc7SUFDSCxPQUFPLEVBQUUsRUFBRTtJQUVYOztPQUVHO0lBQ0gsRUFBRSxFQUFFLEtBQUs7SUFFVDs7T0FFRztJQUNILE9BQU8sRUFBRSxvQkFBb0I7SUFFN0I7Ozs7T0FJRztJQUNILEtBQUssRUFBRSxPQUFPO0lBRWQ7O09BRUc7SUFDSCxtQkFBbUIsRUFBRSxLQUFLO0lBRTFCOzs7O09BSUc7SUFDSCxRQUFRLEVBQUUsVUFBVTtJQUVwQjs7T0FFRztJQUNILFFBQVEsRUFBRSxDQUFDO0NBQ1osQ0FBQztBQUlGOzs7O0dBSUc7QUFDSCxNQUFNLFVBQVUsVUFBVSxDQUFDLEtBQVU7SUFDbkMsT0FBTyxNQUFNLENBQUMsS0FBSyxDQUFDO1NBQ2pCLE9BQU8sQ0FBQyxJQUFJLEVBQUUsT0FBTyxDQUFDO1NBQ3RCLE9BQU8sQ0FBQyxJQUFJLEVBQUUsTUFBTSxDQUFDLENBQUM7QUFDM0IsQ0FBQztBQUVELE1BQU0sVUFBVSxrQkFBa0IsQ0FBQyxFQUFVO0lBQzNDLDZFQUE2RTtJQUM3RSxJQUFJLENBQUMscUJBQXFCLENBQUMsSUFBSSxDQUFDLEVBQUUsQ0FBQyxFQUFFO1FBQ25DLE1BQU0sSUFBSSxLQUFLLENBQUMsaUJBQWlCLENBQUMsQ0FBQztLQUNwQztJQUVELE9BQU8sWUFBWSxDQUFDLFFBQVEsRUFBRSxDQUFDLE9BQU8sQ0FBQyxLQUFLLEVBQUUsRUFBRSxDQUFDLENBQUM7QUFDcEQsQ0FBQyJ9
