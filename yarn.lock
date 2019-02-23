@@ -5096,14 +5096,14 @@ vega-datasets@^1.20.0:
   resolved "https://registry.yarnpkg.com/vega-datasets/-/vega-datasets-1.22.0.tgz#a839f51ec5abb70ab0687e6dbf0ecd231558c605"
   integrity sha512-eeChIzCIBqn1bQY0nEzX0N7DkUEMhjF92qnjmfRfi0EkWG1sG9nGQbYKDGGOQcpVOXSFM8rEhTBTZfRvlL5KJg==
 
-vega-typings@^0.3.53:
-  version "0.3.53"
-  resolved "https://registry.yarnpkg.com/vega-typings/-/vega-typings-0.3.53.tgz#a70b9730ebe1e4c557019ccccc5fd98035b0aab0"
-  integrity sha512-XQRd66eL62ll6tHENQIJHtdwXemqXoB4KnVVbGUwGJIHjQkHHluCbkoWVRvPYuRd+OLM1RXVc+EBxA015hJ1SQ==
+vega-typings@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/vega-typings/-/vega-typings-0.5.0.tgz#550e308857cf206bfe4a9df5732f3e35112f60b1"
+  integrity sha512-YotiynSXziFDu3xK4BMZIX42yLkO32tM0CrWSMxHUEn1tJGFz2fckVD02i4DJc5p3FUupPNU+Oayj6E7prOd3w==
   dependencies:
-    vega-util "^1.7.0"
+    vega-util "^1.8.0"
 
-vega-util@^1.7.0, vega-util@^1.7.1:
+vega-util@^1.7.1, vega-util@^1.8.0:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/vega-util/-/vega-util-1.8.0.tgz#a51768e4eb1e70e54ba32b0483d9bda2ddb9dc7d"
   integrity sha512-SPKAwa4IJW2WGGQhxpzA4JK9tXIU1lTChxgczaeKzf1zf1PKQ+w5deLX3GnnlHXHBEw1nMTp0NZnGal6v9uf4Q==
