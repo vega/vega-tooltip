@@ -3,11 +3,11 @@
     "target": "es6",
     "module": "es2015",
     "moduleResolution": "node",
+    "esModuleInterop": true,
     "declaration": true,
     "strict": true,
     "outDir": "./build",
-    "inlineSourceMap": true,
-    "importHelpers": true
+    "inlineSourceMap": true
   },
   "files": ["src/index.ts"],
   "include": [
