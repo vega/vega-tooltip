@@ -55,7 +55,7 @@ vegaEmbed("#vis", spec, {tooltip: tooltipOptions})
 Then create the style for your theme. 
 
 ```css
-.vg-tooltip.custom-theme {
+#vg-tooltip-element.vg-tooltip.custom-theme {
   color: red;
 }
 ```
