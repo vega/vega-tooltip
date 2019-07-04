@@ -7,7 +7,7 @@
     <!-- Tooltip Library -->
     <script src="https://cdn.jsdelivr.net/npm/d3@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-embed@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@4"></script>
 
     <script src="build/vega-tooltip.js"></script>
 
@@ -41,18 +41,18 @@
     <script type="text/javascript">
       function addVgExample(path, id, options) {
         d3.json(path)
-          .then(function(vgSpec) {
-            var handler = new vegaTooltip.Handler(options);
-            vegaEmbed(id, vgSpec, { tooltip: handler.call }).catch(console.error);
+          .then(vgSpec => {
+            const handler = new vegaTooltip.Handler(options);
+            vegaEmbed(id, vgSpec, {tooltip: handler.call}).catch(console.error);
           })
           .catch(console.error);
       }
 
-      addVgExample("specs/arc.json", "#vis-arc");
-      addVgExample("specs/choropleth.json", "#vis-choropleth");
-      addVgExample("specs/force.json", "#vis-force", { theme: "dark" });
-      addVgExample("specs/heatmap.json", "#vis-heatmap");
-      addVgExample("specs/voronoi.json", "#vis-voronoi");
+      addVgExample('specs/arc.json', '#vis-arc');
+      addVgExample('specs/choropleth.json', '#vis-choropleth');
+      addVgExample('specs/force.json', '#vis-force', {theme: 'dark'});
+      addVgExample('specs/heatmap.json', '#vis-heatmap');
+      addVgExample('specs/voronoi.json', '#vis-voronoi');
     </script>
   </body>
 </html>

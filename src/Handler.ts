@@ -1,8 +1,8 @@
-import { TooltipHandler } from 'vega-typings';
+import {TooltipHandler} from 'vega-typings';
 
-import { createDefaultStyle, DEFAULT_OPTIONS, Options } from './defaults';
-import { formatValue } from './formatValue';
-import { calculatePosition } from './position';
+import {createDefaultStyle, DEFAULT_OPTIONS, Options} from './defaults';
+import {formatValue} from './formatValue';
+import {calculatePosition} from './position';
 
 /**
  * The tooltip handler class.
@@ -29,7 +29,7 @@ export class Handler {
    * @param options Tooltip Options
    */
   constructor(options?: Partial<Options>) {
-    this.options = { ...DEFAULT_OPTIONS, ...options };
+    this.options = {...DEFAULT_OPTIONS, ...options};
     const elementId = this.options.id;
 
     // bind this to call
@@ -50,6 +50,7 @@ export class Handler {
     }
 
     // append a div element that we use as a tooltip unless it already exists
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el = document.getElementById(elementId)!;
     if (!this.el) {
       this.el = document.createElement('div');
@@ -78,7 +79,7 @@ export class Handler {
     // make the tooltip visible
     this.el.classList.add('visible', `${this.options.theme}-theme`);
 
-    const { x, y } = calculatePosition(
+    const {x, y} = calculatePosition(
       event,
       this.el.getBoundingClientRect(),
       this.options.offsetX,

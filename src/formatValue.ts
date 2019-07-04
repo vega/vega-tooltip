@@ -1,4 +1,4 @@
-import { isArray, isObject, isString } from 'vega-util';
+import {isArray, isObject, isString} from 'vega-util';
 
 /**
  * Format the value to be shown in the toolip.
@@ -14,7 +14,7 @@ export function formatValue(value: any, valueToHtml: (value: any) => string, max
   if (isObject(value)) {
     let content = '';
 
-    const { title, ...rest } = value as any;
+    const {title, ...rest} = value as any;
 
     if (title) {
       content += `<h2>${valueToHtml(title)}</h2>`;
@@ -25,7 +25,7 @@ export function formatValue(value: any, valueToHtml: (value: any) => string, max
       content += '<table>';
       for (const key of keys) {
         let val = (rest as any)[key];
-        
+
         // ignore undefined properties
         if (val === undefined) {
           continue;

@@ -1,4 +1,7 @@
-node_modules
+.eslintrc.js
 build
 examples/data
+node_modules
+prettier.config.js
 src/style.ts
+beemo-error.log

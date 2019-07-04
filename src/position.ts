@@ -8,7 +8,7 @@
  */
 export function calculatePosition(
   event: MouseEvent,
-  tooltipBox: { width: number; height: number },
+  tooltipBox: {width: number; height: number},
   offsetX: number,
   offsetY: number
 ) {
@@ -22,5 +22,5 @@ export function calculatePosition(
     y = +event.clientY - offsetY - tooltipBox.height;
   }
 
-  return { x, y };
+  return {x, y};
 }

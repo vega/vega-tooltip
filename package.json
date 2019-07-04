@@ -31,14 +31,16 @@
   },
   "homepage": "https://github.com/vega/vega-tooltip#readme",
   "scripts": {
+    "prepare": "beemo create-config --silent",
     "build": "rollup -c",
     "clean": "rm -rf build examples/data && rm -f src/style.ts && mkdir build",
     "copy:data": "rsync -r node_modules/vega-datasets/data/* examples/data",
     "copy:build": "rsync -r build/* examples/build",
     "deploy:gh": "yarn build && yarn copy:build && gh-pages -d examples && yarn clean",
-    "prettierbase": "prettier '{src,test,typings}/**/*.ts' '*.scss' 'examples/*.{html,css}' '*.js'",
-    "format": "tslint -p . --fix && yarn prettierbase --write",
-    "lint": "tslint -p . && yarn prettierbase --check",
+    "prettierbase": "beemo prettier 'examples/*.{html,scss,css}'",
+    "eslintbase": "beemo eslint '{src,test,typings}/**/*.ts' '*.js'",
+    "format": "yarn eslintbase --fix && yarn prettierbase --write",
+    "lint": "yarn eslintbase && yarn prettierbase --check",
     "postbuild": "terser build/vega-tooltip.js -c -m -o build/vega-tooltip.min.js",
     "prebuild": "yarn clean && yarn copy:data && ./build-style.sh && tsc",
     "prepublishOnly": "yarn build",
@@ -56,20 +58,25 @@
     "jest": "^24.8.0",
     "node-sass": "^4.12.0",
     "path": "^0.12.7",
-    "prettier": "^1.18.2",
     "rollup": "^1.16.4",
     "rollup-plugin-commonjs": "^10.0.1",
     "rollup-plugin-node-resolve": "^5.2.0",
     "terser": "^4.0.2",
     "ts-jest": "^24.0.2",
-    "tslint": "^5.18.0",
-    "tslint-config-prettier": "^1.18.0",
+    "vega-lite-dev-config": "^0.1.7",
     "typescript": "^3.5.2",
     "vega-datasets": "^1.25.0",
     "vega-typings": "^0.7.1"
   },
   "dependencies": {
     "vega-util": "^1.10.0"
+  },
+  "beemo": {
+    "module": "vega-lite-dev-config",
+    "drivers": [
+      "prettier",
+      "eslint"
+    ]
   },
   "jest": {
     "testURL": "http://localhost/",

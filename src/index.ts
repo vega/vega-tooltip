@@ -1,7 +1,7 @@
-import { View } from 'vega-typings';
+import {View} from 'vega-typings';
 
-import { Options } from './defaults';
-import { Handler } from './Handler';
+import {Options} from './defaults';
+import {Handler} from './Handler';
 
 export * from './defaults';
 export * from './formatValue';
