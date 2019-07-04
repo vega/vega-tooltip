@@ -1,6 +1,6 @@
 {
   "name": "vega-tooltip",
-  "version": "0.17.0",
+  "version": "0.17.1",
   "description": "A tooltip plugin for Vega-Lite and Vega visualizations.",
   "main": "build/vega-tooltip.js",
   "module": "build/index.js",
@@ -63,9 +63,9 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "terser": "^4.0.2",
     "ts-jest": "^24.0.2",
-    "vega-lite-dev-config": "^0.1.7",
     "typescript": "^3.5.2",
     "vega-datasets": "^1.25.0",
+    "vega-lite-dev-config": "^0.1.7",
     "vega-typings": "^0.7.1"
   },
   "dependencies": {
