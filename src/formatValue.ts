@@ -25,6 +25,12 @@ export function formatValue(value: any, valueToHtml: (value: any) => string, max
       content += '<table>';
       for (const key of keys) {
         let val = (rest as any)[key];
+        
+        // ignore undefined properties
+        if (val === undefined) {
+          continue;
+        }
+
         if (isObject(val)) {
           val = stringify(val, maxDepth);
         }
