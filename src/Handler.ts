@@ -33,7 +33,7 @@ export class Handler {
     const elementId = this.options.id;
 
     // bind this to call
-    this.call = this.tooltip_handler.bind(this);
+    this.call = this.tooltipHandler.bind(this);
 
     // prepend a default stylesheet for tooltips to the head
     if (!this.options.disableDefaultStyle && !document.getElementById(this.options.styleId)) {
@@ -63,7 +63,7 @@ export class Handler {
   /**
    * The tooltip handler function.
    */
-  private tooltip_handler(handler: any, event: MouseEvent, item: any, value: any) {
+  private tooltipHandler(handler: any, event: MouseEvent, item: any, value: any) {
     // console.log(handler, event, item, value);
 
     // hide tooltip for null, undefined, or empty string values
