@@ -1,5 +1,6 @@
 .DS_Store
 .eslintignore
+.eslintrc.js
 .gitignore
 .prettierignore
 .prettierrc.json
@@ -10,6 +11,7 @@ docs
 eslintrc.js
 examples
 node_modules
+prettier.config.js
 rollup.config.js
 test
 tsconfig.json
