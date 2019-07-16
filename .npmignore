@@ -1,10 +1,13 @@
 .DS_Store
+.eslintignore
 .gitignore
+.prettierignore
 .prettierrc.json
 .travis.yml
-data
+build-style.sh
 demo.png
 docs
+eslintrc.js
 examples
 node_modules
 rollup.config.js
