@@ -16,7 +16,10 @@
     "vega",
     "tooltip"
   ],
-  "author": "Interactive Data Lab",
+  "author": {
+    "name": "UW Interactive Data Lab",
+    "url": "https://idl.cs.washington.edu"
+  },
   "collaborators": [
     "Dominik Moritz",
     "Sira Horradarn",
