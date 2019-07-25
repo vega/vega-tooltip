@@ -4,7 +4,7 @@ import {View} from 'vega-typings';
 import {Options} from './defaults';
 import {Handler} from './Handler';
 
- const version = pkg.version;
+const version = pkg.version;
 
 export * from './defaults';
 export * from './formatValue';
