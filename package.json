@@ -3,10 +3,10 @@
   "version": "0.18.0",
   "description": "A tooltip plugin for Vega-Lite and Vega visualizations.",
   "main": "build/vega-tooltip.js",
-  "module": "build/index.js",
+  "module": "build/src/index.js",
   "unpkg": "build/vega-tooltip.min.js",
   "jsdelivr": "build/vega-tooltip.min.js",
-  "typings": "build/index.d.ts",
+  "typings": "build/src/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/vega/vega-tooltip.git"
@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@types/jest": "^24.0.15",
-    "@types/node": "^12.6.3",
+    "@types/node": "^12.6.8",
     "browser-sync": "^2.26.7",
     "concurrently": "^4.1.1",
     "gh-pages": "^2.0.1",
@@ -70,7 +70,7 @@
     "typescript": "^3.5.3",
     "vega-datasets": "^1.25.0",
     "vega-lite-dev-config": "^0.1.16",
-    "vega-typings": "^0.7.1"
+    "vega-typings": "^0.7.2"
   },
   "dependencies": {
     "vega-util": "^1.10.0"
