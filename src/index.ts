@@ -1,4 +1,4 @@
-import pkg from '../package.json'
+import pkg from '../package.json';
 import {View} from 'vega-typings';
 
 import {Options} from './defaults';
