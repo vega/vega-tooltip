@@ -10,7 +10,7 @@ export * from './defaults';
 export * from './formatValue';
 export * from './position';
 export * from './Handler';
-export { version };
+export {version};
 
 /**
  * Create a tooltip handler and register it with the provided view.
