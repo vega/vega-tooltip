@@ -12,7 +12,6 @@ describe('formatValue', () => {
     expect(fv(true)).toBe('true');
     expect(fv('<html> & </html>')).toBe('&lt;html> &amp; &lt;/html>');
     expect(fv('1234567890')).toBe('1234567890');
-    // @ts-ignore
     expect(fv('1234567890'.repeat(100))).toBe('1234567890'.repeat(100));
   });
 
