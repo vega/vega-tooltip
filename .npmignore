@@ -15,5 +15,6 @@ prettier.config.js
 rollup.config.js
 test
 tsconfig.json
+tsconfig.src.json
 tslint.json
 yarn.lock
