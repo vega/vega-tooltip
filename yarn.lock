@@ -7052,7 +7052,7 @@ vega-typings@^0.8.1:
   dependencies:
     vega-util "^1.11.0"
 
-vega-util@^1.11.0:
+vega-util@^1.11.0, vega-util@^1.11.1:
   version "1.11.1"
   resolved "https://registry.yarnpkg.com/vega-util/-/vega-util-1.11.1.tgz#7a61e3995dec533c38946cc4dcd766bfbdfedba6"
   integrity sha512-ai/gKv2zg753t44YNwDVuCAdR9vFoDzzbSeAv/SG7n1pI4EYCUmsjNUmg+WR8BcaHInS1PCGkoncZ0RoX8dUjg==

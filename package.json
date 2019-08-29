@@ -73,7 +73,7 @@
     "vega-typings": "^0.8.1"
   },
   "dependencies": {
-    "vega-util": "^1.11.0"
+    "vega-util": "^1.11.1"
   },
   "beemo": {
     "module": "vega-lite-dev-config",
