@@ -61,19 +61,19 @@
     "jest": "^24.9.0",
     "node-sass": "^4.12.0",
     "path": "^0.12.7",
-    "rollup": "^1.20.1",
-    "rollup-plugin-commonjs": "^10.0.2",
+    "rollup": "^1.20.3",
+    "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "terser": "^4.2.1",
     "ts-jest": "^24.0.2",
-    "typescript": "^3.5.3",
+    "typescript": "^3.6.2",
     "vega-datasets": "^1.25.0",
     "vega-lite-dev-config": "^0.2.5",
-    "vega-typings": "^0.7.2"
+    "vega-typings": "^0.8.1"
   },
   "dependencies": {
-    "vega-util": "^1.10.0"
+    "vega-util": "^1.11.0"
   },
   "beemo": {
     "module": "vega-lite-dev-config",
