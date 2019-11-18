@@ -7107,10 +7107,10 @@ vega-lite-dev-config@^0.3.0:
     prettier "^1.18.2"
     ts-jest "^24.1.0"
 
-vega-typings@^0.10.0:
-  version "0.10.2"
-  resolved "https://registry.yarnpkg.com/vega-typings/-/vega-typings-0.10.2.tgz#4155bbc72a536a7f503ce61af592502d69b917d5"
-  integrity sha512-W/V6oyoBizlXt0FJnuY5/Y46/dsmfcPTxRaUCtFBf0nyoWBsmO66EYj24xCHJ6pgfHEEbBRLPfrfrvlKiRPaMQ==
+vega-typings@^0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/vega-typings/-/vega-typings-0.11.0.tgz#664edc86962639bb68e67a0339281f06ce8a3b33"
+  integrity sha512-i67WNmzm1ymswDT8t54dOQusDUO+95Lzxmum0YkNrBIXso1hwFWUT1les0swNlKzSJPjhTofN2OrPXa6C+uf6w==
   dependencies:
     vega-util "^1.11.0"
 
