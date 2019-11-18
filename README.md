@@ -24,9 +24,9 @@ Use `npm install vega-tooltip` or `yarn add vega-tooltip`.
 You can import `vega-tooltip` directly from [`jsDelivr`](https://www.jsdelivr.com/package/npm/vega-tooltip). Replace `[VERSION]` with the version that you want to use.
 
 ```html
-<!-- Import Vega 3 & Vega-Lite 2 (does not have to be from CDN) -->
-<script src="https://cdn.jsdelivr.net/npm/vega@3"></script>
-<script src="https://cdn.jsdelivr.net/npm/vega-lite@2"></script>
+<!-- Import Vega 5 & Vega-Lite 3 (does not have to be from CDN) -->
+<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@3"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/vega-tooltip@[VERSION]"></script>
 ```
