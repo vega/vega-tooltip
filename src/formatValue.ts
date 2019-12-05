@@ -40,7 +40,7 @@ export function formatValue(value: any, valueToHtml: (value: any) => string, max
       content += `</table>`;
     }
 
-    return content || '{}'; // show empty object if there are no properties
+    return content ?? '{}'; // show empty object if there are no properties
   }
 
   return valueToHtml(value);
