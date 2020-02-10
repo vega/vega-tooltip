@@ -7940,9 +7940,9 @@ vega-lite-dev-config@^0.3.1:
     ts-jest "^24.2.0"
 
 vega-typings@^0.12.0:
-  version "0.12.1"
-  resolved "https://registry.yarnpkg.com/vega-typings/-/vega-typings-0.12.1.tgz#47f61c7e5bce01617f891dff5148f06fdae5f881"
-  integrity sha512-+9nciYMrG3t/gBQv5bc5s81aBpa3WC/EGsj6pBJBq8hniyeM9OgFf94ABNX6GJCzC7I8QdusVOrA/CTI3HYCpg==
+  version "0.12.3"
+  resolved "https://registry.yarnpkg.com/vega-typings/-/vega-typings-0.12.3.tgz#fc5f00219a0d99d3df5b19c563be77800c157cf0"
+  integrity sha512-ubOekVm60PjzP0b+FAakbti9PkoGu/as2SPX7iBo5IPp8pt+Ej5SNpQJPdCl9rSpKCzU4QNWz1ptZcXL3WSTcg==
   dependencies:
     vega-util "^1.12.1"
 
