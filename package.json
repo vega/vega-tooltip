@@ -64,16 +64,16 @@
     "jest": "^25.1.0",
     "node-sass": "^4.13.1",
     "path": "^0.12.7",
-    "rollup": "^1.31.1",
-    "terser": "^4.6.3",
+    "rollup": "^1.32.0",
+    "terser": "^4.6.4",
     "ts-jest": "^25.2.1",
     "typescript": "^3.8.2",
-    "vega-datasets": "^1.29.0",
+    "vega-datasets": "^1.30.2",
     "vega-lite-dev-config": "^0.4.3",
-    "vega-typings": "^0.12.4"
+    "vega-typings": "^0.13.0"
   },
   "dependencies": {
-    "vega-util": "^1.12.2"
+    "vega-util": "^1.13.0"
   },
   "beemo": {
     "module": "vega-lite-dev-config",
