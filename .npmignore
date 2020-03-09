@@ -2,9 +2,9 @@
 .eslintignore
 .eslintrc.js
 .gitignore
-.prettierignore
-.prettierrc.json
+.prettier*
 .travis.yml
+*.tsbuildinfo
 build-style.sh
 demo.png
 docs
