@@ -7145,14 +7145,14 @@ vega-lite-dev-config@^0.4.3:
     prettier "^1.19.1"
     ts-jest "^25.2.0"
 
-vega-typings@^0.13.0:
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/vega-typings/-/vega-typings-0.13.0.tgz#690fc11f264ec15f611f21133d2e6a6f2dfbbd01"
-  integrity sha512-5Fw1zKSvKkDjyTGWEBNY4GBRotVx5LabJIatfRgRHaao0Qme7u+ydIHd/Yu5Ip7vOlmpnnXQRruoPaGVV2tvqg==
+vega-typings@^0.14.0:
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/vega-typings/-/vega-typings-0.14.0.tgz#4ceaf70b2ba3e5518b9d3e3e09cc60478e95887f"
+  integrity sha512-N+5xGuBodnd3mpIYTSLHX5vg+jgjE152tfrnN47+u6u22rCVagntELdq6sMheWBEwQNCh7nm7kKq1BcEzxXj1w==
   dependencies:
-    vega-util "^1.12.1"
+    vega-util "^1.13.1"
 
-vega-util@^1.12.1, vega-util@^1.13.0:
+vega-util@^1.13.0, vega-util@^1.13.1:
   version "1.13.1"
   resolved "https://registry.yarnpkg.com/vega-util/-/vega-util-1.13.1.tgz#3eae51043184c6b873c17b148755c21b01274a0e"
   integrity sha512-TmvZSMKqhGlS7eAXphqJUhq+NZVYbvXX2ahargTRkVckGWjEUpWhMC7T13vYihrU2Lf/OevKbrruSXKOBxke2w==
