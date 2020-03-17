@@ -48,7 +48,7 @@ export const DEFAULT_OPTIONS = {
   maxDepth: 2
 };
 
-export type Options = typeof DEFAULT_OPTIONS;
+export type Options = Partial<typeof DEFAULT_OPTIONS>;
 
 /**
  * Escape special HTML characters.

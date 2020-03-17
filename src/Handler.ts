@@ -16,7 +16,7 @@ export class Handler {
   /**
    * Complete tooltip options.
    */
-  private options: Options;
+  private options: Required<Options>;
 
   /**
    * The tooltip html element.
@@ -28,7 +28,7 @@ export class Handler {
    *
    * @param options Tooltip Options
    */
-  constructor(options?: Partial<Options>) {
+  constructor(options?: Options) {
     this.options = {...DEFAULT_OPTIONS, ...options};
     const elementId = this.options.id;
 
