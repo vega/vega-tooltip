@@ -8,7 +8,7 @@ import {isArray, isObject, isString} from 'vega-util';
  */
 export function formatValue(value: any, valueToHtml: (value: any) => string, maxDepth: number): string {
   if (isArray(value)) {
-    return `[${value.map(v => valueToHtml(isString(v) ? v : stringify(v, maxDepth))).join(', ')}]`;
+    return `[${value.map((v) => valueToHtml(isString(v) ? v : stringify(v, maxDepth))).join(', ')}]`;
   }
 
   if (isObject(value)) {
@@ -49,7 +49,7 @@ export function formatValue(value: any, valueToHtml: (value: any) => string, max
 export function replacer(maxDepth: number) {
   const stack: any[] = [];
 
-  return function(this: any, key: string, value: any) {
+  return function (this: any, key: string, value: any) {
     if (typeof value !== 'object' || value === null) {
       return value;
     }

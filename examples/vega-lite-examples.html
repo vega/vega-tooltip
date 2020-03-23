@@ -60,7 +60,7 @@
     <script type="text/javascript">
       function addVlExample(path, id, options) {
         d3.json(path)
-          .then(vlSpec => {
+          .then((vlSpec) => {
             const handler = new vegaTooltip.Handler(options);
             vegaEmbed(id, vlSpec, { tooltip: handler.call, mode: "vega-lite" }).catch(console.error);
           })

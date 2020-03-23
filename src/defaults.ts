@@ -45,7 +45,7 @@ export const DEFAULT_OPTIONS = {
   /**
    * The maximum recursion depth when printing objects in the tooltip.
    */
-  maxDepth: 2
+  maxDepth: 2,
 };
 
 export type Options = Partial<typeof DEFAULT_OPTIONS>;
@@ -56,9 +56,7 @@ export type Options = Partial<typeof DEFAULT_OPTIONS>;
  * @param value A value to convert to string and HTML-escape.
  */
 export function escapeHTML(value: any): string {
-  return String(value)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;');
+  return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;');
 }
 
 export function createDefaultStyle(id: string): string {

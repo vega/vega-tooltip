@@ -41,7 +41,7 @@
     <script type="text/javascript">
       function addVgExample(path, id, options) {
         d3.json(path)
-          .then(vgSpec => {
+          .then((vgSpec) => {
             const handler = new vegaTooltip.Handler(options);
             vegaEmbed(id, vgSpec, { tooltip: handler.call }).catch(console.error);
           })
