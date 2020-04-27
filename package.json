@@ -70,7 +70,7 @@
     "typescript": "^3.8.3",
     "vega-datasets": "^1.30.2",
     "vega-lite-dev-config": "^0.7.1",
-    "vega-typings": "^0.15.2"
+    "vega-typings": "^0.16.0"
   },
   "dependencies": {
     "vega-util": "^1.13.1"
