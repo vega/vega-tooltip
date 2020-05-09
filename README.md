@@ -4,7 +4,6 @@
 [![Build Status](https://travis-ci.org/vega/vega-tooltip.svg?branch=master)](https://travis-ci.org/vega/vega-tooltip)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=rounded)](https://github.com/prettier/prettier)
 
-
 A tooltip plugin for [Vega](http://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/) visualizations. This plugin implements a [custom tooltip handler](https://vega.github.io/vega/docs/api/view/#view_tooltip) for Vega that uses custom HTML tooltips instead of the HTML [`title` attribute](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/title). Vega Tooltip is installed in the [Vega Editor](https://vega.github.io/editor/).
 
 ![demo image](demo.png "a tooltip for a Vega-Lite scatterplot")
@@ -14,6 +13,8 @@ A tooltip plugin for [Vega](http://vega.github.io/vega/) and [Vega-Lite](https:/
 http://vega.github.io/vega-tooltip/
 
 ## Installing
+
+We recommend using [Vega-Embed](https://github.com/vega/vega-embed), whcih already comes with this tooltip plugin. 
 
 ### NPM or Yarn
 
