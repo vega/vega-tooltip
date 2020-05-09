@@ -4,14 +4,12 @@
     <title>Tooltip Examples</title>
     <meta charset="utf-8" />
 
-    <!-- Tooltip Library -->
     <script src="https://cdn.jsdelivr.net/npm/d3@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-embed@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 
     <script src="build/vega-tooltip.js"></script>
 
-    <!-- Example Page -->
     <link rel="stylesheet" type="text/css" href="examples.css" />
   </head>
 
@@ -19,19 +17,11 @@
     <h1>Vega Tooltip Examples</h1>
     <a href="index.html" class="large">Back to overview</a>
     <div>
-      <!-- Arc -->
+      <div id="vis-images" class="tooltip-example"></div>
       <div id="vis-arc" class="tooltip-example"></div>
-
-      <!-- Choropleth -->
       <div id="vis-choropleth" class="tooltip-example"></div>
-
-      <!-- Force -->
       <div id="vis-force" class="tooltip-example"></div>
-
-      <!-- Heatmap -->
       <div id="vis-heatmap" class="tooltip-example"></div>
-
-      <!-- Voronoi -->
       <div id="vis-voronoi" class="tooltip-example"></div>
     </div>
 
@@ -39,15 +29,13 @@
     <a id="github-link" href="https://github.com/vega/vega-tooltip/">Back to Github</a>
 
     <script type="text/javascript">
-      function addVgExample(path, id, options) {
-        d3.json(path)
-          .then((vgSpec) => {
-            const handler = new vegaTooltip.Handler(options);
-            vegaEmbed(id, vgSpec, { tooltip: handler.call }).catch(console.error);
-          })
-          .catch(console.error);
+      async function addVgExample(path, id, options) {
+        const vgSpec = await d3.json(path);
+        const handler = new vegaTooltip.Handler(options);
+        await vegaEmbed(id, vgSpec, { tooltip: handler.call }).catch(console.error);
       }
 
+      addVgExample("specs/images.json", "#vis-images");
       addVgExample("specs/arc.json", "#vis-arc");
       addVgExample("specs/choropleth.json", "#vis-choropleth");
       addVgExample("specs/force.json", "#vis-force", { theme: "dark" });

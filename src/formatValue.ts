@@ -1,7 +1,7 @@
 import {isArray, isObject, isString} from 'vega-util';
 
 /**
- * Format the value to be shown in the toolip.
+ * Format the value to be shown in the tooltip.
  *
  * @param value The value to show in the tooltip.
  * @param valueToHtml Function to convert a single cell value to an HTML string
@@ -14,10 +14,14 @@ export function formatValue(value: any, valueToHtml: (value: any) => string, max
   if (isObject(value)) {
     let content = '';
 
-    const {title, ...rest} = value as any;
+    const {title, image, ...rest} = value as any;
 
     if (title) {
       content += `<h2>${valueToHtml(title)}</h2>`;
+    }
+
+    if (image) {
+      content += `<img src="${valueToHtml(image)}">`;
     }
 
     const keys = Object.keys(rest);
