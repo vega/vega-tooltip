@@ -11,8 +11,7 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "strict": true,
-    "outDir": "./build",
-    "incremental": true
+    "outDir": "./build"
   },
   "files": ["src/index.ts"],
   "typeRoots": ["node_modules/@types", "types"]

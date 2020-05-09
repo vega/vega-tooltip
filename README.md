@@ -8,13 +8,19 @@ A tooltip plugin for [Vega](http://vega.github.io/vega/) and [Vega-Lite](https:/
 
 ![demo image](demo.png "a tooltip for a Vega-Lite scatterplot")
 
+**Features**
+* Renders nice tooltips for Vega and Vega-Lite charts
+* Supports dark and light theme
+* Renders object-valued tooltips as a table
+* Supports special keys `title` (becomes the title of the tooltip) and `image` (used as the url for an embedded image)
+
 ## Demo
 
 http://vega.github.io/vega-tooltip/
 
 ## Installing
 
-We recommend using [Vega-Embed](https://github.com/vega/vega-embed), whcih already comes with this tooltip plugin. 
+We recommend using [Vega-Embed](https://github.com/vega/vega-embed), which already comes with this tooltip plugin. 
 
 ### NPM or Yarn
 
@@ -25,9 +31,9 @@ Use `npm install vega-tooltip` or `yarn add vega-tooltip`.
 You can import `vega-tooltip` directly from [`jsDelivr`](https://www.jsdelivr.com/package/npm/vega-tooltip). Replace `[VERSION]` with the version that you want to use.
 
 ```html
-<!-- Import Vega 5 & Vega-Lite 3 (does not have to be from CDN) -->
+<!-- Import Vega 5 & Vega-Lite 4 (does not have to be from CDN) -->
 <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-<script src="https://cdn.jsdelivr.net/npm/vega-lite@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/vega-tooltip@[VERSION]"></script>
 ```

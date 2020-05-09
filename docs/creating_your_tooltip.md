@@ -23,8 +23,8 @@ vega-tooltip/build/vega-tooltip.js
 If you want to manually include the library and its dependencies, you can add the following lines to your HTML script tag. Vega Tooltip works with [`vega`](https://vega.github.io/vega/) and [`vega-lite`](https://vega.github.io/vega-lite/).
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/vega@3"></script>
-<script src="https://cdn.jsdelivr.net/npm/vega-lite@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
 
 <!-- Vega Tooltip -->
 <script src="https://cdn.jsdelivr.net/npm/vega-tooltip"></script>
@@ -92,7 +92,9 @@ vegaTooltip(view);
 
 **You will not see a tooltip if you skip this step.**
 
-You have to define the tooltip property in Vega or Vega-Lite. Note that if you don't use `vega-tooltip`, Vega will use native tooltips instead. Vega Tooltip automatically formats the data. Literal values are coerced to strings. Arrays will be shown in line. For Object values, each key-value pair is displayed in its own row in a table.
+You have to define the tooltip property in Vega or Vega-Lite. Note that if you don't use `vega-tooltip`, Vega will use native tooltips instead. Vega Tooltip automatically formats the data. Literal values are coerced to strings. Arrays will be shown in line. For object values, each key-value pair is displayed in its own row in a table.
+
+Vega tooltip handles some keys in object valued tooltips differently. For example, a field called `title` automatically becomes the title of the tooltip. A field called `image` automatically adds an embedded image that uses the field value as the URL.
 
 ### In Vega
 
