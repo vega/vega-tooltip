@@ -3,6 +3,7 @@
 .prettierignore
 beemo-error.log
 build
+coverage/
 examples/data
 node_modules
 prettier.config.js
