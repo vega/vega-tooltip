@@ -1,7 +1,8 @@
 # Tooltip for Vega & Vega-Lite
 [![npm version](https://img.shields.io/npm/v/vega-tooltip.svg)](https://www.npmjs.com/package/vega-tooltip)
+[![Build Status](https://github.com/vega/vega-tooltip/workflows/Test/badge.svg)](https://github.com/vega/vega-tooltip/actions)
+[![codecov](https://codecov.io/gh/vega/vega-tooltip/branch/master/graph/badge.svg)](https://codecov.io/gh/vega/vega-tooltip)
 [![](https://data.jsdelivr.com/v1/package/npm/vega-tooltip/badge?style=rounded)](https://www.jsdelivr.com/package/npm/vega-tooltip)
-[![Build Status](https://travis-ci.org/vega/vega-tooltip.svg?branch=master)](https://travis-ci.org/vega/vega-tooltip)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=rounded)](https://github.com/prettier/prettier)
 
 A tooltip plugin for [Vega](http://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/) visualizations. This plugin implements a [custom tooltip handler](https://vega.github.io/vega/docs/api/view/#view_tooltip) for Vega that uses custom HTML tooltips instead of the HTML [`title` attribute](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/title). Vega Tooltip is installed in the [Vega Editor](https://vega.github.io/editor/).
