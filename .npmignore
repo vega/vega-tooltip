@@ -6,6 +6,7 @@
 .travis.yml
 *.tsbuildinfo
 build-style.sh
+coverage/
 demo.png
 docs
 eslintrc.js
