@@ -7583,9 +7583,9 @@ vega-lite-dev-config@^0.10.3:
     ts-jest "^25.5.0"
 
 vega-typings@^0.17.0:
-  version "0.17.0"
-  resolved "https://registry.yarnpkg.com/vega-typings/-/vega-typings-0.17.0.tgz#d8386f832dba587df5a85e48737415eb2508d8b1"
-  integrity sha512-+jg0V8xmjwjj66XEPT3uUKiXDHECgGttJ2waoTBWIuqaen7lT5LT4gsPddpNxHaKbj0kasAK8imN/67ZmdTfoA==
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/vega-typings/-/vega-typings-0.17.1.tgz#b37068e6916a2ea9951ea1eb24d8369c54be3bce"
+  integrity sha512-URn78hh1CCJ3A+AN90S5sM2IwZt/DKXDVh/IFj5ciAp3v6dFsFcclEqFQ2Ul/EIBlOuOO5z12BAVHuZA7nsMOA==
   dependencies:
     vega-util "^1.13.1"
 
