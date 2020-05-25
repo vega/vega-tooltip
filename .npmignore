@@ -1,9 +1,9 @@
 .DS_Store
 .eslintignore
 .eslintrc.js
+.github/
 .gitignore
 .prettier*
-.travis.yml
 *.tsbuildinfo
 build-style.sh
 coverage/
