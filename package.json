@@ -57,7 +57,7 @@
     "@rollup/plugin-commonjs": "12.0.0",
     "@rollup/plugin-json": "^4.0.3",
     "@rollup/plugin-node-resolve": "^8.0.0",
-    "@types/jest": "^25.2.2",
+    "@types/jest": "^25.2.3",
     "browser-sync": "^2.26.7",
     "codecov": "^3.7.0",
     "concurrently": "^5.2.0",
@@ -65,13 +65,13 @@
     "jest": "^26.0.1",
     "node-sass": "^4.14.1",
     "path": "^0.12.7",
-    "rollup": "^2.10.2",
-    "terser": "^4.6.13",
+    "rollup": "^2.11.2",
+    "terser": "^4.7.0",
     "ts-jest": "^26.0.0",
-    "typescript": "^3.9.2",
-    "vega-datasets": "^1.30.2",
-    "vega-lite-dev-config": "^0.10.3",
-    "vega-typings": "^0.17.0"
+    "typescript": "^3.9.3",
+    "vega-datasets": "^1.30.3",
+    "vega-lite-dev-config": "^0.11.5",
+    "vega-typings": "^0.17.2"
   },
   "dependencies": {
     "vega-util": "^1.14.0"
