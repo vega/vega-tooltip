@@ -1,0 +1,59 @@
+import { createDefaultStyle, DEFAULT_OPTIONS } from './defaults';
+import { formatValue } from './formatValue';
+import { calculatePosition } from './position';
+/**
+ * The tooltip handler class.
+ */
+export class Handler {
+    /**
+     * Create the tooltip handler and initialize the element and style.
+     *
+     * @param options Tooltip Options
+     */
+    constructor(options) {
+        this.options = Object.assign(Object.assign({}, DEFAULT_OPTIONS), options);
+        const elementId = this.options.id;
+        // bind this to call
+        this.call = this.tooltipHandler.bind(this);
+        // prepend a default stylesheet for tooltips to the head
+        if (!this.options.disableDefaultStyle && !document.getElementById(this.options.styleId)) {
+            const style = document.createElement('style');
+            style.setAttribute('id', this.options.styleId);
+            style.innerHTML = createDefaultStyle(elementId);
+            const head = document.head;
+            if (head.childNodes.length > 0) {
+                head.insertBefore(style, head.childNodes[0]);
+            }
+            else {
+                head.appendChild(style);
+            }
+        }
+        // append a div element that we use as a tooltip unless it already exists
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        this.el = document.getElementById(elementId);
+        if (!this.el) {
+            this.el = document.createElement('div');
+            this.el.setAttribute('id', elementId);
+            this.el.classList.add('vg-tooltip');
+            document.body.appendChild(this.el);
+        }
+    }
+    /**
+     * The tooltip handler function.
+     */
+    tooltipHandler(handler, event, item, value) {
+        // console.log(handler, event, item, value);
+        // hide tooltip for null, undefined, or empty string values
+        if (value == null || value === '') {
+            this.el.classList.remove('visible', `${this.options.theme}-theme`);
+            return;
+        }
+        // set the tooltip content
+        this.el.innerHTML = formatValue(value, this.options.sanitize, this.options.maxDepth);
+        // make the tooltip visible
+        this.el.classList.add('visible', `${this.options.theme}-theme`);
+        const { x, y } = calculatePosition(event, this.el.getBoundingClientRect(), this.options.offsetX, this.options.offsetY);
+        this.el.setAttribute('style', `top: ${y}px; left: ${x}px`);
+    }
+}
+//# sourceMappingURL=Handler.js.map

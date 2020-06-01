@@ -13,3 +13,4 @@ export declare function calculatePosition(event: MouseEvent, tooltipBox: {
     x: number;
     y: number;
 };
+//# sourceMappingURL=position.d.ts.map

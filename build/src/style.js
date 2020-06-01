@@ -18,6 +18,9 @@ export default `#vg-tooltip-element {
     margin-top: 0;
     margin-bottom: 10px;
     font-size: 13px; }
+  #vg-tooltip-element img {
+    max-width: 200px;
+    max-height: 200px; }
   #vg-tooltip-element table {
     border-spacing: 0; }
     #vg-tooltip-element table tr {
@@ -44,4 +47,4 @@ export default `#vg-tooltip-element {
     #vg-tooltip-element.dark-theme td.key {
       color: #bfbfbf; }
 `;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoic3R5bGUuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi9zcmMvc3R5bGUudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsZ0NBQWdDO0FBQ2hDLGVBQWU7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0NBNENkLENBQUEifQ==
+//# sourceMappingURL=style.js.map

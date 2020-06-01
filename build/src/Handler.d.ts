@@ -21,9 +21,10 @@ export declare class Handler {
      *
      * @param options Tooltip Options
      */
-    constructor(options?: Partial<Options>);
+    constructor(options?: Options);
     /**
      * The tooltip handler function.
      */
-    private tooltip_handler;
+    private tooltipHandler;
 }
+//# sourceMappingURL=Handler.d.ts.map

@@ -1,0 +1,106 @@
+{
+    "name": "vega-tooltip",
+    "version": "0.23.0",
+    "description": "A tooltip plugin for Vega-Lite and Vega visualizations.",
+    "main": "build/vega-tooltip.js",
+    "module": "build/src/index.js",
+    "unpkg": "build/vega-tooltip.min.js",
+    "jsdelivr": "build/vega-tooltip.min.js",
+    "typings": "build/src/index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/vega/vega-tooltip.git"
+    },
+    "keywords": [
+        "vega-lite",
+        "vega",
+        "tooltip"
+    ],
+    "author": {
+        "name": "UW Interactive Data Lab",
+        "url": "https://idl.cs.washington.edu"
+    },
+    "collaborators": [
+        "Dominik Moritz",
+        "Sira Horradarn",
+        "Zening Qu",
+        "Kanit Wongsuphasawat",
+        "Yuri Astrakhan",
+        "Jeffrey Heer"
+    ],
+    "license": "BSD-3-Clause",
+    "bugs": {
+        "url": "https://github.com/vega/vega-tooltip/issues"
+    },
+    "homepage": "https://github.com/vega/vega-tooltip#readme",
+    "scripts": {
+        "prepare": "beemo create-config --silent",
+        "tsc:src": "tsc -b tsconfig.src.json",
+        "build": "yarn tsc:src && rollup -c",
+        "clean": "rm -rf build examples/data && rm -f src/style.ts",
+        "copy:data": "rsync -r node_modules/vega-datasets/data/* examples/data",
+        "copy:build": "rsync -r build/* examples/build",
+        "deploy:gh": "yarn build && yarn copy:build && gh-pages -d examples && yarn clean",
+        "prettierbase": "beemo prettier 'examples/*.{html,scss,css}'",
+        "eslintbase": "beemo eslint .",
+        "format": "yarn eslintbase --fix && yarn prettierbase --write",
+        "lint": "yarn eslintbase && yarn prettierbase --check",
+        "postbuild": "terser build/vega-tooltip.js -c -m -o build/vega-tooltip.min.js",
+        "prebuild": "mkdir -p build && yarn copy:data && ./build-style.sh",
+        "prepublishOnly": "yarn clean && yarn build",
+        "preversion": "yarn lint",
+        "start": "yarn build && concurrently --kill-others -n Server,Typescript,Rollup 'browser-sync start -s -f build examples --serveStatic examples' 'yarn tsc:src -w' 'rollup -c -w'",
+        "pretest": "./build-style.sh",
+        "test": "jest"
+    },
+    "devDependencies": {
+        "@rollup/plugin-commonjs": "11.1.0",
+        "@rollup/plugin-json": "^4.0.3",
+        "@rollup/plugin-node-resolve": "^7.1.3",
+        "@types/jest": "^25.2.2",
+        "browser-sync": "^2.26.7",
+        "codecov": "^3.6.5",
+        "concurrently": "^5.2.0",
+        "gh-pages": "^2.2.0",
+        "jest": "^26.0.1",
+        "node-sass": "^4.14.1",
+        "path": "^0.12.7",
+        "rollup": "^2.10.2",
+        "terser": "^4.6.13",
+        "ts-jest": "^26.0.0",
+        "typescript": "^3.9.2",
+        "vega-datasets": "^1.30.2",
+        "vega-lite-dev-config": "^0.10.3",
+        "vega-typings": "^0.17.0"
+    },
+    "dependencies": {
+        "vega-util": "^1.14.0"
+    },
+    "beemo": {
+        "module": "vega-lite-dev-config",
+        "drivers": [
+            "prettier",
+            "eslint"
+        ]
+    },
+    "jest": {
+        "testURL": "http://localhost/",
+        "transform": {
+            "^.+\\.tsx?$": "ts-jest"
+        },
+        "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+        "moduleFileExtensions": [
+            "ts",
+            "tsx",
+            "js",
+            "jsx",
+            "json",
+            "node"
+        ],
+        "testPathIgnorePatterns": [
+            "node_modules",
+            "<rootDir>/build",
+            "src"
+        ]
+    }
+}

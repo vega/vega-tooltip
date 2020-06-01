@@ -1,0 +1,41 @@
+{
+    "$schema": "https://vega.github.io/schema/vega/v5.json",
+    "padding": 5,
+    "height": 100,
+    "title": "Tooltips with images",
+    "data": [
+      {
+        "name": "data",
+        "values": [
+          {"img": "data/ffox.png"},
+          {"img": "data/gimp.png"},
+          {"img": "data/7zip.png"}
+        ]
+      }
+    ],
+    "marks": [
+      {
+        "name": "marks",
+        "type": "text",
+        "style": ["text"],
+        "from": {"data": "data"},
+        "encode": {
+          "update": {
+            "y": {"scale": "y", "field": "img"},
+            "text": {"field": "img"},
+            "tooltip": {
+              "signal": "{image: datum.img}"
+            }
+          }
+        }
+      }
+    ],
+    "scales": [
+      {
+        "name": "y",
+        "type": "point",
+        "domain": {"data": "data", "field": "img", "sort": true},
+        "range": [0, {"signal": "height"}]
+      }
+    ]
+  }
