@@ -57,7 +57,7 @@
     "@rollup/plugin-commonjs": "13.0.0",
     "@rollup/plugin-json": "^4.0.3",
     "@rollup/plugin-node-resolve": "^8.0.0",
-    "@types/jest": "^25.2.3",
+    "@types/jest": "^26.0.0",
     "browser-sync": "^2.26.7",
     "codecov": "^3.7.0",
     "concurrently": "^5.2.0",
