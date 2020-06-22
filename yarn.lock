@@ -7703,10 +7703,10 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
 
-vega-datasets@^1.30.3:
-  version "1.31.1"
-  resolved "https://registry.yarnpkg.com/vega-datasets/-/vega-datasets-1.31.1.tgz#b41d214963f6a00260c2a8f8bc5c21fb7aea979b"
-  integrity sha512-KX3/6ffO3I1Kz8Gc+yQMlzi4rYnCx9n3A93MYyAIn9A/eohddKOuvAMEsx3Ah9NLnkrvkPI3Kup9+9NTXTD3NQ==
+vega-datasets@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/vega-datasets/-/vega-datasets-2.1.0.tgz#98298db5d14a381f72ca4b1fa9ab1bbe153aaf38"
+  integrity sha512-ajIfGt2quFEVNtByDIb5tyM+vP3lth1F8GuVAU88g6N2ucnAImyO/9xWyaZF04quZEAGpbJB/c2tbzfZlqM09g==
 
 vega-lite-dev-config@^0.11.5:
   version "0.11.7"

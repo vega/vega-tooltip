@@ -69,7 +69,7 @@
     "terser": "^4.7.0",
     "ts-jest": "^26.0.0",
     "typescript": "^3.9.3",
-    "vega-datasets": "^1.30.3",
+    "vega-datasets": "^2.1.0",
     "vega-lite-dev-config": "^0.11.5",
     "vega-typings": "^0.18.0"
   },
