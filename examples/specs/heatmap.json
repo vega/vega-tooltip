@@ -52,8 +52,8 @@
   "data": [
     {
       "name": "temperature",
-      "url": "data/seattle-temps.csv",
-      "format": {"type": "csv", "parse": {"temp": "number", "date": "date"}},
+      "url": "data/seattle-weather-hourly-normals.csv",
+      "format": {"type": "csv", "parse": {"temperature": "number", "date": "date"}},
       "transform": [
         {"type": "formula", "as": "hour", "expr": "hours(datum.date)"},
         { "type": "formula", "as": "date",
@@ -82,7 +82,7 @@
       "name": "color",
       "type": "sequential",
       "range": {"scheme": {"signal": "palette"}},
-      "domain": {"data": "temperature", "field": "temp"},
+      "domain": {"data": "temperature", "field": "temperature"},
       "reverse": {"signal": "reverse"},
       "zero": false, "nice": false
     }
@@ -103,7 +103,7 @@
   ],
 
   "legends": [
-    {"fill": "color", "type": "gradient", "title": "Avg. Temp (°F)"}
+    {"fill": "color", "type": "gradient", "title": "Avg. Temp (°C)"}
   ],
 
   "marks": [
@@ -116,10 +116,10 @@
           "width": {"value": 5},
           "y": {"scale": "y", "field": "hour"},
           "height": {"scale": "y", "band": 1},
-          "tooltip": {"signal": "{title: timeFormat(datum.date, '%b %d') + ', ' + datum.hour + ':00', 'Average temperature': datum.temp + ' °F'}"}
+          "tooltip": {"signal": "{title: timeFormat(datum.date, '%b %d') + ', ' + datum.hour + ':00', 'Average temperature': datum.temperature + ' °F'}"}
         },
         "update": {
-          "fill": {"scale": "color", "field": "temp"}
+          "fill": {"scale": "color", "field": "temperature"}
         }
       }
     },
@@ -129,7 +129,7 @@
         "enter": {
           "x": {"value": 0},
           "y": {"value": -4},
-          "text": {"value": "Seattle Annual Temperatures"},
+          "text": {"value": "Seattle Annual Temperature Normals"},
           "baseline": {"value": "bottom"},
           "fontSize": {"value": 14},
           "fontWeight": {"value": "bold"},
