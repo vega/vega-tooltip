@@ -1,8 +1,10 @@
-import {version} from '../package.json';
+import pkg from '../package.json';
 import {View} from 'vega-typings';
 
 import {Options} from './defaults';
 import {Handler} from './Handler';
+
+const version = pkg.version;
 
 export * from './defaults';
 export * from './formatValue';
