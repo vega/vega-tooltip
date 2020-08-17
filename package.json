@@ -54,7 +54,7 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "14.0.0",
+    "@rollup/plugin-commonjs": "15.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^9.0.0",
     "@types/jest": "^26.0.4",
