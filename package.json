@@ -32,7 +32,7 @@
   "module": "build/vega-tooltip.module.js",
   "unpkg": "build/vega-tooltip.min.js",
   "jsdelivr": "build/vega-tooltip.min.js",
-  "types": "build/src/tooltip.d.ts",
+  "types": "build/vega-tooltip.d.ts",
   "files": [
     "src",
     "build",
@@ -84,11 +84,11 @@
   "beemo": {
     "module": "vega-lite-dev-config",
     "drivers": [
+      "typescript",
       "prettier",
       "eslint",
       "babel",
-      "jest",
-      "typescript"
+      "jest"
     ],
     "eslint": {
       "ignore": [
