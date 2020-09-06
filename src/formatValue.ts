@@ -6,6 +6,8 @@ import {isArray, isObject, isString} from 'vega-util';
  * @param value The value to show in the tooltip.
  * @param valueToHtml Function to convert a single cell value to an HTML string
  */
+// TODO: remove next line
+// eslint-disable-next-line no-shadow
 export function formatValue(value: any, valueToHtml: (value: any) => string, maxDepth: number): string {
   if (isArray(value)) {
     return `[${value.map((v) => valueToHtml(isString(v) ? v : stringify(v, maxDepth))).join(', ')}]`;

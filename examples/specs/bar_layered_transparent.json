@@ -8,12 +8,12 @@
       "as": "gender"
     }
   ],
+  "width": {"step": 17},
   "mark": "bar",
   "encoding": {
     "x": {
       "field": "age",
-      "type": "ordinal",
-      "scale": {"rangeStep": 17}
+      "type": "ordinal"
     },
     "y": {
       "aggregate": "sum",
