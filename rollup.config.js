@@ -26,7 +26,7 @@ const outputs = [
   {
     input: 'src/index.ts',
     output: {
-      file: 'build/vega-tooltip.module.js',
+      file: pkg.module,
       format: 'esm'
     },
     plugins: plugins(undefined, true),
@@ -35,13 +35,13 @@ const outputs = [
     input: 'src/index.ts',
     output: [
       {
-        file: `build/vega-tooltip.js`,
+        file: pkg.main,
         format: 'umd',
         name: 'vegaTooltip',
         exports: 'named'
       },
       {
-        file: `build/vega-tooltip.min.js`,
+        file: pkg.unpkg,
         format: 'iife',
         name: 'vegaTooltip',
         exports: 'named',
