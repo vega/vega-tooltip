@@ -7,7 +7,7 @@ import { terser } from 'rollup-plugin-terser';
 
 const pkg = require('./package.json');
 
-const plugins = (declaration) => [
+const plugins = (browserslist, declaration) => [
   resolve({ extensions: ['.js', '.ts'] }),
   commonjs(),
   json(),
@@ -17,7 +17,7 @@ const plugins = (declaration) => [
       declaration,
       declarationMap: declaration
     }),
-    browserslist: 'defaults and not IE 11'
+    browserslist
   }),
   bundleSize()
 ];
@@ -29,14 +29,14 @@ const outputs = [
       file: 'build/vega-tooltip.module.js',
       format: 'esm'
     },
-    plugins: plugins(true),
+    plugins: plugins(undefined, true),
     external: [...Object.keys(pkg.dependencies)]
   }, {
     input: 'src/index.ts',
     output: [
       {
         file: `build/vega-tooltip.js`,
-        format: 'iife',
+        format: 'umd',
         name: 'vegaTooltip',
         exports: 'named'
       },
@@ -48,7 +48,7 @@ const outputs = [
         plugins: [terser()]
       }
     ],
-    plugins: plugins(false),
+    plugins: plugins('defaults and not IE 11', false),
     external: ['vega']
   }
 ];
