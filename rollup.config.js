@@ -1,4 +1,3 @@
-import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import resolve from '@rollup/plugin-node-resolve';
 import ts from '@wessberg/rollup-plugin-ts';
@@ -8,8 +7,7 @@ import { terser } from 'rollup-plugin-terser';
 const pkg = require('./package.json');
 
 const plugins = (browserslist, declaration) => [
-  resolve({ extensions: ['.js', '.ts'] }),
-  commonjs(),
+  resolve(),
   json(),
   ts({
     tsconfig: (resolvedConfig) => ({
@@ -38,18 +36,24 @@ const outputs = [
         file: pkg.main,
         format: 'umd',
         name: 'vegaTooltip',
-        exports: 'named'
+        exports: 'named',
+        globals: {
+          'vega-util': 'vega'
+        },
       },
       {
         file: pkg.unpkg,
         format: 'iife',
         name: 'vegaTooltip',
         exports: 'named',
-        plugins: [terser()]
+        globals: {
+          'vega-util': 'vega'
+        },
+        plugins: [terser()],
       }
     ],
     plugins: plugins('defaults and not IE 11', false),
-    external: ['vega']
+    external: ['vega-util']
   }
 ];
 
