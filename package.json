@@ -32,7 +32,7 @@
   "module": "build/vega-tooltip.module.js",
   "unpkg": "build/vega-tooltip.min.js",
   "jsdelivr": "build/vega-tooltip.min.js",
-  "types": "build/vega-tooltip.d.ts",
+  "types": "build/vega-tooltip.module.d.ts",
   "files": [
     "src",
     "build",
@@ -60,7 +60,6 @@
     "lint": "yarn eslintbase && yarn prettierbase --check"
   },
   "devDependencies": {
-    "@rollup/plugin-babel": "^5.2.0",
     "@rollup/plugin-commonjs": "15.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^9.0.0",
@@ -94,6 +93,14 @@
       "ignore": [
         "types"
       ]
+    },
+    "typescript": {
+      "compilerOptions": {
+        "typeRoots": [
+          "node_modules/@types",
+          "types"
+        ]
+      }
     }
   }
 }
