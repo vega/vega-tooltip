@@ -43,7 +43,7 @@ const outputs = [
       },
       {
         file: pkg.unpkg,
-        format: 'iife',
+        format: 'umd',
         name: 'vegaTooltip',
         exports: 'named',
         globals: {
