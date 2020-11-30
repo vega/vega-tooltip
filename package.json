@@ -53,7 +53,7 @@
     "pretest": "yarn build:style",
     "test": "beemo jest",
     "test:inspect": "node --inspect-brk ./node_modules/.bin/jest --runInBand",
-    "prepare": "beemo create-config",
+    "prepare": "beemo create-config && yarn copy:data",
     "prettierbase": "beemo prettier '*.{css,scss,html}'",
     "eslintbase": "beemo eslint .",
     "format": "yarn eslintbase --fix && yarn prettierbase --write",
