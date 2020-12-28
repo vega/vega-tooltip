@@ -7783,9 +7783,9 @@ vega-lite-dev-config@^0.14.6:
     prettier "^2.2.1"
 
 vega-typings@^0.19.0:
-  version "0.19.1"
-  resolved "https://registry.yarnpkg.com/vega-typings/-/vega-typings-0.19.1.tgz#a53949143fa37721ae7bd146bbb9add5c78aca52"
-  integrity sha512-OSyNYwMJ8FayTTNU/gohprbt1EFQBpoiMPP9p2vqo1O9z45XVnotQ92jYHAhraI6gWiMIIfo4OjPbSe/GX7etg==
+  version "0.19.2"
+  resolved "https://registry.yarnpkg.com/vega-typings/-/vega-typings-0.19.2.tgz#374fc1020c1abb263a0be87de28d1a4bd0526c3f"
+  integrity sha512-YU/S9rDk4d+t4+4eTa9fzuw87PMNteeVtpcL51kUO8H7HvGaoW7ll8RHKLkR0NYBEGPRoFDKUxnoyMvhgjsdYw==
   dependencies:
     vega-util "^1.15.2"
 
