@@ -41,7 +41,7 @@
   "scripts": {
     "prebuild": "yarn clean && yarn build:style",
     "build": "rollup -c",
-    "build:style": "./build-style.sh",
+    "build:style": "sh build-style.sh",
     "clean": "rimraf build && rimraf src/style.ts",
     "copy:data": "rsync -r node_modules/vega-datasets/data/* examples/data",
     "copy:build": "rsync -r build/* examples/build",
