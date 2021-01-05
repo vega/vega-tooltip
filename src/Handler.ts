@@ -31,6 +31,7 @@ export class Handler {
   constructor(options?: Options) {
     this.options = {...DEFAULT_OPTIONS, ...options};
     const elementId = this.options.id;
+    this.el = null!; // We create the tooltip element later, when we need it. This also has the advantage that if you have multiple charts, not multiple elements are created, as each chart will grab the existing one when its needed.
 
     // bind this to call
     this.call = this.tooltipHandler.bind(this);
@@ -48,17 +49,6 @@ export class Handler {
         head.appendChild(style);
       }
     }
-
-    // append a div element that we use as a tooltip unless it already exists
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.el = document.getElementById(elementId)!;
-    if (!this.el) {
-      this.el = document.createElement('div');
-      this.el.setAttribute('id', elementId);
-      this.el.classList.add('vg-tooltip');
-
-      document.body.appendChild(this.el);
-    }
   }
 
   /**
@@ -66,6 +56,18 @@ export class Handler {
    */
   private tooltipHandler(handler: any, event: MouseEvent, item: any, value: any) {
     // console.log(handler, event, item, value);
+
+    // append a div element that we use as a tooltip unless it already exists
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    this.el = document.getElementById(this.options.id)!;
+    if (!this.el) {
+      this.el = document.createElement('div');
+      this.el.setAttribute('id', this.options.id);
+      this.el.classList.add('vg-tooltip');
+    }
+    // set the tooltip container (parent) to the fullscreenElement if there is one, otherwise the body
+    let tooltipContainer = document.fullscreenElement != null ? document.fullscreenElement : document.body;
+    tooltipContainer.appendChild(this.el); // by always appending it to the container we effectively move the element around, browser is smart enough to deal with appending to same parent...
 
     // hide tooltip for null, undefined, or empty string values
     if (value == null || value === '') {
