@@ -21,7 +21,7 @@ export class Handler {
   /**
    * The tooltip html element.
    */
-  private el: HTMLElement;
+  private el: HTMLElement | null;
 
   /**
    * Create the tooltip handler and initialize the element and style.
@@ -31,6 +31,7 @@ export class Handler {
   constructor(options?: Options) {
     this.options = {...DEFAULT_OPTIONS, ...options};
     const elementId = this.options.id;
+    this.el = null;
 
     // bind this to call
     this.call = this.tooltipHandler.bind(this);
@@ -48,17 +49,6 @@ export class Handler {
         head.appendChild(style);
       }
     }
-
-    // append a div element that we use as a tooltip unless it already exists
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.el = document.getElementById(elementId)!;
-    if (!this.el) {
-      this.el = document.createElement('div');
-      this.el.setAttribute('id', elementId);
-      this.el.classList.add('vg-tooltip');
-
-      document.body.appendChild(this.el);
-    }
   }
 
   /**
@@ -66,6 +56,19 @@ export class Handler {
    */
   private tooltipHandler(handler: any, event: MouseEvent, item: any, value: any) {
     // console.log(handler, event, item, value);
+
+    // append a div element that we use as a tooltip unless it already exists
+    this.el = document.getElementById(this.options.id);
+    if (!this.el) {
+      this.el = document.createElement('div');
+      this.el.setAttribute('id', this.options.id);
+      this.el.classList.add('vg-tooltip');
+
+      document.body.appendChild(this.el);
+    }
+
+    const tooltipContainer = document.fullscreenElement != null ? document.fullscreenElement : document.body;
+    tooltipContainer.appendChild(this.el);
 
     // hide tooltip for null, undefined, or empty string values
     if (value == null || value === '') {
