@@ -48,6 +48,11 @@ export const DEFAULT_OPTIONS = {
    */
   maxDepth: 2,
 
+  /**
+   * A function to completely customize the contents of the tooltip.
+   * Accepts a single `value` argument and should return an HTML string.
+   * The returned HTML string will become the innerHTML of the tooltip element.
+   */
   render: formatValue,
 };
 
