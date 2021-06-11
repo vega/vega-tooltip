@@ -64,7 +64,7 @@ Then create the style for your theme.
 
 Vega tooltip can be further customized using the `formatTooltip` option.
 
-> It is highly recommended to follow the pattern below in sanitizing data from the `value ` argument.
+> It is highly recommended to follow the pattern below in sanitizing data from the `value` argument.
 
 ```js
 var tooltipOptions = {
