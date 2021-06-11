@@ -1,5 +1,5 @@
-import {escapeHTML, formatValue} from '../src';
-import {replacer} from '../src/formatValue';
+import {escapeHTML} from '../src';
+import {formatValue, replacer} from '../src/formatValue';
 
 const fv = (value: any) => formatValue(value, escapeHTML, 2);
 

@@ -1,3 +1,4 @@
+import { formatValue } from './formatValue';
 import defaultStyle from './style';
 
 const EL_ID = 'vg-tooltip-element';
@@ -46,6 +47,8 @@ export const DEFAULT_OPTIONS = {
    * The maximum recursion depth when printing objects in the tooltip.
    */
   maxDepth: 2,
+
+  render: formatValue,
 };
 
 export type Options = Partial<typeof DEFAULT_OPTIONS>;
