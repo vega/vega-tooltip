@@ -61,7 +61,7 @@
       addVlExample("specs/line_color.json", "#vis-color-line");
       addVlExample("specs/overlay_area_short.json", "#vis-overlay-area");
       addVlExample("specs/bar_format_tooltip.json", "#vis-bar-format-tooltip", {
-        formatTooltip: (value) => `The value of ${value.a} is ${value.b}`
+        formatTooltip: (value, sanitize) => `The value of ${sanitize(value.a)} is ${sanitize(value.b)}`
       });
     </script>
   </body>
