@@ -53,7 +53,7 @@ export const DEFAULT_OPTIONS = {
    * Accepts a single `value` argument and should return an HTML string.
    * The returned HTML string will become the innerHTML of the tooltip element.
    */
-  render: formatValue,
+  formatTooltip: formatValue,
 };
 
 export type Options = Partial<typeof DEFAULT_OPTIONS>;
