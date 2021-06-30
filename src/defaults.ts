@@ -1,3 +1,4 @@
+import { formatValue } from './formatValue';
 import defaultStyle from './style';
 
 const EL_ID = 'vg-tooltip-element';
@@ -46,6 +47,14 @@ export const DEFAULT_OPTIONS = {
    * The maximum recursion depth when printing objects in the tooltip.
    */
   maxDepth: 2,
+
+  /**
+   * A function to customize the rendered HTML of the tooltip.
+   * @param value A value string, or object of value strings keyed by field
+   * @param sanitize The `sanitize` function from `options.sanitize`
+   * @returns {string} The returned string will become the `innerHTML` of the tooltip element
+   */
+  formatTooltip: formatValue,
 };
 
 export type Options = Partial<typeof DEFAULT_OPTIONS>;

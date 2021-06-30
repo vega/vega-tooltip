@@ -29,6 +29,7 @@
       <div id="vis-color-line" class="tooltip-example"></div>
       <div id="vis-overlay-line" class="tooltip-example"></div>
       <div id="vis-overlay-area" class="tooltip-example"></div>
+      <div id="vis-bar-format-tooltip" class="tooltip-example"></div>
     </div>
 
     <a href="index.html" class="large">Back to overview</a>
@@ -59,6 +60,9 @@
       addVlExample("specs/bar_layered_transparent.json", "#vis-layered-bar");
       addVlExample("specs/line_color.json", "#vis-color-line");
       addVlExample("specs/overlay_area_short.json", "#vis-overlay-area");
+      addVlExample("specs/bar_format_tooltip.json", "#vis-bar-format-tooltip", {
+        formatTooltip: (value, sanitize) => `The value of ${sanitize(value.a)} is ${sanitize(value.b)}`
+      });
     </script>
   </body>
 </html>

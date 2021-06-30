@@ -64,6 +64,7 @@ var view = new vega.View(runtime)
 | `disableDefaultStyle` | Boolean  | Disable the default style completely. |
 | `sanitize`      | Function       | Function to convert value to string, and sanitize the HTML. |
 | `maxDepth`      | Number         | The maximum recursion depth when printing objects in the tooltip. |
+| `formatTooltip`      | Function         | Function to specify custom HTML inside tooltip element. It is highly recommended to `sanitize` any data from `value` before returning an HTML string. |
 
 
 The default values are:
@@ -77,13 +78,14 @@ var DEFAULT_OPTIONS =
   styleId: 'vega-tooltip-style',
   theme: 'light',
   disableDefaultStyle: false,
-  sanitize: (value) => String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+  sanitize: (value) => String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;'),
+  formatTooltip: vegaTooltip.formatValue
 };
 ```
 
 ## [Sanitize](#sanitize)
 
-Vega Tooltip escapes HTML content from the Vega spec before displaying it in the tooltip. This prevents problems with users executing unknown code in their browser. 
+Vega Tooltip escapes HTML content from the Vega spec before displaying it in the tooltip. This prevents problems with users executing unknown code in their browser.
 
 If you want to allow custom formatting, you may provide a custom sanitization function. For example, if you want to support Markdown, you could use [simple-markdown](https://github.com/Khan/simple-markdown).
 

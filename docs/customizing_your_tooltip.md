@@ -36,7 +36,7 @@ var view = new vega.View(runtime)
 
 ## Customizing the theme
 
-Vega tooltip has two predefined themes `light` and `dark`. You can create your own custom theme or override any of the existing CSS properties. 
+Vega tooltip has two predefined themes `light` and `dark`. You can create your own custom theme or override any of the existing CSS properties.
 
 To use a custom theme, pass the `theme` option to Vega tooltip.
 
@@ -52,10 +52,28 @@ vegaEmbed("#vis", spec, {tooltip: tooltipOptions})
   .catch(console.error);
 ```
 
-Then create the style for your theme. 
+Then create the style for your theme.
 
 ```css
 #vg-tooltip-element.vg-tooltip.custom-theme {
   color: red;
 }
+```
+
+## Customizing the rendered tooltip HTML
+
+Vega tooltip can be further customized using the `formatTooltip` option.
+
+> It is highly recommended to follow the pattern below in sanitizing data from the `value` argument.
+
+```js
+var tooltipOptions = {
+  formatTooltip: (value, sanitize) => `My custom tooltip and ${sanitize(value)}.`
+};
+
+vegaEmbed("#vis", spec, {tooltip: tooltipOptions})
+  .then(function(result) {
+    // result.view contains the Vega view
+  })
+  .catch(console.error);
 ```

@@ -1,7 +1,6 @@
 import {TooltipHandler} from 'vega-typings';
 
 import {createDefaultStyle, DEFAULT_OPTIONS, Options} from './defaults';
-import {formatValue} from './formatValue';
 import {calculatePosition} from './position';
 
 /**
@@ -77,7 +76,7 @@ export class Handler {
     }
 
     // set the tooltip content
-    this.el.innerHTML = formatValue(value, this.options.sanitize, this.options.maxDepth);
+    this.el.innerHTML = this.options.formatTooltip(value, this.options.sanitize, this.options.maxDepth);
 
     // make the tooltip visible
     this.el.classList.add('visible', `${this.options.theme}-theme`);
