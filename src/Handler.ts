@@ -67,7 +67,7 @@ export class Handler {
       document.body.appendChild(this.el);
     }
 
-    const tooltipContainer = document.fullscreenElement != null ? document.fullscreenElement : document.body;
+    const tooltipContainer = document.fullscreenElement ?? document.body;
     tooltipContainer.appendChild(this.el);
 
     // hide tooltip for null, undefined, or empty string values
