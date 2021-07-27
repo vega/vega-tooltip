@@ -58,7 +58,7 @@
     "eslintbase": "beemo eslint .",
     "format": "yarn eslintbase --fix && yarn prettierbase --write",
     "lint": "yarn eslintbase && yarn prettierbase --check",
-    "release": "yarn build && auto shipit"
+    "release": "yarn run prebuild && yarn build && auto shipit"
   },
   "devDependencies": {
     "@auto-it/conventional-commits": "^10.30.0",
