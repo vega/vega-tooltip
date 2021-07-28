@@ -21,7 +21,7 @@ http://vega.github.io/vega-tooltip/
 
 ## Installing
 
-We recommend using [Vega-Embed](https://github.com/vega/vega-embed), which already comes with this tooltip plugin. 
+We recommend using [Vega-Embed](https://github.com/vega/vega-embed), which already comes with this tooltip plugin.
 
 ### NPM or Yarn
 
@@ -75,6 +75,11 @@ See the [API documentation](docs/APIs.md) for details.
 2. Then, type `yarn start`. This will build the library and start a web server.
 3. In your browser, navigate to `http://localhost:8000/`, where you can see various Vega-Lite and Vega visualizations with tooltip interaction.
 
-## Release Process
+## Publishing
 
-To release a new version, make sure that everything works. Then run `yarn version` and bump the version number. Lastly, push to GitHub (with the release tag). [Travis](https://travis-ci.org/vega/vega-tooltip/builds) will build a bundle and make the [npm release](https://www.npmjs.com/package/vega-tooltip) automatically.
+Publishing is handled by a 2-branch [pre-release process](https://intuit.github.io/auto/docs/generated/shipit#next-branch-default), configured in `publish.yml`. All changes should be based off the default `next` branch, and are published automatically.
+
+- PRs made into the default branch are auto-deployed to the `next` pre-release tag on NPM. The result can be installed with `npm install vega-tooltip/@next`.
+  - When merging into `next`, please use the `squash and merge` strategy.
+- To release a new stable version, open a PR from `next` into `stable` using this [compare link](https://github.com/vega/vega-tooltip/compare/stable...next).
+  - When merging from `next` into `stable`, please use the `create a merge commit` strategy.
