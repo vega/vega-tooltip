@@ -2,11 +2,6 @@
 # yarn lockfile v1
 
 
-"@auto-it/bot-list@10.32.0":
-  version "10.32.0"
-  resolved "https://registry.yarnpkg.com/@auto-it/bot-list/-/bot-list-10.32.0.tgz#3614b5fd04041f486b62fea98cc137ec83dc2f98"
-  integrity sha512-W04OgTRHXpgorZRojYZ36AT54uUYqzsFnBm6FaAgVqGS2d5zS1CvyOBzH+rgYN38709suSWNK/xQYbua6ycoVA==
-
 "@auto-it/bot-list@10.32.1":
   version "10.32.1"
   resolved "https://registry.yarnpkg.com/@auto-it/bot-list/-/bot-list-10.32.1.tgz#248625b11586b5d53c3cdd8292db78714451ecaf"
@@ -26,51 +21,6 @@
     fp-ts "^2.5.3"
     io-ts "^2.1.2"
     tslib "2.1.0"
-
-"@auto-it/core@10.32.0":
-  version "10.32.0"
-  resolved "https://registry.yarnpkg.com/@auto-it/core/-/core-10.32.0.tgz#d0d4c54878b7c1d5c5a926e304b9d652b2ee8059"
-  integrity sha512-xx1lldpBT23W2sHv63UhpxlRy7WvAazrp0ZFnQ/n7JQL1x81kuHSs8trlnpa/G+R7fdATTJU5R6yr8vGz03FpQ==
-  dependencies:
-    "@auto-it/bot-list" "10.32.0"
-    "@endemolshinegroup/cosmiconfig-typescript-loader" "^3.0.2"
-    "@octokit/plugin-enterprise-compatibility" "^1.2.2"
-    "@octokit/plugin-retry" "^3.0.1"
-    "@octokit/plugin-throttling" "^3.2.0"
-    "@octokit/rest" "^18.0.0"
-    await-to-js "^3.0.0"
-    chalk "^4.0.0"
-    cosmiconfig "7.0.0"
-    deepmerge "^4.0.0"
-    dotenv "^8.0.0"
-    endent "^2.0.1"
-    enquirer "^2.3.4"
-    env-ci "^5.0.1"
-    fast-glob "^3.1.1"
-    fp-ts "^2.5.3"
-    fromentries "^1.2.0"
-    gitlog "^4.0.3"
-    https-proxy-agent "^5.0.0"
-    import-cwd "^3.0.0"
-    import-from "^3.0.0"
-    io-ts "^2.1.2"
-    lodash.chunk "^4.2.0"
-    log-symbols "^4.0.0"
-    node-fetch "2.6.1"
-    parse-author "^2.0.0"
-    parse-github-url "1.0.2"
-    pretty-ms "^7.0.0"
-    requireg "^0.2.2"
-    semver "^7.0.0"
-    signale "^1.4.0"
-    tapable "^2.2.0"
-    terminal-link "^2.1.1"
-    tinycolor2 "^1.4.1"
-    ts-node "^9.1.1"
-    tslib "2.1.0"
-    type-fest "^0.21.1"
-    typescript-memoize "^1.0.0-alpha.3"
-    url-join "^4.0.0"
 
 "@auto-it/core@10.32.1":
   version "10.32.1"
@@ -7074,9 +7024,9 @@ rollup-plugin-terser@^7.0.2:
     terser "^5.0.0"
 
 rollup@^2.56.3:
-  version "2.58.0"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.58.0.tgz#a643983365e7bf7f5b7c62a8331b983b7c4c67fb"
-  integrity sha512-NOXpusKnaRpbS7ZVSzcEXqxcLDOagN6iFS8p45RkoiMqPHDLwJm758UF05KlMoCRbLBTZsPOIa887gZJ1AiXvw==
+  version "2.59.0"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.59.0.tgz#108c61b0fa0a37ebc8d1f164f281622056f0db59"
+  integrity sha512-l7s90JQhCQ6JyZjKgo7Lq1dKh2RxatOM+Jr6a9F7WbS9WgKbocyUSeLmZl8evAse7y96Ae98L2k1cBOwWD8nHw==
   optionalDependencies:
     fsevents "~2.3.2"
 
