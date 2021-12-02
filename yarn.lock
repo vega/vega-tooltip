@@ -8364,10 +8364,10 @@ vega-expression@^5.0.0:
     "@types/estree" "^0.0.50"
     vega-util "^1.16.0"
 
-vega-lite-dev-config@^0.19.0:
-  version "0.19.0"
-  resolved "https://registry.yarnpkg.com/vega-lite-dev-config/-/vega-lite-dev-config-0.19.0.tgz#8a35f7a7dd46926d41b9ead9780703fabf0ba837"
-  integrity sha512-yI5Dp3e/mJgiEBGR51YjL84MhafikB7GIs0sgM6UhiCSaPAeqWUNIKz+GfItDZEhGjcwm9yxvm6zizlrCVJ92A==
+vega-lite-dev-config@^0.20.0:
+  version "0.20.0"
+  resolved "https://registry.yarnpkg.com/vega-lite-dev-config/-/vega-lite-dev-config-0.20.0.tgz#efb0108d405be307f1d949f6ae1420c4e11c7741"
+  integrity sha512-GSR4JdtDYsTr/UVEQPalv389GzTzJGnmT268Kcc7orB7q3ZIaIaXsgJjB+3mnW4CfQeJSLBroRNpZp27X00p/A==
   dependencies:
     "@babel/core" "^7.15.8"
     "@babel/preset-env" "^7.15.8"
