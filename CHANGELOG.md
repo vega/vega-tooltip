@@ -1,3 +1,36 @@
+# v0.28.0 (Fri Jan 28 2022)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: Stefan van der Meer ([@svdm](https://github.com/svdm))
+
+:heart: Cameron Yick ([@hydrosquall](https://github.com/hydrosquall))
+
+#### 🚀 Enhancement
+
+- Release [#627](https://github.com/vega/vega-tooltip/pull/627) ([@dependabot[bot]](https://github.com/dependabot[bot]) [@domoritz](https://github.com/domoritz) [@svdm](https://github.com/svdm))
+
+#### 🐛 Bug Fix
+
+- chore: upgrade deps [#578](https://github.com/vega/vega-tooltip/pull/578) ([@domoritz](https://github.com/domoritz))
+- chore: sync prerelease branch version with stable [#575](https://github.com/vega/vega-tooltip/pull/575) ([@hydrosquall](https://github.com/hydrosquall))
+
+#### 🔩 Dependency Updates
+
+- chore(deps): bump tar from 6.1.0 to 6.1.3 [#576](https://github.com/vega/vega-tooltip/pull/576) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps-dev): bump rollup from 2.55.0 to 2.55.1 [#574](https://github.com/vega/vega-tooltip/pull/574) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+
+#### Authors: 4
+
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+- Cameron Yick ([@hydrosquall](https://github.com/hydrosquall))
+- Dominik Moritz ([@domoritz](https://github.com/domoritz))
+- Stefan van der Meer ([@svdm](https://github.com/svdm))
+
+---
+
 # v0.4.0 (Wed Jul 28 2021)
 
 :tada: This release contains work from new contributors! :tada:
