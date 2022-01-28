@@ -63,11 +63,9 @@ export class Handler {
       this.el.setAttribute('id', this.options.id);
       this.el.classList.add('vg-tooltip');
 
-      document.body.appendChild(this.el);
+      const tooltipContainer = document.fullscreenElement ?? document.body;
+      tooltipContainer.appendChild(this.el);
     }
-
-    const tooltipContainer = document.fullscreenElement ?? document.body;
-    tooltipContainer.appendChild(this.el);
 
     // hide tooltip for null, undefined, or empty string values
     if (value == null || value === '') {
