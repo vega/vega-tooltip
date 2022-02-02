@@ -68,7 +68,7 @@
     "rollup-plugin-ts": "^2.0.4",
     "auto": "^10.32.3",
     "browser-sync": "^2.27.7",
-    "concurrently": "^6.4.0",
+    "concurrently": "^7.0.0",
     "gh-pages": "^3.2.3",
     "sass": "^1.44.0",
     "path": "^0.12.7",
