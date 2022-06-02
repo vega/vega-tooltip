@@ -61,24 +61,24 @@
     "release": "yarn run prebuild && yarn build && auto shipit"
   },
   "devDependencies": {
-    "@auto-it/conventional-commits": "^10.32.3",
-    "@auto-it/first-time-contributor": "^10.32.3",
+    "@auto-it/conventional-commits": "^10.37.1",
+    "@auto-it/first-time-contributor": "^10.37.1",
     "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^13.0.6",
-    "rollup-plugin-ts": "^2.0.4",
-    "auto": "^10.32.3",
-    "browser-sync": "^2.27.7",
-    "concurrently": "^7.0.0",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "rollup-plugin-ts": "^3.0.1",
+    "auto": "^10.37.1",
+    "browser-sync": "^2.27.10",
+    "concurrently": "^7.2.1",
     "gh-pages": "^4.0.0",
-    "sass": "^1.44.0",
+    "sass": "^1.52.1",
     "path": "^0.12.7",
-    "rollup": "^2.60.2",
+    "rollup": "^2.75.5",
     "rollup-plugin-bundle-size": "^1.0.3",
     "rollup-plugin-terser": "^7.0.2",
-    "typescript": "~4.6.2",
-    "vega-datasets": "^2.2.0",
+    "typescript": "~4.7.2",
+    "vega-datasets": "^2.3.0",
     "vega-lite-dev-config": "^0.20.0",
-    "vega-typings": "^0.22.1"
+    "vega-typings": "^0.22.3"
   },
   "dependencies": {
     "vega-util": "^1.17.0"
