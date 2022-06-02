@@ -69,7 +69,7 @@
     "auto": "^10.32.3",
     "browser-sync": "^2.27.7",
     "concurrently": "^7.0.0",
-    "gh-pages": "^3.2.3",
+    "gh-pages": "^4.0.0",
     "sass": "^1.44.0",
     "path": "^0.12.7",
     "rollup": "^2.60.2",
