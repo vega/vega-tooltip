@@ -21,8 +21,6 @@ jobs:
         run: git fetch --unshallow --tags
 
       - uses: actions/setup-node@v3
-        with:
-          node-version: 14
 
       - name: Install Node dependencies
         run: yarn --frozen-lockfile
