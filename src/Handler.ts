@@ -86,6 +86,8 @@ export class Handler {
       this.options.offsetY
     );
 
-    this.el.setAttribute('style', `top: ${y}px; left: ${x}px`);
+    // position the tooltip
+    this.el.style.top = `${y}px`;
+    this.el.style.left = `${x}px`;
   }
 }
