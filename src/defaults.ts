@@ -1,4 +1,4 @@
-import { formatValue } from './formatValue';
+import {formatValue} from './formatValue';
 import defaultStyle from './style';
 
 const EL_ID = 'vg-tooltip-element';

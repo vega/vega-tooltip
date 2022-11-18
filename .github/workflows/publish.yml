@@ -15,20 +15,22 @@ jobs:
 
     name: Make a release and publish to NPM
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Prepare repository
-        run: git fetch --unshallow --tags
-
-      - uses: actions/setup-node@v2.3.0
+      - uses: actions/checkout@v3
         with:
-          node-version: 14
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          cache: 'yarn'
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Install Node dependencies
         run: yarn --frozen-lockfile
 
+      # don't use yarn run to avoid using yarnpkg registry
       - name: Create release
+        run: npm run release
         env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: yarn run release
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

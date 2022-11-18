@@ -1,6 +1,6 @@
 import json from '@rollup/plugin-json';
 import resolve from '@rollup/plugin-node-resolve';
-import ts from '@wessberg/rollup-plugin-ts';
+import ts from 'rollup-plugin-ts';
 import bundleSize from 'rollup-plugin-bundle-size';
 import { terser } from 'rollup-plugin-terser';
 
@@ -25,7 +25,8 @@ const outputs = [
     input: 'src/index.ts',
     output: {
       file: pkg.module,
-      format: 'esm'
+      format: 'esm',
+      sourcemap: true
     },
     plugins: plugins(undefined, true),
     external: [...Object.keys(pkg.dependencies)]
@@ -37,6 +38,7 @@ const outputs = [
         format: 'umd',
         name: 'vegaTooltip',
         exports: 'named',
+        sourcemap: true,
         globals: {
           'vega-util': 'vega'
         },
@@ -46,6 +48,7 @@ const outputs = [
         format: 'umd',
         name: 'vegaTooltip',
         exports: 'named',
+        sourcemap: true,
         globals: {
           'vega-util': 'vega'
         },
