@@ -51,7 +51,7 @@ vegaEmbed("#vis", spec, {tooltip: {theme: 'dark'}})
   .catch(console.error);
 ```
 
-If you want to ue a different version of the tooltip handler, you can override the default handler with the handler from Vega Tooltip (and you need to install it separately).
+If you want to use a different version of the tooltip handler, you can override the default handler with the handler from Vega Tooltip (and you need to install it separately).
 
 ```js
 var handler = new vegaTooltip.Handler();
