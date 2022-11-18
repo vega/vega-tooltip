@@ -3,8 +3,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import ts from 'rollup-plugin-ts';
 import bundleSize from 'rollup-plugin-bundle-size';
 import { terser } from 'rollup-plugin-terser';
-
-const pkg = require('./package.json');
+import pkg from './package.json' assert { type: 'json' };
 
 const plugins = (browserslist, declaration) => [
   resolve(),
