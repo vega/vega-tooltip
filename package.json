@@ -68,7 +68,7 @@
     "auto": "^10.37.6",
     "browser-sync": "^2.27.10",
     "concurrently": "^7.5.0",
-    "gh-pages": "^4.0.0",
+    "gh-pages": "^5.0.0",
     "jest-environment-jsdom": "^29.3.1",
     "path": "^0.12.7",
     "rollup": "^3.3.0",
