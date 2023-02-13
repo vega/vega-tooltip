@@ -1,3 +1,26 @@
+
+
+## <small>0.30.1 (2023-02-13)</small>
+
+* chore: switch to release-it ([45e1520](https://github.com/vega/vega-tooltip/commit/45e1520))
+* chore: update lockfile ([778a85d](https://github.com/vega/vega-tooltip/commit/778a85d))
+* chore: upgrade deps ([e756faf](https://github.com/vega/vega-tooltip/commit/e756faf))
+* chore(deps-dev): bump @rollup/plugin-json from 5.0.1 to 5.0.2 (#721) ([3610e13](https://github.com/vega/vega-tooltip/commit/3610e13)), closes [#721](https://github.com/vega/vega-tooltip/issues/721)
+* chore(deps-dev): bump @rollup/plugin-json from 5.0.2 to 6.0.0 ([2cae3b7](https://github.com/vega/vega-tooltip/commit/2cae3b7))
+* chore(deps-dev): bump browser-sync from 2.27.10 to 2.27.11 (#727) ([f58fbdb](https://github.com/vega/vega-tooltip/commit/f58fbdb)), closes [#727](https://github.com/vega/vega-tooltip/issues/727)
+* chore(deps-dev): bump concurrently from 7.5.0 to 7.6.0 (#722) ([14d5d94](https://github.com/vega/vega-tooltip/commit/14d5d94)), closes [#722](https://github.com/vega/vega-tooltip/issues/722)
+* chore(deps-dev): bump gh-pages from 4.0.0 to 5.0.0 ([26545d9](https://github.com/vega/vega-tooltip/commit/26545d9))
+* chore(deps-dev): bump jest-environment-jsdom from 29.3.1 to 29.4.1 (#732) ([07651aa](https://github.com/vega/vega-tooltip/commit/07651aa)), closes [#732](https://github.com/vega/vega-tooltip/issues/732)
+* chore(deps-dev): bump rollup from 3.3.0 to 3.5.1 (#720) ([b80e8ab](https://github.com/vega/vega-tooltip/commit/b80e8ab)), closes [#720](https://github.com/vega/vega-tooltip/issues/720)
+* chore(deps-dev): bump rollup from 3.5.1 to 3.9.0 (#725) ([c6f4a02](https://github.com/vega/vega-tooltip/commit/c6f4a02)), closes [#725](https://github.com/vega/vega-tooltip/issues/725)
+* chore(deps-dev): bump rollup from 3.9.0 to 3.12.1 (#733) ([92d6691](https://github.com/vega/vega-tooltip/commit/92d6691)), closes [#733](https://github.com/vega/vega-tooltip/issues/733)
+* chore(deps-dev): bump sass from 1.56.1 to 1.57.1 (#726) ([97fdb99](https://github.com/vega/vega-tooltip/commit/97fdb99)), closes [#726](https://github.com/vega/vega-tooltip/issues/726)
+* chore(deps-dev): bump sass from 1.57.1 to 1.58.0 (#730) ([b50d170](https://github.com/vega/vega-tooltip/commit/b50d170)), closes [#730](https://github.com/vega/vega-tooltip/issues/730)
+* chore(deps-dev): bump typescript from 4.9.3 to 4.9.4 (#724) ([7f0376e](https://github.com/vega/vega-tooltip/commit/7f0376e)), closes [#724](https://github.com/vega/vega-tooltip/issues/724)
+* chore(deps-dev): bump typescript from 4.9.4 to 4.9.5 (#729) ([41fcca9](https://github.com/vega/vega-tooltip/commit/41fcca9)), closes [#729](https://github.com/vega/vega-tooltip/issues/729)
+* chore(deps): bump engine.io from 6.2.0 to 6.2.1 (#719) ([e55c3a9](https://github.com/vega/vega-tooltip/commit/e55c3a9)), closes [#719](https://github.com/vega/vega-tooltip/issues/719)
+* chore(deps): bump json5 from 2.2.1 to 2.2.3 (#728) ([6d94b88](https://github.com/vega/vega-tooltip/commit/6d94b88)), closes [#728](https://github.com/vega/vega-tooltip/issues/728)
+
 # v0.29.0 (Fri Nov 18 2022)
 
 :tada: This release contains work from new contributors! :tada:
