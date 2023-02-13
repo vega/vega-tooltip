@@ -58,14 +58,13 @@
     "eslintbase": "beemo eslint .",
     "format": "yarn eslintbase --fix && yarn prettierbase --write",
     "lint": "yarn eslintbase && yarn prettierbase --check",
-    "release": "yarn run prebuild && yarn build && auto shipit"
+    "release": "release-it"
   },
   "devDependencies": {
-    "@auto-it/conventional-commits": "^10.37.6",
-    "@auto-it/first-time-contributor": "^10.37.6",
+    "@release-it/conventional-changelog": "^5.1.1",
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^15.0.1",
-    "auto": "^10.37.6",
+    "release-it": "^15.6.0",
     "browser-sync": "^2.27.10",
     "concurrently": "^7.5.0",
     "gh-pages": "^5.0.0",
