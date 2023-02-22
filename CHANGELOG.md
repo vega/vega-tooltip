@@ -1,5 +1,12 @@
 
 
+# [0.31.0](https://github.com/vega/vega-tooltip/compare/v0.30.1...v0.31.0) (2023-02-22)
+
+
+### Features
+
+* remove limit on image size in tooltips ([#740](https://github.com/vega/vega-tooltip/issues/740)) ([ca90788](https://github.com/vega/vega-tooltip/commit/ca907884a0b1b329a4cb1de146b602877b209a17))
+
 ## <small>0.30.1 (2023-02-13)</small>
 
 * chore: switch to release-it ([45e1520](https://github.com/vega/vega-tooltip/commit/45e1520))
