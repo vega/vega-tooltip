@@ -28,7 +28,7 @@ const outputs = [
       format: 'esm',
       sourcemap: true
     },
-    plugins: plugins(undefined, true),
+    plugins: plugins(false, true),
     external: [...Object.keys(pkg.dependencies)]
   }, {
     input: 'src/index.ts',
@@ -55,7 +55,7 @@ const outputs = [
         plugins: [terser()],
       }
     ],
-    plugins: plugins('defaults and not IE 11', false),
+    plugins: plugins('> 1%, not dead', false),
     external: ['vega-util']
   }
 ];
