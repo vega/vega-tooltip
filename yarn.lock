@@ -8552,9 +8552,9 @@ vary@^1:
   integrity sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==
 
 vega-datasets@^2.5.4:
-  version "2.5.4"
-  resolved "https://registry.yarnpkg.com/vega-datasets/-/vega-datasets-2.5.4.tgz#a8071d88ca82635e0df7368bb0a37c923538cbbb"
-  integrity sha512-GTOXrEVVkjJiSeye1SECCnEI+jGSyZbzhgYdoXpAnfNKOKyLX4zrfeQ+GeEwFVs0ctDwIL07he4yxaz5Iog7vw==
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/vega-datasets/-/vega-datasets-2.7.0.tgz#458bec5e4ec1b506fc1ba63fed59ea86feaef764"
+  integrity sha512-dvHJFK9ousiblywNcRcJbedwbcAfVY/RH1UAqEWfvu4GZrXFibPlO+u8nP/onxDETcaHFDOGFs/+SK1P/sjjOQ==
 
 vega-event-selector@^3.0.1:
   version "3.0.1"
