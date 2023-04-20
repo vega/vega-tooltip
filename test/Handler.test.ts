@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import {Item} from 'vega-typings/types';
 import {DEFAULT_OPTIONS, Handler} from '../src';
 
