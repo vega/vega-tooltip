@@ -1,5 +1,12 @@
 
 
+# [0.32.0](https://github.com/vega/vega-tooltip/compare/v0.31.0...v0.32.0) (2023-04-20)
+
+
+### Features
+
+* remove beemo ([#759](https://github.com/vega/vega-tooltip/issues/759)) ([1dadf6a](https://github.com/vega/vega-tooltip/commit/1dadf6a384e90085e6247efe771d65e345e25375))
+
 # [0.31.0](https://github.com/vega/vega-tooltip/compare/v0.30.1...v0.31.0) (2023-02-22)
 
 
