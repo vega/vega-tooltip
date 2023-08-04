@@ -31,11 +31,11 @@ describe('formatValue', () => {
         '<tr><td class="key">nostr:</td><td class="value"></td></tr>' +
         '<tr><td class="key">null:</td><td class="value">null</td></tr>' +
         '<tr><td class="key">html:</td><td class="value">&amp;&lt;script></td></tr>' +
-        '</table>'
+        '</table>',
     );
 
     expect(fv({a: {b: [1, 2]}})).toBe(
-      '<table><tr><td class="key">a:</td><td class="value">{"b":[1,2]}</td></tr></table>'
+      '<table><tr><td class="key">a:</td><td class="value">{"b":[1,2]}</td></tr></table>',
     );
 
     // title should not output table
@@ -44,13 +44,13 @@ describe('formatValue', () => {
 
     // title should not output table
     expect(fv({title: 'eh', foo: 42})).toBe(
-      '<h2>eh</h2><table><tr><td class="key">foo:</td><td class="value">42</td></tr></table>'
+      '<h2>eh</h2><table><tr><td class="key">foo:</td><td class="value">42</td></tr></table>',
     );
 
     const recursive: any = {};
     recursive.foo = recursive;
     expect(fv(recursive)).toBe(
-      '<table><tr><td class="key">foo:</td><td class="value">{"foo":"[Circular]"}</td></tr></table>'
+      '<table><tr><td class="key">foo:</td><td class="value">{"foo":"[Circular]"}</td></tr></table>',
     );
 
     const recursive2: any = {};
@@ -59,7 +59,7 @@ describe('formatValue', () => {
       '<table><tr>' +
         '<td class="key">foo:</td>' +
         '<td class="value">{"bar":{"foo":"[Circular]"},"a":42}</td>' +
-        '</tr></table>'
+        '</tr></table>',
     );
   });
 

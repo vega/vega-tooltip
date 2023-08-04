@@ -83,7 +83,7 @@ export class Handler {
       event,
       this.el.getBoundingClientRect(),
       this.options.offsetX,
-      this.options.offsetY
+      this.options.offsetY,
     );
 
     this.el.style.top = `${y}px`;
