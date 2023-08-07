@@ -39,7 +39,7 @@ export function formatValue(value: any, valueToHtml: (value: any) => string, max
           val = stringify(val, maxDepth);
         }
 
-        content += `<tr><td class="key">${valueToHtml(key)}:</td><td class="value">${valueToHtml(val)}</td></tr>`;
+        content += `<tr><td class="key">${valueToHtml(key)}</td><td class="value">${valueToHtml(val)}</td></tr>`;
       }
       content += `</table>`;
     }
