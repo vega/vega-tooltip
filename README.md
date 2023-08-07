@@ -77,4 +77,4 @@ See the [API documentation](docs/APIs.md) for details.
 
 ## Publishing
 
-To make a release, run `npm run release`.
+To make a release, run `npm run release`. The update the website with `yarn deploy:gh`.
