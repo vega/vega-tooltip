@@ -1,4 +1,5 @@
 {
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
   "description": "A bubbleplot showing year on x, mean horsepower on y, and population standard deviation of horsepower on size and color.",
   "data": {"url": "data/cars.json"},
   "mark": "circle",

@@ -12,6 +12,6 @@
   "encoding": {
     "x": {"field": "a", "type": "nominal"},
     "y": {"field": "b", "type": "quantitative"},
-    "tooltip": {"field": "b", "type": "quantitative"}
+    "tooltip": [{"field": "a", "type": "datum" }, { "field": "b", "type": "quantitative"}]
   }
 }
