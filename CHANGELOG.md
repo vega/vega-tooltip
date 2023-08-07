@@ -1,5 +1,12 @@
 
 
+# [0.33.0](https://github.com/vega/vega-tooltip/compare/v0.32.0...v0.33.0) (2023-08-07)
+
+
+### Features
+
+* remove : from default format string to enable easier customization and localization ([bab8e2a](https://github.com/vega/vega-tooltip/commit/bab8e2abe549b7e8d092d031f1e25baf512230af)), closes [#785](https://github.com/vega/vega-tooltip/issues/785)
+
 # [0.32.0](https://github.com/vega/vega-tooltip/compare/v0.31.0...v0.32.0) (2023-04-20)
 
 
