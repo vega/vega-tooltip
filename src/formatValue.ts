@@ -29,7 +29,7 @@ export function formatValue(value: any, valueToHtml: (value: any) => string, max
     if (keys.length > 0) {
       content += '<table>';
       
-      let kv_list = [];
+      const kv_list = [];
       for (const key of keys) {
         let val = (rest as any)[key];
 
@@ -47,12 +47,12 @@ export function formatValue(value: any, valueToHtml: (value: any) => string, max
         if (val == 0) {
           continue;
         }
-        let kv: [string, number] = [key, val];
+        const kv: [string, number] = [key, val];
         kv_list.push(kv);
         //content += `<tr><td class="key">${valueToHtml(key)}:</td><td class="value">${valueToHtml(val)}</td></tr>`;
       }
       // TODO: to be generic, should pass 1) by key or by value? 2) how to sort? (ascending/descending).
-      let kv_list_sorted = kv_list.sort((n1,n2) => -(n1[1] - n2[1])); // Sort by values.
+      const kv_list_sorted = kv_list.sort((n1,n2) => -(n1[1] - n2[1])); // Sort by values.
       for (const kv of kv_list_sorted) {
         content += `<tr><td class="key">${valueToHtml(kv[0])}:</td><td class="value">${valueToHtml(kv[1])}</td></tr>`;
       }
