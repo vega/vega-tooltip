@@ -31,7 +31,7 @@ export function formatValue(value: any, valueToHtml: (value: any) => string, max
       var sort_tooltip: string | undefined = undefined
       for (const key of keys) {
         // Do not show the sort placeholder field to users.
-        if (key == "tooltip_sort_placeholder") {
+        if (key === "tooltip_sort_placeholder") {
           sort_tooltip = (rest as any)[key];
           continue;
         }
@@ -51,8 +51,8 @@ export function formatValue(value: any, valueToHtml: (value: any) => string, max
         kv_list.push(kv);
       }
 
-      if (sort_tooltip != undefined) {
-        const order: number = sort_tooltip == "0" ? 1 : -1; // order = 1: ascending, order = -1: descending
+      if (sort_tooltip !== undefined) {
+        const order: number = sort_tooltip === "0" ? 1 : -1; // order = 1: ascending, order = -1: descending
         kv_list = kv_list.sort((n1,n2) => order * (n1[1] - n2[1])); // Sort by values.
       }
       for (const kv of kv_list) {
