@@ -52,9 +52,15 @@ export const DEFAULT_OPTIONS = {
    * A function to customize the rendered HTML of the tooltip.
    * @param value A value string, or object of value strings keyed by field
    * @param sanitize The `sanitize` function from `options.sanitize`
+   * @param baseURL The `baseURL` from `options.baseURL`
    * @returns {string} The returned string will become the `innerHTML` of the tooltip element
    */
   formatTooltip: formatValue,
+
+  /**
+   * The baseurl to use in image paths.
+   */
+  baseURL: '',
 };
 
 export type Options = Partial<typeof DEFAULT_OPTIONS>;
