@@ -1,5 +1,12 @@
 
 
+# [0.34.0](https://github.com/vega/vega-tooltip/compare/v0.33.0...v0.34.0) (2023-12-18)
+
+
+### Features
+
+* baseURL for image paths ([#855](https://github.com/vega/vega-tooltip/issues/855)) ([136e38c](https://github.com/vega/vega-tooltip/commit/136e38c8fff33c106dbbdd389616a0109272eab2))
+
 # [0.33.0](https://github.com/vega/vega-tooltip/compare/v0.32.0...v0.33.0) (2023-08-07)
 
 
