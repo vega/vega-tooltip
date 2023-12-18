@@ -6,7 +6,12 @@ import {isArray, isObject, isString} from 'vega-util';
  * @param value The value to show in the tooltip.
  * @param valueToHtml Function to convert a single cell value to an HTML string
  */
-export function formatValue(value: any, valueToHtml: (value: any) => string, maxDepth: number): string {
+export function formatValue(
+  value: any,
+  valueToHtml: (value: any) => string,
+  maxDepth: number,
+  baseURL: string,
+): string {
   if (isArray(value)) {
     return `[${value.map((v) => valueToHtml(isString(v) ? v : stringify(v, maxDepth))).join(', ')}]`;
   }
@@ -21,7 +26,7 @@ export function formatValue(value: any, valueToHtml: (value: any) => string, max
     }
 
     if (image) {
-      content += `<img src="${valueToHtml(image)}">`;
+      content += `<img src="${new URL(valueToHtml(image), baseURL || location.href).href}">`;
     }
 
     const keys = Object.keys(rest);

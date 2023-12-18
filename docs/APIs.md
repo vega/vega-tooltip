@@ -64,7 +64,8 @@ var view = new vega.View(runtime)
 | `disableDefaultStyle` | Boolean  | Disable the default style completely. |
 | `sanitize`      | Function       | Function to convert value to string, and sanitize the HTML. |
 | `maxDepth`      | Number         | The maximum recursion depth when printing objects in the tooltip. |
-| `formatTooltip`      | Function         | Function to specify custom HTML inside tooltip element. It is highly recommended to `sanitize` any data from `value` before returning an HTML string. |
+| `formatTooltip` | Function       | Function to specify custom HTML inside tooltip element. It is highly recommended to `sanitize` any data from `value` before returning an HTML string. |
+| `baseURL`       | String         | The base URL to use for resolving relative URLs for images. |
 
 
 The default values are:
@@ -79,7 +80,8 @@ var DEFAULT_OPTIONS =
   theme: 'light',
   disableDefaultStyle: false,
   sanitize: (value) => String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;'),
-  formatTooltip: vegaTooltip.formatValue
+  formatTooltip: vegaTooltip.formatValue,
+  baseURL: ''
 };
 ```
 
