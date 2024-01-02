@@ -93,7 +93,7 @@
     "sass": "^1.64.2",
     "typescript": "~5.3.2",
     "vega-datasets": "^2.7.0",
-    "vega-typings": "^0.24.2"
+    "vega-typings": "^1.0.1"
   },
   "dependencies": {
     "vega-util": "^1.17.2"
