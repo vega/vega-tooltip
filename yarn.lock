@@ -7877,7 +7877,7 @@ vega-event-selector@^3.0.1:
   resolved "https://registry.yarnpkg.com/vega-event-selector/-/vega-event-selector-3.0.1.tgz#b99e92147b338158f8079d81b28b2e7199c2e259"
   integrity sha512-K5zd7s5tjr1LiOOkjGpcVls8GsH/f2CWCrWcpKy74gTCp+llCdwz0Enqo013ZlGaRNjfgD/o1caJRt3GSaec4A==
 
-vega-expression@^5.0.1:
+vega-expression@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/vega-expression/-/vega-expression-5.1.0.tgz#4ec0e66b56a2faba88361eb717011303bbb1ff61"
   integrity sha512-u8Rzja/cn2PEUkhQN3zUj3REwNewTA92ExrcASNKUJPCciMkHJEjESwFYuI6DWMCq4hQElQ92iosOAtwzsSTqA==
@@ -7885,15 +7885,15 @@ vega-expression@^5.0.1:
     "@types/estree" "^1.0.0"
     vega-util "^1.17.1"
 
-vega-typings@^0.24.2:
-  version "0.24.2"
-  resolved "https://registry.yarnpkg.com/vega-typings/-/vega-typings-0.24.2.tgz#7fa93e1ecccf2ea1e711024ef45aa3ef84b9ad1c"
-  integrity sha512-fW02GElYoqweCCaPqH6iH44UZnzXiX9kbm1qyecjU3k5s0vtufLI7Yuz/a/uL37mEAqTMQplBBAlk0T9e2e1Dw==
+vega-typings@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/vega-typings/-/vega-typings-1.0.1.tgz#748facd9e1f5a1d8c0e9ee148d3210286058b5d2"
+  integrity sha512-VYsezOoYU8lDWGX6m5g6+m48Icq5RhZ51ek4Gc2UJkz8WJpYlVeN81Ko/smQMLblcU5NTD4Ffu+Mb3EcnXpMZw==
   dependencies:
     "@types/geojson" "7946.0.4"
     vega-event-selector "^3.0.1"
-    vega-expression "^5.0.1"
-    vega-util "^1.17.1"
+    vega-expression "^5.1.0"
+    vega-util "^1.17.2"
 
 vega-util@^1.17.1, vega-util@^1.17.2:
   version "1.17.2"
