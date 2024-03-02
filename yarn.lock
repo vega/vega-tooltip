@@ -7853,9 +7853,9 @@ vega-expression@^5.1.0:
     vega-util "^1.17.1"
 
 vega-typings@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/vega-typings/-/vega-typings-1.0.1.tgz#748facd9e1f5a1d8c0e9ee148d3210286058b5d2"
-  integrity sha512-VYsezOoYU8lDWGX6m5g6+m48Icq5RhZ51ek4Gc2UJkz8WJpYlVeN81Ko/smQMLblcU5NTD4Ffu+Mb3EcnXpMZw==
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/vega-typings/-/vega-typings-1.2.0.tgz#0a3a4bd27b3088b651f28ec1ae32fa2109ba2edc"
+  integrity sha512-uuuMoOtBnTTErmo8p+4v1aNgjG+hkaWebASRnXvZ4gSHi77fR6e0EpJf9Fjh58p7I3A9E5Zlhcmt+p3Bl2ROqA==
   dependencies:
     "@types/geojson" "7946.0.4"
     vega-event-selector "^3.0.1"
