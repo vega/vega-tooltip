@@ -1,7 +1,7 @@
 import {TooltipHandler} from 'vega-typings';
 
 import {createDefaultStyle, DEFAULT_OPTIONS, Options} from './defaults';
-import {calculatePosition} from './position';
+import {calculatePositionRelativeToCursor, calculatePositionRelativeToItem} from './position';
 
 /**
  * The tooltip handler class.
@@ -54,8 +54,6 @@ export class Handler {
    * The tooltip handler function.
    */
   private tooltipHandler(handler: any, event: MouseEvent, item: any, value: any) {
-    // console.log(handler, event, item, value);
-
     // append a div element that we use as a tooltip unless it already exists
     this.el = document.getElementById(this.options.id);
     if (!this.el) {
@@ -84,14 +82,27 @@ export class Handler {
     // make the tooltip visible
     this.el.classList.add('visible', `${this.options.theme}-theme`);
 
-    const {x, y} = calculatePosition(
-      event,
-      this.el.getBoundingClientRect(),
-      this.options.offsetX,
-      this.options.offsetY,
-    );
+    let position: {x: number; y: number};
 
-    this.el.style.top = `${y}px`;
-    this.el.style.left = `${x}px`;
+    if (this.options.anchor === 'item') {
+      position = calculatePositionRelativeToItem(
+        event,
+        handler._el.getBoundingClientRect(),
+        handler._origin,
+        item,
+        this.el.getBoundingClientRect(),
+        this.options.position,
+      );
+    } else {
+      position = calculatePositionRelativeToCursor(
+        event,
+        this.el.getBoundingClientRect(),
+        this.options.offsetX,
+        this.options.offsetY,
+      );
+    }
+
+    this.el.style.top = `${position.y}px`;
+    this.el.style.left = `${position.x}px`;
   }
 }

@@ -3,50 +3,52 @@ import defaultStyle from './style';
 
 const EL_ID = 'vg-tooltip-element';
 
-export const DEFAULT_OPTIONS = {
+export type Position = 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+
+export interface Options {
   /**
    * X offset.
    */
-  offsetX: 10,
+  offsetX?: number;
 
   /**
    * Y offset.
    */
-  offsetY: 10,
+  offsetY?: number;
 
   /**
    * ID of the tooltip element.
    */
-  id: EL_ID,
+  id?: string;
 
   /**
    * ID of the tooltip CSS style.
    */
-  styleId: 'vega-tooltip-style',
+  styleId?: string;
 
   /**
    * The name of the theme. You can use the CSS class called [THEME]-theme to style the tooltips.
    *
    * There are two predefined themes: "light" (default) and "dark".
    */
-  theme: 'light',
+  theme?: string;
 
   /**
    * Do not use the default styles provided by Vega Tooltip. If you enable this option, you need to use your own styles. It is not necessary to disable the default style when using a custom theme.
    */
-  disableDefaultStyle: false,
+  disableDefaultStyle?: boolean;
 
   /**
    * HTML sanitizer function that removes dangerous HTML to prevent XSS.
    *
    * This should be a function from string to string. You may replace it with a formatter such as a markdown formatter.
    */
-  sanitize: escapeHTML,
+  sanitize?: (value: any) => string;
 
   /**
    * The maximum recursion depth when printing objects in the tooltip.
    */
-  maxDepth: 2,
+  maxDepth?: number;
 
   /**
    * A function to customize the rendered HTML of the tooltip.
@@ -55,15 +57,40 @@ export const DEFAULT_OPTIONS = {
    * @param baseURL The `baseURL` from `options.baseURL`
    * @returns {string} The returned string will become the `innerHTML` of the tooltip element
    */
-  formatTooltip: formatValue,
+  formatTooltip?: (value: any, valueToHtml: (value: any) => string, maxDepth: number, baseURL: string) => string;
 
   /**
    * The baseurl to use in image paths.
    */
-  baseURL: '',
-};
+  baseURL?: string;
 
-export type Options = Partial<typeof DEFAULT_OPTIONS>;
+  /**
+   * The snap reference for the tooltip.
+   */
+  anchor?: 'cursor' | 'item';
+
+  /**
+   * The position of the tooltip relative to the anchor.
+   *
+   * Only valid when `anchor` is set to 'item'.
+   */
+  position?: Position | Position[];
+}
+
+export const DEFAULT_OPTIONS: Required<Options> = {
+  offsetX: 10,
+  offsetY: 10,
+  id: EL_ID,
+  styleId: 'vega-tooltip-style',
+  theme: 'light',
+  disableDefaultStyle: false,
+  sanitize: escapeHTML,
+  maxDepth: 2,
+  formatTooltip: formatValue,
+  baseURL: '',
+  anchor: 'cursor',
+  position: 'top',
+};
 
 /**
  * Escape special HTML characters.

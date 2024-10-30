@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>Tooltip Examples</title>
@@ -35,12 +35,12 @@
         await vegaEmbed(id, vgSpec, { tooltip: handler.call }).catch(console.error);
       }
 
-      addVgExample("specs/images.json", "#vis-images");
-      addVgExample("specs/arc.json", "#vis-arc");
-      addVgExample("specs/choropleth.json", "#vis-choropleth");
+      addVgExample("specs/images.json", "#vis-images", { anchor: "item", position: "right" });
+      addVgExample("specs/arc.json", "#vis-arc", { anchor: "item", position: "right" });
+      addVgExample("specs/choropleth.json", "#vis-choropleth", { anchor: "item", position: "right" });
       addVgExample("specs/force.json", "#vis-force", { theme: "dark" });
-      addVgExample("specs/heatmap.json", "#vis-heatmap");
-      addVgExample("specs/voronoi.json", "#vis-voronoi");
+      addVgExample("specs/heatmap.json", "#vis-heatmap", { anchor: "item" });
+      addVgExample("specs/voronoi.json", "#vis-voronoi", { anchor: "item" });
     </script>
   </body>
 </html>
