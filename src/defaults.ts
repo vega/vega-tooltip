@@ -17,6 +17,13 @@ export interface Options {
   offsetY?: number;
 
   /**
+   * Set the offset of the tooltip in the direction that it is being anchored.
+   *
+   * Example: bottom left would offset the tooltip to the bottom left by the offset value in pixels.
+   */
+  // offset?: number;
+
+  /**
    * ID of the tooltip element.
    */
   id?: string;
@@ -67,12 +74,12 @@ export interface Options {
   /**
    * The snap reference for the tooltip.
    */
-  anchor?: 'cursor' | 'item';
+  anchor?: 'cursor' | 'mark';
 
   /**
    * The position of the tooltip relative to the anchor.
    *
-   * Only valid when `anchor` is set to 'item'.
+   * Only valid when `anchor` is set to 'mark'.
    */
   position?: Position | Position[];
 }
@@ -89,7 +96,7 @@ export const DEFAULT_OPTIONS: Required<Options> = {
   formatTooltip: formatValue,
   baseURL: '',
   anchor: 'cursor',
-  position: 'top',
+  position: ['top', 'bottom', 'left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'],
 };
 
 /**

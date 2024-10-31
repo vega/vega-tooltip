@@ -1,7 +1,7 @@
 import {TooltipHandler} from 'vega-typings';
 
 import {createDefaultStyle, DEFAULT_OPTIONS, Options} from './defaults';
-import {calculatePositionRelativeToCursor, calculatePositionRelativeToItem} from './position';
+import {calculatePositionRelativeToCursor, calculatePositionRelativeToMark} from './position';
 
 /**
  * The tooltip handler class.
@@ -84,15 +84,8 @@ export class Handler {
 
     let position: {x: number; y: number};
 
-    if (this.options.anchor === 'item') {
-      position = calculatePositionRelativeToItem(
-        event,
-        handler._el.getBoundingClientRect(),
-        handler._origin,
-        item,
-        this.el.getBoundingClientRect(),
-        this.options.position,
-      );
+    if (this.options.anchor === 'mark') {
+      position = calculatePositionRelativeToMark(handler, event, item, this.el.getBoundingClientRect(), this.options);
     } else {
       position = calculatePositionRelativeToCursor(
         event,

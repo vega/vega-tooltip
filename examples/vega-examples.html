@@ -35,12 +35,17 @@
         await vegaEmbed(id, vgSpec, { tooltip: handler.call }).catch(console.error);
       }
 
-      addVgExample("specs/images.json", "#vis-images", { anchor: "item", position: "right" });
-      addVgExample("specs/arc.json", "#vis-arc", { anchor: "item", position: "right" });
-      addVgExample("specs/choropleth.json", "#vis-choropleth", { anchor: "item", position: "right" });
+      addVgExample("specs/images.json", "#vis-images", {
+        anchor: "mark",
+        position: ["right", "top", "left", "bottom"],
+      });
+      addVgExample("specs/arc.json", "#vis-arc", { anchor: "mark", position: "right" });
+      addVgExample("specs/choropleth.json", "#vis-choropleth", { anchor: "mark", position: "right" });
       addVgExample("specs/force.json", "#vis-force", { theme: "dark" });
-      addVgExample("specs/heatmap.json", "#vis-heatmap", { anchor: "item" });
-      addVgExample("specs/voronoi.json", "#vis-voronoi", { anchor: "item" });
+      addVgExample("specs/heatmap.json", "#vis-heatmap", {
+        anchor: "mark",
+      });
+      addVgExample("specs/voronoi.json", "#vis-voronoi", { anchor: "mark" });
     </script>
   </body>
 </html>
