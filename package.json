@@ -52,6 +52,7 @@
     "start": "yarn build && concurrently --kill-others -n Server,Rollup 'yarn serve' 'rollup -c -w'",
     "pretest": "yarn build:style",
     "test": "jest",
+    "watch": "jest --watch",
     "test:inspect": "node --inspect-brk ./node_modules/.bin/jest --runInBand",
     "prepare": "yarn copy:data",
     "prettierbase": "prettier '*.{css,scss,html}'",
