@@ -31,14 +31,12 @@ export function calculatePositionRelativeToCursor(
 }
 
 /**
- * calculates the position of the tooltip relative to the mark
+ * Calculates the position of the tooltip relative to the mark.
+ * @param handler The handler instance.
  * @param event The mouse event.
- * @param containerBox The bounding box of the container relative to the viewport.
- * @param origin The origin of the chart area.
  * @param item The item that the tooltip is being shown for.
- * @param tooltipBox The bounding box of the tooltip.
- * @param position The position of the tooltip relative to the mark.
- * @param offset The offset from the mark.
+ * @param tooltipBox Client rect of the tooltip element.
+ * @param options Tooltip handler options.
  * @returns
  */
 export function calculatePositionRelativeToMark(
@@ -63,7 +61,7 @@ export function calculatePositionRelativeToMark(
   // test positions till a valid one is found
   for (const p of positionArr) {
     // verify that the tooltip is in the view and the mouse is not where the tooltip would be
-    if (isInView(positions[p], tooltipBox) && !mouseIsOnTooltip(event, positions[p], tooltipBox)) {
+    if (tooltipIsInViewport(positions[p], tooltipBox) && !mouseIsOnTooltip(event, positions[p], tooltipBox)) {
       return positions[p];
     }
   }
@@ -73,7 +71,11 @@ export function calculatePositionRelativeToMark(
 }
 
 // Calculates the bounds of the mark relative to the viewport
-function getMarkBounds(containerBox: {left: number; top: number}, origin: [number, number], item: any): MarkBounds {
+export function getMarkBounds(
+  containerBox: {left: number; top: number},
+  origin: [number, number],
+  item: any,
+): MarkBounds {
   // if this is a voronoi mark, we want to use the bounds of the point that voronoi cell represents
   const markBounds = item.isVoronoi ? item.datum.bounds : item.bounds;
 
@@ -104,43 +106,40 @@ function getMarkBounds(containerBox: {left: number; top: number}, origin: [numbe
 
 // calculates the tooltip xy for each possible position
 //update to handle offsetX and offsetY
-function getPositions(
-  anchorBounds: MarkBounds,
+export function getPositions(
+  markBounds: MarkBounds,
   tooltipBox: {width: number; height: number},
   offsetX: number,
   offsetY: number,
 ) {
+  const xc = (markBounds.x1 + markBounds.x2) / 2;
+  const yc = (markBounds.y1 + markBounds.y2) / 2;
 
-  const xc = (anchorBounds.x1 + anchorBounds.x2) / 2;
-  const yc = (anchorBounds.y1 + anchorBounds.y2) / 2;
+  // x positions
+  const left = markBounds.x1 - tooltipBox.width - offsetX;
+  const center = xc - tooltipBox.width / 2;
+  const right = markBounds.x2 + offsetX;
 
-  const yPositions = {
-    top: anchorBounds.y1 - tooltipBox.height,
-    middle: yc - tooltipBox.height / 2,
-    bottom: anchorBounds.y2,
-  };
-
-  const xPositions = {
-    left: anchorBounds.x1 - tooltipBox.width,
-    center: xc - tooltipBox.width / 2,
-    right: anchorBounds.x2,
-  };
+  // y positions
+  const top = markBounds.y1 - tooltipBox.height - offsetY;
+  const middle = yc - tooltipBox.height / 2;
+  const bottom = markBounds.y2 + offsetY;
 
   const positions: Record<Position, {x: number; y: number}> = {
-    top: {x: xPositions.center, y: yPositions.top - offsetY},
-    bottom: {x: xPositions.center, y: yPositions.bottom + offsetY},
-    left: {x: xPositions.left - offsetX, y: yPositions.middle},
-    right: {x: xPositions.right + offsetX, y: yPositions.middle},
-    'top-left': {x: xPositions.left - offsetX, y: yPositions.top - offsetY},
-    'top-right': {x: xPositions.right + offsetX, y: yPositions.top - offsetY},
-    'bottom-left': {x: xPositions.left - offsetX, y: yPositions.bottom + offsetY},
-    'bottom-right': {x: xPositions.right + offsetX, y: yPositions.bottom + offsetY},
+    top: {x: center, y: top},
+    bottom: {x: center, y: bottom},
+    left: {x: left, y: middle},
+    right: {x: right, y: middle},
+    'top-left': {x: left, y: top},
+    'top-right': {x: right, y: top},
+    'bottom-left': {x: left, y: bottom},
+    'bottom-right': {x: right, y: bottom},
   };
   return positions;
 }
 
-// Checks if the tooltip would be in view at the given position
-function isInView(position: {x: number; y: number}, tooltipBox: {width: number; height: number}) {
+// Checks if the tooltip would be in the viewport at the given position
+function tooltipIsInViewport(position: {x: number; y: number}, tooltipBox: {width: number; height: number}) {
   return (
     position.x >= 0 &&
     position.y >= 0 &&
