@@ -55,8 +55,7 @@ export function calculatePositionRelativeToMark(
   const markBounds = getMarkBounds(containerBox, origin, item);
 
   // the possible positions for the tooltip
-  // TODO: use offset from options
-  const positions = getPositions(markBounds, tooltipBox, 20);
+  const positions = getPositions(markBounds, tooltipBox, offsetX, offsetY);
 
   // positions to test
   const positionArr = Array.isArray(position) ? position : [position];
@@ -104,8 +103,14 @@ function getMarkBounds(containerBox: {left: number; top: number}, origin: [numbe
 }
 
 // calculates the tooltip xy for each possible position
-function getPositions(anchorBounds: MarkBounds, tooltipBox: {width: number; height: number}, offset: number) {
-  const diagnalOffset = offset / Math.sqrt(2);
+//update to handle offsetX and offsetY
+function getPositions(
+  anchorBounds: MarkBounds,
+  tooltipBox: {width: number; height: number},
+  offsetX: number,
+  offsetY: number,
+) {
+
   const xc = (anchorBounds.x1 + anchorBounds.x2) / 2;
   const yc = (anchorBounds.y1 + anchorBounds.y2) / 2;
 
@@ -122,14 +127,14 @@ function getPositions(anchorBounds: MarkBounds, tooltipBox: {width: number; heig
   };
 
   const positions: Record<Position, {x: number; y: number}> = {
-    top: {x: xPositions.center, y: yPositions.top - offset},
-    bottom: {x: xPositions.center, y: yPositions.bottom + offset},
-    left: {x: xPositions.left - offset, y: yPositions.middle},
-    right: {x: xPositions.right + offset, y: yPositions.middle},
-    'top-left': {x: xPositions.left - diagnalOffset, y: yPositions.top - diagnalOffset},
-    'top-right': {x: xPositions.right + diagnalOffset, y: yPositions.top - diagnalOffset},
-    'bottom-left': {x: xPositions.left - diagnalOffset, y: yPositions.bottom + diagnalOffset},
-    'bottom-right': {x: xPositions.right + diagnalOffset, y: yPositions.bottom + diagnalOffset},
+    top: {x: xPositions.center, y: yPositions.top - offsetY},
+    bottom: {x: xPositions.center, y: yPositions.bottom + offsetY},
+    left: {x: xPositions.left - offsetX, y: yPositions.middle},
+    right: {x: xPositions.right + offsetX, y: yPositions.middle},
+    'top-left': {x: xPositions.left - offsetX, y: yPositions.top - offsetY},
+    'top-right': {x: xPositions.right + offsetX, y: yPositions.top - offsetY},
+    'bottom-left': {x: xPositions.left - offsetX, y: yPositions.bottom + offsetY},
+    'bottom-right': {x: xPositions.right + offsetX, y: yPositions.bottom + offsetY},
   };
   return positions;
 }
