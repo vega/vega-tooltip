@@ -55,7 +55,6 @@ export function calculatePositionRelativeToMark(
   const markBounds = getMarkBounds(containerBox, origin, item);
 
   // the possible positions for the tooltip
-  // TODO: use offset from options
   const positions = getPositions(markBounds, tooltipBox, offsetX, offsetY);
 
   // positions to test
@@ -111,8 +110,6 @@ function getPositions(
   offsetX: number,
   offsetY: number,
 ) {
-  const diagnalOffsetX = offsetX / Math.sqrt(2);
-  const diagnalOffsetY = offsetY / Math.sqrt(2);
 
   const xc = (anchorBounds.x1 + anchorBounds.x2) / 2;
   const yc = (anchorBounds.y1 + anchorBounds.y2) / 2;
@@ -134,10 +131,10 @@ function getPositions(
     bottom: {x: xPositions.center, y: yPositions.bottom + offsetY},
     left: {x: xPositions.left - offsetX, y: yPositions.middle},
     right: {x: xPositions.right + offsetX, y: yPositions.middle},
-    'top-left': {x: xPositions.left - diagnalOffsetX, y: yPositions.top - diagnalOffsetY},
-    'top-right': {x: xPositions.right + diagnalOffsetX, y: yPositions.top - diagnalOffsetY},
-    'bottom-left': {x: xPositions.left - diagnalOffsetX, y: yPositions.bottom + diagnalOffsetY},
-    'bottom-right': {x: xPositions.right + diagnalOffsetX, y: yPositions.bottom + diagnalOffsetY},
+    'top-left': {x: xPositions.left - offsetX, y: yPositions.top - offsetY},
+    'top-right': {x: xPositions.right + offsetX, y: yPositions.top - offsetY},
+    'bottom-left': {x: xPositions.left - offsetX, y: yPositions.bottom + offsetY},
+    'bottom-right': {x: xPositions.right + offsetX, y: yPositions.bottom + offsetY},
   };
   return positions;
 }
