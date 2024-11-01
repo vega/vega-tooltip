@@ -70,7 +70,7 @@ export function calculatePositionRelativeToMark(
   return calculatePositionRelativeToCursor(event, tooltipBox, offsetX, offsetY);
 }
 
-// Calculates the bounds of the mark relative to the viewport
+// Calculates the bounds of the mark relative to the viewport.
 export function getMarkBounds(
   containerBox: {left: number; top: number},
   origin: [number, number],
@@ -104,8 +104,7 @@ export function getMarkBounds(
   };
 }
 
-// calculates the tooltip xy for each possible position
-//update to handle offsetX and offsetY
+// Calculates the tooltip xy for each possible position.
 export function getPositions(
   markBounds: MarkBounds,
   tooltipBox: {width: number; height: number},
