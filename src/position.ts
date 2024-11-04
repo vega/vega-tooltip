@@ -17,17 +17,27 @@ export function calculatePositionRelativeToCursor(
   offsetX: number,
   offsetY: number,
 ) {
-  let x = event.clientX + offsetX;
-  if (x + tooltipBox.width > window.innerWidth) {
-    x = +event.clientX - offsetX - tooltipBox.width;
+  // the possible positions for the tooltip
+  const positions = getPositions(
+    {x1: event.clientX, x2: event.clientX, y1: event.clientY, y2: event.clientY},
+    tooltipBox,
+    offsetX,
+    offsetY,
+  );
+
+  // order of positions to try
+  const postionArr: Position[] = ['bottom-right', 'bottom-left', 'top-right', 'top-left'];
+
+  // test positions till a valid one is found
+  for (const p of postionArr) {
+    if (tooltipIsInViewport(positions[p], tooltipBox)) {
+      return positions[p];
+    }
   }
 
-  let y = event.clientY + offsetY;
-  if (y + tooltipBox.height > window.innerHeight) {
-    y = +event.clientY - offsetY - tooltipBox.height;
-  }
-
-  return {x, y};
+  // default to top-left if a valid position is not found
+  // this is legacy behavior
+  return positions['top-left'];
 }
 
 /**

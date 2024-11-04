@@ -85,7 +85,12 @@ export class Handler {
     const position =
       this.options.anchor === 'mark'
         ? calculatePositionRelativeToMark(handler, event, item, this.el.getBoundingClientRect(), this.options)
-        : calculatePositionRelativeToCursor(event, this.el.getBoundingClientRect(), this.options);
+        : calculatePositionRelativeToCursor(
+            event,
+            this.el.getBoundingClientRect(),
+            this.options.offsetX,
+            this.options.offsetY,
+          );
 
     this.el.style.top = `${position.y}px`;
     this.el.style.left = `${position.x}px`;
