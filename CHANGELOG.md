@@ -1,5 +1,13 @@
 
 
+# [0.35.0](https://github.com/vega/vega-tooltip/compare/v0.34.0...v0.35.0) (2024-11-05)
+
+
+### Features
+
+* anchor tooltip to mark ([#959](https://github.com/vega/vega-tooltip/issues/959)) ([5a95192](https://github.com/vega/vega-tooltip/commit/5a95192deb6ac07aaa79c3e6df9eaebe7f6c3b45))
+* move to npm, update rollup typescript, remove need for rsync ([#970](https://github.com/vega/vega-tooltip/issues/970)) ([77e5732](https://github.com/vega/vega-tooltip/commit/77e57322f9a9afc8e2a60fcb195cb77118a5fbba))
+
 # [0.34.0](https://github.com/vega/vega-tooltip/compare/v0.33.0...v0.34.0) (2023-12-18)
 
 
