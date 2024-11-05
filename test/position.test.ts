@@ -4,6 +4,8 @@ import {
   DEFAULT_OPTIONS,
   getMarkBounds,
   getPositions,
+  mouseIsOnTooltip,
+  tooltipIsInViewport,
 } from '../src';
 
 global.window = Object.create({});
@@ -122,5 +124,38 @@ describe('getPositions()', () => {
     expect(positions).toHaveProperty('top-right', {x: 60, y: -110});
     expect(positions).toHaveProperty('bottom-left', {x: -210, y: 60});
     expect(positions).toHaveProperty('bottom-right', {x: 60, y: 60});
+  });
+});
+
+describe('tooltipIsInViewport()', () => {
+  const tooltipBox = {width: 100, height: 100};
+  test('should return true if the tooltip is in the viewport', () => {
+    expect(tooltipIsInViewport({x: 0, y: 0}, tooltipBox)).toBe(true);
+    expect(tooltipIsInViewport({x: 400, y: 400}, tooltipBox)).toBe(true);
+    expect(tooltipIsInViewport({x: 0, y: 400}, tooltipBox)).toBe(true);
+    expect(tooltipIsInViewport({x: 400, y: 0}, tooltipBox)).toBe(true);
+  });
+  test('should return false if the tooltip is not in the viewport', () => {
+    expect(tooltipIsInViewport({x: -1, y: 0}, tooltipBox)).toBe(false);
+    expect(tooltipIsInViewport({x: 0, y: -1}, tooltipBox)).toBe(false);
+    expect(tooltipIsInViewport({x: 401, y: 0}, tooltipBox)).toBe(false);
+    expect(tooltipIsInViewport({x: 0, y: 401}, tooltipBox)).toBe(false);
+  });
+});
+
+describe('mouseIsOnTooltip()', () => {
+  const tooltipBox = {width: 100, height: 100};
+  test('should return true if the mouse is on the tooltip', () => {
+    expect(mouseIsOnTooltip(defaultMouseEvent, {x: 0, y: 0}, tooltipBox)).toBe(true);
+    expect(mouseIsOnTooltip(defaultMouseEvent, {x: 50, y: 50}, tooltipBox)).toBe(true);
+    expect(mouseIsOnTooltip(defaultMouseEvent, {x: 100, y: 100}, tooltipBox)).toBe(true);
+    expect(mouseIsOnTooltip(defaultMouseEvent, {x: 100, y: 0}, tooltipBox)).toBe(true);
+    expect(mouseIsOnTooltip(defaultMouseEvent, {x: 0, y: 100}, tooltipBox)).toBe(true);
+  });
+  test('should return false if the mouse is not on the tooltip', () => {
+    expect(mouseIsOnTooltip(defaultMouseEvent, {x: -1, y: 0}, tooltipBox)).toBe(false);
+    expect(mouseIsOnTooltip(defaultMouseEvent, {x: 0, y: -1}, tooltipBox)).toBe(false);
+    expect(mouseIsOnTooltip(defaultMouseEvent, {x: 101, y: 0}, tooltipBox)).toBe(false);
+    expect(mouseIsOnTooltip(defaultMouseEvent, {x: 0, y: 101}, tooltipBox)).toBe(false);
   });
 });

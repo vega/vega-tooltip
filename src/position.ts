@@ -147,7 +147,7 @@ export function getPositions(
 }
 
 // Checks if the tooltip would be in the viewport at the given position
-function tooltipIsInViewport(position: {x: number; y: number}, tooltipBox: {width: number; height: number}) {
+export function tooltipIsInViewport(position: {x: number; y: number}, tooltipBox: {width: number; height: number}) {
   return (
     position.x >= 0 &&
     position.y >= 0 &&
@@ -157,7 +157,7 @@ function tooltipIsInViewport(position: {x: number; y: number}, tooltipBox: {widt
 }
 
 // Checks if the mouse is within the tooltip area
-function mouseIsOnTooltip(
+export function mouseIsOnTooltip(
   event: MouseEvent,
   position: {x: number; y: number},
   tooltipBox: {width: number; height: number},
