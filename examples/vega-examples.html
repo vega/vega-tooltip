@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>Tooltip Examples</title>
@@ -16,6 +16,13 @@
   <body>
     <h1>Vega Tooltip Examples</h1>
     <a href="index.html" class="large">Back to overview</a>
+    <div class="options">
+      <div>
+        <span>anchor:</span>
+        <label> <input type="radio" name="anchor" value="cursor" id="anchor-cursor" checked /> cursor </label>
+        <label> <input type="radio" name="anchor" value="mark" id="anchor-mark" /> mark </label>
+      </div>
+    </div>
     <div>
       <div id="vis-images" class="tooltip-example"></div>
       <div id="vis-arc" class="tooltip-example"></div>
@@ -35,12 +42,23 @@
         await vegaEmbed(id, vgSpec, { tooltip: handler.call }).catch(console.error);
       }
 
-      addVgExample("specs/images.json", "#vis-images");
-      addVgExample("specs/arc.json", "#vis-arc");
-      addVgExample("specs/choropleth.json", "#vis-choropleth");
-      addVgExample("specs/force.json", "#vis-force", { theme: "dark" });
-      addVgExample("specs/heatmap.json", "#vis-heatmap");
-      addVgExample("specs/voronoi.json", "#vis-voronoi");
+      function renderCharts() {
+        const anchor = document.getElementById("anchor-cursor").checked ? "cursor" : "mark";
+
+        addVgExample("specs/images.json", "#vis-images", { anchor });
+        addVgExample("specs/arc.json", "#vis-arc", { anchor });
+        addVgExample("specs/choropleth.json", "#vis-choropleth", { anchor });
+        addVgExample("specs/force.json", "#vis-force", { anchor, theme: "dark" });
+        addVgExample("specs/heatmap.json", "#vis-heatmap", { anchor });
+        addVgExample("specs/voronoi.json", "#vis-voronoi", { anchor });
+      }
+
+      // Initial render
+      renderCharts();
+
+      // Re-render charts when the checkbox is clicked
+      document.getElementById("anchor-cursor").addEventListener("change", renderCharts);
+      document.getElementById("anchor-mark").addEventListener("change", renderCharts);
     </script>
   </body>
 </html>
