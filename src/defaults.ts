@@ -17,13 +17,6 @@ export interface Options {
   offsetY?: number;
 
   /**
-   * Set the offset of the tooltip in the direction that it is being anchored.
-   *
-   * Example: bottom left would offset the tooltip to the bottom left by the offset value in pixels.
-   */
-  // offset?: number;
-
-  /**
    * ID of the tooltip element.
    */
   id?: string;
