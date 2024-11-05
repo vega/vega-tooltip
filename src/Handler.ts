@@ -82,12 +82,12 @@ export class Handler {
     // make the tooltip visible
     this.el.classList.add('visible', `${this.options.theme}-theme`);
 
-    const position =
+    const {x, y} =
       this.options.anchor === 'mark'
         ? calculatePositionRelativeToMark(handler, event, item, this.el.getBoundingClientRect(), this.options)
         : calculatePositionRelativeToCursor(event, this.el.getBoundingClientRect(), this.options);
 
-    this.el.style.top = `${position.y}px`;
-    this.el.style.left = `${position.x}px`;
+    this.el.style.top = `${y}px`;
+    this.el.style.left = `${x}px`;
   }
 }
