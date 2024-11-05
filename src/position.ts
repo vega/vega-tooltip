@@ -8,14 +8,12 @@ type MarkBounds = Pick<Bounds, 'x1' | 'x2' | 'y1' | 'y2'>;
  *
  * @param event The mouse event.
  * @param tooltipBox
- * @param offsetX Horizontal offset.
- * @param offsetY Vertical offset.
+ * @param options Tooltip handler options.
  */
 export function calculatePositionRelativeToCursor(
   event: MouseEvent,
   tooltipBox: {width: number; height: number},
-  offsetX: number,
-  offsetY: number,
+  {offsetX, offsetY}: Required<Options>,
 ) {
   // the possible positions for the tooltip
   const positions = getPositions(
@@ -54,8 +52,9 @@ export function calculatePositionRelativeToMark(
   event: MouseEvent,
   item: any,
   tooltipBox: {width: number; height: number},
-  {position, offsetX, offsetY}: Required<Options>,
+  options: Required<Options>,
 ) {
+  const {position, offsetX, offsetY} = options;
   const containerBox = handler._el.getBoundingClientRect();
   const origin = handler._origin;
 
@@ -77,7 +76,7 @@ export function calculatePositionRelativeToMark(
   }
 
   // default to cursor position if a valid position is not found
-  return calculatePositionRelativeToCursor(event, tooltipBox, offsetX, offsetY);
+  return calculatePositionRelativeToCursor(event, tooltipBox, options);
 }
 
 // Calculates the bounds of the mark relative to the viewport.

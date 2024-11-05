@@ -12,8 +12,6 @@ Object.defineProperty(window, 'innerHeight', {value: 500});
 
 const defaultTooltipBox = {width: 100, height: 100};
 const defaultMouseEvent = {clientX: 100, clientY: 100} as MouseEvent;
-const defaultOffsetX = 10;
-const defaultOffsetY = 10;
 
 const defaultItem = {
   isVoronoi: false,
@@ -23,20 +21,14 @@ const defaultItem = {
 
 describe('calculatePositionRelativeToCursor()', () => {
   test('should return position in bottom right corner of cursor if there is enough space', () => {
-    const position = calculatePositionRelativeToCursor(
-      defaultMouseEvent,
-      defaultTooltipBox,
-      defaultOffsetX,
-      defaultOffsetY,
-    );
+    const position = calculatePositionRelativeToCursor(defaultMouseEvent, defaultTooltipBox, DEFAULT_OPTIONS);
     expect(position).toEqual({x: 110, y: 110});
   });
   test('should return position in top right corner of cursor if there is not space below', () => {
     const position = calculatePositionRelativeToCursor(
       {...defaultMouseEvent, clientY: 480},
       defaultTooltipBox,
-      defaultOffsetX,
-      defaultOffsetY,
+      DEFAULT_OPTIONS,
     );
     expect(position).toEqual({x: 110, y: 370});
   });
@@ -44,8 +36,7 @@ describe('calculatePositionRelativeToCursor()', () => {
     const position = calculatePositionRelativeToCursor(
       {...defaultMouseEvent, clientX: 480},
       defaultTooltipBox,
-      defaultOffsetX,
-      defaultOffsetY,
+      DEFAULT_OPTIONS,
     );
     expect(position).toEqual({x: 370, y: 110});
   });
@@ -53,8 +44,7 @@ describe('calculatePositionRelativeToCursor()', () => {
     const position = calculatePositionRelativeToCursor(
       {...defaultMouseEvent, clientX: 480, clientY: 480},
       defaultTooltipBox,
-      defaultOffsetX,
-      defaultOffsetY,
+      DEFAULT_OPTIONS,
     );
     expect(position).toEqual({x: 370, y: 370});
   });
