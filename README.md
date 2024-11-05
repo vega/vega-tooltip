@@ -23,9 +23,7 @@ http://vega.github.io/vega-tooltip/
 
 We recommend using [Vega-Embed](https://github.com/vega/vega-embed), which already comes with this tooltip plugin.
 
-### NPM or Yarn
-
-Use `npm install vega-tooltip` or `yarn add vega-tooltip`.
+You can install Vega tooltip directly with `npm install vega-tooltip`.
 
 ### Using Vega-tooltip with a CDN
 
@@ -71,10 +69,10 @@ See the [API documentation](docs/APIs.md) for details.
 
 ## Run Instructions
 
-1. In the project folder `vega-tooltip`, type command `yarn` to install dependencies.
-2. Then, type `yarn start`. This will build the library and start a web server.
+1. In the project folder `vega-tooltip`, type command `npm i` to install dependencies.
+2. Then, type `npm run start`. This will build the library and start a web server.
 3. In your browser, navigate to `http://localhost:8000/`, where you can see various Vega-Lite and Vega visualizations with tooltip interaction.
 
 ## Publishing
 
-To make a release, run `npm run release`. The update the website with `yarn deploy:gh`.
+To make a release, run `npm run release`. The update the website with `npm run deploy:gh`.

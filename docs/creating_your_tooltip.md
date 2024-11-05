@@ -2,12 +2,6 @@
 
 ## Step 1. Add The Library
 
-If you use [`yarn`](https://yarnpkg.com/), you can install the library via:
-
-```bash
-yarn add vega-tooltip
-```
-
 With npm, you can install it as
 
 ```bash
