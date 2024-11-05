@@ -1,5 +1,12 @@
 
 
+## [0.35.1](https://github.com/vega/vega-tooltip/compare/v0.35.0...v0.35.1) (2024-11-05)
+
+
+### Bug Fixes
+
+* correct type build ([9dbc553](https://github.com/vega/vega-tooltip/commit/9dbc5531d36b5da3fbe8eb1ea4cdc91766e738ea))
+
 # [0.35.0](https://github.com/vega/vega-tooltip/compare/v0.34.0...v0.35.0) (2024-11-05)
 
 
