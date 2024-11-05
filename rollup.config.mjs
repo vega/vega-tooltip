@@ -2,21 +2,18 @@ import json from '@rollup/plugin-json';
 import resolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
 import bundleSize from 'rollup-plugin-bundle-size';
-import ts from 'rollup-plugin-ts';
+import typescript from '@rollup/plugin-typescript';
 
 import pkg from './package.json' assert { type: 'json' };
 
 const plugins = (browserslist, declaration) => [
   resolve(),
   json(),
-  ts({
-    tsconfig: (resolvedConfig) => ({
-      ...resolvedConfig,
+  typescript({
+    compilerOptions: {
       declaration,
-      declarationMap: declaration
-    }),
-    transpiler: "babel",
-    browserslist
+      declarationMap: declaration,
+    },
   }),
   bundleSize()
 ];
@@ -29,7 +26,7 @@ const outputs = [
       format: 'esm',
       sourcemap: true
     },
-    plugins: plugins(false, true),
+    plugins: plugins(true),
     external: Object.keys(pkg.dependencies)
   }, {
     input: 'src/index.ts',
@@ -56,7 +53,7 @@ const outputs = [
         plugins: [terser()],
       }
     ],
-    plugins: plugins('defaults', false),
+    plugins: plugins(false),
     external: ['vega-util']
   }
 ];

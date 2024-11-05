@@ -10,7 +10,7 @@ export function formatValue(
   value: any,
   valueToHtml: (value: any) => string,
   maxDepth: number,
-  baseURL: string,
+  baseURL?: string,
 ): string {
   if (isArray(value)) {
     return `[${value.map((v) => valueToHtml(isString(v) ? v : stringify(v, maxDepth))).join(', ')}]`;
