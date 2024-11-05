@@ -1,10 +1,9 @@
-import json from '@rollup/plugin-json';
-import resolve from '@rollup/plugin-node-resolve';
-import terser from '@rollup/plugin-terser';
-import bundleSize from 'rollup-plugin-bundle-size';
-import ts from 'rollup-plugin-ts';
-
-import pkg from './package.json' assert { type: 'json' };
+const json = require('@rollup/plugin-json');
+const resolve = require('@rollup/plugin-node-resolve');
+const terser = require('@rollup/plugin-terser');
+const bundleSize = require('rollup-plugin-bundle-size');
+const ts = require('rollup-plugin-ts');
+const pkg = require('./package.json');
 
 const plugins = (browserslist, declaration) => [
   resolve(),
@@ -61,4 +60,5 @@ const outputs = [
   }
 ];
 
-export default outputs;
+module.exports = outputs;
+
