@@ -96,8 +96,10 @@ export function getMarkBounds(
   let parentItem = item;
   while (parentItem.mark.group) {
     parentItem = parentItem.mark.group;
-    if ('x' in parentItem && 'y' in parentItem) {
+    if ('x' in parentItem) {
       left += parentItem.x;
+    }
+    if ('y' in parentItem) {
       top += parentItem.y;
     }
   }
