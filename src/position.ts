@@ -96,12 +96,8 @@ export function getMarkBounds(
   let parentItem = item;
   while (parentItem.mark.group) {
     parentItem = parentItem.mark.group;
-    if ('x' in parentItem) {
-      left += parentItem.x;
-    }
-    if ('y' in parentItem) {
-      top += parentItem.y;
-    }
+    left += parentItem.x ?? 0;
+    top += parentItem.y ?? 0;
   }
 
   const markWidth = markBounds.x2 - markBounds.x1;
