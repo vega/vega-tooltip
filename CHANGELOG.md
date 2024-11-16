@@ -1,5 +1,12 @@
 
 
+## [0.35.2](https://github.com/vega/vega-tooltip/compare/v0.35.1...v0.35.2) (2024-11-16)
+
+
+### Bug Fixes
+
+* mark position calculation when only x or y are defined ([#974](https://github.com/vega/vega-tooltip/issues/974)) ([795bd70](https://github.com/vega/vega-tooltip/commit/795bd7081096f73d9298b5dd04951b341318a5e3))
+
 ## [0.35.1](https://github.com/vega/vega-tooltip/compare/v0.35.0...v0.35.1) (2024-11-05)
 
 
