@@ -107,6 +107,10 @@ describe('getMarkBounds()', () => {
     expect(getMarkBounds({left: 0, top: 0}, [0, 0], defaultItem)).toEqual({x1: 150, x2: 200, y1: 75, y2: 125});
     expect(getMarkBounds({left: 0, top: 0}, [0, 0], item)).toEqual({x1: 190, x2: 240, y1: 135, y2: 185});
   });
+  test('should sum the offsets even if only x is defined', () => {
+    const item = {...defaultItem, mark: {group: {x: 10, mark: {group: {x: 30, mark: {}}}}}};
+    expect(getMarkBounds({left: 0, top: 0}, [0, 0], item)).toEqual({x1: 190, x2: 240, y1: 75, y2: 125});
+  });
 });
 
 describe('getPositions()', () => {
