@@ -1,7 +1,7 @@
 import {TooltipHandler} from 'vega-typings';
 
-import {createDefaultStyle, DEFAULT_OPTIONS, Options} from './defaults';
-import {calculatePositionRelativeToCursor, calculatePositionRelativeToMark} from './position';
+import {createDefaultStyle, DEFAULT_OPTIONS, Options} from './defaults.js';
+import {calculatePositionRelativeToCursor, calculatePositionRelativeToMark} from './position.js';
 
 /**
  * The tooltip handler class.
