@@ -1,15 +1,15 @@
 import pkg from '../package.json';
 import {View} from 'vega-typings';
 
-import {Options} from './defaults';
-import {Handler} from './Handler';
+import {Options} from './defaults.js';
+import {Handler} from './Handler.js';
 
 const version = pkg.version;
 
-export * from './defaults';
-export * from './formatValue';
-export * from './position';
-export * from './Handler';
+export * from './defaults.js';
+export * from './formatValue.js';
+export * from './position.js';
+export * from './Handler.js';
 export {version};
 
 /**

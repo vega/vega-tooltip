@@ -6,7 +6,7 @@ import {
   getPositions,
   mouseIsOnTooltip,
   tooltipIsInViewport,
-} from '../src';
+} from '../src/index.js';
 import {expect, describe, test} from 'vitest';
 
 global.window = Object.create({});

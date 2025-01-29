@@ -1,4 +1,4 @@
-import {escapeHTML} from '../src/defaults';
+import {escapeHTML} from '../src/defaults.js';
 import {expect, test} from 'vitest';
 
 test('escapeHTML escapes HTML', () => {

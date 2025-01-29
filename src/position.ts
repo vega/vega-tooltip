@@ -1,5 +1,5 @@
 import {Bounds} from 'vega-typings';
-import {Options, Position} from './defaults';
+import {Options, Position} from './defaults.js';
 
 type MarkBounds = Pick<Bounds, 'x1' | 'x2' | 'y1' | 'y2'>;
 

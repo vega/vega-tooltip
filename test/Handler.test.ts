@@ -3,7 +3,7 @@
  */
 
 import {Item} from 'vega-typings/types';
-import {DEFAULT_OPTIONS, Handler} from '../src';
+import {DEFAULT_OPTIONS, Handler} from '../src/index.js';
 import {expect, describe, it, beforeEach} from 'vitest';
 
 describe('Handler', () => {
