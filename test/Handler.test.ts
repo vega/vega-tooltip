@@ -1,9 +1,10 @@
 /**
- * @jest-environment jsdom
+ * @vitest-environment jsdom
  */
 
 import {Item} from 'vega-typings/types';
 import {DEFAULT_OPTIONS, Handler} from '../src';
+import {expect, describe, it, beforeEach} from 'vitest';
 
 describe('Handler', () => {
   it('instantiates a tooltip handler', () => {

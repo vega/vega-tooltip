@@ -7,6 +7,7 @@ import {
   mouseIsOnTooltip,
   tooltipIsInViewport,
 } from '../src';
+import {expect, describe, test} from 'vitest';
 
 global.window = Object.create({});
 Object.defineProperty(window, 'innerWidth', {value: 500});

@@ -1,5 +1,6 @@
 import {escapeHTML} from '../src';
 import {formatValue, replacer} from '../src/formatValue';
+import {expect, describe, it} from 'vitest';
 
 const fv = (value: any) => formatValue(value, escapeHTML, 2);
 
