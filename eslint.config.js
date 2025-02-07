@@ -12,22 +12,14 @@ delete globals.browser['AudioWorkletGlobalScope '];
  */
 export default [
   {
-    ignores: [
-      'babel.config.js',
-      'prettier.config.js',
-      'vitest.config.ts',
-      'vitest.setup.ts',
-      'build/**',
-      'examples/build/**',
-      'coverage/**',
-    ],
+    ignores: ['vitest.config.ts', 'build/**', 'examples/build/**', 'coverage/**'],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
   {
     languageOptions: {
       parserOptions: {
-        project: true,
+        project: './tsconfig.eslint.json',
         tsconfigRootDir: import.meta.dirname,
       },
     },

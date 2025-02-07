@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-   "target": "ES2022",
+    "target": "ES2022",
     "module": "Node16",
     "moduleResolution": "Node16",
     "noEmit": true,
@@ -12,8 +12,5 @@
     "importHelpers": true,
     "resolveJsonModule": true
   },
-  "include": [
-    "src/**/*.ts",
-    "test/**/*.ts"
-  ]
+  "include": ["src/index.ts"]
 }
