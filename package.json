@@ -1,6 +1,6 @@
 {
   "name": "vega-tooltip",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "A tooltip plugin for Vega-Lite and Vega visualizations.",
   "keywords": [
     "vega-lite",
