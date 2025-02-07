@@ -1,6 +1,6 @@
 {
   "name": "vega-tooltip",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "description": "A tooltip plugin for Vega-Lite and Vega visualizations.",
   "keywords": [
     "vega-lite",
@@ -29,8 +29,10 @@
   },
   "homepage": "https://github.com/vega/vega-tooltip#readme",
   "type": "module",
-  "exports": "./build/vega-tooltip.js",
-  "types": "build/index.d.ts",
+  "exports": {
+    "default": "./build/vega-tooltip.js",
+    "types": "./build/index.d.ts"
+  },
   "unpkg": "build/vega-tooltip.min.js",
   "jsdelivr": "build/vega-tooltip.min.js",
   "files": [
