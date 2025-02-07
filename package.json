@@ -1,6 +1,6 @@
 {
   "name": "vega-tooltip",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "description": "A tooltip plugin for Vega-Lite and Vega visualizations.",
   "keywords": [
     "vega-lite",
@@ -43,7 +43,7 @@
     "prebuild": "npm run clean && npm run build:style",
     "build": "rollup -c",
     "build:style": "./build-style.sh",
-    "clean": "rimraf build && rimraf src/style.ts",
+    "clean": "del-cli build && del-cli src/style.ts",
     "copy:data": "cp -R node_modules/vega-datasets/data examples",
     "copy:build": "cp -R build examples",
     "deploy:gh": "npm run build && npm run copy:build && gh-pages -d examples && npm run clean",
@@ -79,7 +79,7 @@
     "path": "^0.12.7",
     "prettier": "^3.4.2",
     "release-it": "^18.1.2",
-    "rimraf": "^6.0.1",
+    "del-cli": "^6.0.0",
     "rollup": "^4.32.1",
     "rollup-plugin-bundle-size": "^1.0.3",
     "sass": "^1.83.4",
