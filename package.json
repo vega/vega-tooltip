@@ -42,11 +42,12 @@
   "scripts": {
     "prebuild": "npm run clean && npm run build:style",
     "build": "rollup -c",
+    "postbuild": "npm run copy:build",
     "build:style": "./build-style.sh",
     "clean": "del-cli build && del-cli src/style.ts",
     "copy:data": "cp -R node_modules/vega-datasets/data examples",
     "copy:build": "cp -R build examples",
-    "deploy:gh": "npm run build && npm run copy:build && gh-pages -d examples && npm run clean",
+    "deploy:gh": "npm run build && gh-pages -d examples && npm run clean",
     "prepublishOnly": "npm run clean && npm run build",
     "preversion": "npm run lint && npm run test",
     "serve": "browser-sync start -s -f build examples --serveStatic examples",

@@ -21,13 +21,8 @@ const outputs = [
     input: 'src/index.ts',
     output: {
       file: pkg.unpkg,
-      format: 'umd',
-      name: 'vegaTooltip',
-      exports: 'named',
+      format: 'esm',
       sourcemap: true,
-      globals: {
-        'vega-util': 'vega',
-      },
     },
     plugins: [nodeResolve(), json(), typescript(), terser(), bundleSize()],
     external: ['vega-util'],

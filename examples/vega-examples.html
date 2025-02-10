@@ -4,11 +4,7 @@
     <title>Tooltip Examples</title>
     <meta charset="utf-8" />
 
-    <script src="https://cdn.jsdelivr.net/npm/d3@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
-
-    <script src="build/vega-tooltip.js"></script>
 
     <link rel="stylesheet" type="text/css" href="examples.css" />
   </head>
@@ -35,10 +31,22 @@
     <a href="index.html" class="large">Back to overview</a>
     <a id="github-link" href="https://github.com/vega/vega-tooltip/">Back to Github</a>
 
-    <script type="text/javascript">
+    <script type="importmap">
+      {
+        "imports": {
+          "vega-util": "https://cdn.jsdelivr.net/npm/vega-util@1/+esm"
+        }
+      }
+    </script>
+
+    <script type="module">
+      import vegaEmbed from "https://cdn.jsdelivr.net/npm/vega-embed@6/+esm";
+      import {json} from "https://cdn.jsdelivr.net/npm/d3-fetch@3/+esm";
+      import {Handler} from "./build/vega-tooltip.js";
+
       async function addVgExample(path, id, options) {
-        const vgSpec = await d3.json(path);
-        const handler = new vegaTooltip.Handler(options);
+        const vgSpec = await json(path);
+        const handler = new Handler(options);
         await vegaEmbed(id, vgSpec, { tooltip: handler.call }).catch(console.error);
       }
 
