@@ -7,10 +7,15 @@
     "vega",
     "tooltip"
   ],
+  "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/vega/vega-tooltip.git"
   },
+  "bugs": {
+    "url": "https://github.com/vega/vega-tooltip/issues"
+  },
+  "homepage": "https://github.com/vega/vega-tooltip#readme",
   "author": {
     "name": "UW Interactive Data Lab",
     "url": "https://idl.cs.washington.edu"
@@ -23,11 +28,6 @@
     "Yuri Astrakhan",
     "Jeffrey Heer"
   ],
-  "license": "BSD-3-Clause",
-  "bugs": {
-    "url": "https://github.com/vega/vega-tooltip/issues"
-  },
-  "homepage": "https://github.com/vega/vega-tooltip#readme",
   "type": "module",
   "exports": {
     "types": "./build/index.d.ts",
@@ -46,7 +46,7 @@
     "deploy:gh": "vite build examples && gh-pages -d examples/dist && npm run clean",
     "prepublishOnly": "npm run clean && npm run build",
     "preversion": "npm run lint && npm run test",
-    "serve": "vite examples",
+    "dev": "vite examples",
     "pretest": "npm run build:style",
     "test": "vitest run",
     "prepare": "npm run copy:data",
@@ -70,7 +70,6 @@
     "eslint-plugin-prettier": "^5.2.3",
     "eslint-plugin-vitest": "^0.5.4",
     "gh-pages": "^6.3.0",
-    "jsdom": "^26.0.0",
     "path": "^0.12.7",
     "prettier": "^3.5.0",
     "release-it": "^18.1.2",
