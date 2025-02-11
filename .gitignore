@@ -1,6 +1,7 @@
 build
 coverage/
-examples/data
+examples/public/data
+examples/dist
 node_modules
 npm-debug.log*
 src/style.ts
