@@ -7,10 +7,15 @@
     "vega",
     "tooltip"
   ],
+  "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vega/vega-tooltip.git"
+    "url": "git+https://github.com/vega/vega-tooltip.git"
   },
+  "bugs": {
+    "url": "https://github.com/vega/vega-tooltip/issues"
+  },
+  "homepage": "https://github.com/vega/vega-tooltip#readme",
   "author": {
     "name": "UW Interactive Data Lab",
     "url": "https://idl.cs.washington.edu"
@@ -23,18 +28,11 @@
     "Yuri Astrakhan",
     "Jeffrey Heer"
   ],
-  "license": "BSD-3-Clause",
-  "bugs": {
-    "url": "https://github.com/vega/vega-tooltip/issues"
-  },
-  "homepage": "https://github.com/vega/vega-tooltip#readme",
   "type": "module",
   "exports": {
-    "default": "./build/vega-tooltip.js",
-    "types": "./build/index.d.ts"
+    "types": "./build/index.d.ts",
+    "default": "./build/index.js"
   },
-  "unpkg": "build/vega-tooltip.min.js",
-  "jsdelivr": "build/vega-tooltip.min.js",
   "files": [
     "src",
     "build"
@@ -43,14 +41,12 @@
     "prebuild": "npm run clean && npm run build:style",
     "build": "rollup -c",
     "build:style": "./build-style.sh",
-    "clean": "del-cli build && del-cli src/style.ts",
-    "copy:data": "cp -R node_modules/vega-datasets/data examples",
-    "copy:build": "cp -R build examples",
-    "deploy:gh": "npm run build && npm run copy:build && gh-pages -d examples && npm run clean",
+    "clean": "del-cli build src/style.ts examples/dist",
+    "copy:data": "cp -R node_modules/vega-datasets/data examples/public/data",
+    "deploy:gh": "vite build examples && gh-pages -d examples/dist && npm run clean",
     "prepublishOnly": "npm run clean && npm run build",
     "preversion": "npm run lint && npm run test",
-    "serve": "browser-sync start -s -f build examples --serveStatic examples",
-    "start": "npm run build && concurrently --kill-others -n Server,Rollup 'npm run serve' 'rollup -c -w'",
+    "dev": "vite examples",
     "pretest": "npm run build:style",
     "test": "vitest run",
     "prepare": "npm run copy:data",
@@ -60,39 +56,34 @@
     "release": "release-it"
   },
   "devDependencies": {
-    "@eslint/js": "^9.19.0",
+    "@eslint/js": "^9.20.0",
     "@release-it/conventional-changelog": "^10.0.0",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.0",
-    "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.1.2",
-    "@typescript-eslint/eslint-plugin": "^8.22.0",
-    "@typescript-eslint/parser": "^8.22.0",
-    "@vitest/coverage-istanbul": "^3.0.4",
-    "browser-sync": "^3.0.3",
-    "concurrently": "^9.1.2",
-    "eslint": "^9.19.0",
+    "@typescript-eslint/eslint-plugin": "^8.24.0",
+    "@typescript-eslint/parser": "^8.24.0",
+    "@vitest/coverage-istanbul": "^3.0.5",
+    "del-cli": "^6.0.0",
+    "eslint": "^9.20.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.3",
     "eslint-plugin-vitest": "^0.5.4",
     "gh-pages": "^6.3.0",
     "path": "^0.12.7",
-    "prettier": "^3.4.2",
+    "prettier": "^3.5.0",
     "release-it": "^18.1.2",
-    "del-cli": "^6.0.0",
-    "rollup": "^4.32.1",
+    "rollup": "^4.34.6",
     "rollup-plugin-bundle-size": "^1.0.3",
-    "sass": "^1.83.4",
+    "sass": "^1.84.0",
     "typescript": "~5.7.3",
-    "typescript-eslint": "^8.22.0",
+    "typescript-eslint": "^8.24.0",
     "vega-datasets": "^2.11.0",
     "vega-typings": "^1.4.0",
-    "vitest": "^3.0.4"
+    "vite": "^6.1.0",
+    "vitest": "^3.0.5"
   },
   "dependencies": {
     "vega-util": "^1.17.3"
-  },
-  "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "^4.32.1"
   }
 }
