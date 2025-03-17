@@ -50,8 +50,8 @@
     "pretest": "npm run build:style",
     "test": "vitest run",
     "prepare": "npm run copy:data",
-    "format": "eslint --fix && prettier. --write",
-    "lint": "eslint && prettier. --check",
+    "format": "eslint --fix && prettier . --write",
+    "lint": "eslint && prettier . --check",
     "release": "release-it"
   },
   "devDependencies": {

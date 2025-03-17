@@ -36,16 +36,16 @@
     <a id="github-link" href="https://github.com/vega/vega-tooltip/">Back to Github</a>
 
     <script type="module">
-      import vegaEmbed from "https://cdn.jsdelivr.net/npm/vega-embed@6/+esm";
-      import {json} from "https://cdn.jsdelivr.net/npm/d3-fetch@3/+esm";
-      import {Handler} from "../src/index.ts";
+      import vegaEmbed from 'https://cdn.jsdelivr.net/npm/vega-embed@6/+esm';
+      import {json} from 'https://cdn.jsdelivr.net/npm/d3-fetch@3/+esm';
+      import {Handler} from '../src/index.ts';
 
       async function addVlExample(path, id, options) {
         const vlSpec = await json(path);
         const handler = new Handler(options);
         await vegaEmbed(id, vlSpec, {
           tooltip: handler.call,
-          mode: "vega-lite",
+          mode: 'vega-lite',
           config: {
             mark: {
               tooltip: true,
@@ -55,19 +55,19 @@
       }
 
       function renderCharts() {
-        const anchor = document.getElementById("anchor-cursor").checked ? "cursor" : "mark";
+        const anchor = document.getElementById('anchor-cursor').checked ? 'cursor' : 'mark';
 
-        addVlExample("specs/histogram.json", "#vis-histogram", { anchor });
-        addVlExample("specs/scatter.json", "#vis-scatter", { anchor });
-        addVlExample("specs/bubble_multiple_aggregation.json", "#vis-bubble-multi-aggr", { anchor });
-        addVlExample("specs/trellis_barley.json", "#vis-trellis-barley", { anchor });
-        addVlExample("specs/scatter_binned.json", "#vis-scatter-binned", { anchor });
-        addVlExample("specs/bar.json", "#vis-bar", { anchor });
-        addVlExample("specs/stacked_bar_weather.json", "#vis-stacked-bar", { anchor });
-        addVlExample("specs/bar_layered_transparent.json", "#vis-layered-bar", { anchor });
-        addVlExample("specs/line_color.json", "#vis-color-line", { anchor });
-        addVlExample("specs/overlay_area_short.json", "#vis-overlay-area", { anchor });
-        addVlExample("specs/bar_format_tooltip.json", "#vis-bar-format-tooltip", {
+        addVlExample('specs/histogram.json', '#vis-histogram', {anchor});
+        addVlExample('specs/scatter.json', '#vis-scatter', {anchor});
+        addVlExample('specs/bubble_multiple_aggregation.json', '#vis-bubble-multi-aggr', {anchor});
+        addVlExample('specs/trellis_barley.json', '#vis-trellis-barley', {anchor});
+        addVlExample('specs/scatter_binned.json', '#vis-scatter-binned', {anchor});
+        addVlExample('specs/bar.json', '#vis-bar', {anchor});
+        addVlExample('specs/stacked_bar_weather.json', '#vis-stacked-bar', {anchor});
+        addVlExample('specs/bar_layered_transparent.json', '#vis-layered-bar', {anchor});
+        addVlExample('specs/line_color.json', '#vis-color-line', {anchor});
+        addVlExample('specs/overlay_area_short.json', '#vis-overlay-area', {anchor});
+        addVlExample('specs/bar_format_tooltip.json', '#vis-bar-format-tooltip', {
           anchor,
           formatTooltip: (value, sanitize) => `The value of ${sanitize(value.a)} is ${sanitize(value.b)}`,
         });
@@ -77,8 +77,8 @@
       renderCharts();
 
       // Re-render charts when the checkbox is clicked
-      document.getElementById("anchor-cursor").addEventListener("change", renderCharts);
-      document.getElementById("anchor-mark").addEventListener("change", renderCharts);
+      document.getElementById('anchor-cursor').addEventListener('change', renderCharts);
+      document.getElementById('anchor-mark').addEventListener('change', renderCharts);
     </script>
   </body>
 </html>
