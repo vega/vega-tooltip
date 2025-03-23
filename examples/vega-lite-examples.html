@@ -36,12 +36,12 @@
     <a id="github-link" href="https://github.com/vega/vega-tooltip/">Back to Github</a>
 
     <script type="module">
-      import vegaEmbed from 'https://cdn.jsdelivr.net/npm/vega-embed@6/+esm';
-      import {json} from 'https://cdn.jsdelivr.net/npm/d3-fetch@3/+esm';
+      import vegaEmbed from 'vega-embed';
+      import {json} from 'd3-fetch';
       import {Handler} from '../src/index.ts';
 
       async function addVlExample(path, id, options) {
-        const vlSpec = await json(path);
+        const vlSpec = await (await fetch(path)).json();
         const handler = new Handler(options);
         await vegaEmbed(id, vlSpec, {
           tooltip: handler.call,
