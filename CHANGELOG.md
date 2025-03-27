@@ -1,4 +1,11 @@
+# Changelog
 
+# [1.0.0](https://github.com/vega/vega-tooltip/compare/v0.35.2...v1.0.0) (2025-03-27)
+
+
+### Bug Fixes
+
+* update defaults.ts to fix custom EL_ID replacing logic ([#1019](https://github.com/vega/vega-tooltip/issues/1019)) ([cc397ff](https://github.com/vega/vega-tooltip/commit/cc397ffef46de315a6c8bd2ed027486f6a48eb02))
 
 ## [0.35.2](https://github.com/vega/vega-tooltip/compare/v0.35.1...v0.35.2) (2024-11-16)
 
