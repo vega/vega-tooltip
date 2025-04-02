@@ -71,7 +71,7 @@
     "typescript": "~5.8.2",
     "typescript-eslint": "^8.28.0",
     "vega-datasets": "^3.0.1",
-    "vega-embed": "^6.29.0",
+    "vega-embed": "^7.0.2",
     "vega-typings": "^2.0.0",
     "vite": "^6.2.3",
     "vitest": "^3.0.9"
