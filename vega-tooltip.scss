@@ -7,6 +7,7 @@
   font-size: 11px;
   border-radius: 3px;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  white-space: pre-line;
 
   &.visible {
     visibility: visible;
@@ -34,6 +35,7 @@
           max-width: 150px;
           text-align: right;
           padding-right: 4px;
+          vertical-align: text-top;
         }
         &.value {
           display: block;
