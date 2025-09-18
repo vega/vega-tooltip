@@ -30,12 +30,12 @@
         text-overflow: ellipsis;
         padding-top: 2px;
         padding-bottom: 2px;
+        vertical-align: text-top;
         &.key {
           color: #808080;
           max-width: 150px;
           text-align: right;
           padding-right: 4px;
-          vertical-align: text-top;
         }
         &.value {
           display: block;
