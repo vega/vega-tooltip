@@ -7,6 +7,7 @@
   font-size: 11px;
   border-radius: 3px;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  white-space: pre-line;
 
   &.visible {
     visibility: visible;
@@ -29,6 +30,7 @@
         text-overflow: ellipsis;
         padding-top: 2px;
         padding-bottom: 2px;
+        vertical-align: text-top;
         &.key {
           color: #808080;
           max-width: 150px;
