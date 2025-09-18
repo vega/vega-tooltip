@@ -1,5 +1,18 @@
 # Changelog
 
+# [1.1.0](https://github.com/vega/vega-tooltip/compare/v1.0.0...v1.1.0) (2025-09-18)
+
+
+### Bug Fixes
+
+* install jsdom ([2fa4ef9](https://github.com/vega/vega-tooltip/commit/2fa4ef94e2970113db4f2307488c505d15ea7d49))
+* update versions in specs ([#1028](https://github.com/vega/vega-tooltip/issues/1028)) ([7e20bb2](https://github.com/vega/vega-tooltip/commit/7e20bb2e3e13a8f6535288f8126141e3af881004))
+
+
+### Features
+
+* Support newlines ([#1075](https://github.com/vega/vega-tooltip/issues/1075)) ([f8b83a3](https://github.com/vega/vega-tooltip/commit/f8b83a35cdd3a0984757853a577f110d2c5906db))
+
 # [1.0.0](https://github.com/vega/vega-tooltip/compare/v0.35.2...v1.0.0) (2025-03-27)
 
 
