@@ -19,7 +19,7 @@ export function formatValue(
   if (isObject(value)) {
     let content = '';
 
-    const {title, image, ...rest} = value as any;
+    const {title, image, ...rest} = value as any; 
 
     if (title) {
       content += `<h2>${valueToHtml(title)}</h2>`;
@@ -32,7 +32,15 @@ export function formatValue(
     const keys = Object.keys(rest);
     if (keys.length > 0) {
       content += '<table>';
+      var kv_list = [];
+      var sort_tooltip: string | undefined = undefined
       for (const key of keys) {
+        // Handle sort placeholder.
+        if (key === "tooltip_sort_placeholder") {
+          sort_tooltip = (rest as any)[key];
+          continue;
+        }
+
         let val = (rest as any)[key];
 
         // ignore undefined properties
@@ -44,7 +52,17 @@ export function formatValue(
           val = stringify(val, maxDepth);
         }
 
-        content += `<tr><td class="key">${valueToHtml(key)}</td><td class="value">${valueToHtml(val)}</td></tr>`;
+        const kv: [string, any] = [key, val];
+        kv_list.push(kv);
+      }
+
+      // Sort tooltip if specified. 
+      if (sort_tooltip !== undefined) {
+        const order: number = sort_tooltip === "0" ? 1 : -1; // order = 1: ascending, order = -1: descending
+        kv_list = kv_list.sort((n1,n2) => order * (n1[1] - n2[1])); // Sort by values.
+      }
+      for (const kv of kv_list) {
+        content += `<tr><td class="key">${valueToHtml(kv[0])}:</td><td class="value">${valueToHtml(kv[1])}</td></tr>`;
       }
       content += `</table>`;
     }
