@@ -44,7 +44,7 @@
     "dev": "vite examples",
     "pretest": "npm run build:style",
     "test": "vitest run",
-    "prepare": "npm run copy:data",
+    "prepare": "husky",
     "format": "eslint --fix && prettier . --write",
     "lint": "eslint && prettier . --check",
     "release": "release-it"
@@ -62,7 +62,9 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "gh-pages": "^6.3.0",
+    "husky": "^9.1.7",
     "jsdom": "^27.1.0",
+    "lint-staged": "^16.2.7",
     "path": "^0.12.7",
     "prettier": "^3.6.2",
     "release-it": "^19.0.6",
@@ -79,5 +81,8 @@
   },
   "dependencies": {
     "vega-util": "^2.1.0"
+  },
+  "lint-staged": {
+    "*.{js,ts,mjs,cjs}": "eslint --fix"
   }
 }
