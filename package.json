@@ -69,7 +69,7 @@
     "rollup": "^4.52.5",
     "rollup-plugin-bundle-size": "^1.0.3",
     "sass": "^1.93.3",
-    "typescript": "~5.9.3",
+    "typescript": "~6.0.2",
     "typescript-eslint": "^8.46.3",
     "vega-datasets": "^3.2.1",
     "vega-embed": "^7.1.0",
