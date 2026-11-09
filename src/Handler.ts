@@ -4,6 +4,27 @@ import {createDefaultStyle, DEFAULT_OPTIONS, Options} from './defaults.js';
 import {calculatePositionRelativeToCursor, calculatePositionRelativeToMark} from './position.js';
 
 /**
+ * The default stylesheets adopted by the document, keyed by `styleId`.
+ */
+const adoptedStyles = new Map<string, CSSStyleSheet>();
+
+/**
+ * Adopt the default styles once per `styleId`. A new `CSSStyleSheet` is not blocked by CSP, and
+ * the `vega-tooltip` cascade layer lets unlayered page styles override it.
+ */
+function addDefaultStyle(styleId: string, css: string) {
+  const existing = adoptedStyles.get(styleId);
+  if (existing && document.adoptedStyleSheets.includes(existing)) {
+    return;
+  }
+
+  const sheet = new CSSStyleSheet();
+  sheet.replaceSync(`@layer vega-tooltip {\n${css}}\n`);
+  adoptedStyles.set(styleId, sheet);
+  document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
+}
+
+/**
  * The tooltip handler class.
  */
 export class Handler {
@@ -35,18 +56,8 @@ export class Handler {
     // bind this to call
     this.call = this.tooltipHandler.bind(this);
 
-    // prepend a default stylesheet for tooltips to the head
-    if (!this.options.disableDefaultStyle && !document.getElementById(this.options.styleId)) {
-      const style = document.createElement('style');
-      style.setAttribute('id', this.options.styleId);
-      style.innerHTML = createDefaultStyle(elementId);
-
-      const head = document.head;
-      if (head.childNodes.length > 0) {
-        head.insertBefore(style, head.childNodes[0]);
-      } else {
-        head.appendChild(style);
-      }
+    if (!this.options.disableDefaultStyle) {
+      addDefaultStyle(this.options.styleId, createDefaultStyle(elementId));
     }
   }
 
