@@ -65,6 +65,8 @@ var view = new vega.View(runtime)
 | `sanitize`      | Function       | Function to convert value to string, and sanitize the HTML. |
 | `maxDepth`      | Number         | The maximum recursion depth when printing objects in the tooltip. |
 | `formatTooltip` | Function       | Function to specify custom HTML inside tooltip element. It is highly recommended to `sanitize` any data from `value` before returning an HTML string. |
+| `titleKey`      | String or null | Field rendered as a heading. Defaults to `"title"`; set to `null` to disable special title handling. Applies to the default formatter. |
+| `imageKeys`     | String[]       | Fields rendered as images, in order. Defaults to `["image"]`; set to `[]` to disable special image handling. Applies to the default formatter. |
 | `baseURL`       | String         | The base URL to use for resolving relative URLs for images. |
 
 
@@ -81,6 +83,8 @@ var DEFAULT_OPTIONS =
   disableDefaultStyle: false,
   sanitize: (value) => String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;'),
   formatTooltip: vegaTooltip.formatValue,
+  titleKey: 'title',
+  imageKeys: ['image'],
   baseURL: ''
 };
 ```

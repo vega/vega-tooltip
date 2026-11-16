@@ -34,6 +34,25 @@ var view = new vega.View(runtime)
   .run();
 ```
 
+## Choosing title and image fields
+
+By default, an object tooltip's `title` field becomes a heading and its `image`
+field becomes an image. These fields are omitted from the data table.
+If your data contains ordinary columns with those names, disable the special
+handling:
+
+```js
+var tooltipOptions = {
+  titleKey: null,
+  imageKeys: []
+};
+```
+
+You can also choose other field names, for example
+`{titleKey: 'tooltip:title', imageKeys: ['photo', 'thumbnail']}`. Images appear
+in the order of `imageKeys`. These options apply to the default formatter;
+a custom `formatTooltip` function controls its own output.
+
 ## Customizing the theme
 
 Vega tooltip has two predefined themes `light` and `dark`. You can create your own custom theme or override any of the existing CSS properties.
