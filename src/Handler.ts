@@ -1,6 +1,7 @@
 import {TooltipHandler} from 'vega-typings';
 
 import {createDefaultStyle, DEFAULT_OPTIONS, Options} from './defaults.js';
+import {formatValue} from './formatValue.js';
 import {calculatePositionRelativeToCursor, calculatePositionRelativeToMark} from './position.js';
 
 /**
@@ -29,6 +30,10 @@ export class Handler {
    */
   constructor(options?: Options) {
     this.options = {...DEFAULT_OPTIONS, ...options};
+    if (this.options.formatTooltip === formatValue) {
+      this.options.formatTooltip = (value, sanitize, maxDepth, baseURL) =>
+        formatValue(value, sanitize, maxDepth, baseURL, this.options);
+    }
     const elementId = this.options.id;
     this.el = null;
 

@@ -60,6 +60,16 @@ export interface Options {
   formatTooltip?: (value: any, valueToHtml: (value: any) => string, maxDepth: number, baseURL: string) => string;
 
   /**
+   * Field to render as the tooltip title. Set to null to disable special title handling.
+   */
+  titleKey?: string | null;
+
+  /**
+   * Fields to render as images. Set to an empty array to show image fields as ordinary data.
+   */
+  imageKeys?: string[];
+
+  /**
    * The baseurl to use in image paths.
    */
   baseURL?: string;
@@ -87,6 +97,8 @@ export const DEFAULT_OPTIONS: Required<Options> = {
   sanitize: escapeHTML,
   maxDepth: 2,
   formatTooltip: formatValue,
+  titleKey: 'title',
+  imageKeys: ['image'],
   baseURL: '',
   anchor: 'cursor',
   position: ['top', 'bottom', 'left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'],

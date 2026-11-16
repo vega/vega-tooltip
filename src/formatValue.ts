@@ -1,4 +1,5 @@
 import {isArray, isObject, isString} from 'vega-util';
+import type {Options} from './defaults.js';
 
 /**
  * Format the value to be shown in the tooltip.
@@ -11,6 +12,7 @@ export function formatValue(
   valueToHtml: (value: any) => string,
   maxDepth: number,
   baseURL?: string,
+  options?: Pick<Options, 'titleKey' | 'imageKeys'>,
 ): string {
   if (isArray(value)) {
     return `[${value.map((v) => valueToHtml(isString(v) ? v : stringify(v, maxDepth))).join(', ')}]`;
@@ -18,22 +20,28 @@ export function formatValue(
 
   if (isObject(value)) {
     let content = '';
+    const fields = value as Record<string, unknown>;
 
-    const {title, image, ...rest} = value as any;
+    const titleKey = options?.titleKey === undefined ? 'title' : options.titleKey;
+    const imageKeys = options?.imageKeys ?? ['image'];
+    const title = titleKey === null ? undefined : fields[titleKey];
 
     if (title) {
       content += `<h2>${valueToHtml(title)}</h2>`;
     }
 
-    if (image) {
-      content += `<img src="${new URL(valueToHtml(image), baseURL || location.href).href}">`;
+    for (const key of imageKeys) {
+      const image = fields[key];
+      if (image) {
+        content += `<img src="${new URL(valueToHtml(image), baseURL || location.href).href}">`;
+      }
     }
 
-    const keys = Object.keys(rest);
+    const keys = Object.keys(fields).filter((key) => key !== titleKey && !imageKeys.includes(key));
     if (keys.length > 0) {
       content += '<table>';
       for (const key of keys) {
-        let val = (rest as any)[key];
+        let val = fields[key];
 
         // ignore undefined properties
         if (val === undefined) {
